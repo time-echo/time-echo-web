@@ -1,26 +1,86 @@
 @import "tailwindcss";
 
+/* El modo oscuro se activará con la clase .dark (la lógica llega en el Paso 5.2) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Paleta: modo claro ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --wax: #8e2818;          /* Carmine Wax */
+  --wax-active: #6a1e12;   /* Carmine Wax (activo) */
+  --ink: #2c485e;          /* Postmark Ink Indigo */
+  --manila: #efece3;       /* Manila Dossier */
+  --parchment: #faf9f5;    /* Paper Parchment */
+  --crease: #d8d2c2;       /* Fold Crease */
+  --foreground: #2a2622;
 }
 
+/* ---------- Paleta: modo oscuro ---------- */
+.dark {
+  --wax: #d14930;
+  --wax-active: #a83a26;   /* el plan no define el activo en oscuro: valor provisional */
+  --ink: #77a3c4;
+  --manila: #1c2028;
+  --parchment: #16181d;
+  --crease: #2d3340;
+  --foreground: #e8e4d8;
+}
+
+/* ---------- Tokens de Tailwind ---------- */
 @theme inline {
-  --color-background: var(--background);
+  --color-wax: var(--wax);
+  --color-wax-active: var(--wax-active);
+  --color-ink: var(--ink);
+  --color-manila: var(--manila);
+  --color-parchment: var(--parchment);
+  --color-crease: var(--crease);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --font-serif-editorial: var(--font-fraunces), Georgia, serif;
+  --font-letter: var(--font-courier-prime), "Courier New", monospace;
+  --font-ui: var(--font-plex-sans), system-ui, sans-serif;
+
+  --animate-seal-press: seal-press 0.35s ease-out;
+  --animate-seal-crack-left: crack-left 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  --animate-seal-crack-right: crack-right 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ---------- Textura de papel ---------- */
+.paper-texture {
+  background-color: var(--parchment);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.35  0 0 0 0 0.25  0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- Papel rayado (para Courier Prime) ---------- */
+.lined-canvas {
+  --line-h: 2rem; /* debe coincidir con el line-height del texto */
+  line-height: var(--line-h);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--line-h) - 1px),
+    var(--crease) calc(var(--line-h) - 1px),
+    var(--crease) var(--line-h)
+  );
+  background-attachment: local;
+}
+
+/* ---------- Animaciones del sello ---------- */
+@keyframes seal-press {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+@keyframes crack-left {
+  to { transform: translate(-22px, 8px) rotate(-14deg); opacity: 0; }
+}
+@keyframes crack-right {
+  to { transform: translate(22px, 12px) rotate(16deg); opacity: 0; }
+}
+
+/* Respeta movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
