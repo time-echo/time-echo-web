@@ -15,7 +15,7 @@ export const courierPrime = Courier_Prime({
 
 export const plexSans = IBM_Plex_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-plex-sans",
   display: "swap",
 });
