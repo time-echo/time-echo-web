@@ -1,0 +1,191 @@
+"use client";
+
+import React from "react";
+import { Prediction, PredictionOutcome } from "@/types/timeecho";
+import { Check, X, Shuffle, Quote, Compass } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export interface PredictionComparisonRowProps {
+  prediction: Prediction;
+  outcome: PredictionOutcome;
+  realityText: string;
+  onOutcomeChange?: (outcome: PredictionOutcome) => void;
+  onRealityTextChange?: (text: string) => void;
+  readOnly?: boolean;
+  className?: string;
+}
+
+const OUTCOME_OPTIONS: Array<{
+  value: PredictionOutcome;
+  label: string;
+  subtext: string;
+  icon: React.ElementType;
+  activeClass: string;
+}> = [
+  {
+    value: "fulfilled",
+    label: "Cumplido",
+    subtext: "La visión se materializó",
+    icon: Check,
+    activeClass:
+      "border-emerald-700/60 bg-emerald-50 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-200 dark:border-emerald-700/60",
+  },
+  {
+    value: "diverged",
+    label: "Tomó otro rumbo",
+    subtext: "El destino cambió de cauce",
+    icon: Shuffle,
+    activeClass: "border-wax bg-wax/10 text-wax dark:bg-wax/20",
+  },
+  {
+    value: "unfulfilled",
+    label: "No cumplido",
+    subtext: "Aún no alcanzado o pospuesto",
+    icon: X,
+    activeClass: "border-ink bg-ink/10 text-ink dark:bg-ink/20",
+  },
+];
+
+/**
+ * ⚖️ PredictionComparisonRow Component
+ *
+ * Two-column retrospective row comparing a past milestone prediction
+ * against the actual present reality, with physical archival outcome toggles.
+ */
+export function PredictionComparisonRow({
+  prediction,
+  outcome,
+  realityText,
+  onOutcomeChange,
+  onRealityTextChange,
+  readOnly = false,
+  className,
+}: PredictionComparisonRowProps) {
+  return (
+    <div
+      className={cn(
+        "p-5 sm:p-6 rounded border border-crease bg-parchment shadow-sm space-y-4",
+        "transition-colors duration-200",
+        className,
+      )}
+    >
+      {/* Category Docket Tag */}
+      <div className="flex items-center justify-between gap-2 border-b border-crease/60 pb-2.5 font-letter text-[11px] text-foreground-muted select-none">
+        <div className="flex items-center gap-1.5 uppercase tracking-wider font-semibold text-ink">
+          <Compass size={13} className="text-wax" />
+          <span>CATEGORÍA: {prediction.category}</span>
+        </div>
+
+        <span className="font-mono text-[10px] tracking-widest uppercase">
+          ID: {prediction.id}
+        </span>
+      </div>
+
+      {/* Two-Column Side-by-Side Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        {/* Past Prediction Column */}
+        <div className="p-4 rounded border border-crease bg-manila/40 flex flex-col justify-between space-y-3">
+          <div>
+            <span className="font-letter text-[10px] uppercase tracking-widest text-foreground-muted block mb-1">
+              Lo que predijiste en el pasado:
+            </span>
+            <div className="flex items-start gap-2">
+              <Quote size={16} className="text-wax/60 shrink-0 mt-1" />
+              <p className="font-serif-editorial text-sm sm:text-base text-ink italic leading-relaxed">
+                &ldquo;{prediction.prediction}&rdquo;
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-crease/50 text-[10px] font-letter text-foreground-muted/70">
+            Sellado en fecha de emisión original
+          </div>
+        </div>
+
+        {/* Present Reality Column */}
+        <div className="p-4 rounded border border-crease bg-parchment flex flex-col justify-between space-y-3">
+          <div>
+            <label
+              htmlFor={`reality-${prediction.id}`}
+              className="font-letter text-[10px] uppercase tracking-widest text-foreground-muted block mb-1"
+            >
+              Lo que realmente sucedió:
+            </label>
+
+            {readOnly ? (
+              <p className="font-letter text-xs sm:text-sm text-foreground leading-relaxed">
+                {realityText || (
+                  <span className="italic text-foreground-muted">
+                    Sin testimonio registrado.
+                  </span>
+                )}
+              </p>
+            ) : (
+              <textarea
+                id={`reality-${prediction.id}`}
+                rows={3}
+                value={realityText}
+                onChange={(e) => onRealityTextChange?.(e.target.value)}
+                placeholder="Describe con honestidad qué ocurrió con este anhelo o predicción..."
+                className="w-full p-2.5 rounded border border-crease bg-manila/20 font-letter text-xs sm:text-sm text-foreground placeholder:text-foreground-muted/40 focus:outline-none focus:border-ink resize-none leading-relaxed"
+              />
+            )}
+          </div>
+
+          <div className="pt-2 border-t border-crease/50 text-[10px] font-letter text-foreground-muted/70 flex items-center justify-between">
+            <span>EXPEDIENTE DE REALIDAD</span>
+            <span>VERIFICACIÓN HOY</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Outcome Toggle Selector */}
+      <div className="pt-2 border-t border-crease/60 space-y-2">
+        <span className="font-letter text-[10px] uppercase tracking-wider text-foreground-muted block">
+          Dictamen del Hito:
+        </span>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          {OUTCOME_OPTIONS.map((opt) => {
+            const isSelected = outcome === opt.value;
+            const Icon = opt.icon;
+
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                disabled={readOnly}
+                onClick={() => !readOnly && onOutcomeChange?.(opt.value)}
+                className={cn(
+                  "p-2.5 rounded border text-left transition-all flex items-center gap-2.5",
+                  isSelected
+                    ? opt.activeClass
+                    : "border-crease bg-parchment hover:bg-manila/50 text-foreground-muted opacity-75",
+                  readOnly && "cursor-default",
+                )}
+              >
+                <span
+                  className={cn(
+                    "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-xs",
+                    isSelected ? "border-current" : "border-crease bg-manila",
+                  )}
+                >
+                  <Icon size={12} />
+                </span>
+
+                <div className="min-w-0">
+                  <div className="font-letter font-bold text-xs uppercase tracking-wider truncate">
+                    {opt.label}
+                  </div>
+                  <div className="text-[10px] opacity-75 truncate">
+                    {opt.subtext}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

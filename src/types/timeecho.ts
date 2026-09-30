@@ -10,28 +10,31 @@
 // Core Statuses, Enums & Literal Unions
 // ============================================================================
 
-export type LetterStatus = 'pending' | 'queued' | 'delivered' | 'opened' | 'archived';
+export type LetterStatus =
+  "pending" | "queued" | "delivered" | "opened" | "archived";
 
 export type PredictionCategory =
-  | 'city'
-  | 'salary'
-  | 'relationship'
-  | 'career'
-  | 'achievement'
-  | 'happiness'
+  | "city"
+  | "salary"
+  | "relationship"
+  | "career"
+  | "achievement"
+  | "happiness"
   | (string & {});
 
-export type PredictionOutcome = 'fulfilled' | 'unfulfilled' | 'diverged' | 'pending';
+export type PredictionOutcome =
+  "fulfilled" | "unfulfilled" | "diverged" | "pending";
 
-export type SupportedLanguage = 'en' | 'es';
+export type SupportedLanguage = "en" | "es";
 
-export type AppearanceMode = 'light' | 'dark' | 'system';
+export type AppearanceMode = "light" | "dark" | "system";
 
-export type ThemeOption = 'timeecho' | 'cupcake' | 'pastel' | 'autumn' | 'luxury' | (string & {});
+export type ThemeOption =
+  "timeecho" | "cupcake" | "pastel" | "autumn" | "luxury" | (string & {});
 
-export type ReflectionStyle = 'reflective' | 'motivational' | 'nostalgic';
+export type ReflectionStyle = "reflective" | "motivational" | "nostalgic";
 
-export type MemoryFrequency = 'low' | 'normal' | 'frequent';
+export type MemoryFrequency = "low" | "normal" | "frequent";
 
 // ============================================================================
 // Domain Entities

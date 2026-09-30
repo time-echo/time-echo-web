@@ -1,4 +1,8 @@
-import { Letter, CreateLetterInput, UpdateRealityInput } from '@/types/timeecho';
+import {
+  Letter,
+  CreateLetterInput,
+  UpdateRealityInput,
+} from "@/types/timeecho";
 
 /**
  * 🏛️ ICapsuleRepository

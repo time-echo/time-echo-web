@@ -1,0 +1,188 @@
+{
+  "common": {
+    "appName": "TimeEcho",
+    "tagline": "Private Postal Vault",
+    "back": "Back",
+    "backToLedger": "Back to Ledger",
+    "backToLetter": "Back to Letter",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "share": "Share",
+    "copied": "Copied!",
+    "print": "Print",
+    "archive": "Archive Letter",
+    "restore": "Restore Letter",
+    "loading": "Loading archive...",
+    "error": "Error",
+    "search": "Search...",
+    "view": "View",
+    "inspect": "Inspect",
+    "close": "Close",
+    "pending": "In Transit",
+    "delivered": "Unlocked",
+    "opened": "Unsealed",
+    "archived": "Archived",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "happiness": "Happiness",
+    "anxiety": "Anxiety",
+    "motivation": "Motivation"
+  },
+  "header": {
+    "folio": "№ TE-00421",
+    "vaultActive": "CIPHERED VAULT ACTIVE",
+    "nav": {
+      "vault": "Vault",
+      "compose": "Compose",
+      "analytics": "Analytics"
+    }
+  },
+  "footer": {
+    "motto": "“Time does not erase the words written to meet you in the future.”",
+    "colophon": "Held under private postal custody. Encrypted at rest until scheduled release.",
+    "rights": "All rights reserved. Personal Archival Vault.",
+    "links": {
+      "manifesto": "Epistolary Manifesto",
+      "security": "Custody & Ciphering",
+      "ledger": "Central Ledger"
+    }
+  },
+  "landing": {
+    "badge": "CIPHERED TEMPORAL CORRESPONDENCE",
+    "headline": "Write today to the person you will become.",
+    "subheadline": "TimeEcho is a private postal vault where your letters travel through time, sealed with 3D crimson wax and safeguarded until the date of your choosing.",
+    "ctaDraft": "Compose a Letter",
+    "ctaVault": "Open Postal Vault",
+    "quote": "“We do not write to remember the past, but to bear witness to what we promised to become.”",
+    "preview": {
+      "tab": "DEMONSTRATION SHEET",
+      "sender": "Present Self",
+      "destination": "Self in 1 Year",
+      "hint": "Click the crimson wax seal to fracture the demonstration seal.",
+      "brokenHint": "Seal fractured! The parchment is now unsealed."
+    },
+    "features": {
+      "materialityTitle": "Authentic Postal Materiality",
+      "materialityDesc": "Parchment paper textures, Manila folders with cut tabs, cancellation postmarks, and tactile 3D wax seals.",
+      "custodyTitle": "Ciphered Custody at Rest",
+      "custodyDesc": "Immune to premature opening. Your words remain encrypted until the clock strikes the appointed second.",
+      "retrospectionTitle": "Reality Ledger",
+      "retrospectionDesc": "Compare past milestone predictions against present reality and calibrate your psychological emotional shift."
+    }
+  },
+  "dashboard": {
+    "badge": "CENTRAL ARCHIVE // DOCKETS",
+    "title": "Correspondence Vault",
+    "description": "Explore your safeguarded letters, active countdowns in transit, and unsealed dockets.",
+    "composeButton": "Compose New Letter",
+    "searchPlaceholder": "Search by title, content, or docket (e.g., TE-00421)...",
+    "filters": {
+      "all": "All Dockets",
+      "pending": "In Transit",
+      "delivered": "Unlocked",
+      "archived": "Archived"
+    },
+    "emptyState": {
+      "title": "No letters match this filter",
+      "description": "No archival dockets were found matching the selected criteria.",
+      "cta": "Compose First Letter"
+    }
+  },
+  "composer": {
+    "folio": "POSTAL DISPATCH // NEW FOLIO",
+    "title": "Write a Letter to the Future",
+    "subtitle": "Pen your honest thoughts. Your letter will be sealed with crimson wax until the appointed arrival day.",
+    "titleLabel": "Letter subject or title",
+    "titlePlaceholder": "e.g., Reflections on Crossing the Threshold",
+    "recipientLabel": "Recipient (your future email address)",
+    "recipientPlaceholder": "future.self@personal.me",
+    "dateLabel": "Scheduled delivery date",
+    "datePresets": {
+      "sixMonths": "6 Months",
+      "oneYear": "1 Year",
+      "threeYears": "3 Years",
+      "fiveYears": "5 Years",
+      "custom": "Custom Date"
+    },
+    "letterLabel": "Stationery paper sheet",
+    "letterPlaceholder": "Dear future self:\n\nToday I take the pen to write to you because...",
+    "emotionalSectionTitle": "Baseline Emotional State",
+    "emotionalSectionSubtitle": "How do you feel in this exact moment of writing? (Scale 1 to 10)",
+    "predictionsSectionTitle": "Life Milestones & Predictions",
+    "predictionsSectionSubtitle": "State concrete predictions to contrast when you break the seal in the future.",
+    "sealButton": "Seal with Crimson Wax",
+    "sealingButton": "Melting & Stamping Wax..."
+  },
+  "success": {
+    "badge": "OFFICIAL VAULT RECEIPT",
+    "title": "Capsule Sealed Successfully",
+    "description": "Your letter is now encrypted and secured under postal custody. The crimson seal will preserve your reflections until the appointed day.",
+    "sealIntact": "CRIMSON WAX SEAL INTACT",
+    "docketNumber": "Vault Docket",
+    "releaseDate": "Release Date",
+    "recipient": "Notified Recipient",
+    "remainingTime": "Remaining Time",
+    "ctaInspect": "Inspect Letter",
+    "ctaVault": "Go to Central Ledger",
+    "ctaNew": "Compose Another Letter"
+  },
+  "reveal": {
+    "lockedTitle": "VAULT TEMPORARILY INACCESSIBLE",
+    "lockedDesc": "This correspondence is safeguarded and sealed under archival custody. The crimson seal protects reflections and predictions until the time voyage concludes.",
+    "sealLocked": "WAX SEAL LOCKED",
+    "sealLockedSubtext": "Immune to premature opening until the scheduled release date.",
+    "unlockableBadge": "THE APPOINTED HOUR HAS ARRIVED",
+    "unlockableDesc": "The journey through time has concluded. The sealed parchment rests before you, ready for the crimson wax to be broken.",
+    "breakSeal": "Break the Wax Seal",
+    "breakSealPrompt": "Click to break the wax seal!",
+    "unsealedBadge": "CORRESPONDENCE UNSEALED",
+    "authenticityVerified": "Authenticity Preserved",
+    "writtenPastSelf": "Written by your past self.",
+    "baselineEmotions": "Baseline Emotional State at Writing",
+    "milestonesTitle": "Registered Predictions & Milestones",
+    "realityLedgerPromptTitle": "How accurate was your past self?",
+    "realityLedgerPromptDesc": "Submit your Reality Ledger to contrast past predictions with present facts, record emotional shifts, and compute your accuracy score.",
+    "ctaOpenReality": "Open Reality Ledger"
+  },
+  "reality": {
+    "title": "Reality Ledger",
+    "subtitle": "Confrontation between expectations and destiny.",
+    "badge": "FACTUAL COMPARISON",
+    "introTitle": "Audit of Expectations",
+    "introDesc": "Examine your past self’s convictions against the present reality. Record your current emotional baseline and evaluate whether your predictions were fulfilled, unfulfilled, or diverged.",
+    "successTitle": "Reality Ledger Settled Successfully",
+    "successDesc": "Your retrospective notes and emotional ratings have been preserved in the vault.",
+    "evolutionTitle": "Emotional Trajectory (Past vs Present)",
+    "evolutionSubtitle": "Calibrate your feelings at this moment of unsealing:",
+    "predictionsTitle": "Prediction Verification",
+    "outcomes": {
+      "fulfilled": "Fulfilled",
+      "diverged": "Diverged",
+      "unfulfilled": "Unfulfilled",
+      "pending": "Pending Evaluation"
+    },
+    "settleButton": "Settle Reality Ledger",
+    "settledBadge": "LEDGER SETTLED"
+  },
+  "analytics": {
+    "badge": "RETROSPECTIVE STATISTICS",
+    "title": "Retrospective Analytics Vault",
+    "description": "Aggregate analysis of your future visions, prediction accuracy calibration, and emotional trajectory across epistolary time.",
+    "totalCapsules": "Total Capsules",
+    "totalPredictions": "Total Predictions",
+    "accuracyRate": "Accuracy Rate",
+    "netHappiness": "Net Happiness (Delta)",
+    "predictionAccuracyTitle": "Prediction Accuracy",
+    "categoryEffectiveness": "Effectiveness by Category",
+    "emotionalTrajectoryTitle": "Emotional Trajectory",
+    "emotionalTrajectoryDesc": "Aggregate comparison between your emotional ratings at the moment of composition (Baseline) and upon breaking the seal in the present (Reveal).",
+    "pendingAuditsTitle": "Letters Awaiting Reality Audit",
+    "pendingAuditsDesc": "You have unsealed letters with pending predictions. Settle their reality to automatically update your global statistics.",
+    "auditButton": "Audit",
+    "allAudited": "All unsealed letters have completed their reality evaluation.",
+    "composeNew": "Compose New Letter"
+  }
+}
