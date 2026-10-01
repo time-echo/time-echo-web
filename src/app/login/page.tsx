@@ -1,0 +1,97 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { Mail, ArrowLeft } from "lucide-react";
+
+export default function LoginPage() {
+  const router = useRouter();
+  const { locale } = useTimeEcho();
+  const isEs = locale === "es";
+
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubmitted(true);
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 1200);
+  };
+
+  return (
+    <div className="max-w-md mx-auto py-12 px-4 font-ui select-none animate-fade-in text-foreground">
+      <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs">
+        <div className="text-center space-y-3">
+          <div className="wax-seal w-14 h-14 rounded-full mx-auto flex items-center justify-center text-parchment select-none shadow-xs">
+            <Mail size={24} />
+          </div>
+          <h1 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold leading-tight">
+            {isEs ? "Ingresa a tu baúl" : "Access Your Vault"}
+          </h1>
+          <p className="text-xs font-letter text-foreground-muted leading-relaxed">
+            {isEs
+              ? "Te enviaremos un enlace seguro de inicio de sesión mágico directamente a tu correo electrónico. Sin contraseñas."
+              : "We will send a secure magic login link directly to your inbox. No passwords required."}
+          </p>
+        </div>
+
+        {submitted ? (
+          <div className="p-4 rounded-xs border border-crease bg-manila/50 text-center font-letter text-xs text-foreground space-y-2">
+            <span className="font-semibold text-wax block">
+              {isEs ? "¡Enlace enviado!" : "Magic link dispatched!"}
+            </span>
+            <p className="text-foreground-muted">
+              {isEs
+                ? `Hemos enviado el enlace a ${email}. Redirigiendo a tu bóveda...`
+                : `We sent the magic link to ${email}. Redirecting to your vault...`}
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-1.5">
+              <label
+                htmlFor="login-email"
+                className="text-[10px] font-letter font-semibold text-foreground-muted uppercase tracking-wider block"
+              >
+                {isEs ? "Tu Dirección de Correo" : "Your Email Address"}
+              </label>
+              <input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full paper-sheet rounded-xs px-3.5 py-2.5 text-xs font-letter text-foreground border border-crease placeholder:text-foreground-muted/50 focus:border-wax focus:outline-none min-h-[44px]"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
+            >
+              {isEs ? "Enviar enlace mágico" : "Send Magic Link"}
+            </button>
+          </form>
+        )}
+
+        <div className="text-center pt-2 border-t border-crease">
+          <Link
+            href="/"
+            className="text-xs font-letter font-semibold text-foreground-muted hover:text-foreground transition-colors uppercase tracking-wider inline-flex items-center gap-1.5"
+          >
+            <ArrowLeft size={13} />
+            <span>
+              {isEs ? "Volver a la página de inicio" : "Back to Home"}
+            </span>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}

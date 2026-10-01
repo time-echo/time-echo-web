@@ -1,0 +1,188 @@
+{
+  "common": {
+    "appName": "TimeEcho",
+    "tagline": "Bóveda Postal Privada",
+    "back": "Volver",
+    "backToLedger": "Volver al Registro",
+    "backToLetter": "Volver al Pliego",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "cancel": "Cancelar",
+    "share": "Compartir",
+    "copied": "¡Copiado!",
+    "print": "Imprimir",
+    "archive": "Mover a Archivo",
+    "restore": "Restaurar de Archivo",
+    "loading": "Cargando archivo...",
+    "error": "Error",
+    "search": "Buscar...",
+    "view": "Ver",
+    "inspect": "Inspeccionar",
+    "close": "Cerrar",
+    "pending": "En Tránsito",
+    "delivered": "Desbloqueada",
+    "opened": "Desprecintada",
+    "archived": "Archivada",
+    "days": "Días",
+    "hours": "Horas",
+    "minutes": "Minutos",
+    "seconds": "Segundos",
+    "happiness": "Felicidad",
+    "anxiety": "Ansiedad",
+    "motivation": "Motivación"
+  },
+  "header": {
+    "folio": "№ TE-00421",
+    "vaultActive": "BÓVEDA CIFRADA ACTIVA",
+    "nav": {
+      "vault": "Bóveda",
+      "compose": "Redactar",
+      "analytics": "Retrospectiva"
+    }
+  },
+  "footer": {
+    "motto": "«El tiempo no borra las palabras que nacieron para encontrarte en el porvenir.»",
+    "colophon": "Bajo custodia postal privada. Cifrado en reposo hasta su liberación estipulada.",
+    "rights": "Todos los derechos reservados. Archivo Histórico Personal.",
+    "links": {
+      "manifesto": "Manifiesto Epistolar",
+      "security": "Custodia y Cifrado",
+      "ledger": "Registro Central"
+    }
+  },
+  "landing": {
+    "badge": "CORRESPONDENCIA TEMPORAL CIFRADA",
+    "headline": "Escribe hoy a la persona en la que te convertirás.",
+    "subheadline": "TimeEcho es una bóveda postal privada donde tus cartas viajan en el tiempo, selladas con lacre carmesí 3D y protegidas hasta la fecha que elijas.",
+    "ctaDraft": "Redactar una Carta",
+    "ctaVault": "Abrir Bóveda Postal",
+    "quote": "«No escribimos para recordar el pasado, sino para dar testimonio de lo que prometimos llegar a ser.»",
+    "preview": {
+      "tab": "PLIEGO DE DEMOSTRACIÓN",
+      "sender": "Yo del presente",
+      "destination": "Yo dentro de 1 año",
+      "hint": "Haz clic en el lacre carmesí para fracturar el sello de demostración.",
+      "brokenHint": "¡Sello fracturado! El pergamino queda desprecintado."
+    },
+    "features": {
+      "materialityTitle": "Materialidad Postal Auténtica",
+      "materialityDesc": "Pergaminos con texturas de papel real, carpetas manila con pestañas cortadas, sellos de cancelación y lacre carmesí con física 3D.",
+      "custodyTitle": "Custodia Cifrada en Reposo",
+      "custodyDesc": "Inmune a aperturas prematuras. Tu correspondencia permanece blindada hasta que el cronómetro marque el segundo convenido.",
+      "retrospectionTitle": "Expediente de Realidad",
+      "retrospectionDesc": "Compara tus predicciones pasadas contra los hechos del presente y calibra la evolución de tus estados emocionales."
+    }
+  },
+  "dashboard": {
+    "badge": "REGISTRO CENTRAL // EXPEDIENTES",
+    "title": "Bóveda de Correspondencia",
+    "description": "Explora tus cartas custodiadas, cronómetros en tránsito y expedientes desprecintados.",
+    "composeButton": "Redactar Nueva Carta",
+    "searchPlaceholder": "Buscar por título, contenido o folio (ej: TE-00421)...",
+    "filters": {
+      "all": "Todos los Expedientes",
+      "pending": "En Tránsito",
+      "delivered": "Desbloqueadas",
+      "archived": "Archivadas"
+    },
+    "emptyState": {
+      "title": "No hay correspondencia en este filtro",
+      "description": "No se encontraron expedientes que coincidan con el criterio seleccionado.",
+      "cta": "Redactar Primera Carta"
+    }
+  },
+  "composer": {
+    "folio": "EXPEDICIÓN POSTAL // NUEVO PLIEGO",
+    "title": "Redactar Carta al Porvenir",
+    "subtitle": "Escribe tus pensamientos sin filtros. Tu carta será sellada con lacre carmesí hasta el día de su entrega.",
+    "titleLabel": "Título o asunto epistolar",
+    "titlePlaceholder": "ej: Reflexiones sobre el cruce del umbral",
+    "recipientLabel": "Destinatario (tu correo electrónico futuro)",
+    "recipientPlaceholder": "yo.del.futuro@personal.me",
+    "dateLabel": "Fecha convenida de entrega",
+    "datePresets": {
+      "sixMonths": "6 Meses",
+      "oneYear": "1 Año",
+      "threeYears": "3 Años",
+      "fiveYears": "5 Años",
+      "custom": "Personalizada"
+    },
+    "letterLabel": "Pliego de redacción",
+    "letterPlaceholder": "Querido yo del porvenir:\n\nHoy tomo la pluma para escribirte porque...",
+    "emotionalSectionTitle": "Calibración Emocional Basal",
+    "emotionalSectionSubtitle": "¿Cómo te sientes en este instante exacto de redacción? (Escala 1 a 10)",
+    "predictionsSectionTitle": "Hitos & Predicciones de Vida",
+    "predictionsSectionSubtitle": "Formula predicciones concretas para contrastarlas cuando quebres el sello en el futuro.",
+    "sealButton": "Sellar con Lacre Carmesí",
+    "sealingButton": "Fundiendo y Estampando Lacre..."
+  },
+  "success": {
+    "badge": "RECIBO OFICIAL DE BÓVEDA",
+    "title": "Cápsula Sellada con Éxito",
+    "description": "Tu pliego ha sido cifrado y asegurado bajo custodia postal. El lacre carmesí preservará tus reflexiones hasta el día convenido.",
+    "sealIntact": "LACRE CARMESÍ INTACTO",
+    "docketNumber": "Folio de Bóveda",
+    "releaseDate": "Fecha de Apertura",
+    "recipient": "Destinatario Notificado",
+    "remainingTime": "Tiempo Restante",
+    "ctaInspect": "Inspeccionar Carta",
+    "ctaVault": "Ir al Registro Central",
+    "ctaNew": "Redactar Otra Carta"
+  },
+  "reveal": {
+    "lockedTitle": "BÓVEDA DE TIEMPO TEMPORALMENTE INACCESIBLE",
+    "lockedDesc": "Esta correspondencia está custodiada y sellada bajo fe de archivo. El lacre carmesí protege las reflexiones y predicciones hasta que concluya el viaje en el tiempo.",
+    "sealLocked": "SELLO DE LACRE BLOQUEADO",
+    "sealLockedSubtext": "Inmune a aperturas prematuras hasta la fecha de liberación.",
+    "unlockableBadge": "LA HORA CONVENIDA HA LLEGADO",
+    "unlockableDesc": "El trayecto en el tiempo ha concluido. El pliego descansa ante ti con el lacre carmesí listo para ser quebrado.",
+    "breakSeal": "Quebrar el Sello de Lacre",
+    "breakSealPrompt": "¡Haz clic para romper el sello!",
+    "unsealedBadge": "CORRESPONDENCIA DESPRECINTADA",
+    "authenticityVerified": "Autenticidad Preservada",
+    "writtenPastSelf": "Redactado por ti mismo en el pasado.",
+    "baselineEmotions": "Estado Emocional Basal al Escribir",
+    "milestonesTitle": "Predicciones e Hitos Registrados",
+    "realityLedgerPromptTitle": "¿Cuánto acertó tu yo del pasado?",
+    "realityLedgerPromptDesc": "Asienta el Expediente de Realidad para contrastar tus predicciones de vida con los hechos del presente, registrar tu evolución emocional y calcular tu precisión retrospectiva.",
+    "ctaOpenReality": "Asentar Expediente de Realidad"
+  },
+  "reality": {
+    "title": "Expediente de Realidad",
+    "subtitle": "Confrontación entre expectativas y destino.",
+    "badge": "CONTRASTE DE HECHOS",
+    "introTitle": "Auditoría de Expectativas",
+    "introDesc": "Examina las convicciones de tu antiguo yo frente a la realidad del presente. Registra tus estados de ánimo actuales y califica si tus predicciones se cumplieron, se pospusieron o tomaron otro rumbo.",
+    "successTitle": "Expediente de Realidad Asentado con Éxito",
+    "successDesc": "Tus notas retrospectivas y métricas emocionales han sido archivadas bajo fe de bóveda.",
+    "evolutionTitle": "Evolución Emocional (Ayer vs Hoy)",
+    "evolutionSubtitle": "Calibra tus sentimientos en este momento de apertura:",
+    "predictionsTitle": "Verificación de Predicciones",
+    "outcomes": {
+      "fulfilled": "Cumplido",
+      "diverged": "Tomó otro rumbo",
+      "unfulfilled": "No cumplido",
+      "pending": "Pendiente de evaluar"
+    },
+    "settleButton": "Asentar Expediente de Realidad",
+    "settledBadge": "EXPEDIENTE ASENTADO"
+  },
+  "analytics": {
+    "badge": "ESTADÍSTICAS RETROSPECTIVAS",
+    "title": "Bóveda de Retrospección & Métricas",
+    "description": "Análisis agregado de tus visiones de futuro, calibración retrospectiva de aciertos y evolución de tus estados emocionales a través del tiempo epistolar.",
+    "totalCapsules": "Cápsulas Custodiadas",
+    "totalPredictions": "Predicciones Formuladas",
+    "accuracyRate": "Tasa de Precisión",
+    "netHappiness": "Felicidad Neta (Delta)",
+    "predictionAccuracyTitle": "Precisión de Predicciones",
+    "categoryEffectiveness": "Efectividad por Categoría de Vida",
+    "emotionalTrajectoryTitle": "Evolución Emocional",
+    "emotionalTrajectoryDesc": "Contraste agregado entre tus niveles emocionales al momento de redactar las cartas (Línea Basal) y tus sensaciones al fracturar el lacre en el presente (Apertura).",
+    "pendingAuditsTitle": "Expedientes Pendientes de Contraste",
+    "pendingAuditsDesc": "Tienes cartas desbloqueadas cuyas predicciones aún no han sido contrastadas. Al asentar su realidad, tus estadísticas y calibración predictiva se actualizarán automáticamente.",
+    "auditButton": "Evaluar",
+    "allAudited": "Todos los expedientes desprecintados han completado su confrontación de realidad.",
+    "composeNew": "Redactar Nueva Carta"
+  }
+}

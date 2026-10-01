@@ -11,7 +11,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 # TimeEcho Frontend Rules
 
 ## Core Guidelines
+
 - Do not write code comments. Keep the code clean, self-describing, and concise without inline or block comments.
 - All code, variable names, function names, CSS tokens, and documentation must be written in English.
 - Avoid generic SaaS patterns. Follow TimeEcho's epistolary, archival design principles (wax seals, parchment sheets, manila dossiers, postmark stamps, Courier Prime, Fraunces, IBM Plex Sans).
 - Use Tailwind CSS v4 with CSS-first configuration via `@theme inline`.
+- Do not run `git commit` or `git push` commands. The user will handle committing and pushing code changes manually.
