@@ -323,7 +323,7 @@ export function LetterComposerForm({
             type="submit"
             disabled={isSubmitting || isSealing}
             className={cn(
-              "inline-flex items-center justify-center gap-3 px-8 py-4 rounded border-2 border-wax bg-wax text-parchment w-full sm:w-auto",
+              "inline-flex items-center justify-center gap-3 px-8 py-4 rounded border-2 border-wax bg-wax text-on-wax w-full sm:w-auto",
               "font-letter text-sm font-bold uppercase tracking-widest shadow-lg transition-all",
               "hover:bg-wax-hover hover:scale-[1.03] active:scale-[0.97] cursor-pointer",
               (isSubmitting || isSealing) && "opacity-70 cursor-not-allowed",

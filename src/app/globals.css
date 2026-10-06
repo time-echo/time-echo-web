@@ -5,6 +5,7 @@
 :root {
   --wax: #8e2818;
   --wax-hover: #6a1e12;
+  --on-wax: #faf9f5;
   --ink: #2c485e;
   --manila: #efece3;
   --manila-border: #d5cebd;
@@ -17,6 +18,7 @@
 .dark {
   --wax: #d14930;
   --wax-hover: #e05a40;
+  --on-wax: #faf9f5;
   --ink: #77a3c4;
   --manila: #1c2028;
   --manila-border: #2d3342;
@@ -30,6 +32,7 @@
   --color-wax: var(--wax);
   --color-wax-hover: var(--wax-hover);
   --color-wax-active: var(--wax-hover);
+  --color-on-wax: var(--on-wax);
   --color-ink: var(--ink);
   --color-manila: var(--manila);
   --color-manila-border: var(--manila-border);
@@ -66,8 +69,12 @@
   }
 
   ::placeholder {
-    color: #8c827a;
-    opacity: 0.7;
+    color: var(--foreground-muted);
+  }
+
+  input,
+  textarea {
+    caret-color: var(--wax);
   }
 
   :focus-visible {
@@ -140,7 +147,7 @@
   justify-content: center;
   font-family: var(--font-letter);
   font-weight: 700;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .wax-seal:hover {

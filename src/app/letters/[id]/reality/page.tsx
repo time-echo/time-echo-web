@@ -3,8 +3,9 @@
 import React, { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import confetti from "canvas-confetti";
+import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { formatLocaleDate } from "@/lib/utils";
 import { Letter } from "@/types/timeecho";
 import { RealityLedger } from "@/features/reality-ledger/components/RealityLedger";
 import { ArchivalFolder } from "@/components/ui/ArchivalFolder";
@@ -82,12 +83,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     setIsSettled(true);
 
     try {
-      confetti({
-        particleCount: 75,
-        spread: 65,
-        origin: { y: 0.6 },
-        colors: ["#8e2818", "#2c485e", "#efece3", "#059669", "#b23320"],
-      });
+      celebrate("reality-settled");
     } catch {
       // Confetti fallback for environments without canvas
     }
@@ -169,7 +165,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
           <div className="pt-2">
             <button
               onClick={() => router.push(`/letters/${letter.id}`)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded bg-wax hover:bg-[#a42c19] text-parchment font-letter text-xs uppercase tracking-wider font-bold shadow transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded bg-wax hover:bg-wax-hover text-on-wax font-letter text-xs uppercase tracking-wider font-bold shadow transition-all"
             >
               <ArrowLeft size={14} />
               <span>
@@ -184,14 +180,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     );
   }
 
-  const createdFormatted = new Date(letter.createdAt).toLocaleDateString(
-    isEs ? "es-ES" : "en-US",
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    },
-  );
+  const createdFormatted = formatLocaleDate(letter.createdAt, locale);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-16">
@@ -242,7 +231,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
                 city="BOGOTÁ // CENTRAL"
                 docketId={letter.docketNumber}
                 date={createdFormatted}
-                subtext="REGISTRO DE REALIDAD"
+                subtext={isEs ? "REGISTRO DE REALIDAD" : "REALITY RECORD"}
                 variant="circular"
                 size="sm"
               />
@@ -295,7 +284,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
 
                 <Link
                   href="/analytics"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-wax hover:bg-[#a42c19] text-parchment font-bold shadow transition-all"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-wax hover:bg-wax-hover text-on-wax font-bold shadow transition-all"
                 >
                   <Sparkles size={13} />
                   <span>{isEs ? "Ver Métricas" : "View Analytics"}</span>

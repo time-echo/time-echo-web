@@ -27,7 +27,7 @@ export default function LoginPage() {
     <div className="max-w-md mx-auto py-12 px-4 font-ui select-none animate-fade-in text-foreground">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs">
         <div className="text-center space-y-3">
-          <div className="wax-seal w-14 h-14 rounded-full mx-auto flex items-center justify-center text-parchment select-none shadow-xs">
+          <div className="wax-seal w-14 h-14 rounded-full mx-auto flex items-center justify-center text-on-wax select-none shadow-xs">
             <Mail size={24} />
           </div>
           <h1 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold leading-tight">
@@ -73,7 +73,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
+              className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
             >
               {isEs ? "Enviar enlace mágico" : "Send Magic Link"}
             </button>

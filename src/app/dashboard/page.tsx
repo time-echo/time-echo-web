@@ -15,7 +15,7 @@ import {
   RotateCcw,
   Trash2,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -43,11 +43,7 @@ export default function DashboardPage() {
   };
 
   const formatDate = (iso: string) => {
-    return new Date(iso).toLocaleDateString(isEs ? "es-ES" : "en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
+    return formatLocaleDate(iso, isEs ? "es" : "en");
   };
 
   if (isTimeline) {
@@ -68,14 +64,14 @@ export default function DashboardPage() {
           <div className="flex gap-3 shrink-0 items-center">
             <Link
               href="/dashboard"
-              className="border border-crease text-foreground hover:bg-manila/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[40px] font-letter inline-flex items-center gap-1.5 transition-colors"
+              className="border border-crease text-foreground hover:bg-manila/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[44px] font-letter inline-flex items-center gap-1.5 transition-colors"
             >
               <Mail size={15} />
               <span>{isEs ? "Mis cartas" : "My Letters"}</span>
             </Link>
             <Link
               href="/letters/new"
-              className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-2 px-5 text-xs font-medium border-none cursor-pointer tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
+              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2 px-5 text-xs font-medium border-none cursor-pointer tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
             >
               <Plus size={15} />
               <span>{isEs ? "Escribir carta" : "Write Letter"}</span>
@@ -101,9 +97,9 @@ export default function DashboardPage() {
                       "absolute -left-[31px] sm:-left-[39px] top-4 w-4 h-4 rounded-full border-2 border-parchment shadow-xs",
                       isDelivered
                         ? hasRevealedReality
-                          ? "bg-[#2C485E]"
+                          ? "bg-ink"
                           : "bg-amber-600"
-                        : "bg-[#8E2818]",
+                        : "bg-wax",
                     )}
                   />
 
@@ -161,7 +157,7 @@ export default function DashboardPage() {
 
                     {isDelivered ? (
                       <>
-                        <p className="font-letter text-sm text-foreground/85 leading-relaxed pl-4 border-l-2 border-[#2C485E]/30 italic">
+                        <p className="font-letter text-sm text-foreground/85 leading-relaxed pl-4 border-l-2 border-ink/30 italic">
                           &ldquo;{letter.content}&rdquo;
                         </p>
 
@@ -190,7 +186,7 @@ export default function DashboardPage() {
 
                           {letter.predictions &&
                             letter.predictions.length > 0 && (
-                              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-[#D5CEBD] pt-2">
+                              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-manila-border pt-2">
                                 <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
                                   {isEs ? "Predicciones:" : "Predictions:"}
                                 </span>
@@ -207,7 +203,7 @@ export default function DashboardPage() {
                         <div className="flex justify-end pt-1">
                           <Link
                             href={`/letters/${letter.id}`}
-                            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[36px] transition-colors"
+                            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors"
                           >
                             <Eye size={14} />
                             <span>
@@ -250,7 +246,7 @@ export default function DashboardPage() {
                           <button
                             type="button"
                             onClick={() => archiveCapsule(letter.id)}
-                            className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-2.5 py-1 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1 min-h-[32px] transition-colors cursor-pointer bg-transparent"
+                            className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-2.5 py-1 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1 min-h-[44px] transition-colors cursor-pointer bg-transparent"
                             title={isEs ? "Archivar carta" : "Archive letter"}
                           >
                             <Archive size={13} />
@@ -266,7 +262,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="paper-sheet rounded-xs p-12 text-center max-w-lg mx-auto space-y-5">
-            <div className="text-[#2C485E] flex justify-center">
+            <div className="text-ink flex justify-center">
               <Mail size={40} />
             </div>
             <h2 className="font-serif-editorial text-2xl font-semibold text-foreground">
@@ -281,7 +277,7 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/letters/new"
-              className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-2 px-6 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
+              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2 px-6 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
             >
               <Plus size={15} />
               <span>{isEs ? "Comenzar a escribir" : "Start Writing"}</span>
@@ -310,14 +306,14 @@ export default function DashboardPage() {
         <div className="flex gap-3 shrink-0 items-center">
           <Link
             href="/dashboard?timeline=true"
-            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[40px] font-letter inline-flex items-center gap-1.5 transition-colors"
+            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[44px] font-letter inline-flex items-center gap-1.5 transition-colors"
           >
             <Calendar size={15} />
             <span>{isEs ? "Ver línea de tiempo" : "View Timeline"}</span>
           </Link>
           <Link
             href="/letters/new"
-            className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-2.5 px-5 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
+            className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2.5 px-5 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
           >
             <Plus size={15} />
             <span>{isEs ? "Escribir carta" : "Write Letter"}</span>
@@ -343,7 +339,7 @@ export default function DashboardPage() {
           <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
             {isEs ? "Abiertas" : "Delivered"}
           </span>
-          <span className="font-serif-editorial text-3xl font-semibold text-[#2C485E] block">
+          <span className="font-serif-editorial text-3xl font-semibold text-ink block">
             {deliveredCapsules.length}
           </span>
           <span className="text-[11px] font-letter text-foreground-muted pt-1 block">
@@ -355,7 +351,7 @@ export default function DashboardPage() {
           <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
             {isEs ? "Selladas en el tiempo" : "Sealed in Time"}
           </span>
-          <span className="font-serif-editorial text-3xl font-semibold text-[#8E2818] block">
+          <span className="font-serif-editorial text-3xl font-semibold text-wax block">
             {scheduledCapsules.length}
           </span>
           <span className="text-[11px] font-letter text-foreground-muted pt-1 block">
@@ -434,7 +430,7 @@ export default function DashboardPage() {
 
                 {isDelivered ? (
                   <div className="space-y-4">
-                    <p className="font-letter text-sm text-foreground/85 leading-relaxed pl-4 border-l-2 border-[#2C485E]/30 line-clamp-3 italic">
+                    <p className="font-letter text-sm text-foreground/85 leading-relaxed pl-4 border-l-2 border-ink/30 line-clamp-3 italic">
                       &ldquo;{letter.content}&rdquo;
                     </p>
 
@@ -468,7 +464,7 @@ export default function DashboardPage() {
 
                         {letter.predictions &&
                           letter.predictions.length > 0 && (
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-[#D5CEBD] pt-2">
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-manila-border pt-2">
                               <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
                                 {isEs ? "Predicciones:" : "Predictions:"}
                               </span>
@@ -489,7 +485,7 @@ export default function DashboardPage() {
                       {hasRevealedReality ? (
                         <Link
                           href={`/letters/${letter.id}`}
-                          className="border border-crease text-foreground hover:bg-manila/50 rounded-xs py-2 px-5 text-xs font-medium tracking-wider uppercase min-h-[38px] font-letter inline-flex items-center gap-1.5 transition-colors"
+                          className="border border-crease text-foreground hover:bg-manila/50 rounded-xs py-2 px-5 text-xs font-medium tracking-wider uppercase min-h-[44px] font-letter inline-flex items-center gap-1.5 transition-colors"
                         >
                           <Eye size={14} />
                           <span>
@@ -501,7 +497,7 @@ export default function DashboardPage() {
                       ) : (
                         <Link
                           href={`/letters/${letter.id}`}
-                          className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-2 px-5 text-xs font-medium tracking-wider uppercase min-h-[38px] font-letter inline-flex items-center gap-1.5 shadow-xs transition-colors"
+                          className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2 px-5 text-xs font-medium tracking-wider uppercase min-h-[44px] font-letter inline-flex items-center gap-1.5 shadow-xs transition-colors"
                         >
                           <Unlock size={14} />
                           <span>
@@ -516,7 +512,7 @@ export default function DashboardPage() {
                 ) : (
                   <div className="archival-folder rounded-xs p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-letter">
                     <div className="flex items-center gap-3">
-                      <span className="text-[#8E2818]">
+                      <span className="text-wax">
                         <Lock size={18} />
                       </span>
                       <div className="space-y-0.5">
@@ -547,7 +543,7 @@ export default function DashboardPage() {
                       <button
                         type="button"
                         onClick={() => archiveCapsule(letter.id)}
-                        className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-2.5 py-1 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1 min-h-[32px] transition-colors cursor-pointer bg-transparent"
+                        className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-2.5 py-1 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1 min-h-[44px] transition-colors cursor-pointer bg-transparent"
                         title={isEs ? "Archivar carta" : "Archive letter"}
                       >
                         <Archive size={13} />
@@ -562,7 +558,7 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="paper-sheet rounded-xs p-12 text-center max-w-xl mx-auto space-y-5">
-          <div className="text-[#2C485E] flex justify-center">
+          <div className="text-ink flex justify-center">
             <Mail size={40} />
           </div>
           <h2 className="font-serif-editorial text-2xl font-semibold text-foreground">
@@ -575,7 +571,7 @@ export default function DashboardPage() {
           </p>
           <Link
             href="/letters/new"
-            className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-2.5 px-6 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
+            className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2.5 px-6 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
           >
             <Plus size={15} />
             <span>
@@ -591,7 +587,7 @@ export default function DashboardPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-[#2C485E]">
+                <span className="text-ink">
                   <Archive size={18} />
                 </span>
                 <h2 className="font-serif-editorial text-2xl font-semibold text-foreground tracking-tight">
@@ -613,7 +609,7 @@ export default function DashboardPage() {
             {archivedCapsules.map((letter) => (
               <div
                 key={letter.id}
-                className="archival-folder rounded-xs p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-letter border border-[#D5CEBD]"
+                className="archival-folder rounded-xs p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-letter border border-manila-border"
               >
                 <div className="space-y-1.5 min-w-0">
                   <div className="flex items-center gap-2.5 flex-wrap">
@@ -622,7 +618,7 @@ export default function DashboardPage() {
                       {letter.docketNumber ||
                         letter.id.slice(0, 5).toUpperCase()}
                     </span>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 text-[#2C485E]">
+                    <span className="postmark-stamp text-[10px] py-0.5 px-2 text-ink">
                       {isEs ? "Archivada" : "Archived"}
                     </span>
                     <span className="text-foreground-muted text-[11px] inline-flex items-center gap-1">
@@ -640,7 +636,7 @@ export default function DashboardPage() {
                   <button
                     type="button"
                     onClick={() => restoreCapsule(letter.id)}
-                    className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[36px] transition-colors cursor-pointer bg-transparent"
+                    className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
                     title={isEs ? "Restaurar carta" : "Restore letter"}
                   >
                     <RotateCcw size={14} />
@@ -656,7 +652,7 @@ export default function DashboardPage() {
                         deleteCapsule(letter.id);
                       }
                     }}
-                    className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[36px] transition-colors cursor-pointer bg-transparent"
+                    className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
                     title={isEs ? "Eliminar carta" : "Delete letter"}
                   >
                     <Trash2 size={14} />

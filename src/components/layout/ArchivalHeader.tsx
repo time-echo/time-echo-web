@@ -45,7 +45,7 @@ export function ArchivalHeader() {
           {hasLetters ? (
             <Link
               href="/dashboard"
-              className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-none cursor-pointer inline-flex items-center gap-1 sm:gap-1.5 font-letter shadow-xs whitespace-nowrap shrink-0 transition-colors"
+              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-3 sm:px-4 py-1.5 sm:py-2 min-h-[44px] inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-none cursor-pointer font-letter shadow-xs whitespace-nowrap shrink-0 transition-colors"
             >
               <Mail size={14} />
               <span>{isEs ? "Mis Cartas" : "Vault"}</span>
@@ -53,7 +53,7 @@ export function ArchivalHeader() {
           ) : (
             <Link
               href="/login"
-              className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-none cursor-pointer inline-flex items-center gap-1 sm:gap-1.5 font-letter shadow-xs whitespace-nowrap shrink-0 transition-colors"
+              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-3 sm:px-4 py-1.5 sm:py-2 min-h-[44px] inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-none cursor-pointer font-letter shadow-xs whitespace-nowrap shrink-0 transition-colors"
             >
               <LogIn size={14} />
               <span>{isEs ? "Iniciar Sesión" : "Sign In"}</span>

@@ -56,7 +56,7 @@ export interface SliderProps {
 }
 
 /**
- * 🎚️ Slider Component
+ * Slider Component
  *
  * Tactile archival range slider for 1–10 emotional metric ratings.
  * Features numbered tick marks, keyboard navigation, accessible touch targets (>= 44px),

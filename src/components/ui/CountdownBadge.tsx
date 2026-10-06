@@ -86,7 +86,7 @@ function calculateTimeRemaining(target: Date): TimeRemaining {
 }
 
 /**
- * ⏳ CountdownBadge Component
+ * CountdownBadge Component
  *
  * Real-time ticking ticker badge for in-transit letters with days/hours/minutes/seconds,
  * physical archival border styling, and accessible completion states.

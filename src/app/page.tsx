@@ -14,7 +14,7 @@ import {
   Calendar,
   BarChart3,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
 
 export default function HomePage() {
   const router = useRouter();
@@ -42,9 +42,9 @@ export default function HomePage() {
     () => new Date(Date.now() + 86400000).toISOString().split("T")[0],
   );
 
-  const currentDateFormatted = new Date().toLocaleDateString(
-    isEs ? "es-ES" : "en-US",
-    { day: "numeric", month: "long", year: "numeric" },
+  const currentDateFormatted = formatLocaleDate(
+    new Date().toISOString(),
+    locale,
   );
 
   const handlePresetDate = (days: number) => {
@@ -144,13 +144,13 @@ export default function HomePage() {
 
           <div className="space-y-3 pt-2">
             <div className="paper-sheet rounded-xs p-4 border border-crease flex items-start gap-3.5">
-              <div className="w-8 h-8 rounded-xs bg-[#8E2818]/10 text-[#8E2818] flex items-center justify-center shrink-0 border border-[#8E2818]/20">
+              <div className="w-8 h-8 rounded-xs bg-wax/10 text-wax flex items-center justify-center shrink-0 border border-wax/20">
                 <Lock size={16} />
               </div>
               <div className="space-y-0.5">
-                <h4 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
-                  {isEs ? "100% Privado y Seguro" : "100% Private & Sealed"}
-                </h4>
+              <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
+                {isEs ? "100% Privado y Seguro" : "100% Private & Sealed"}
+              </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
                   {isEs
                     ? "Solo tú puedes leer tu carta. Permanece resguardada de forma segura en tu bóveda personal hasta la fecha que elijas."
@@ -160,13 +160,13 @@ export default function HomePage() {
             </div>
 
             <div className="paper-sheet rounded-xs p-4 border border-crease flex items-start gap-3.5">
-              <div className="w-8 h-8 rounded-xs bg-[#2C485E]/10 text-[#2C485E] flex items-center justify-center shrink-0 border border-[#2C485E]/20">
+              <div className="w-8 h-8 rounded-xs bg-ink/10 text-ink flex items-center justify-center shrink-0 border border-ink/20">
                 <Clock size={16} />
               </div>
               <div className="space-y-0.5">
-                <h4 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
-                  {isEs ? "Entrega a Tiempo" : "Delivered on Schedule"}
-                </h4>
+              <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
+                {isEs ? "Entrega a Tiempo" : "Delivered on Schedule"}
+              </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
                   {isEs
                     ? "Llega directo a tu bandeja de entrada en la mañana exacta que elegiste, en tu horario local."
@@ -176,15 +176,15 @@ export default function HomePage() {
             </div>
 
             <div className="paper-sheet rounded-xs p-4 border border-crease flex items-start gap-3.5">
-              <div className="w-8 h-8 rounded-xs bg-amber-600/10 text-amber-700 flex items-center justify-center shrink-0 border border-amber-600/20">
+              <div className="w-8 h-8 rounded-xs bg-ink/10 text-ink flex items-center justify-center shrink-0 border border-ink/20">
                 <Sparkles size={16} />
               </div>
               <div className="space-y-0.5">
-                <h4 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
+                <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
                   {isEs
                     ? "Predicciones vs. Realidad"
                     : "Predictions vs. Reality"}
-                </h4>
+                </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
                   {isEs
                     ? "Compara lo que imaginabas con lo que realmente viviste y descubre cuánto has evolucionado."
@@ -233,6 +233,7 @@ export default function HomePage() {
                 rows={7}
                 maxLength={2000}
                 required
+                aria-describedby="landing-content-counter"
                 className="w-full p-4 sm:p-5 border border-crease rounded-xs font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none transition-all shadow-inner bg-transparent"
               />
               <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1">
@@ -241,7 +242,10 @@ export default function HomePage() {
                     ? "Solo tú podrás verla"
                     : "Only you will be able to see it"}
                 </span>
-                <span className={cn(isUnderMinChars && "text-wax")}>
+                <span
+                  id="landing-content-counter"
+                  className={cn(isUnderMinChars && "text-wax")}
+                >
                   {isUnderMinChars
                     ? isEs
                       ? `${charCount} / 80 mín (2000 máx)`
@@ -249,6 +253,16 @@ export default function HomePage() {
                     : `${charCount} / 2000`}
                 </span>
               </div>
+              {isUnderMinChars && (
+                <p
+                  className="text-[11px] font-letter text-wax pt-0.5"
+                  aria-live="polite"
+                >
+                  {isEs
+                    ? "Escribe al menos 80 caracteres para sellar tu carta."
+                    : "Write at least 80 characters to seal your letter."}
+                </p>
+              )}
             </div>
 
             {/* Delivery Horizon Presets */}
@@ -258,14 +272,23 @@ export default function HomePage() {
                   ? "¿Cuándo quieres recibirla?"
                   : "When do you want to receive it?"}
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-letter">
+              <div
+                role="group"
+                aria-label={
+                  isEs
+                    ? "Fecha de entrega"
+                    : "Delivery date"
+                }
+                className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-letter"
+              >
                 <button
                   type="button"
                   onClick={() => handlePresetDate(180)}
+                  aria-pressed={selectedHorizonDays === 180 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 180 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -274,10 +297,11 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => handlePresetDate(365)}
+                  aria-pressed={selectedHorizonDays === 365 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 365 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -286,10 +310,11 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => handlePresetDate(1095)}
+                  aria-pressed={selectedHorizonDays === 1095 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 1095 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -298,10 +323,11 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => handlePresetDate(1825)}
+                  aria-pressed={selectedHorizonDays === 1825 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 1825 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -310,10 +336,11 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={handleToggleCustomDate}
+                  aria-pressed={showCustomDate}
                   className={cn(
-                    "col-span-2 sm:col-span-1 py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "col-span-2 sm:col-span-1 py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -346,8 +373,8 @@ export default function HomePage() {
             </div>
 
             {/* Annex I: Optional Predictions */}
-            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-4 border border-[#D5CEBD]">
-              <div className="border-b border-[#D5CEBD] pb-2">
+            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-4 border border-manila-border">
+              <div className="border-b border-manila-border pb-2">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
                   {isEs ? "ANEXO I / PREDICCIONES" : "ANNEX I / PREDICTIONS"}
                 </span>
@@ -490,8 +517,8 @@ export default function HomePage() {
             </div>
 
             {/* Annex II: Emotional Baseline Sliders */}
-            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-3 border border-[#D5CEBD]">
-              <div className="border-b border-[#D5CEBD] pb-1.5">
+            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-3 border border-manila-border">
+              <div className="border-b border-manila-border pb-1.5">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
                   {isEs
                     ? "ANEXO II / ESTADO EMOCIONAL"
@@ -516,7 +543,8 @@ export default function HomePage() {
                     max={10}
                     value={happiness}
                     onChange={(e) => setHappiness(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={isEs ? "Felicidad" : "Happiness"}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
 
@@ -533,7 +561,8 @@ export default function HomePage() {
                     max={10}
                     value={anxiety}
                     onChange={(e) => setAnxiety(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={isEs ? "Ansiedad" : "Anxiety"}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
 
@@ -550,7 +579,8 @@ export default function HomePage() {
                     max={10}
                     value={motivation}
                     onChange={(e) => setMotivation(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={isEs ? "Motivación" : "Motivation"}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
               </div>
@@ -580,7 +610,7 @@ export default function HomePage() {
                   type="submit"
                   disabled={isSubmitting || isUnderMinChars}
                   className={cn(
-                    "bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs px-6 py-3 text-xs font-semibold tracking-widest uppercase font-letter inline-flex items-center justify-center gap-2 border-none shadow-xs shrink-0 min-h-[44px] cursor-pointer transition-colors",
+                    "bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-6 py-3 text-xs font-semibold tracking-widest uppercase font-letter inline-flex items-center justify-center gap-2 border-none shadow-xs shrink-0 min-h-[44px] cursor-pointer transition-colors",
                     (isSubmitting || isUnderMinChars) &&
                       "opacity-60 cursor-not-allowed",
                   )}
@@ -600,7 +630,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center justify-center gap-2 text-[11px] font-letter text-foreground-muted pt-2 border-t border-crease">
-              <ShieldCheck size={14} className="text-[#2C485E]" />
+              <ShieldCheck size={14} className="text-ink" />
               <span>
                 {isEs
                   ? "Tu carta es 100% privada y segura."
@@ -632,8 +662,8 @@ export default function HomePage() {
           {/* Top Dossier Bar with 3 Dots */}
           <div className="bg-manila/50 px-5 py-3 border-b border-crease flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#8E2818] inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#2C485E] inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-wax inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-ink inline-block" />
               <span className="w-2.5 h-2.5 rounded-full bg-crease inline-block" />
             </div>
             <div className="font-letter text-[11px] text-foreground-muted tracking-wider">
@@ -668,7 +698,7 @@ export default function HomePage() {
                 </nav>
               </div>
 
-              <div className="border-t border-[#D5CEBD] pt-4">
+              <div className="border-t border-manila-border pt-4">
                 <p className="text-[11px] font-letter italic text-foreground-muted leading-relaxed">
                   {isEs
                     ? "«La mejor manera de predecir el futuro es crearlo.»"
@@ -790,7 +820,7 @@ export default function HomePage() {
 
               {/* Right Column: Emotional Evolution Graph & Radial Progress Accuracy */}
               <div className="lg:col-span-5 space-y-4">
-                <div className="archival-folder rounded-xs p-4 border border-[#D5CEBD] space-y-3">
+                <div className="archival-folder rounded-xs p-4 border border-manila-border space-y-3">
                   <div>
                     <h4 className="text-[10px] font-letter font-semibold uppercase tracking-widest text-foreground-muted">
                       {isEs ? "Evolución emocional" : "Emotional Evolution"}
@@ -875,7 +905,7 @@ export default function HomePage() {
 
                 <div className="paper-sheet rounded-xs p-4 border border-crease flex items-center gap-4">
                   <div
-                    className="radial-progress text-[#2C485E] font-letter text-lg font-bold shrink-0"
+                    className="radial-progress text-ink font-letter text-lg font-bold shrink-0"
                     style={{
                       ["--value" as string]: 75,
                       ["--size" as string]: "4.5rem",
@@ -931,7 +961,7 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-parchment font-letter font-bold text-sm select-none">
+            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
               01
             </div>
             <div className="space-y-1">
@@ -947,7 +977,7 @@ export default function HomePage() {
           </div>
 
           <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-parchment font-letter font-bold text-sm select-none">
+            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
               02
             </div>
             <div className="space-y-1">
@@ -963,7 +993,7 @@ export default function HomePage() {
           </div>
 
           <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-parchment font-letter font-bold text-sm select-none">
+            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
               03
             </div>
             <div className="space-y-1">

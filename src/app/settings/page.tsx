@@ -4,11 +4,21 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
-import { Mail, AlertTriangle, ArrowLeft } from "lucide-react";
+import { Mail, AlertTriangle, ArrowLeft, CheckCircle, Sun, Moon, Monitor } from "lucide-react";
+
+const APPEARANCE_OPTIONS: Array<{
+  value: "light" | "dark" | "system";
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
+}> = [
+  { value: "light", icon: Sun },
+  { value: "dark", icon: Moon },
+  { value: "system", icon: Monitor },
+];
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { locale, resetVault } = useTimeEcho();
+  const { locale, resetVault, appearanceMode, setAppearanceMode } =
+    useTimeEcho();
   const isEs = locale === "es";
 
   const [email, setEmail] = useState("user@timeecho.me");
@@ -56,12 +66,74 @@ export default function SettingsPage() {
       </div>
 
       {savedNotice && (
-        <div className="paper-sheet rounded-xs border border-crease border-l-4 border-l-[#2C485E] p-3 text-xs font-letter text-foreground">
-          {isEs
-            ? "Ajustes guardados correctamente."
-            : "Settings saved successfully."}
+        <div className="paper-sheet rounded-xs border border-crease bg-manila/30 p-3 text-xs font-letter text-foreground flex items-center gap-2">
+          <CheckCircle size={13} className="text-ink shrink-0" />
+          <span>
+            {isEs
+              ? "Ajustes guardados correctamente."
+              : "Settings saved successfully."}
+          </span>
         </div>
       )}
+
+      <div className="paper-sheet rounded-xs border border-crease p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-crease pb-3.5">
+          <h2 className="font-serif-editorial text-xl font-semibold text-foreground flex items-center gap-2">
+            <Sun size={18} className="text-ink" />
+            <span>
+              {isEs ? "Apariencia" : "Appearance"}
+            </span>
+          </h2>
+        </div>
+
+        <div className="space-y-2">
+          <span className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block">
+            {isEs ? "Modo de color" : "Color mode"}
+          </span>
+          <div
+            role="group"
+            aria-label={isEs ? "Modo de apariencia" : "Appearance mode"}
+            className="grid grid-cols-3 gap-2"
+          >
+            {APPEARANCE_OPTIONS.map(({ value, icon: Icon }) => {
+              const active = appearanceMode === value;
+              const label =
+                value === "light"
+                  ? isEs
+                    ? "Claro"
+                    : "Light"
+                  : value === "dark"
+                    ? isEs
+                      ? "Oscuro"
+                      : "Dark"
+                    : isEs
+                      ? "Sistema"
+                      : "System";
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setAppearanceMode(value)}
+                  aria-pressed={active}
+                  className={`min-h-[44px] rounded-xs border px-3 py-2.5 text-xs font-letter font-semibold uppercase tracking-wider inline-flex items-center justify-center gap-2 cursor-pointer transition-colors ${
+                    active
+                      ? "border-wax bg-wax text-on-wax"
+                      : "border-crease bg-transparent text-foreground hover:bg-manila/50"
+                  }`}
+                >
+                  <Icon size={15} />
+                  <span>{label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-[11px] font-letter text-foreground-muted leading-relaxed">
+            {isEs
+              ? "Claro y oscuro siguen la paleta de la bóveda; Sistema sigue el ajuste de tu dispositivo."
+              : "Light and dark follow the vault palette; System follows your device setting."}
+          </p>
+        </div>
+      </div>
 
       <div className="paper-sheet rounded-xs border border-crease p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-crease pb-3.5">
@@ -99,7 +171,7 @@ export default function SettingsPage() {
 
           <button
             type="submit"
-            className="w-full bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-3 px-8 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
+            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-8 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
           >
             {isEs ? "Actualizar Correo" : "Update Email"}
           </button>

@@ -3,8 +3,9 @@
 import React, { useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import confetti from "canvas-confetti";
+import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { formatLocaleDate } from "@/lib/utils";
 import { PostmarkStamp } from "@/components/ui/PostmarkStamp";
 import { WaxSeal } from "@/components/ui/WaxSeal";
 import { CountdownBadge } from "@/components/ui/CountdownBadge";
@@ -30,12 +31,7 @@ function SuccessContent() {
 
   // Trigger postal celebratory confetti on mount
   useEffect(() => {
-    confetti({
-      particleCount: 75,
-      spread: 60,
-      origin: { y: 0.6 },
-      colors: ["#8e2818", "#b23320", "#2c485e", "#efece3", "#d8d2c2"],
-    });
+    celebrate("letter-sealed");
   }, []);
 
   const scheduledFormatted = capsule
@@ -75,12 +71,12 @@ function SuccessContent() {
             <PostmarkStamp
               city="BOGOTÁ // CENTRAL"
               docketId={capsule?.docketNumber || "TE-00421"}
-              date={new Date().toLocaleDateString("es-ES", {
+              date={formatLocaleDate(new Date().toISOString(), locale, {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
               })}
-              subtext="TIMBRADO Y SELLADO"
+              subtext={isEs ? "TIMBRADO Y SELLADO" : "POSTMARKED & SEALED"}
               variant="circular"
               size="sm"
             />
@@ -173,7 +169,7 @@ function SuccessContent() {
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded border border-wax bg-wax text-parchment hover:bg-wax-hover text-xs font-bold uppercase tracking-wider shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded border border-wax bg-wax text-on-wax hover:bg-wax-hover text-xs font-bold uppercase tracking-wider shadow-sm transition-all"
             >
               <Archive size={14} />
               <span>{isEs ? "Ir a la Bóveda" : "Go to Vault"}</span>

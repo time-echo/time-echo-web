@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface WaxSealProps {
   /**
@@ -71,7 +72,7 @@ const SIZE_CONFIGS = {
 };
 
 /**
- * 🕯️ WaxSeal Component
+ * WaxSeal Component
  *
  * 3D tactile Carmine Wax Seal with radial bevel, depth shadows,
  * stamped monogram insignia, and interactive fracture split physics.
@@ -87,6 +88,8 @@ export function WaxSeal({
   disabled = false,
   className,
 }: WaxSealProps) {
+  const { locale } = useTimeEcho();
+  const isEs = locale === "es";
   const [internalBroken, setInternalBroken] = useState(isBroken);
   const [isFracturing, setIsFracturing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -129,12 +132,12 @@ export function WaxSeal({
             config.container,
             "rounded-full border-2 border-dashed border-wax/40 opacity-40 flex items-center justify-center font-mono text-xs text-wax rotate-[-12deg]",
           )}
-          title="Sello quebrado"
+          title={isEs ? "Sello quebrado" : "Broken seal"}
         >
           <span className="text-[10px] tracking-wider uppercase font-bold text-center leading-none">
             {monogram}
             <br />
-            ROTO
+            {isEs ? "ROTO" : "BROKEN"}
           </span>
         </div>
       ) : (
@@ -165,13 +168,14 @@ export function WaxSeal({
                   style={{
                     clipPath:
                       "polygon(0 0, 52% 0, 48% 30%, 54% 50%, 46% 75%, 52% 100%, 0 100%)",
-                  }}
-                >
-                  <SealBody
-                    config={config}
-                    monogram={monogram}
-                    isLocked={isLocked}
-                  />
+                    }}
+                  >
+                    <SealBody
+                      config={config}
+                      monogram={monogram}
+                      isLocked={isLocked}
+                      isEs={isEs}
+                    />
                 </motion.div>
 
                 {/* Right Seal Half */}
@@ -188,13 +192,14 @@ export function WaxSeal({
                   style={{
                     clipPath:
                       "polygon(52% 0, 100% 0, 100% 100%, 52% 100%, 46% 75%, 54% 50%, 48% 30%)",
-                  }}
-                >
-                  <SealBody
-                    config={config}
-                    monogram={monogram}
-                    isLocked={isLocked}
-                  />
+                    }}
+                  >
+                    <SealBody
+                      config={config}
+                      monogram={monogram}
+                      isLocked={isLocked}
+                      isEs={isEs}
+                    />
                 </motion.div>
 
                 {/* Wax Fragments / Splinters */}
@@ -223,8 +228,12 @@ export function WaxSeal({
                 tabIndex={canInteract ? 0 : -1}
                 aria-label={
                   isLocked
-                    ? "Sello de lacre protegido en tránsito"
-                    : "Romper sello de lacre carmesí"
+                    ? isEs
+                      ? "Sello de lacre protegido en tránsito"
+                      : "Wax seal protected in transit"
+                    : isEs
+                      ? "Romper sello de lacre carmesí"
+                      : "Break the carmine wax seal"
                 }
                 whileHover={
                   canInteract
@@ -248,11 +257,12 @@ export function WaxSeal({
                       : "cursor-default",
                 )}
               >
-                <SealBody
-                  config={config}
-                  monogram={monogram}
-                  isLocked={isLocked}
-                />
+                  <SealBody
+                    config={config}
+                    monogram={monogram}
+                    isLocked={isLocked}
+                    isEs={isEs}
+                  />
               </motion.div>
             )}
           </AnimatePresence>
@@ -268,7 +278,14 @@ export function WaxSeal({
         >
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-wax animate-pulse" />
           <span>
-            {promptText || (isHovered ? "¡Clic para quebrar!" : "Romper sello")}
+            {promptText ||
+              (isHovered
+                ? isEs
+                  ? "¡Clic para quebrar!"
+                  : "Click to break!"
+                : isEs
+                  ? "Romper sello"
+                  : "Break seal")}
           </span>
         </motion.div>
       )}
@@ -284,10 +301,12 @@ function SealBody({
   config,
   monogram,
   isLocked,
+  isEs,
 }: {
   config: (typeof SIZE_CONFIGS)["md"];
   monogram: string;
   isLocked: boolean;
+  isEs: boolean;
 }) {
   return (
     <div
@@ -316,7 +335,7 @@ function SealBody({
         <div className="absolute inset-1 rounded-full border border-dashed border-white/15 pointer-events-none" />
 
         {isLocked ? (
-          <div className="flex flex-col items-center justify-center text-parchment/90">
+          <div className="flex flex-col items-center justify-center text-on-wax/90">
             <Lock
               size={config.iconSize}
               className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
@@ -327,7 +346,7 @@ function SealBody({
                 "font-mono mt-0.5 uppercase tracking-widest opacity-80",
               )}
             >
-              Bóveda
+              {isEs ? "Bóveda" : "Vault"}
             </span>
           </div>
         ) : (
@@ -335,7 +354,7 @@ function SealBody({
             <span
               className={cn(
                 config.monogram,
-                "font-serif-editorial text-parchment drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)] select-none leading-none",
+                "font-serif-editorial text-on-wax drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)] select-none leading-none",
               )}
             >
               {monogram}
@@ -343,7 +362,7 @@ function SealBody({
             <span
               className={cn(
                 config.subtext,
-                "font-mono uppercase tracking-[0.2em] text-parchment/70 leading-none mt-1 scale-90 select-none",
+                "font-mono uppercase tracking-[0.2em] text-on-wax/70 leading-none mt-1 scale-90 select-none",
               )}
             >
               VAULT

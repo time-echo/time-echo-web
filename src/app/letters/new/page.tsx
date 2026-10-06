@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { PredictionCategory } from "@/types/timeecho";
 import { Mail, Calendar } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
 
 export default function NewLetterPage() {
   const router = useRouter();
@@ -31,9 +31,9 @@ export default function NewLetterPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const currentDateFormatted = new Date().toLocaleDateString(
-    isEs ? "es-ES" : "en-US",
-    { day: "numeric", month: "long", year: "numeric" },
+  const currentDateFormatted = formatLocaleDate(
+    new Date().toISOString(),
+    locale,
   );
 
   const calculatedDeliverDate = new Date();
@@ -196,6 +196,7 @@ export default function NewLetterPage() {
                 rows={15}
                 maxLength={2000}
                 required
+                aria-describedby="letter-content-counter"
                 className="w-full p-5 sm:p-6 rounded-xs bg-transparent border border-crease font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none transition-all shadow-inner"
               />
               <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1">
@@ -204,7 +205,10 @@ export default function NewLetterPage() {
                     ? "Solo tú podrás verla"
                     : "Only you will be able to see it"}
                 </span>
-                <span className={cn(isUnderMinChars && "text-wax")}>
+                <span
+                  id="letter-content-counter"
+                  className={cn(isUnderMinChars && "text-wax")}
+                >
                   {isUnderMinChars
                     ? isEs
                       ? `${charCount} / 80 mín (2000 máx)`
@@ -212,6 +216,16 @@ export default function NewLetterPage() {
                     : `${charCount} / 2000`}
                 </span>
               </div>
+              {isUnderMinChars && (
+                <p
+                  className="text-[11px] font-letter text-wax pt-0.5"
+                  aria-live="polite"
+                >
+                  {isEs
+                    ? "Escribe al menos 80 caracteres para sellar tu carta."
+                    : "Write at least 80 characters to seal your letter."}
+                </p>
+              )}
             </div>
 
             {/* Horizon Presets */}
@@ -221,17 +235,24 @@ export default function NewLetterPage() {
                   ? "¿Cuándo quieres recibirla?"
                   : "When do you want to receive it?"}
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-letter">
+              <div
+                role="group"
+                aria-label={
+                  isEs ? "Fecha de entrega" : "Delivery date"
+                }
+                className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-letter"
+              >
                 <button
                   type="button"
                   onClick={() => {
                     setSelectedHorizonDays(180);
                     setShowCustomDate(false);
                   }}
+                  aria-pressed={selectedHorizonDays === 180 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 180 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -243,10 +264,11 @@ export default function NewLetterPage() {
                     setSelectedHorizonDays(365);
                     setShowCustomDate(false);
                   }}
+                  aria-pressed={selectedHorizonDays === 365 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 365 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -258,10 +280,11 @@ export default function NewLetterPage() {
                     setSelectedHorizonDays(1095);
                     setShowCustomDate(false);
                   }}
+                  aria-pressed={selectedHorizonDays === 1095 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 1095 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -273,10 +296,11 @@ export default function NewLetterPage() {
                     setSelectedHorizonDays(1825);
                     setShowCustomDate(false);
                   }}
+                  aria-pressed={selectedHorizonDays === 1825 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 1825 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -288,10 +312,11 @@ export default function NewLetterPage() {
                     setShowCustomDate(true);
                     setSelectedHorizonDays(0);
                   }}
+                  aria-pressed={showCustomDate}
                   className={cn(
-                    "col-span-2 sm:col-span-1 py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "col-span-2 sm:col-span-1 py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
@@ -355,8 +380,8 @@ export default function NewLetterPage() {
           {/* Right Column: Annexes & Summary Card */}
           <div className="lg:col-span-5 space-y-6">
             {/* Annex I: Predictions */}
-            <div className="archival-folder rounded-xs p-6 space-y-5 border border-[#D5CEBD]">
-              <div className="border-b border-[#D5CEBD] pb-3">
+            <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
+              <div className="border-b border-manila-border pb-3">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
                   {isEs ? "ANEXO I" : "ANNEX I"}
                 </span>
@@ -502,8 +527,8 @@ export default function NewLetterPage() {
             </div>
 
             {/* Annex II: Emotional Baseline */}
-            <div className="archival-folder rounded-xs p-6 space-y-5 border border-[#D5CEBD]">
-              <div className="border-b border-[#D5CEBD] pb-3">
+            <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
+              <div className="border-b border-manila-border pb-3">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
                   {isEs ? "ANEXO II" : "ANNEX II"}
                 </span>
@@ -531,7 +556,8 @@ export default function NewLetterPage() {
                     max={10}
                     value={happiness}
                     onChange={(e) => setHappiness(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={isEs ? "Felicidad" : "Happiness"}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
 
@@ -548,7 +574,8 @@ export default function NewLetterPage() {
                     max={10}
                     value={anxiety}
                     onChange={(e) => setAnxiety(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={isEs ? "Ansiedad" : "Anxiety"}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
 
@@ -565,7 +592,8 @@ export default function NewLetterPage() {
                     max={10}
                     value={motivation}
                     onChange={(e) => setMotivation(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={isEs ? "Motivación" : "Motivation"}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
               </div>
@@ -613,7 +641,7 @@ export default function NewLetterPage() {
                 type="submit"
                 disabled={isSubmitting || isUnderMinChars}
                 className={cn(
-                  "bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase border-none cursor-pointer w-full min-h-[46px] shadow-xs font-letter inline-flex items-center justify-center gap-2 transition-colors",
+                  "bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase border-none cursor-pointer w-full min-h-[46px] shadow-xs font-letter inline-flex items-center justify-center gap-2 transition-colors",
                   (isSubmitting || isUnderMinChars) &&
                     "opacity-60 cursor-not-allowed",
                 )}

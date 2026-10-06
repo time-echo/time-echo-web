@@ -39,8 +39,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   if (isPublicPage) {
     return (
       <div className="min-h-screen flex flex-col bg-parchment text-foreground font-ui">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
+        >
+          {isEs ? "Saltar al contenido" : "Skip to content"}
+        </a>
         <ArchivalHeader />
-        <main className="flex-grow max-w-6xl mx-auto px-4 md:px-6 py-10 w-full font-ui">
+        <main
+          id="main-content"
+          className="flex-grow max-w-6xl mx-auto px-4 md:px-6 py-10 w-full font-ui"
+        >
           {children}
         </main>
         <ArchivalFooter />
@@ -56,6 +65,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen w-full bg-parchment text-foreground font-ui">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
+      >
+        {isEs ? "Saltar al contenido" : "Skip to content"}
+      </a>
       {/* Desktop Sticky Sidebar */}
       <aside className="hidden md:flex w-72 h-screen sticky top-0 bg-manila/50 border-r border-crease p-8 flex-col justify-between shrink-0 font-ui select-none">
         <div className="space-y-10">
@@ -86,7 +101,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className={cn(
                 "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
                 isWriteActive
-                  ? "bg-[#8E2818] text-[#FAF9F5]"
+                  ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
               )}
             >
@@ -99,7 +114,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className={cn(
                 "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
                 isVaultActive
-                  ? "bg-[#8E2818] text-[#FAF9F5]"
+                  ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
               )}
             >
@@ -112,7 +127,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className={cn(
                 "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
                 isTimelineActive
-                  ? "bg-[#8E2818] text-[#FAF9F5]"
+                  ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
               )}
             >
@@ -125,7 +140,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className={cn(
                 "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
                 isAnalyticsActive
-                  ? "bg-[#8E2818] text-[#FAF9F5]"
+                  ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
               )}
             >
@@ -138,7 +153,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className={cn(
                 "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
                 isSettingsActive
-                  ? "bg-[#8E2818] text-[#FAF9F5]"
+                  ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
               )}
             >
@@ -188,7 +203,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={toggleLocale}
-            className="flex items-center gap-1 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-1 font-ui text-xs font-medium"
+            className="flex items-center justify-center gap-1 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-2 font-ui text-xs font-medium min-h-[44px] min-w-[44px]"
+            aria-label={
+              isEs ? "Switch language to English" : "Cambiar idioma a español"
+            }
           >
             <Globe size={16} />
             <span>{isEs ? "ES" : "EN"}</span>
@@ -197,8 +215,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1 rounded text-foreground-muted hover:text-foreground cursor-pointer"
-            aria-label="Menu"
+            className="p-2 rounded text-foreground-muted hover:text-foreground cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-label={
+              mobileMenuOpen
+                ? isEs
+                  ? "Cerrar menú"
+                  : "Close menu"
+                : isEs
+                  ? "Abrir menú"
+                  : "Open menu"
+            }
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -211,7 +238,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/letters/new"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-2 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
           >
             <PenTool size={16} />
             <span>{isEs ? "Escribir una Carta" : "Write a Letter"}</span>
@@ -219,7 +246,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/dashboard"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-2 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
           >
             <Mail size={16} />
             <span>{isEs ? "Mis Cartas" : "My Letters"}</span>
@@ -227,7 +254,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/dashboard?timeline=true"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-2 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
           >
             <Clock size={16} />
             <span>{isEs ? "Línea de Tiempo" : "Timeline"}</span>
@@ -235,7 +262,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/analytics"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-2 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
           >
             <BarChart3 size={16} />
             <span>{isEs ? "Estadísticas" : "Analytics"}</span>
@@ -243,7 +270,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/settings"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-2 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
           >
             <Settings size={16} />
             <span>{isEs ? "Ajustes" : "Settings"}</span>
@@ -263,7 +290,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-grow min-h-screen bg-parchment p-4 sm:p-8 md:p-12 overflow-x-hidden font-ui">
+      <main
+        id="main-content"
+        className="flex-grow min-h-screen bg-parchment p-4 sm:p-8 md:p-12 overflow-x-hidden font-ui"
+      >
         {children}
       </main>
     </div>

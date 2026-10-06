@@ -239,7 +239,7 @@ export default function AboutPage() {
         <div className="text-center pt-6 pb-2">
           <Link
             href="/letters/new"
-            className="inline-flex items-center gap-2 bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] px-6 py-3 rounded-xs font-letter text-xs uppercase tracking-wider font-semibold shadow-xs transition-colors"
+            className="inline-flex items-center gap-2 bg-wax hover:bg-wax-hover text-on-wax px-6 py-3 rounded-xs font-letter text-xs uppercase tracking-wider font-semibold shadow-xs transition-colors"
           >
             <Send size={15} />
             <span>{isEs ? "Escribir una carta al futuro" : "Write a letter to the future"}</span>

@@ -286,7 +286,7 @@ export function RealityLedger({
               disabled={isSaving || readOnly}
               onClick={handleSave}
               className={cn(
-                "inline-flex items-center gap-2 px-5 py-2.5 rounded border border-wax bg-wax text-parchment",
+                "inline-flex items-center gap-2 px-5 py-2.5 rounded border border-wax bg-wax text-on-wax",
                 "font-letter text-xs font-bold uppercase tracking-wider shadow-sm transition-all",
                 "hover:bg-wax-hover hover:scale-[1.02] active:scale-[0.98] cursor-pointer",
                 isSaving && "opacity-60 cursor-not-allowed",

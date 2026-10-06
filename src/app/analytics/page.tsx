@@ -102,7 +102,7 @@ export default function AnalyticsPage() {
         <div className="shrink-0">
           <Link
             href="/dashboard"
-            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[40px] cursor-pointer transition-colors"
+            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] cursor-pointer transition-colors"
           >
             <ArrowLeft size={14} />
             <span>{isEs ? "Volver al Baúl" : "Back to Vault"}</span>
@@ -124,7 +124,7 @@ export default function AnalyticsPage() {
           <p className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">
             {isEs ? "Entregadas" : "Delivered"}
           </p>
-          <p className="text-2xl font-bold text-[#2C485E] mt-1">
+          <p className="text-2xl font-bold text-ink mt-1">
             {deliveredLetters}
           </p>
         </div>
@@ -132,7 +132,7 @@ export default function AnalyticsPage() {
           <p className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">
             {isEs ? "En Tránsito" : "In Transit"}
           </p>
-          <p className="text-2xl font-bold text-amber-700 mt-1">
+          <p className="text-2xl font-bold text-wax mt-1">
             {scheduledLetters}
           </p>
         </div>
@@ -143,7 +143,7 @@ export default function AnalyticsPage() {
         {/* Card 1: Emotional Evolution Averages */}
         <div className="paper-sheet border border-crease p-6 sm:p-8 rounded-xs shadow-xs space-y-6">
           <div className="flex items-center gap-2.5 border-b border-crease pb-3.5">
-            <Brain size={20} className="text-[#2C485E]" />
+            <Brain size={20} className="text-ink" />
             <h2 className="font-serif-editorial text-xl font-semibold text-foreground">
               {isEs
                 ? "Promedios de Evolución Emocional"
@@ -169,11 +169,11 @@ export default function AnalyticsPage() {
               </div>
               <div className="relative bg-manila/60 h-2.5 rounded-xs overflow-hidden border border-crease/50">
                 <div
-                  className="bg-[#8E2818]/25 absolute top-0 left-0 h-full rounded-xs"
+                  className="bg-wax/25 absolute top-0 left-0 h-full rounded-xs"
                   style={{ width: `${avgInitHappiness * 10}%` }}
                 />
                 <div
-                  className="bg-[#8E2818] absolute top-0 left-0 h-full rounded-xs opacity-85"
+                  className="bg-wax absolute top-0 left-0 h-full rounded-xs opacity-85"
                   style={{ width: `${avgRevealHappiness * 10}%` }}
                 />
               </div>
@@ -195,11 +195,11 @@ export default function AnalyticsPage() {
               </div>
               <div className="relative bg-manila/60 h-2.5 rounded-xs overflow-hidden border border-crease/50">
                 <div
-                  className="bg-[#2C485E]/25 absolute top-0 left-0 h-full rounded-xs"
+                  className="bg-ink/25 absolute top-0 left-0 h-full rounded-xs"
                   style={{ width: `${avgInitAnxiety * 10}%` }}
                 />
                 <div
-                  className="bg-[#2C485E] absolute top-0 left-0 h-full rounded-xs opacity-85"
+                  className="bg-ink absolute top-0 left-0 h-full rounded-xs opacity-85"
                   style={{ width: `${avgRevealAnxiety * 10}%` }}
                 />
               </div>
@@ -221,11 +221,11 @@ export default function AnalyticsPage() {
               </div>
               <div className="relative bg-manila/60 h-2.5 rounded-xs overflow-hidden border border-crease/50">
                 <div
-                  className="bg-amber-600/25 absolute top-0 left-0 h-full rounded-xs"
+                  className="bg-ink/25 absolute top-0 left-0 h-full rounded-xs"
                   style={{ width: `${avgInitMotivation * 10}%` }}
                 />
                 <div
-                  className="bg-amber-700 absolute top-0 left-0 h-full rounded-xs opacity-85"
+                  className="bg-ink absolute top-0 left-0 h-full rounded-xs opacity-85"
                   style={{ width: `${avgRevealMotivation * 10}%` }}
                 />
               </div>
@@ -240,7 +240,7 @@ export default function AnalyticsPage() {
         {/* Card 2: Predictions vs Reality Dial */}
         <div className="paper-sheet border border-crease p-6 sm:p-8 rounded-xs shadow-xs space-y-6">
           <div className="flex items-center gap-2.5 border-b border-crease pb-3.5">
-            <Sparkles size={20} className="text-[#2C485E]" />
+            <Sparkles size={20} className="text-ink" />
             <h2 className="font-serif-editorial text-xl font-semibold text-foreground">
               {isEs
                 ? "Índice de Predicciones vs Realidad"
@@ -255,7 +255,7 @@ export default function AnalyticsPage() {
 
           <div className="flex flex-col items-center justify-center py-4 space-y-5 font-letter">
             <div
-              className="radial-progress text-[#2C485E] text-3xl font-bold"
+              className="radial-progress text-ink text-3xl font-bold"
               style={{
                 ["--value" as string]: predictionMatchRate,
                 ["--size" as string]: "8.5rem",

@@ -3,7 +3,7 @@
 import React, { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import confetti from "canvas-confetti";
+import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Letter, Prediction } from "@/types/timeecho";
 import {
@@ -16,7 +16,7 @@ import {
   Check,
   X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
 
 interface LetterPageProps {
   params: Promise<{ id: string }>;
@@ -140,26 +140,15 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     ),
   );
 
-  const formattedCreated = new Date(letter.createdAt).toLocaleDateString(
-    isEs ? "es-ES" : "en-US",
-    { day: "numeric", month: "long", year: "numeric" },
-  );
+  const formattedCreated = formatLocaleDate(letter.createdAt, locale);
 
-  const formattedScheduled = new Date(letter.scheduledAt).toLocaleDateString(
-    isEs ? "es-ES" : "en-US",
-    { day: "numeric", month: "long", year: "numeric" },
-  );
+  const formattedScheduled = formatLocaleDate(letter.scheduledAt, locale);
 
   const handleRealitySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      confetti({
-        particleCount: 60,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ["#8E2818", "#2C485E", "#D8D2C2", "#FAF9F5"],
-      });
+      celebrate("reality-submitted");
     } catch {
       // Confetti fallback
     }
@@ -198,7 +187,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             </div>
 
             <div className="space-y-2">
-              <span className="postmark-stamp text-[10px] py-0.5 px-2.5 text-[#2C485E]">
+              <span className="postmark-stamp text-[10px] py-0.5 px-2.5 text-ink">
                 {isEs ? "Expediente Archivado" : "Archived Docket"}
               </span>
               <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
@@ -214,7 +203,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             <div className="pt-4 border-t border-crease flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/dashboard"
-                className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors"
+                className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors"
               >
                 <ArrowLeft size={14} />
                 <span>{isEs ? "Volver a mis cartas" : "Back to Vault"}</span>
@@ -225,7 +214,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                   const updated = await restoreCapsule(letter.id);
                   setLocalLetter(updated);
                 }}
-                className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors cursor-pointer bg-transparent"
+                className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
               >
                 <RotateCcw size={14} />
                 <span>{isEs ? "Restaurar" : "Restore"}</span>
@@ -241,7 +230,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                     router.push("/dashboard");
                   }
                 }}
-                className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors cursor-pointer bg-transparent"
+                className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
               >
                 <Trash2 size={14} />
                 <span>{isEs ? "Eliminar" : "Delete"}</span>
@@ -259,7 +248,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
       <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">
         <div className="max-w-xl mx-auto py-8">
           <div className="paper-sheet rounded-xs p-8 sm:p-12 text-center space-y-7 border border-crease">
-            <div className="wax-seal w-24 h-24 rounded-full mx-auto flex items-center justify-center text-parchment select-none">
+            <div className="wax-seal w-24 h-24 rounded-full mx-auto flex items-center justify-center text-on-wax select-none">
               <Lock size={36} />
             </div>
 
@@ -290,7 +279,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             <div className="pt-4 border-t border-crease flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/dashboard"
-                className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors"
+                className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors"
               >
                 <ArrowLeft size={14} />
                 <span>{isEs ? "Volver a mis cartas" : "Back to Vault"}</span>
@@ -301,7 +290,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                   await archiveCapsule(letter.id);
                   router.push("/dashboard");
                 }}
-                className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors cursor-pointer bg-transparent"
+                className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
               >
                 <Archive size={14} />
                 <span>{isEs ? "Archivar carta" : "Archive Letter"}</span>
@@ -338,12 +327,12 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               </div>
 
               <div className="my-6 relative select-none flex items-center justify-center h-32">
-                <div className="wax-seal w-20 h-20 rounded-full flex items-center justify-center text-parchment animate-seal-left">
+                <div className="wax-seal w-20 h-20 rounded-full flex items-center justify-center text-on-wax animate-seal-left">
                   <Unlock size={28} />
                 </div>
               </div>
 
-              <div className="archival-folder rounded-xs p-4 text-xs font-letter text-foreground/80 space-y-1 text-left border border-[#D5CEBD]">
+              <div className="archival-folder rounded-xs p-4 text-xs font-letter text-foreground/80 space-y-1 text-left border border-manila-border">
                 <p className="font-semibold uppercase tracking-wider text-[10px] text-foreground">
                   {isEs ? "Consejo de reflexión:" : "Reflection tip:"}
                 </p>
@@ -356,8 +345,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             </div>
 
             {/* Middle Column: Fact Matching / Predictions Reality Questions */}
-            <div className="lg:col-span-5 archival-folder rounded-xs p-6 sm:p-8 space-y-6 border border-[#D5CEBD]">
-              <div className="border-b border-[#D5CEBD] pb-3">
+            <div className="lg:col-span-5 archival-folder rounded-xs p-6 sm:p-8 space-y-6 border border-manila-border">
+              <div className="border-b border-manila-border pb-3">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
                   {isEs ? "COTEJO DE HECHOS" : "FACT MATCHING"}
                 </span>
@@ -440,7 +429,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                                 className={cn(
                                   "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors",
                                   currentAnswer.matched
-                                    ? "bg-[#2C485E] text-[#FAF9F5] border-[#2C485E]"
+                                    ? "bg-ink text-on-wax border-ink"
                                     : "border-crease bg-manila/30 text-foreground-muted",
                                 )}
                               >
@@ -460,7 +449,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                                 className={cn(
                                   "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors",
                                   !currentAnswer.matched
-                                    ? "bg-[#8E2818] text-[#FAF9F5] border-[#8E2818]"
+                                    ? "bg-wax text-on-wax border-wax"
                                     : "border-crease bg-manila/30 text-foreground-muted",
                                 )}
                               >
@@ -481,8 +470,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
 
             {/* Right Column: Present Emotional Baseline & Submit */}
             <div className="lg:col-span-3 space-y-6">
-              <div className="archival-folder rounded-xs p-6 space-y-5 border border-[#D5CEBD]">
-                <div className="border-b border-[#D5CEBD] pb-3">
+              <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
+                <div className="border-b border-manila-border pb-3">
                   <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
                     {isEs ? "ESTADO ACTUAL" : "CURRENT STATE"}
                   </span>
@@ -512,7 +501,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                       onChange={(e) =>
                         setRevealHappiness(Number(e.target.value))
                       }
-                      className="w-full accent-[#8E2818] cursor-pointer"
+                      aria-label={isEs ? "Felicidad" : "Happiness"}
+                      className="w-full accent-wax cursor-pointer"
                     />
                   </div>
 
@@ -529,7 +519,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                       max={10}
                       value={revealAnxiety}
                       onChange={(e) => setRevealAnxiety(Number(e.target.value))}
-                      className="w-full accent-[#8E2818] cursor-pointer"
+                      aria-label={isEs ? "Ansiedad" : "Anxiety"}
+                      className="w-full accent-wax cursor-pointer"
                     />
                   </div>
 
@@ -548,7 +539,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                       onChange={(e) =>
                         setRevealMotivation(Number(e.target.value))
                       }
-                      className="w-full accent-[#8E2818] cursor-pointer"
+                      aria-label={isEs ? "Motivación" : "Motivation"}
+                      className="w-full accent-wax cursor-pointer"
                     />
                   </div>
                 </div>
@@ -556,7 +548,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
 
               <button
                 type="submit"
-                className="w-full bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase border-none cursor-pointer min-h-[46px] shadow-xs font-letter inline-flex items-center justify-center gap-2 transition-colors"
+                className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase border-none cursor-pointer min-h-[46px] shadow-xs font-letter inline-flex items-center justify-center gap-2 transition-colors"
               >
                 <Unlock size={16} />
                 <span>
@@ -635,8 +627,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
           </div>
 
           {predictions.length > 0 && (
-            <div className="archival-folder rounded-xs p-6 sm:p-8 space-y-5 border border-[#D5CEBD]">
-              <div className="border-b border-[#D5CEBD] pb-3">
+            <div className="archival-folder rounded-xs p-6 sm:p-8 space-y-5 border border-manila-border">
+              <div className="border-b border-manila-border pb-3">
                 <h2 className="font-serif-editorial text-xl font-semibold text-foreground">
                   {isEs ? "Predicciones vs Realidad" : "Predictions vs Reality"}
                 </h2>
@@ -661,7 +653,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                         className={cn(
                           "py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1",
                           pred.matched
-                            ? "bg-emerald-800/10 text-emerald-800"
+                            ? "bg-emerald-800/10 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
                             : "bg-red-800/10 text-wax",
                         )}
                       >
@@ -722,7 +714,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               <>
                 <div className="relative w-32 h-32 mx-auto flex items-center justify-center my-2">
                   <div
-                    className="radial-progress text-[#2C485E] font-letter text-2xl font-bold"
+                    className="radial-progress text-ink font-letter text-2xl font-bold"
                     style={{
                       ["--value" as string]: accuracyPct,
                       ["--size" as string]: "8rem",
@@ -768,8 +760,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
           </div>
 
           {/* Emotional Evolution Breakdown */}
-          <div className="archival-folder rounded-xs p-6 space-y-5 border border-[#D5CEBD]">
-            <div className="border-b border-[#D5CEBD] pb-2.5">
+          <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
+            <div className="border-b border-manila-border pb-2.5">
               <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
                 {isEs ? "Evolución emocional" : "Emotional Evolution"}
               </h3>
@@ -787,11 +779,11 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                     {isEs ? "Felicidad" : "Happiness"}
                   </span>
                   {hapShift > 0 ? (
-                    <span className="text-[10px] font-semibold text-[#2C485E]">
+                    <span className="text-[10px] font-semibold text-ink">
                       +{hapShift} {isEs ? "Crecimiento" : "Growth"}
                     </span>
                   ) : hapShift < 0 ? (
-                    <span className="text-[10px] font-semibold text-[#8E2818]">
+                    <span className="text-[10px] font-semibold text-wax">
                       {hapShift} {isEs ? "Descenso" : "Decline"}
                     </span>
                   ) : (
@@ -818,11 +810,11 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                     {isEs ? "Ansiedad" : "Anxiety"}
                   </span>
                   {anxShift < 0 ? (
-                    <span className="text-[10px] font-semibold text-[#2C485E]">
+                    <span className="text-[10px] font-semibold text-ink">
                       {anxShift} {isEs ? "Más Calma" : "Calmer"}
                     </span>
                   ) : anxShift > 0 ? (
-                    <span className="text-[10px] font-semibold text-[#8E2818]">
+                    <span className="text-[10px] font-semibold text-wax">
                       +{anxShift} {isEs ? "Estrés" : "Stress"}
                     </span>
                   ) : (
@@ -848,11 +840,11 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                     {isEs ? "Motivación" : "Motivation"}
                   </span>
                   {motShift > 0 ? (
-                    <span className="text-[10px] font-semibold text-amber-700">
+                    <span className="text-[10px] font-semibold text-ink">
                       +{motShift} {isEs ? "Inspirado" : "Inspired"}
                     </span>
                   ) : motShift < 0 ? (
-                    <span className="text-[10px] font-semibold text-[#8E2818]">
+                    <span className="text-[10px] font-semibold text-wax">
                       {motShift} {isEs ? "Descenso" : "Decline"}
                     </span>
                   ) : (
