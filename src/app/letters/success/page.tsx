@@ -29,7 +29,6 @@ function SuccessContent() {
 
   const capsule = letterId ? getCapsuleById(letterId) : undefined;
 
-  // Trigger postal celebratory confetti on mount
   useEffect(() => {
     celebrate("letter-sealed");
   }, []);
@@ -49,24 +48,20 @@ function SuccessContent() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
-      {/* Physical Archival Docket Receipt */}
       <div className="relative rounded-md border border-crease bg-manila p-2 sm:p-3 shadow-[0_12px_36px_rgba(44,72,94,0.08)]">
-        {/* Manila Header Tab Strip */}
         <div className="flex items-center justify-between px-4 py-2 border-b border-crease/70 bg-crease/30 font-letter text-xs text-foreground-muted select-none">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-wax" />
             <span className="font-bold text-ink uppercase tracking-wider">
-              RECIBO OFICIAL DE BÓVEDA // TIME-ECHO
+              {isEs ? "RECIBO OFICIAL DE BÓVEDA // TIME-ECHO" : "OFFICIAL VAULT RECEIPT // TIME-ECHO"}
             </span>
           </div>
           <span className="text-[10px] font-mono tracking-widest uppercase">
-            REGISTRO CONFIRMADO
+            {isEs ? "REGISTRO CONFIRMADO" : "RECORD CONFIRMED"}
           </span>
         </div>
 
-        {/* Receipt Parchment Body */}
         <div className="relative rounded border border-crease bg-parchment p-6 sm:p-10 space-y-8 text-center font-letter overflow-hidden">
-          {/* Postmark cancellation stamp in corner */}
           <div className="absolute right-4 top-4 pointer-events-none opacity-85">
             <PostmarkStamp
               city="BOGOTÁ // CENTRAL"
@@ -82,9 +77,8 @@ function SuccessContent() {
             />
           </div>
 
-          {/* Success Icon & Heading */}
           <div className="space-y-2 pt-2">
-            <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-700/40 text-emerald-800 dark:text-emerald-300 mx-auto flex items-center justify-center">
+            <div className="w-14 h-14 rounded-full bg-fulfilled-bg border border-fulfilled-border text-fulfilled mx-auto flex items-center justify-center">
               <CheckCircle2 size={28} />
             </div>
 
@@ -101,15 +95,13 @@ function SuccessContent() {
             </p>
           </div>
 
-          {/* Intact 3D Carmine Wax Seal Display */}
           <div className="flex flex-col items-center justify-center py-2">
             <WaxSeal size="lg" isLocked={true} />
             <span className="text-[11px] text-wax font-mono font-bold tracking-widest uppercase mt-3">
-              LACRE CARMESÍ INTACTO
+              {isEs ? "LACRE CARMESÍ INTACTO" : "CARMINE WAX SEAL INTACT"}
             </span>
           </div>
 
-          {/* Receipt Docket Metadata Table */}
           <div className="p-4 rounded border border-crease bg-manila/40 text-left text-xs space-y-2.5">
             <div className="flex justify-between items-center border-b border-crease/60 pb-2">
               <span className="text-foreground-muted uppercase tracking-wider text-[11px]">
@@ -155,9 +147,8 @@ function SuccessContent() {
             )}
           </div>
 
-          {/* Cryptographic Security Advisory */}
           <div className="p-3.5 rounded border border-crease bg-crease/20 flex items-center gap-2.5 text-[11px] text-foreground-muted text-left">
-            <ShieldCheck size={16} className="text-emerald-700 shrink-0" />
+            <ShieldCheck size={16} className="text-fulfilled shrink-0" />
             <p className="leading-relaxed">
               {isEs
                 ? "El archivo ha sido cifrado en reposo. Ninguna persona ajena a ti podrá inspeccionar el pliego epistolar."
@@ -165,11 +156,10 @@ function SuccessContent() {
             </p>
           </div>
 
-          {/* Action Triggers */}
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded border border-wax bg-wax text-on-wax hover:bg-wax-hover text-xs font-bold uppercase tracking-wider shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded border border-wax bg-wax text-on-wax hover:bg-wax-hover text-xs font-bold uppercase tracking-wider shadow-xs transition-all min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax"
             >
               <Archive size={14} />
               <span>{isEs ? "Ir a la Bóveda" : "Go to Vault"}</span>
@@ -178,7 +168,7 @@ function SuccessContent() {
             {letterId && (
               <Link
                 href={`/letters/${letterId}`}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded border border-crease bg-parchment hover:bg-manila text-ink text-xs font-bold uppercase tracking-wider shadow-2xs transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded border border-crease bg-parchment hover:bg-manila text-ink text-xs font-bold uppercase tracking-wider shadow-2xs transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax"
               >
                 <Eye size={14} />
                 <span>{isEs ? "Inspeccionar Carta" : "Inspect Letter"}</span>
@@ -187,7 +177,7 @@ function SuccessContent() {
 
             <Link
               href="/letters/new"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded border border-crease bg-parchment hover:bg-manila text-foreground-muted hover:text-ink text-xs uppercase tracking-wider transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded border border-crease bg-parchment hover:bg-manila text-foreground-muted hover:text-ink text-xs uppercase tracking-wider transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax"
             >
               <PenTool size={14} />
               <span>{isEs ? "Redactar Otra" : "Draft Another"}</span>
@@ -200,13 +190,20 @@ function SuccessContent() {
 }
 
 export default function LetterSuccessPage() {
+  const { locale } = useTimeEcho();
+  const isEs = locale === "es";
+
   return (
     <div className="paper-texture min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <Suspense
         fallback={
           <div className="max-w-md mx-auto p-12 text-center font-letter text-xs text-foreground-muted">
             <div className="inline-block w-6 h-6 border-2 border-wax border-t-transparent rounded-full animate-spin mb-3" />
-            <p>Generando recibo de bóveda...</p>
+            <p>
+              {isEs
+                ? "Generando recibo de bóveda..."
+                : "Generating vault receipt..."}
+            </p>
           </div>
         }
       >

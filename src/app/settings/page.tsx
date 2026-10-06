@@ -178,8 +178,8 @@ export default function SettingsPage() {
         </form>
       </div>
 
-      <div className="archival-folder rounded-xs border border-red-800/30 p-6 sm:p-8 space-y-6">
-        <div className="flex items-center gap-2 border-b border-red-800/20 pb-3 text-wax font-letter">
+      <div className="archival-folder rounded-xs border border-wax/30 p-6 sm:p-8 space-y-6">
+        <div className="flex items-center gap-2 border-b border-wax/20 pb-3 text-wax font-letter">
           <AlertTriangle size={18} />
           <h2 className="font-serif-editorial text-xl font-semibold text-wax">
             {isEs ? "Zona de Riesgo" : "Danger Zone"}

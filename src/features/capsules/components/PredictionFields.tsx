@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface PredictionItemInput {
   category: PredictionCategory;
@@ -21,69 +22,89 @@ export interface PredictionItemInput {
 }
 
 export interface PredictionFieldsProps {
-  /**
-   * List of current prediction items.
-   */
   predictions: PredictionItemInput[];
-  /**
-   * Callback on predictions list changes.
-   */
   onChange?: (predictions: PredictionItemInput[]) => void;
-  /**
-   * Maximum allowed predictions.
-   * @default 6
-   */
   maxPredictions?: number;
-  /**
-   * Read-only mode.
-   * @default false
-   */
   readOnly?: boolean;
   className?: string;
 }
 
-const CATEGORY_DEFINITIONS: Record<
+const CATEGORY_MAP: Record<
   string,
-  { label: string; placeholder: string; icon: React.ElementType }
+  {
+    icon: React.ElementType;
+    es: { label: string; placeholder: string };
+    en: { label: string; placeholder: string };
+  }
 > = {
   city: {
-    label: "Ciudad / Residencia",
-    placeholder: "¿En qué ciudad o rincón del mundo estarás viviendo?",
     icon: MapPin,
+    es: {
+      label: "Ciudad / Residencia",
+      placeholder: "¿En qué ciudad o rincón del mundo estarás viviendo?",
+    },
+    en: {
+      label: "City & Residence",
+      placeholder: "In which city or corner of the world will you reside?",
+    },
   },
   career: {
-    label: "Carrera / Proyecto",
-    placeholder: "¿Qué hito profesional o proyecto habrás lanzado?",
     icon: Briefcase,
+    es: {
+      label: "Carrera / Proyecto",
+      placeholder: "¿Qué hito profesional o proyecto habrás lanzado?",
+    },
+    en: {
+      label: "Career & Work",
+      placeholder: "What professional milestone or craft will you pursue?",
+    },
   },
   achievement: {
-    label: "Logro Personal",
-    placeholder: "¿Qué desafío habrás superado con constancia?",
     icon: Trophy,
+    es: {
+      label: "Logro Personal",
+      placeholder: "¿Qué desafío habrás superado con constancia?",
+    },
+    en: {
+      label: "Personal Achievement",
+      placeholder: "What personal summit will you have reached?",
+    },
   },
   salary: {
-    label: "Finanzas / Economía",
-    placeholder: "¿Cuál será tu meta de ingresos o ahorro?",
     icon: DollarSign,
+    es: {
+      label: "Finanzas / Economía",
+      placeholder: "¿Cuál será tu meta de ingresos o ahorro?",
+    },
+    en: {
+      label: "Wealth & Finance",
+      placeholder: "What is your target income, savings, or independence?",
+    },
   },
   relationship: {
-    label: "Vínculos / Afectos",
-    placeholder: "¿A quiénes cuidarás y mantendrás cerca?",
     icon: Heart,
+    es: {
+      label: "Vínculos / Afectos",
+      placeholder: "¿A quiénes cuidarás y mantendrás cerca?",
+    },
+    en: {
+      label: "Relationships & Love",
+      placeholder: "Who will you cherish and hold close to your heart?",
+    },
   },
   happiness: {
-    label: "Paz Mental",
-    placeholder: "¿Qué hábito te traerá serenidad cotidiana?",
     icon: Sparkles,
+    es: {
+      label: "Paz Mental",
+      placeholder: "¿Qué hábito te traerá serenidad cotidiana?",
+    },
+    en: {
+      label: "Mental Peace",
+      placeholder: "What daily ritual will bring you enduring serenity?",
+    },
   },
 };
 
-/**
- * 🧭 PredictionFields Component
- *
- * Epistolary milestone predictions (City, Career, Achievement, Salary, Relationship)
- * evaluated retrospectively upon capsule reveal.
- */
 export function PredictionFields({
   predictions,
   onChange,
@@ -91,6 +112,9 @@ export function PredictionFields({
   readOnly = false,
   className,
 }: PredictionFieldsProps) {
+  const { locale } = useTimeEcho();
+  const isEs = locale === "es";
+
   const handleAddPrediction = (category: PredictionCategory = "city") => {
     if (readOnly || !onChange || predictions.length >= maxPredictions) return;
     onChange([...predictions, { category, prediction: "" }]);
@@ -115,30 +139,31 @@ export function PredictionFields({
         className,
       )}
     >
-      {/* Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-crease pb-3">
         <div className="flex items-center gap-2">
           <Compass size={16} className="text-ink" />
           <h3 className="font-letter font-bold text-xs uppercase tracking-wider text-ink">
-            Predicciones del Destino (Hitos y Metas)
+            {isEs
+              ? "Predicciones del Destino (Hitos y Metas)"
+              : "Forecasts of Destiny (Milestones & Goals)"}
           </h3>
         </div>
         <span className="font-mono text-[10px] text-foreground-muted tracking-widest uppercase">
-          {predictions.length} / {maxPredictions} PREVISTAS
+          {predictions.length} / {maxPredictions} {isEs ? "PREVISTAS" : "LOGGED"}
         </span>
       </div>
 
-      {/* Prediction List */}
       <div className="space-y-3.5">
         {predictions.length === 0 ? (
           <div className="py-6 px-4 text-center border border-dashed border-crease rounded bg-manila/30 font-letter text-xs text-foreground-muted">
-            No has agregado predicciones aún. Selecciona una categoría abajo
-            para apostar con tu futuro.
+            {isEs
+              ? "No has agregado predicciones aún. Selecciona una categoría abajo para apostar con tu futuro."
+              : "No predictions recorded yet. Choose a category below to wager with your future self."}
           </div>
         ) : (
           predictions.map((item, index) => {
-            const def =
-              CATEGORY_DEFINITIONS[item.category] || CATEGORY_DEFINITIONS.city;
+            const def = CATEGORY_MAP[item.category] || CATEGORY_MAP.city;
+            const meta = isEs ? def.es : def.en;
             const Icon = def.icon;
 
             return (
@@ -152,10 +177,9 @@ export function PredictionFields({
                       <Icon size={13} />
                     </span>
 
-                    {/* Category Selector */}
                     {readOnly ? (
                       <span className="font-letter text-xs font-semibold text-ink uppercase">
-                        {def.label}
+                        {meta.label}
                       </span>
                     ) : (
                       <select
@@ -165,16 +189,18 @@ export function PredictionFields({
                             category: e.target.value as PredictionCategory,
                           })
                         }
-                        aria-label="Categoría de predicción"
-                        className="font-letter text-xs font-semibold text-ink bg-transparent focus:outline-none border-b border-dashed border-crease cursor-pointer"
+                        aria-label={
+                          isEs
+                            ? "Categoría de predicción"
+                            : "Prediction category"
+                        }
+                        className="font-letter text-xs font-semibold text-ink bg-transparent focus:outline-none border-b border-dashed border-crease cursor-pointer py-1"
                       >
-                        {Object.entries(CATEGORY_DEFINITIONS).map(
-                          ([catKey, catDef]) => (
-                            <option key={catKey} value={catKey}>
-                              {catDef.label}
-                            </option>
-                          ),
-                        )}
+                        {Object.entries(CATEGORY_MAP).map(([catKey, catDef]) => (
+                          <option key={catKey} value={catKey}>
+                            {isEs ? catDef.es.label : catDef.en.label}
+                          </option>
+                        ))}
                       </select>
                     )}
                   </div>
@@ -183,27 +209,28 @@ export function PredictionFields({
                     <button
                       type="button"
                       onClick={() => handleRemove(index)}
-                      className="p-1 text-foreground-muted hover:text-wax transition-colors"
-                      title="Eliminar predicción"
-                      aria-label="Eliminar predicción"
+                      className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2 text-foreground-muted hover:text-wax transition-colors rounded cursor-pointer"
+                      title={isEs ? "Eliminar predicción" : "Delete prediction"}
+                      aria-label={
+                        isEs ? "Eliminar predicción" : "Delete prediction"
+                      }
                     >
-                      <Trash2 size={13} />
+                      <Trash2 size={15} />
                     </button>
                   )}
                 </div>
 
-                {/* Prediction Input */}
                 <input
                   type="text"
                   value={item.prediction}
                   onChange={(e) =>
                     handleUpdate(index, { prediction: e.target.value })
                   }
-                  placeholder={def.placeholder}
+                  placeholder={meta.placeholder}
                   readOnly={readOnly}
-                  aria-label={`Predicción sobre ${def.label}`}
+                  aria-label={`${isEs ? "Predicción sobre" : "Prediction for"} ${meta.label}`}
                   className={cn(
-                    "w-full px-3 py-2 rounded border border-crease bg-parchment",
+                    "w-full px-3.5 py-2.5 rounded border border-crease bg-parchment",
                     "font-letter text-xs sm:text-sm text-foreground placeholder:text-foreground-muted/40",
                     "focus:outline-none focus:ring-1 focus:ring-ink focus:border-ink",
                     readOnly && "border-none bg-transparent px-0 font-medium",
@@ -215,25 +242,27 @@ export function PredictionFields({
         )}
       </div>
 
-      {/* Add Prediction Category Pills */}
       {!readOnly && predictions.length < maxPredictions && (
-        <div className="pt-2 border-t border-crease/60 space-y-2">
-          <span className="font-letter text-[10px] text-foreground-muted uppercase tracking-wider block">
-            Agregar hito por categoría:
+        <div className="pt-2 border-t border-crease/60 space-y-2.5">
+          <span className="font-letter text-[10px] text-foreground-muted uppercase tracking-wider block font-semibold">
+            {isEs
+              ? "Agregar hito por categoría:"
+              : "Add milestone by category:"}
           </span>
-          <div className="flex flex-wrap gap-1.5">
-            {Object.entries(CATEGORY_DEFINITIONS).map(([key, def]) => {
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(CATEGORY_MAP).map(([key, def]) => {
               const Icon = def.icon;
+              const meta = isEs ? def.es : def.en;
               return (
                 <button
                   key={key}
                   type="button"
                   onClick={() => handleAddPrediction(key as PredictionCategory)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-crease bg-parchment hover:bg-manila text-ink font-letter text-[11px] tracking-wider transition-colors cursor-pointer"
+                  className="min-h-[44px] inline-flex items-center gap-2 px-3.5 py-2 rounded border border-crease bg-parchment hover:bg-manila text-ink font-letter text-xs tracking-wider transition-colors cursor-pointer"
                 >
-                  <Plus size={11} className="text-wax" />
-                  <Icon size={12} />
-                  <span>{def.label}</span>
+                  <Plus size={13} className="text-wax" />
+                  <Icon size={14} />
+                  <span>{meta.label}</span>
                 </button>
               );
             })}

@@ -99,7 +99,11 @@ export function LetterComposerForm({
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs text-foreground-muted tracking-widest uppercase">
               <span className="w-2 h-2 rounded-full bg-wax animate-pulse" />
-              <span>FOLIO № TE-NUEVO // COMPOSICIÓN EPISTOLAR</span>
+              <span>
+                {isEs
+                  ? "FOLIO № TE-NUEVO // COMPOSICIÓN EPISTOLAR"
+                  : "DOCKET № TE-NEW // EPISTOLARY COMPOSITION"}
+              </span>
             </div>
             <h2 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-ink">
               {isEs ? "Redactar Carta al Futuro" : "Draft Letter to the Future"}
@@ -128,7 +132,7 @@ export function LetterComposerForm({
               </span>
             </span>
             <span className="text-[10px] font-mono text-foreground-muted uppercase tracking-widest">
-              CAMPOS REQUERIDOS
+              {isEs ? "CAMPOS REQUERIDOS" : "REQUIRED FIELDS"}
             </span>
           </div>
 
@@ -180,7 +184,7 @@ export function LetterComposerForm({
               onChange={(e) => setField("email", e.target.value)}
               placeholder="tu.correo@personal.me"
               className={cn(
-                "w-full px-3.5 py-2 rounded border border-crease bg-manila/30 font-letter text-xs sm:text-sm text-foreground placeholder:text-foreground-muted/40 focus:outline-none focus:border-ink shadow-2xs",
+                "w-full px-3.5 py-2.5 rounded border border-crease bg-manila/30 font-letter text-xs sm:text-sm text-foreground placeholder:text-foreground-muted/40 focus:outline-none focus:border-ink shadow-2xs min-h-[44px]",
                 hasAttemptedSubmit &&
                   validationErrors.email &&
                   "border-wax bg-wax/5",
@@ -218,7 +222,7 @@ export function LetterComposerForm({
                     type="button"
                     onClick={() => setHorizonPreset(p.id)}
                     className={cn(
-                      "p-2.5 rounded border text-left transition-all cursor-pointer flex flex-col justify-between",
+                      "p-3 rounded border text-left transition-all cursor-pointer flex flex-col justify-between min-h-[48px]",
                       isSelected
                         ? "border-wax bg-wax/10 text-ink shadow-xs"
                         : "border-crease bg-manila/30 hover:bg-manila/70 text-foreground-muted",
@@ -242,11 +246,18 @@ export function LetterComposerForm({
 
             {form.horizonPreset === "custom" && (
               <div className="pt-2">
+                <label
+                  htmlFor="composer-custom-date"
+                  className="block text-xs uppercase tracking-wider font-semibold text-ink mb-1.5"
+                >
+                  {isEs ? "Fecha Personalizada" : "Custom Delivery Date"}
+                </label>
                 <input
+                  id="composer-custom-date"
                   type="date"
                   value={form.scheduledAt}
                   onChange={(e) => setField("scheduledAt", e.target.value)}
-                  className="px-3.5 py-2 rounded border border-crease bg-manila/40 font-mono text-xs text-ink focus:outline-none focus:border-ink cursor-pointer"
+                  className="px-3.5 py-2.5 rounded border border-crease bg-manila/40 font-mono text-xs text-ink focus:outline-none focus:border-ink cursor-pointer min-h-[44px]"
                 />
               </div>
             )}
@@ -263,7 +274,7 @@ export function LetterComposerForm({
           <div className="flex items-center justify-between font-letter text-xs text-foreground-muted px-1">
             <span className="font-bold text-ink uppercase tracking-wider">
               {isEs
-                ? "2. Pliego Timbrado (.lined-paper-canvas)"
+                ? "2. Pliego Timbrado"
                 : "2. Ruled Letter Stationery"}{" "}
               *
             </span>
@@ -323,7 +334,7 @@ export function LetterComposerForm({
             type="submit"
             disabled={isSubmitting || isSealing}
             className={cn(
-              "inline-flex items-center justify-center gap-3 px-8 py-4 rounded border-2 border-wax bg-wax text-on-wax w-full sm:w-auto",
+              "inline-flex items-center justify-center gap-3 px-8 py-4 rounded border-2 border-wax bg-wax text-on-wax w-full sm:w-auto min-h-[44px]",
               "font-letter text-sm font-bold uppercase tracking-widest shadow-lg transition-all",
               "hover:bg-wax-hover hover:scale-[1.03] active:scale-[0.97] cursor-pointer",
               (isSubmitting || isSealing) && "opacity-70 cursor-not-allowed",
@@ -350,6 +361,9 @@ export function LetterComposerForm({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sealing-dialog-title"
             className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center select-none"
           >
             <motion.div
@@ -360,7 +374,10 @@ export function LetterComposerForm({
               <WaxSeal size="lg" isLocked={false} />
 
               <div className="space-y-2">
-                <h3 className="font-serif-editorial text-2xl font-bold text-ink">
+                <h3
+                  id="sealing-dialog-title"
+                  className="font-serif-editorial text-2xl font-bold text-ink"
+                >
                   {isEs ? "Sellando la Bóveda..." : "Sealing the Vault..."}
                 </h3>
                 <p className="font-letter text-xs text-foreground-muted leading-relaxed">

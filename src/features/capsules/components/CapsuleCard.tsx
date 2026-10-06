@@ -14,32 +14,24 @@ import {
   Archive,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface CapsuleCardProps {
-  /**
-   * The Letter capsule entity.
-   */
   capsule: Letter;
-  /**
-   * Custom card classes.
-   */
   className?: string;
 }
 
-/**
- * 📦 CapsuleCard Component
- *
- * Dossier entry card representing a time-capsule letter with postal docket,
- * countdown status, prediction counter, and archival styling.
- */
 export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
+  const { locale } = useTimeEcho();
+  const isEs = locale === "es";
+
   const isPending = capsule.status === "pending";
   const isDelivered = capsule.status === "delivered";
   const isOpened = capsule.status === "opened";
   const isArchived = capsule.status === "archived";
 
   const scheduledFormatted = new Date(capsule.scheduledAt).toLocaleDateString(
-    "es-ES",
+    isEs ? "es-ES" : "en-US",
     {
       day: "numeric",
       month: "short",
@@ -56,11 +48,9 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
         className,
       )}
     >
-      {/* Top Paper Cut Highlight */}
       <div className="absolute inset-x-0 top-0 h-[1px] bg-white/80 pointer-events-none" />
 
       <div>
-        {/* Top Folio Bar */}
         <div className="flex items-center justify-between gap-2 border-b border-crease/70 pb-3 font-letter text-xs text-foreground-muted select-none">
           <div className="flex items-center gap-2">
             <span
@@ -84,7 +74,6 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
           </div>
         </div>
 
-        {/* Status & Timing Indicator */}
         <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2">
           {isPending && (
             <CountdownBadge
@@ -97,21 +86,25 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
           {isDelivered && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-wax bg-wax/10 text-wax font-letter text-[11px] font-bold tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-wax animate-pulse" />
-              <span>DESBLOQUEADA // SELLO INTACTO</span>
+              <span>
+                {isEs
+                  ? "DESBLOQUEADA // SELLO INTACTO"
+                  : "UNLOCKED // SEAL INTACT"}
+              </span>
             </span>
           )}
 
           {isOpened && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-ink/40 bg-ink/10 text-ink font-letter text-[11px] font-semibold tracking-wider uppercase">
               <CheckCircle size={12} />
-              <span>DESPRECINTADA</span>
+              <span>{isEs ? "DESPRECINTADA" : "UNSEALED"}</span>
             </span>
           )}
 
           {isArchived && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-crease bg-crease/40 text-foreground-muted font-letter text-[11px] tracking-wider uppercase">
               <Archive size={12} />
-              <span>EXPEDIENTE ARCHIVADO</span>
+              <span>{isEs ? "EXPEDIENTE ARCHIVADO" : "ARCHIVED"}</span>
             </span>
           )}
 
@@ -121,21 +114,20 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
           </div>
         </div>
 
-        {/* Title */}
         <h3 className="mt-4 font-serif-editorial text-xl sm:text-2xl font-bold text-ink leading-snug group-hover:text-wax transition-colors">
           <Link href={`/letters/${capsule.id}`} className="focus:outline-none">
             {capsule.title}
           </Link>
         </h3>
 
-        {/* Excerpt */}
         <p className="mt-2.5 font-letter text-xs sm:text-sm text-foreground-muted line-clamp-3 leading-relaxed">
           {isPending ? (
             <span className="italic opacity-70 flex items-center gap-1.5">
               <Lock size={12} className="shrink-0" />
               <span>
-                El contenido epistolar permanece sellado bajo bóveda cifrada
-                hasta la fecha de entrega.
+                {isEs
+                  ? "El contenido epistolar permanece sellado bajo bóveda cifrada hasta la fecha de entrega."
+                  : "Correspondence is safeguarded under encrypted vault custody until arrival."}
               </span>
             </span>
           ) : (
@@ -144,13 +136,15 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
         </p>
       </div>
 
-      {/* Footer Details */}
       <div className="mt-6 pt-4 border-t border-crease/70 flex flex-wrap items-center justify-between gap-3 font-letter text-xs">
         <div className="flex items-center gap-3 text-foreground-muted">
           {capsule.predictions && capsule.predictions.length > 0 && (
             <span className="inline-flex items-center gap-1 text-[11px]">
               <Compass size={13} className="text-ink" />
-              <span>{capsule.predictions.length} predicciones</span>
+              <span>
+                {capsule.predictions.length}{" "}
+                {isEs ? "predicciones" : "predictions"}
+              </span>
             </span>
           )}
         </div>
@@ -158,18 +152,25 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
         <Link
           href={`/letters/${capsule.id}`}
           className={cn(
-            "inline-flex items-center gap-1.5 font-letter text-xs uppercase tracking-wider font-bold transition-all",
+            "inline-flex items-center gap-1.5 font-letter text-xs uppercase tracking-wider font-bold transition-all min-h-[44px] py-1",
             isDelivered
               ? "text-wax hover:translate-x-1"
               : "text-ink hover:text-wax hover:translate-x-1",
           )}
         >
-          <span>{isDelivered ? "Quebrar sello" : "Inspeccionar"}</span>
+          <span>
+            {isDelivered
+              ? isEs
+                ? "Quebrar sello"
+                : "Break seal"
+              : isEs
+                ? "Inspeccionar"
+                : "Inspect"}
+          </span>
           <ArrowRight size={13} />
         </Link>
       </div>
 
-      {/* Subtle Mini Postmark in background on hover */}
       <div className="absolute right-2 -bottom-2 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
         <PostmarkStamp
           docketId={capsule.docketNumber}

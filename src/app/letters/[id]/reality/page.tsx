@@ -252,20 +252,19 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
             </div>
           </div>
 
-          {/* Settlement Success Banner */}
           {isSettled && (
-            <div className="rounded-md border-2 border-emerald-600/40 bg-emerald-50 dark:bg-emerald-950/40 p-5 flex flex-col sm:flex-row items-center justify-between gap-4 font-letter text-xs shadow-sm">
+            <div className="rounded-md border border-fulfilled-border bg-fulfilled-bg p-5 flex flex-col sm:flex-row items-center justify-between gap-4 font-letter text-xs shadow-xs">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-fulfilled text-parchment flex items-center justify-center shrink-0">
                   <CheckCircle2 size={20} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-emerald-950 dark:text-emerald-100 text-sm">
+                  <h4 className="font-bold text-foreground text-sm">
                     {isEs
                       ? "Expediente de Realidad Asentado con Éxito"
                       : "Reality Ledger Settled Successfully"}
                   </h4>
-                  <p className="text-emerald-800 dark:text-emerald-300 text-[11px] mt-0.5">
+                  <p className="text-foreground-muted text-[11px] mt-0.5">
                     {isEs
                       ? "Tus notas retrospectivas y métricas emocionales han sido archivadas bajo fe de bóveda."
                       : "Your retrospective notes and emotional ratings have been preserved in the vault."}

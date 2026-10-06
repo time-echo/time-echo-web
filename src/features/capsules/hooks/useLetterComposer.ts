@@ -30,9 +30,6 @@ export interface LetterComposerState {
   }>;
 }
 
-/**
- * Calculates a future ISO timestamp based on preset duration.
- */
 function getPresetDate(preset: HorizonPreset): string {
   const date = new Date();
   switch (preset) {
@@ -53,7 +50,7 @@ function getPresetDate(preset: HorizonPreset): string {
       date.setFullYear(date.getFullYear() + 1);
       break;
   }
-  return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+  return date.toISOString().split("T")[0];
 }
 
 const DEFAULT_STATE: LetterComposerState = {
@@ -75,16 +72,11 @@ const DEFAULT_STATE: LetterComposerState = {
   ],
 };
 
-/**
- * ✍️ useLetterComposer Hook
- *
- * Feature hook orchestrating new letter drafting, horizon calculations,
- * baseline emotional calibration, milestone predictions, and sealing operations.
- */
 export function useLetterComposer(
   initialValues?: Partial<LetterComposerState>,
 ) {
   const { createCapsule, locale } = useTimeEcho();
+  const isEs = locale === "es";
 
   const [form, setForm] = useState<LetterComposerState>(() => ({
     ...DEFAULT_STATE,
@@ -101,7 +93,6 @@ export function useLetterComposer(
   const [error, setError] = useState<string | null>(null);
   const [createdLetter, setCreatedLetter] = useState<Letter | null>(null);
 
-  // Field updates
   const setField = useCallback(
     <K extends keyof LetterComposerState>(
       key: K,
@@ -146,39 +137,51 @@ export function useLetterComposer(
     [],
   );
 
-  // Pure structural validation for rendering hints
   const validationErrors = useMemo(() => {
     const errs: Record<string, string> = {};
 
     if (!form.title.trim()) {
-      errs.title = "El título de la cápsula es obligatorio.";
+      errs.title = isEs
+        ? "El título de la cápsula es obligatorio."
+        : "The capsule title is required.";
     } else if (form.title.trim().length < 3) {
-      errs.title = "El título debe tener al menos 3 caracteres.";
+      errs.title = isEs
+        ? "El título debe tener al menos 3 caracteres."
+        : "The title must be at least 3 characters.";
     }
 
     if (!form.content.trim()) {
-      errs.content = "Escribe un mensaje para tu yo del futuro.";
+      errs.content = isEs
+        ? "Escribe un mensaje para tu yo del futuro."
+        : "Write a message for your future self.";
     } else if (form.content.trim().length < 10) {
-      errs.content = "El contenido debe tener al menos 10 caracteres.";
+      errs.content = isEs
+        ? "El contenido debe tener al menos 10 caracteres."
+        : "Content must be at least 10 characters.";
     }
 
     if (!form.email.trim()) {
-      errs.email = "El correo de entrega es requerido.";
+      errs.email = isEs
+        ? "El correo de entrega es requerido."
+        : "Delivery email is required.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      errs.email = "Ingresa un correo electrónico válido.";
+      errs.email = isEs
+        ? "Ingresa un correo electrónico válido."
+        : "Please enter a valid email address.";
     }
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
     if (!form.scheduledAt || isNaN(scheduledTime)) {
-      errs.scheduledAt = "Selecciona una fecha de entrega válida.";
+      errs.scheduledAt = isEs
+        ? "Selecciona una fecha de entrega válida."
+        : "Please select a valid delivery date.";
     }
 
     return errs;
-  }, [form.title, form.content, form.email, form.scheduledAt]);
+  }, [form.title, form.content, form.email, form.scheduledAt, isEs]);
 
   const isValid = Object.keys(validationErrors).length === 0;
 
-  // Submit and Seal
   const submitLetter = useCallback(async (): Promise<Letter> => {
     if (!isValid) {
       const firstErr = Object.values(validationErrors)[0];
@@ -188,7 +191,9 @@ export function useLetterComposer(
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
     if (scheduledTime <= Date.now()) {
-      const dateErr = "La fecha de entrega debe situarse en el futuro.";
+      const dateErr = isEs
+        ? "La fecha de entrega debe situarse en el futuro."
+        : "Delivery date must be in the future.";
       setError(dateErr);
       throw new Error(dateErr);
     }
@@ -198,7 +203,6 @@ export function useLetterComposer(
     setError(null);
 
     try {
-      // Filter out empty predictions
       const validPredictions = form.predictions.filter(
         (p) => p.prediction.trim() !== "",
       );
@@ -219,14 +223,18 @@ export function useLetterComposer(
       return result;
     } catch (err) {
       const msg =
-        err instanceof Error ? err.message : "Error al sellar la cápsula";
+        err instanceof Error
+          ? err.message
+          : isEs
+            ? "Error al sellar la cápsula"
+            : "Error sealing capsule";
       setError(msg);
       throw err;
     } finally {
       setIsSubmitting(false);
       setIsSealing(false);
     }
-  }, [isValid, validationErrors, form, createCapsule]);
+  }, [isValid, validationErrors, form, createCapsule, isEs]);
 
   const resetComposer = useCallback(() => {
     setForm(DEFAULT_STATE);

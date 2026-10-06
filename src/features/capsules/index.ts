@@ -1,4 +1,3 @@
-// Components
 export { LinedPaperCanvas } from "./components/LinedPaperCanvas";
 export type { LinedPaperCanvasProps } from "./components/LinedPaperCanvas";
 
@@ -20,7 +19,6 @@ export type { CapsuleCardProps } from "./components/CapsuleCard";
 export { LetterComposerForm } from "./components/LetterComposerForm";
 export type { LetterComposerFormProps } from "./components/LetterComposerForm";
 
-// Hooks
 export { useCapsules } from "./hooks/useCapsules";
 export type { CapsuleFilterStatus } from "./hooks/useCapsules";
 

@@ -13,6 +13,9 @@
   --crease: #d8d2c2;
   --foreground: #1c1f26;
   --foreground-muted: #5a606b;
+  --fulfilled: #1b5e20;
+  --fulfilled-bg: rgba(27, 94, 32, 0.08);
+  --fulfilled-border: rgba(27, 94, 32, 0.35);
 }
 
 .dark {
@@ -26,6 +29,9 @@
   --crease: #2d3340;
   --foreground: #e5e7eb;
   --foreground-muted: #9ca3af;
+  --fulfilled: #4caf50;
+  --fulfilled-bg: rgba(76, 175, 80, 0.15);
+  --fulfilled-border: rgba(76, 175, 80, 0.4);
 }
 
 @theme inline {
@@ -40,6 +46,9 @@
   --color-crease: var(--crease);
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
+  --color-fulfilled: var(--fulfilled);
+  --color-fulfilled-bg: var(--fulfilled-bg);
+  --color-fulfilled-border: var(--fulfilled-border);
 
   --font-serif-editorial: var(--font-fraunces), Georgia, serif;
   --font-letter: var(--font-courier-prime), "Courier New", monospace;
@@ -246,7 +255,13 @@
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 150ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .animate-seal-left,
+  .animate-seal-right {
+    animation: none !important;
+    transform: none !important;
   }
 }

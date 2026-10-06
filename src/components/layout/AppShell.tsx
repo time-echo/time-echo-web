@@ -71,7 +71,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       >
         {isEs ? "Saltar al contenido" : "Skip to content"}
       </a>
-      {/* Desktop Sticky Sidebar */}
       <aside className="hidden md:flex w-72 h-screen sticky top-0 bg-manila/50 border-r border-crease p-8 flex-col justify-between shrink-0 font-ui select-none">
         <div className="space-y-10">
           <div className="flex items-center justify-between">
@@ -85,7 +84,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={toggleLocale}
-              className="flex items-center gap-1.5 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-0 font-ui text-xs font-medium"
+              className="flex items-center justify-center gap-1.5 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-2 font-ui text-xs font-medium min-h-[44px] min-w-[44px] focus-visible:outline-2 focus-visible:outline-wax"
               aria-label={
                 isEs ? "Switch language to English" : "Cambiar idioma a español"
               }
@@ -99,7 +98,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/letters/new"
               className={cn(
-                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
+                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150 min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax",
                 isWriteActive
                   ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
@@ -112,7 +111,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/dashboard"
               className={cn(
-                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
+                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150 min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax",
                 isVaultActive
                   ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
@@ -125,7 +124,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/dashboard?timeline=true"
               className={cn(
-                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
+                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150 min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax",
                 isTimelineActive
                   ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
@@ -138,7 +137,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/analytics"
               className={cn(
-                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
+                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150 min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax",
                 isAnalyticsActive
                   ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
@@ -151,7 +150,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/settings"
               className={cn(
-                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
+                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150 min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax",
                 isSettingsActive
                   ? "bg-wax text-on-wax"
                   : "text-foreground-muted hover:bg-manila hover:text-wax",
@@ -180,7 +179,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
             <Link
               href="/login"
-              className="p-1.5 rounded-full hover:bg-red-800/10 text-wax transition-colors"
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full hover:bg-wax/10 text-wax transition-colors focus-visible:outline-2 focus-visible:outline-wax"
               title={isEs ? "Cerrar Sesión" : "Sign Out"}
               aria-label={isEs ? "Cerrar Sesión" : "Sign Out"}
             >
@@ -190,7 +189,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Mobile Top Navbar */}
       <header className="md:hidden sticky top-0 z-50 bg-parchment/90 backdrop-blur-md border-b border-crease px-4 py-3 flex items-center justify-between font-ui select-none">
         <Link
           href="/"
@@ -203,7 +201,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={toggleLocale}
-            className="flex items-center justify-center gap-1 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-2 font-ui text-xs font-medium min-h-[44px] min-w-[44px]"
+            className="flex items-center justify-center gap-1 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-2 font-ui text-xs font-medium min-h-[44px] min-w-[44px] focus-visible:outline-2 focus-visible:outline-wax"
             aria-label={
               isEs ? "Switch language to English" : "Cambiar idioma a español"
             }
@@ -215,7 +213,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded text-foreground-muted hover:text-foreground cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="p-2 rounded text-foreground-muted hover:text-foreground cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-wax"
             aria-label={
               mobileMenuOpen
                 ? isEs
@@ -232,13 +230,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-crease bg-manila p-4 space-y-2 font-ui animate-fade-in select-none">
           <Link
             href="/letters/new"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <PenTool size={16} />
             <span>{isEs ? "Escribir una Carta" : "Write a Letter"}</span>
@@ -246,7 +243,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/dashboard"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <Mail size={16} />
             <span>{isEs ? "Mis Cartas" : "My Letters"}</span>
@@ -254,7 +251,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/dashboard?timeline=true"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <Clock size={16} />
             <span>{isEs ? "Línea de Tiempo" : "Timeline"}</span>
@@ -262,7 +259,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/analytics"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <BarChart3 size={16} />
             <span>{isEs ? "Estadísticas" : "Analytics"}</span>
@@ -270,7 +267,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/settings"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-3 text-sm text-foreground hover:text-wax"
+            className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <Settings size={16} />
             <span>{isEs ? "Ajustes" : "Settings"}</span>
@@ -280,7 +277,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/login"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-wax flex items-center gap-1"
+              className="text-wax flex items-center gap-1 min-h-[44px] px-2 py-1 focus-visible:outline-2 focus-visible:outline-wax"
             >
               <LogOut size={14} />
               <span>{isEs ? "Cerrar Sesión" : "Sign Out"}</span>
@@ -289,7 +286,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* Main Content Area */}
       <main
         id="main-content"
         className="flex-grow min-h-screen bg-parchment p-4 sm:p-8 md:p-12 overflow-x-hidden font-ui"

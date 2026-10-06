@@ -870,29 +870,27 @@ export default function HomePage() {
                         strokeWidth="0.5"
                       />
 
-                      {/* Past baseline (dashed indigo) */}
                       <path
                         d="M 15 15 L 50 36 L 85 24"
                         fill="none"
-                        stroke="#2C485E"
+                        stroke="var(--ink)"
                         strokeWidth="1.5"
                         strokeDasharray="2 2"
                       />
-                      <circle cx="15" cy="15" r="1.5" fill="#2C485E" />
-                      <circle cx="50" cy="36" r="1.5" fill="#2C485E" />
-                      <circle cx="85" cy="24" r="1.5" fill="#2C485E" />
+                      <circle cx="15" cy="15" r="1.5" fill="var(--ink)" />
+                      <circle cx="50" cy="36" r="1.5" fill="var(--ink)" />
+                      <circle cx="85" cy="24" r="1.5" fill="var(--ink)" />
 
-                      {/* Present line (solid carmine) */}
                       <path
                         d="M 15 10 L 50 40 L 85 5"
                         fill="none"
-                        stroke="#8E2818"
+                        stroke="var(--wax)"
                         strokeWidth="2"
                         strokeLinecap="round"
                       />
-                      <circle cx="15" cy="10" r="2.2" fill="#8E2818" />
-                      <circle cx="50" cy="40" r="2.2" fill="#8E2818" />
-                      <circle cx="85" cy="5" r="2.2" fill="#8E2818" />
+                      <circle cx="15" cy="10" r="2.2" fill="var(--wax)" />
+                      <circle cx="50" cy="40" r="2.2" fill="var(--wax)" />
+                      <circle cx="85" cy="5" r="2.2" fill="var(--wax)" />
                     </svg>
 
                     <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[8px] font-letter font-semibold text-foreground-muted tracking-wider uppercase select-none">

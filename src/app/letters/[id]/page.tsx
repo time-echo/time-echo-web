@@ -653,8 +653,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                         className={cn(
                           "py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1",
                           pred.matched
-                            ? "bg-emerald-800/10 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
-                            : "bg-red-800/10 text-wax",
+                            ? "bg-fulfilled-bg text-fulfilled border border-fulfilled-border"
+                            : "bg-wax/10 text-wax border border-wax/20",
                         )}
                       >
                         {pred.matched ? <Check size={12} /> : <X size={12} />}

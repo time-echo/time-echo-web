@@ -11,15 +11,6 @@ export interface DetailedAnalyticsResult extends AnalyticsMetrics {
   categoryBreakdown: CategoryMetricBreakdown[];
 }
 
-/**
- * 🧮 calculateAnalyticsMetrics
- *
- * Pure utility computing aggregate stats from an array of time-capsule letters:
- * - Status distribution (in-transit, delivered, opened, archived)
- * - Milestone prediction accuracy rates (% matched)
- * - Baseline emotional snapshot averages vs unsealed reveal averages
- * - Per-category prediction outcomes
- */
 export function calculateAnalyticsMetrics(
   letters: Letter[],
 ): DetailedAnalyticsResult {
@@ -48,7 +39,6 @@ export function calculateAnalyticsMetrics(
   let revealCount = 0;
 
   for (const letter of letters) {
-    // Status counts
     switch (letter.status) {
       case "pending":
         inTransitCount++;
@@ -64,7 +54,6 @@ export function calculateAnalyticsMetrics(
         break;
     }
 
-    // Baseline emotional averages
     if (letter.emotionalSnapshot) {
       sumBaseHappiness += letter.emotionalSnapshot.happinessLevel;
       sumBaseAnxiety += letter.emotionalSnapshot.anxietyLevel;
@@ -72,7 +61,6 @@ export function calculateAnalyticsMetrics(
       baselineCount++;
     }
 
-    // Reveal emotional averages
     if (
       letter.revealHappiness !== null &&
       letter.revealHappiness !== undefined &&
@@ -87,7 +75,6 @@ export function calculateAnalyticsMetrics(
       revealCount++;
     }
 
-    // Predictions aggregation
     for (const pred of letter.predictions || []) {
       totalPredictionsCount++;
 
@@ -111,7 +98,6 @@ export function calculateAnalyticsMetrics(
     }
   }
 
-  // Averages calculation with 1 decimal precision
   const round1 = (val: number) => Number(val.toFixed(1));
 
   const avgBaseHappiness =
@@ -128,7 +114,6 @@ export function calculateAnalyticsMetrics(
   const avgRevealMotivation =
     revealCount > 0 ? round1(sumRevealMotivation / revealCount) : 0;
 
-  // Delta calculations
   const deltaHappiness =
     revealCount > 0 ? round1(avgRevealHappiness - avgBaseHappiness) : 0;
   const deltaAnxiety =
@@ -136,13 +121,11 @@ export function calculateAnalyticsMetrics(
   const deltaMotivation =
     revealCount > 0 ? round1(avgRevealMotivation - avgBaseMotivation) : 0;
 
-  // Accuracy rate (percentage of evaluated predictions that were fulfilled)
   const predictionsAccuracyRate =
     evaluatedPredictionsCount > 0
       ? Math.round((matchedPredictionsCount / evaluatedPredictionsCount) * 100)
       : 0;
 
-  // Category breakdown
   const categoryBreakdown: CategoryMetricBreakdown[] = Object.entries(
     categoryMap,
   ).map(([category, data]) => ({

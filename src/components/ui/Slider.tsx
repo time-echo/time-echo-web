@@ -4,64 +4,19 @@ import React, { useId } from "react";
 import { cn } from "@/lib/utils";
 
 export interface SliderProps {
-  /**
-   * Current value of the slider (typically 1 to 10).
-   */
   value: number;
-  /**
-   * Callback fired when value changes.
-   */
   onChange: (value: number) => void;
-  /**
-   * Minimum value.
-   * @default 1
-   */
   min?: number;
-  /**
-   * Maximum value.
-   * @default 10
-   */
   max?: number;
-  /**
-   * Step increment.
-   * @default 1
-   */
   step?: number;
-  /**
-   * Descriptive label displayed above the slider.
-   */
   label?: string;
-  /**
-   * Low anchor description (e.g., "Mínimo", "Sombrío").
-   */
   lowLabel?: string;
-  /**
-   * High anchor description (e.g., "Máximo", "Radiante").
-   */
   highLabel?: string;
-  /**
-   * Accent color theme for the filled track and thumb.
-   * @default 'wax'
-   */
   accentColor?: "wax" | "ink";
-  /**
-   * Whether the slider is disabled.
-   * @default false
-   */
   disabled?: boolean;
-  /**
-   * Custom container classes.
-   */
   className?: string;
 }
 
-/**
- * Slider Component
- *
- * Tactile archival range slider for 1–10 emotional metric ratings.
- * Features numbered tick marks, keyboard navigation, accessible touch targets (>= 44px),
- * and vintage mechanical dial aesthetics.
- */
 export function Slider({
   value,
   onChange,
@@ -69,15 +24,14 @@ export function Slider({
   max = 10,
   step = 1,
   label,
-  lowLabel = "Mínimo (1)",
-  highLabel = "Pleno (10)",
+  lowLabel,
+  highLabel,
   accentColor = "wax",
   disabled = false,
   className,
 }: SliderProps) {
   const id = useId();
 
-  // Calculate percentage for filled track width
   const percentage = Math.max(
     0,
     Math.min(100, ((value - min) / (max - min)) * 100),
@@ -93,7 +47,6 @@ export function Slider({
 
   return (
     <div className={cn("w-full select-none font-letter", className)}>
-      {/* Header bar: Label and numeric readout */}
       {label && (
         <div className="flex items-center justify-between mb-2">
           <label
@@ -122,11 +75,8 @@ export function Slider({
         </div>
       )}
 
-      {/* Slider Physical Track & Native Range Input */}
       <div className="relative py-3 flex items-center">
-        {/* Physical Track Groove */}
         <div className="absolute inset-x-0 h-2 rounded-full bg-crease/60 border border-crease shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] overflow-hidden">
-          {/* Active Filled Progress Bar */}
           <div
             className={cn(
               "h-full transition-[width] duration-150",
@@ -136,7 +86,6 @@ export function Slider({
           />
         </div>
 
-        {/* Native Range Input (Ensures accessible touch & keyboard operation) */}
         <input
           id={id}
           type="range"
@@ -146,7 +95,7 @@ export function Slider({
           value={value}
           onChange={handleInputChange}
           disabled={disabled}
-          aria-label={label || "Calificación emocional"}
+          aria-label={label || "Rating level"}
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuenow={value}
@@ -164,7 +113,6 @@ export function Slider({
             "[&::-webkit-slider-thumb]:transition-transform",
             "[&::-webkit-slider-thumb]:hover:scale-110",
             "[&::-webkit-slider-thumb]:active:scale-95",
-            // Firefox thumb styles
             "[&::-moz-range-thumb]:w-6",
             "[&::-moz-range-thumb]:h-6",
             "[&::-moz-range-thumb]:rounded-full",
@@ -180,8 +128,7 @@ export function Slider({
         />
       </div>
 
-      {/* Numbered Ticks (1 through 10) */}
-      <div className="flex justify-between px-1 text-[10px] font-mono text-foreground-muted select-none mt-0.5">
+      <div className="flex justify-between px-1 text-[10px] font-mono text-foreground-muted select-none -mt-1">
         {ticks.map((tick) => {
           const isSelected = tick === value;
           return (
@@ -191,23 +138,22 @@ export function Slider({
               tabIndex={-1}
               onClick={() => !disabled && onChange(tick)}
               className={cn(
-                "flex flex-col items-center cursor-pointer transition-colors",
+                "min-h-[44px] min-w-[24px] sm:min-w-[32px] flex flex-col items-center justify-center cursor-pointer transition-colors touch-manipulation",
                 isSelected
                   ? "font-bold text-ink"
                   : "opacity-65 hover:opacity-100",
                 disabled && "cursor-default",
               )}
             >
-              <span className="h-1.5 w-[1px] bg-crease mb-0.5" />
+              <span className="h-1.5 w-[1px] bg-crease mb-1" />
               <span>{tick}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Extremity helper labels */}
       {(lowLabel || highLabel) && (
-        <div className="flex justify-between items-center text-[10px] text-foreground-muted/80 uppercase tracking-widest mt-1.5 select-none">
+        <div className="flex justify-between items-center text-[10px] text-foreground-muted/80 uppercase tracking-widest mt-1 select-none">
           <span>{lowLabel}</span>
           <span>{highLabel}</span>
         </div>

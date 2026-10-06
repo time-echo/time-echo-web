@@ -14,16 +14,9 @@ export interface PredictionEvaluationState {
   matched: boolean | null;
 }
 
-/**
- * ⚖️ useRealityLedger Hook
- *
- * Feature hook managing retrospective reality comparisons, reveal emotional delta calculations,
- * and reality ledger settlement.
- */
 export function useRealityLedger(capsule: Letter) {
   const { updateReality } = useTimeEcho();
 
-  // Reveal emotional ratings state
   const [revealHappiness, setRevealHappiness] = useState<number>(
     capsule.revealHappiness ?? 7,
   );
@@ -34,7 +27,6 @@ export function useRealityLedger(capsule: Letter) {
     capsule.revealMotivation ?? 8,
   );
 
-  // Predictions evaluation dictionary
   const [predictionsMap, setPredictionsMap] = useState<
     Record<string, PredictionEvaluationState>
   >(() => {
@@ -63,7 +55,6 @@ export function useRealityLedger(capsule: Letter) {
   );
   const [error, setError] = useState<string | null>(null);
 
-  // Setters for ratings
   const setRevealRating = useCallback(
     (metric: "happiness" | "anxiety" | "motivation", value: number) => {
       if (metric === "happiness") setRevealHappiness(value);
@@ -73,7 +64,6 @@ export function useRealityLedger(capsule: Letter) {
     [],
   );
 
-  // Setters for predictions
   const setPredictionReality = useCallback((id: string, reality: string) => {
     setPredictionsMap((prev) => ({
       ...prev,
@@ -102,7 +92,6 @@ export function useRealityLedger(capsule: Letter) {
     [],
   );
 
-  // Emotional Deltas (Current Reveal vs Past Baseline)
   const emotionalDeltas = useMemo(() => {
     const base = capsule.emotionalSnapshot || {
       happinessLevel: 5,
@@ -122,7 +111,6 @@ export function useRealityLedger(capsule: Letter) {
     revealMotivation,
   ]);
 
-  // Prediction Stats
   const fulfillmentStats = useMemo(() => {
     const items = Object.values(predictionsMap);
     const fulfilled = items.filter((i) => i.outcome === "fulfilled").length;
@@ -143,7 +131,6 @@ export function useRealityLedger(capsule: Letter) {
     };
   }, [predictionsMap]);
 
-  // Save to repository
   const saveRealityLedger = useCallback(async (): Promise<Letter> => {
     setIsSaving(true);
     setError(null);

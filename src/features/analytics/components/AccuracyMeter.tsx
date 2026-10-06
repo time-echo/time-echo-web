@@ -1,41 +1,20 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Target, CheckCircle2, AlertTriangle, Clock } from "lucide-react";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { cn } from "@/lib/utils";
 
 export interface AccuracyMeterProps {
-  /**
-   * Accuracy percentage (0 to 100).
-   */
   rate: number;
-  /**
-   * Total number of evaluated predictions.
-   */
   evaluatedCount: number;
-  /**
-   * Number of fulfilled predictions.
-   */
   matchedCount: number;
-  /**
-   * Number of pending/unfulfilled predictions.
-   */
   pendingCount?: number;
-  /**
-   * Diameter size of the circular meter.
-   * @default 160
-   */
   size?: number;
   className?: string;
 }
 
-/**
- * 🎯 AccuracyMeter Component
- *
- * Circular archival radial percentage gauge visualizing milestone prediction fulfillment,
- * animated with Framer Motion and styled with postal ink tones.
- */
 export function AccuracyMeter({
   rate,
   evaluatedCount,
@@ -44,36 +23,52 @@ export function AccuracyMeter({
   size = 180,
   className,
 }: AccuracyMeterProps) {
+  const { locale } = useTimeEcho();
+  const isEs = locale === "es";
+  const shouldReduceMotion = useReducedMotion();
+
   const strokeWidth = 10;
   const radius = (size - strokeWidth * 2) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (rate / 100) * circumference;
 
+  const rateColorClass =
+    rate >= 70 ? "text-fulfilled" : rate >= 40 ? "text-ink" : "text-wax";
+
   return (
     <div
       className={cn(
-        "p-6 sm:p-7 rounded border border-crease bg-parchment shadow-sm flex flex-col items-center justify-between text-center select-none",
+        "p-6 sm:p-7 rounded border border-crease bg-parchment shadow-xs flex flex-col items-center justify-between text-center select-none",
         className,
       )}
+      role="progressbar"
+      aria-valuenow={rate}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label={
+        isEs ? "Tasa de acierto predictivo" : "Predictive accuracy rate"
+      }
     >
-      {/* Header Docket Tag */}
       <div className="w-full flex items-center justify-between border-b border-crease pb-3 font-letter text-xs text-foreground-muted mb-4">
         <div className="flex items-center gap-1.5 uppercase font-semibold text-ink">
           <Target size={14} className="text-wax" />
-          <span>TASA DE ACIERTO</span>
+          <span>{isEs ? "Tasa de Acierto" : "Accuracy Rate"}</span>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-widest">
-          EXPEDIENTE PREDICTIVO
+          {isEs ? "Expediente Predictivo" : "Predictive Ledger"}
         </span>
       </div>
 
-      {/* Circular SVG Gauge */}
       <div
         className="relative my-2 flex items-center justify-center"
         style={{ width: size, height: size }}
       >
-        <svg width={size} height={size} className="rotate-[-90deg]">
-          {/* Background Track Circle */}
+        <svg
+          width={size}
+          height={size}
+          className="rotate-[-90deg]"
+          aria-hidden="true"
+        >
           <circle
             cx={size / 2}
             cy={size / 2}
@@ -84,7 +79,6 @@ export function AccuracyMeter({
             className="text-crease/50"
           />
 
-          {/* Animated Foreground Progress Circle */}
           <motion.circle
             cx={size / 2}
             cy={size / 2}
@@ -92,46 +86,45 @@ export function AccuracyMeter({
             stroke="currentColor"
             strokeWidth={strokeWidth}
             strokeDasharray={circumference}
-            initial={{ strokeDashoffset: circumference }}
+            initial={{
+              strokeDashoffset: shouldReduceMotion
+                ? strokeDashoffset
+                : circumference,
+            }}
             animate={{ strokeDashoffset }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{
+              duration: shouldReduceMotion ? 0 : 1.2,
+              ease: [0.16, 1, 0.3, 1],
+            }}
             strokeLinecap="round"
             fill="transparent"
-            className={cn(
-              rate >= 70
-                ? "text-emerald-700 dark:text-emerald-500"
-                : rate >= 40
-                  ? "text-ink"
-                  : "text-wax",
-            )}
+            className={rateColorClass}
           />
         </svg>
 
-        {/* Center Readout Numerals */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <motion.span
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+            transition={{ delay: shouldReduceMotion ? 0 : 0.2, duration: shouldReduceMotion ? 0 : 0.4 }}
             className="font-mono text-3xl sm:text-4xl font-extrabold text-ink leading-none"
           >
             {rate}%
           </motion.span>
           <span className="font-letter text-[9px] uppercase tracking-widest text-foreground-muted mt-1">
-            CUMPLIMIENTO
+            {isEs ? "Cumplimiento" : "Fulfillment"}
           </span>
         </div>
       </div>
 
-      {/* Breakdown Metrics Footer */}
       <div className="w-full mt-4 pt-4 border-t border-crease/60 grid grid-cols-3 gap-2 font-letter text-xs text-foreground-muted">
         <div className="flex flex-col items-center">
-          <div className="flex items-center gap-1 text-emerald-800 dark:text-emerald-300 font-mono font-bold text-sm">
+          <div className="flex items-center gap-1 text-fulfilled font-mono font-bold text-sm">
             <CheckCircle2 size={12} />
             <span>{matchedCount}</span>
           </div>
           <span className="text-[9px] uppercase tracking-tight mt-0.5">
-            Cumplidas
+            {isEs ? "Cumplidas" : "Fulfilled"}
           </span>
         </div>
 
@@ -141,7 +134,7 @@ export function AccuracyMeter({
             <span>{Math.max(0, evaluatedCount - matchedCount)}</span>
           </div>
           <span className="text-[9px] uppercase tracking-tight mt-0.5">
-            Divergentes
+            {isEs ? "Divergentes" : "Diverged"}
           </span>
         </div>
 
@@ -151,7 +144,7 @@ export function AccuracyMeter({
             <span>{pendingCount}</span>
           </div>
           <span className="text-[9px] uppercase tracking-tight mt-0.5">
-            En Tránsito
+            {isEs ? "En Tránsito" : "In Transit"}
           </span>
         </div>
       </div>
