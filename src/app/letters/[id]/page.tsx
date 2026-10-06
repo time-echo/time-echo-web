@@ -2,10 +2,20 @@
 
 import React, { use, useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Letter, Prediction } from "@/types/timeecho";
-import { Lock, Unlock, ArrowLeft, Archive, Check, X } from "lucide-react";
+import {
+  Lock,
+  Unlock,
+  ArrowLeft,
+  Archive,
+  RotateCcw,
+  Trash2,
+  Check,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LetterPageProps {
@@ -40,8 +50,16 @@ function getPredictionQuestion(category: string, isEs: boolean): string {
 export default function LetterDetailPage({ params }: LetterPageProps) {
   const { id } = use(params);
 
-  const { getCapsuleById, repository, updateReality, archiveCapsule, locale } =
-    useTimeEcho();
+  const router = useRouter();
+  const {
+    getCapsuleById,
+    repository,
+    updateReality,
+    archiveCapsule,
+    restoreCapsule,
+    deleteCapsule,
+    locale,
+  } = useTimeEcho();
 
   const isEs = locale === "es";
 
@@ -170,6 +188,71 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     setLocalLetter(updated);
   };
 
+  if (letter.status === "archived") {
+    return (
+      <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">
+        <div className="max-w-xl mx-auto py-8">
+          <div className="paper-sheet rounded-xs p-8 sm:p-12 text-center space-y-7 border border-crease">
+            <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-foreground-muted border border-crease bg-manila select-none">
+              <Archive size={32} />
+            </div>
+
+            <div className="space-y-2">
+              <span className="postmark-stamp text-[10px] py-0.5 px-2.5 text-[#2C485E]">
+                {isEs ? "Expediente Archivado" : "Archived Docket"}
+              </span>
+              <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
+                {letter.title}
+              </h1>
+              <p className="text-xs font-letter text-foreground-muted max-w-sm mx-auto leading-relaxed">
+                {isEs
+                  ? "Esta carta se encuentra archivada en la bóveda postal. Puedes restaurarla para reintegrarla o eliminarla permanentemente."
+                  : "This letter is archived in the postal vault. You can restore it to your vault or permanently delete it."}
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-crease flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/dashboard"
+                className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors"
+              >
+                <ArrowLeft size={14} />
+                <span>{isEs ? "Volver a mis cartas" : "Back to Vault"}</span>
+              </Link>
+              <button
+                type="button"
+                onClick={async () => {
+                  const updated = await restoreCapsule(letter.id);
+                  setLocalLetter(updated);
+                }}
+                className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors cursor-pointer bg-transparent"
+              >
+                <RotateCcw size={14} />
+                <span>{isEs ? "Restaurar" : "Restore"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const confirmMsg = isEs
+                    ? "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer."
+                    : "Are you sure you want to permanently delete this letter? This action cannot be undone.";
+                  if (window.confirm(confirmMsg)) {
+                    await deleteCapsule(letter.id);
+                    router.push("/dashboard");
+                  }
+                }}
+                className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors cursor-pointer bg-transparent"
+              >
+                <Trash2 size={14} />
+                <span>{isEs ? "Eliminar" : "Delete"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Case 1: Locked Capsule in Transit
   if (isLocked) {
     return (
@@ -214,7 +297,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               </Link>
               <button
                 type="button"
-                onClick={() => archiveCapsule(letter.id)}
+                onClick={async () => {
+                  await archiveCapsule(letter.id);
+                  router.push("/dashboard");
+                }}
                 className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[38px] transition-colors cursor-pointer bg-transparent"
               >
                 <Archive size={14} />

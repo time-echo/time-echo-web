@@ -13,6 +13,7 @@ import {
   Archive,
   Eye,
   RotateCcw,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +21,8 @@ export default function DashboardPage() {
   const searchParams = useSearchParams();
   const isTimeline = searchParams.get("timeline") === "true";
 
-  const { capsules, archiveCapsule, restoreCapsule, locale } = useTimeEcho();
+  const { capsules, archiveCapsule, restoreCapsule, deleteCapsule, locale } =
+    useTimeEcho();
 
   const [currentTime] = useState(() => Date.now());
   const isEs = locale === "es";
@@ -643,6 +645,22 @@ export default function DashboardPage() {
                   >
                     <RotateCcw size={14} />
                     <span>{isEs ? "Restaurar" : "Restore"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const confirmMsg = isEs
+                        ? "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer."
+                        : "Are you sure you want to permanently delete this letter? This action cannot be undone.";
+                      if (window.confirm(confirmMsg)) {
+                        deleteCapsule(letter.id);
+                      }
+                    }}
+                    className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[36px] transition-colors cursor-pointer bg-transparent"
+                    title={isEs ? "Eliminar carta" : "Delete letter"}
+                  >
+                    <Trash2 size={14} />
+                    <span>{isEs ? "Eliminar" : "Delete"}</span>
                   </button>
                 </div>
               </div>

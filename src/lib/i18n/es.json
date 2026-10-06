@@ -13,6 +13,8 @@
     "print": "Imprimir",
     "archive": "Mover a Archivo",
     "restore": "Restaurar de Archivo",
+    "delete": "Eliminar carta",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer.",
     "loading": "Cargando archivo...",
     "error": "Error",
     "search": "Buscar...",

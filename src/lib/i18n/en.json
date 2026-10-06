@@ -13,6 +13,8 @@
     "print": "Print",
     "archive": "Archive Letter",
     "restore": "Restore Letter",
+    "delete": "Delete Letter",
+    "confirmDelete": "Are you sure you want to permanently delete this letter? This action cannot be undone.",
     "loading": "Loading archive...",
     "error": "Error",
     "search": "Search...",

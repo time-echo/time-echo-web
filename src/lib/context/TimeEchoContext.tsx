@@ -59,6 +59,7 @@ interface TimeEchoContextValue {
   updateReality: (input: UpdateRealityInput) => Promise<Letter>;
   archiveCapsule: (id: string) => Promise<Letter>;
   restoreCapsule: (id: string) => Promise<Letter>;
+  deleteCapsule: (id: string) => Promise<void>;
   breakWaxSeal: (id: string) => Promise<Letter>;
   resetVault: () => Promise<void>;
   t: (key: string, params?: Record<string, string | number>) => string;
@@ -245,6 +246,22 @@ export function TimeEchoProvider({
     [repository],
   );
 
+  const deleteCapsule = useCallback(
+    async (id: string): Promise<void> => {
+      setError(null);
+      try {
+        await repository.delete(id);
+        setCapsules((prev) => prev.filter((item) => item.id !== id));
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Error al eliminar la cápsula";
+        setError(msg);
+        throw err;
+      }
+    },
+    [repository],
+  );
+
   /**
    * Convenience action to break the wax seal and unseal the letter.
    */
@@ -289,6 +306,7 @@ export function TimeEchoProvider({
       updateReality,
       archiveCapsule,
       restoreCapsule,
+      deleteCapsule,
       breakWaxSeal,
       resetVault,
       t,
@@ -307,6 +325,7 @@ export function TimeEchoProvider({
       updateReality,
       archiveCapsule,
       restoreCapsule,
+      deleteCapsule,
       breakWaxSeal,
       resetVault,
       t,

@@ -20,6 +20,7 @@ export function useCapsules() {
     getCapsuleById,
     archiveCapsule,
     restoreCapsule,
+    deleteCapsule,
     breakWaxSeal,
   } = useTimeEcho();
 
@@ -100,6 +101,13 @@ export function useCapsules() {
     [restoreCapsule],
   );
 
+  const handleDelete = useCallback(
+    async (id: string): Promise<void> => {
+      return deleteCapsule(id);
+    },
+    [deleteCapsule],
+  );
+
   return {
     capsules,
     filteredCapsules,
@@ -118,6 +126,7 @@ export function useCapsules() {
     getCapsuleById,
     archiveCapsule: handleArchive,
     restoreCapsule: handleRestore,
+    deleteCapsule: handleDelete,
     breakWaxSeal,
   };
 }
