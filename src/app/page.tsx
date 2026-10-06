@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { PredictionCategory } from "@/types/timeecho";
@@ -11,8 +12,9 @@ import {
   ShieldCheck,
   Mail,
   FileText,
-  Calendar,
-  BarChart3,
+  Check,
+  X,
+  ArrowRight,
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 
@@ -682,282 +684,341 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="paper-sheet rounded-xs border border-crease shadow-sm overflow-hidden max-w-5xl mx-auto font-ui relative">
-          {/* Top Dossier Bar with 3 Dots */}
-          <div className="bg-manila/50 px-5 py-3 border-b border-crease flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-wax inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-ink inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-crease inline-block" />
-            </div>
-            <div className="font-letter text-[11px] text-foreground-muted tracking-wider">
-              {isEs
-                ? "CÁPSULA DESBLOQUEADA · TE-00412"
-                : "UNLOCKED DOSSIER · TE-00412"}
-            </div>
-            <div className="w-8" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 min-h-[460px]">
-            {/* Left Dossier Aside */}
-            <aside className="md:col-span-3 archival-folder border-r border-crease p-6 flex flex-col justify-between space-y-6 select-none">
-              <div className="space-y-6">
-                <span className="postmark-stamp text-[10px] py-0.5 px-2">
-                  TimeEcho
-                </span>
-
-                <nav className="space-y-1 text-xs font-letter">
-                  <div className="flex items-center gap-2.5 px-3 py-2 rounded-xs paper-sheet border border-crease font-semibold text-foreground">
-                    <FileText size={15} />
-                    <span>{isEs ? "Mis Cartas" : "My Letters"}</span>
+        <div className="max-w-5xl mx-auto font-ui text-foreground space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="lg:col-span-8 space-y-6">
+              <div className="paper-sheet rounded-xs p-6 sm:p-8 space-y-6 border border-crease">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-4 text-xs font-letter">
+                  <div>
+                    <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
+                      {isEs ? "Escrito" : "Written"}
+                    </p>
+                    <p className="font-semibold text-foreground text-xs">
+                      {isEs ? "15 sep 2022" : "Sep 15, 2022"}
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2.5 px-3 py-2 text-foreground-muted">
-                    <Calendar size={15} />
-                    <span>{isEs ? "Línea de Tiempo" : "Timeline"}</span>
+                  <div className="text-center">
+                    <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
+                      {isEs ? "Carta del pasado" : "Letter from Past"}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2.5 px-3 py-2 text-foreground-muted">
-                    <BarChart3 size={15} />
-                    <span>{isEs ? "Estadísticas" : "Analytics"}</span>
+                  <div className="sm:text-right">
+                    <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
+                      {isEs ? "Entregado" : "Delivered"}
+                    </p>
+                    <p className="font-semibold text-foreground text-xs">
+                      {isEs ? "15 sep 2022" : "Sep 15, 2022"}
+                    </p>
                   </div>
-                </nav>
-              </div>
+                </div>
 
-              <div className="border-t border-manila-border pt-4">
-                <p className="text-[11px] font-letter italic text-foreground-muted leading-relaxed">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-serif-editorial text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
+                      {isEs
+                        ? "Cuaderno de bitácora: La primera chispa de la idea"
+                        : "Logbook: The First Spark of the Idea"}
+                    </h3>
+                    <span className="font-letter text-[10px] font-semibold text-foreground-muted uppercase tracking-widest shrink-0">
+                      TE-00108
+                    </span>
+                  </div>
+                </div>
+
+                <article className="p-5 sm:p-6 border border-crease rounded-xs bg-transparent text-foreground/90 whitespace-pre-wrap break-words select-text font-letter text-sm leading-loose shadow-inner">
                   {isEs
-                    ? "«La mejor manera de predecir el futuro es crearlo.»"
-                    : "“The best way to predict the future is to create it.”"}
-                </p>
-              </div>
-            </aside>
+                    ? `Para el expediente histórico de TimeEcho:\n\nEste folio representa el momento germinal. Aquella noche donde anoté por primera vez en un papel manila: "¿Y si pudiéramos enviar cartas al futuro con lacre físico y verificación de realidad?".\n\nTodo parecía desmedido y complejo, pero decidí confiar en la belleza de la palabra escrita y el peso del tiempo.`
+                    : `For the historical record of TimeEcho:\n\nThis sheet represents the seminal moment. That evening when I first jotted down on a manila folio: "What if we could send letters into the future with physical wax seals and reality verification?".\n\nEverything seemed daunting and complex, yet I chose to trust in the beauty of the written word and the weight of time.`}
+                </article>
 
-            {/* Right Dossier Area: Predictions vs Reality & Emotional Chart */}
-            <div className="md:col-span-9 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-transparent">
-              <div className="lg:col-span-7 space-y-4">
-                <div className="border-b border-crease pb-2.5 flex items-center justify-between">
-                  <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                    {isEs ? "Predicción vs Realidad" : "Prediction vs Reality"}
-                  </h3>
-                  <span className="postmark-stamp text-[10px] py-0.5 px-2">
-                    {isEs ? "Revelada & Comparada" : "Revealed & Compared"}
+                <div className="pt-3 border-t border-crease flex flex-wrap justify-between items-center gap-2 text-xs font-letter">
+                  <span className="text-[11px] text-foreground-muted italic">
+                    {isEs
+                      ? "Sellada bajo custodia postal con lacre carmesí"
+                      : "Sealed in postal custody under crimson wax"}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider font-semibold text-ink">
+                    yo.del.futuro@timeecho.internal
                   </span>
                 </div>
+              </div>
 
-                <div className="space-y-2.5 text-xs font-letter">
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
-                          {isEs ? "Predicción:" : "Prediction:"}
-                        </span>
-                        <span className="italic text-foreground/80">
-                          {isEs ? "Viviré en Barcelona" : "Living in Barcelona"}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
-                          {isEs ? "Realidad:" : "Reality:"}
-                        </span>
-                        <span>
-                          {isEs ? "Vivo en Medellín" : "Living in Medellín"}
-                        </span>
-                      </div>
+              <div className="archival-folder rounded-xs p-6 sm:p-8 space-y-5 border border-manila-border">
+                <div className="border-b border-manila-border pb-3">
+                  <h3 className="font-serif-editorial text-xl font-semibold text-foreground">
+                    {isEs ? "Predicciones vs Realidad" : "Predictions vs Reality"}
+                  </h3>
+                  <p className="text-xs font-letter text-foreground-muted mt-1">
+                    {isEs
+                      ? "Compara lo que imaginabas hace un tiempo con la vida que estás viviendo hoy."
+                      : "Compare what you once envisioned with the life you are actively living today."}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
+                    <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
+                        {isEs ? "¿En qué trabajas hoy en día?" : "What do you do today?"}
+                      </span>
+                      <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-fulfilled-bg text-fulfilled border border-fulfilled-border">
+                        <Check size={12} />
+                        <span>{isEs ? "¡LO LOGRASTE!" : "ACCOMPLISHED"}</span>
+                      </span>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {isEs ? "PARCIALMENTE" : "PARTIALLY"}
-                    </span>
-                  </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
-                          {isEs ? "Predicción:" : "Prediction:"}
+                    <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
+                      <div className="p-4 space-y-1">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {isEs ? "Predicción del pasado:" : "Past Prediction:"}
                         </span>
-                        <span className="italic text-foreground/80">
+                        <p className="text-foreground/80 leading-relaxed italic">
+                          &ldquo;
                           {isEs
-                            ? "Seré diseñadora freelance"
-                            : "Freelance designer"}
-                        </span>
+                            ? "Construir una arquitectura limpia basada en el patrón Adapter."
+                            : "Build a clean architecture based on the Adapter pattern."}
+                          &rdquo;
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
-                          {isEs ? "Realidad:" : "Reality:"}
+
+                      <div className="p-4 space-y-1 bg-manila/10">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {isEs ? "Realidad hoy en día:" : "Reality Today:"}
                         </span>
-                        <span>Product Designer</span>
+                        <p className="text-foreground/90 leading-relaxed font-semibold">
+                          &ldquo;
+                          {isEs
+                            ? "Completada e implementada en Next.js con soporte offline y tipado estricto."
+                            : "Completed and implemented in Next.js with offline support and strict typing."}
+                          &rdquo;
+                        </p>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {isEs ? "¡LO LOGRASTE!" : "YOU DID IT!"}
-                    </span>
                   </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
-                          {isEs ? "Predicción:" : "Prediction:"}
+                  <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
+                    <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
+                        {isEs ? "¿Dónde vives hoy en día?" : "Where do you live today?"}
+                      </span>
+                      <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-fulfilled-bg text-fulfilled border border-fulfilled-border">
+                        <Check size={12} />
+                        <span>{isEs ? "¡LO LOGRASTE!" : "ACCOMPLISHED"}</span>
+                      </span>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
+                      <div className="p-4 space-y-1">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {isEs ? "Predicción del pasado:" : "Past Prediction:"}
                         </span>
-                        <span className="italic text-foreground/80">
-                          {isEs ? "Ganaré $5.000.000 COP" : "Earn $5,000 / mo"}
-                        </span>
+                        <p className="text-foreground/80 leading-relaxed italic">
+                          &ldquo;
+                          {isEs
+                            ? "Mudarme a un estudio con balcón soleado para escribir."
+                            : "Move to a studio with a sunny balcony to write."}
+                          &rdquo;
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
-                          {isEs ? "Realidad:" : "Reality:"}
+
+                      <div className="p-4 space-y-1 bg-manila/10">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {isEs ? "Realidad hoy en día:" : "Reality Today:"}
                         </span>
-                        <span>
-                          {isEs ? "Gano $7.200.000 COP" : "Earning $7,200 / mo"}
-                        </span>
+                        <p className="text-foreground/90 leading-relaxed font-semibold">
+                          &ldquo;
+                          {isEs
+                            ? "Encontré un ático con terraza iluminada y vistas al parque."
+                            : "Found a penthouse with a sunlit terrace and park views."}
+                          &rdquo;
+                        </p>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {isEs ? "¡SUPERASTE!" : "EXCEEDED!"}
-                    </span>
                   </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
-                          {isEs ? "Predicción:" : "Prediction:"}
+                  <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
+                    <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
+                        {isEs
+                          ? "¿Cuál terminó siendo tu mayor logro?"
+                          : "What was your greatest achievement?"}
+                      </span>
+                      <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-wax/10 text-wax border border-wax/20">
+                        <X size={12} />
+                        <span>{isEs ? "NO EXACTAMENTE" : "DIVERGED"}</span>
+                      </span>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
+                      <div className="p-4 space-y-1">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {isEs ? "Predicción del pasado:" : "Past Prediction:"}
                         </span>
-                        <span className="italic text-foreground/80">
-                          8 / 10 {isEs ? "de felicidad" : "happiness"}
-                        </span>
+                        <p className="text-foreground/80 leading-relaxed italic">
+                          &ldquo;
+                          {isEs
+                            ? "Publicar una novela epistolar en formato tradicional."
+                            : "Publish an epistolary novel in traditional print format."}
+                          &rdquo;
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
-                          {isEs ? "Realidad:" : "Reality:"}
+
+                      <div className="p-4 space-y-1 bg-manila/10">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {isEs ? "Realidad hoy en día:" : "Reality Today:"}
                         </span>
-                        <span>
-                          7 / 10 {isEs ? "de felicidad" : "happiness"}
-                        </span>
+                        <p className="text-foreground/90 leading-relaxed font-semibold">
+                          &ldquo;
+                          {isEs
+                            ? "El proyecto evolucionó hacia TimeEcho en formato de cartas digitales selladas."
+                            : "The project evolved into TimeEcho in the format of sealed digital letters."}
+                          &rdquo;
+                        </p>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {isEs ? "MUY CERCA" : "VERY CLOSE"}
-                    </span>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Right Column: Emotional Evolution Graph & Radial Progress Accuracy */}
-              <div className="lg:col-span-5 space-y-4">
-                <div className="archival-folder rounded-xs p-4 border border-manila-border space-y-3">
-                  <div>
-                    <h4 className="text-[10px] font-letter font-semibold uppercase tracking-widest text-foreground-muted">
-                      {isEs ? "Evolución emocional" : "Emotional Evolution"}
-                    </h4>
-                    <div className="flex gap-4 text-[10px] font-letter text-foreground-muted mt-1 select-none">
-                      <span className="flex items-center gap-1">
-                        <span className="border-b border-dashed border-foreground-muted w-3 inline-block" />{" "}
-                        {isEs ? "Hace 1 año" : "1 year ago"}
-                      </span>
-                      <span className="flex items-center gap-1 font-semibold text-foreground">
-                        <span className="border-b-2 border-wax w-3 inline-block" />{" "}
-                        {isEs ? "Hoy" : "Today"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="relative w-full h-32 flex items-end">
-                    <svg
-                      viewBox="0 0 100 50"
-                      className="w-full h-full overflow-visible"
-                    >
-                      <line
-                        x1="0"
-                        y1="2"
-                        x2="100"
-                        y2="2"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-                      <line
-                        x1="0"
-                        y1="23"
-                        x2="100"
-                        y2="23"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-                      <line
-                        x1="0"
-                        y1="45"
-                        x2="100"
-                        y2="45"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-
-                      <path
-                        d="M 15 15 L 50 36 L 85 24"
-                        fill="none"
-                        stroke="var(--ink)"
-                        strokeWidth="1.5"
-                        strokeDasharray="2 2"
-                      />
-                      <circle cx="15" cy="15" r="1.5" fill="var(--ink)" />
-                      <circle cx="50" cy="36" r="1.5" fill="var(--ink)" />
-                      <circle cx="85" cy="24" r="1.5" fill="var(--ink)" />
-
-                      <path
-                        d="M 15 10 L 50 40 L 85 5"
-                        fill="none"
-                        stroke="var(--wax)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <circle cx="15" cy="10" r="2.2" fill="var(--wax)" />
-                      <circle cx="50" cy="40" r="2.2" fill="var(--wax)" />
-                      <circle cx="85" cy="5" r="2.2" fill="var(--wax)" />
-                    </svg>
-
-                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[8px] font-letter font-semibold text-foreground-muted tracking-wider uppercase select-none">
-                      <span>{isEs ? "Felicidad" : "Happiness"}</span>
-                      <span>{isEs ? "Ansiedad" : "Anxiety"}</span>
-                      <span>{isEs ? "Motivación" : "Motivation"}</span>
-                    </div>
-                  </div>
+            <div className="lg:col-span-4 space-y-6">
+              <div className="paper-sheet rounded-xs p-6 space-y-4 text-center border border-crease">
+                <div className="border-b border-crease pb-2.5">
+                  <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
+                    {isEs
+                      ? "Tu Score de Predicciones"
+                      : "Prediction Accuracy Score"}
+                  </h3>
                 </div>
 
-                <div className="paper-sheet rounded-xs p-4 border border-crease flex items-center gap-4">
+                <div className="relative w-32 h-32 mx-auto flex items-center justify-center my-2">
                   <div
-                    className="radial-progress text-ink font-letter text-lg font-bold shrink-0"
+                    className="radial-progress text-ink font-letter text-2xl font-bold"
                     style={{
-                      ["--value" as string]: 75,
-                      ["--size" as string]: "4.5rem",
-                      ["--thickness" as string]: "5px",
+                      ["--value" as string]: 67,
+                      ["--size" as string]: "8rem",
+                      ["--thickness" as string]: "8px",
                     }}
                     role="progressbar"
-                    aria-valuenow={75}
+                    aria-valuenow={67}
                     aria-valuemin={0}
                     aria-valuemax={100}
                   >
-                    75%
+                    67%
+                  </div>
+                </div>
+
+                <div className="space-y-1 text-xs font-letter">
+                  <p className="font-semibold text-foreground">
+                    {isEs
+                      ? "Acertaste 2 de 3 predicciones (67%)."
+                      : "You matched 2 of 3 predictions (67%)."}
+                  </p>
+                  <p className="text-foreground-muted leading-relaxed max-w-xs mx-auto">
+                    {isEs
+                      ? "Vas por un gran camino. Muchas cosas cambiaron, pero tu rumbo sigue claro."
+                      : "You are on a good path. Circumstances shifted, but your compass remains steadfast."}
+                  </p>
+                </div>
+              </div>
+
+              <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
+                <div className="border-b border-manila-border pb-2.5">
+                  <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
+                    {isEs ? "Evolución emocional" : "Emotional Evolution"}
+                  </h3>
+                  <p className="text-[10px] font-letter text-foreground-muted uppercase tracking-wider mt-0.5">
+                    {isEs
+                      ? "Cambio en tu bienestar interno"
+                      : "Shift in your internal wellbeing"}
+                  </p>
+                </div>
+
+                <div className="space-y-4 font-letter text-xs">
+                  <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">
+                        {isEs ? "Felicidad" : "Happiness"}
+                      </span>
+                      <span className="text-[10px] font-semibold text-ink">
+                        +3 {isEs ? "Crecimiento" : "Growth"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-[11px] text-foreground-muted">
+                      <span>
+                        {isEs ? "Pasado:" : "Past:"} <strong>6</strong>
+                      </span>
+                      <span>&rarr;</span>
+                      <span>
+                        {isEs ? "Hoy:" : "Today:"} <strong>9</strong>
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="space-y-0.5 font-letter text-xs">
-                    <h5 className="font-semibold text-foreground uppercase tracking-wider text-[10px]">
-                      {isEs ? "Tu precisión general" : "Your overall accuracy"}
-                    </h5>
-                    <p className="font-semibold text-foreground/90">
-                      {isEs
-                        ? "Acertaste 3 de 4 predicciones"
-                        : "You got 3 out of 4 predictions right"}
-                    </p>
-                    <p className="text-[10px] text-foreground-muted">
-                      {isEs
-                        ? "¡Vas por buen camino!"
-                        : "You are on the right track!"}
-                    </p>
+                  <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">
+                        {isEs ? "Ansiedad" : "Anxiety"}
+                      </span>
+                      <span className="text-[10px] font-semibold text-ink">
+                        -4 {isEs ? "Más Calma" : "Calmer"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-[11px] text-foreground-muted">
+                      <span>
+                        {isEs ? "Pasado:" : "Past:"} <strong>7</strong>
+                      </span>
+                      <span>&rarr;</span>
+                      <span>
+                        {isEs ? "Hoy:" : "Today:"} <strong>3</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">
+                        {isEs ? "Motivación" : "Motivation"}
+                      </span>
+                      <span className="text-[10px] font-semibold text-ink">
+                        +1 {isEs ? "Inspirado" : "Inspired"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-[11px] text-foreground-muted">
+                      <span>
+                        {isEs ? "Pasado:" : "Past:"} <strong>7</strong>
+                      </span>
+                      <span>&rarr;</span>
+                      <span>
+                        {isEs ? "Hoy:" : "Today:"} <strong>8</strong>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <Link
+                href="/letters/capsule-archived-2022"
+                className="paper-sheet rounded-xs p-4 border border-crease hover:border-ink/50 flex items-center justify-between group transition-all text-xs font-letter"
+              >
+                <div className="flex items-center gap-2.5">
+                  <FileText size={16} className="text-ink shrink-0" />
+                  <div>
+                    <span className="font-semibold text-foreground block group-hover:text-wax transition-colors">
+                      {isEs
+                        ? "Ver este folio en la bóveda"
+                        : "View this folio in the vault"}
+                    </span>
+                    <span className="text-[10px] text-foreground-muted block">
+                      TE-00108 · {isEs ? "Expediente histórico abierto" : "Opened historical docket"}
+                    </span>
+                  </div>
+                </div>
+                <ArrowRight
+                  size={14}
+                  className="text-foreground-muted group-hover:translate-x-1 group-hover:text-wax transition-all shrink-0"
+                />
+              </Link>
             </div>
           </div>
         </div>

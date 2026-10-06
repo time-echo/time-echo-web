@@ -177,7 +177,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     setLocalLetter(updated);
   };
 
-  if (letter.status === "archived") {
+  if (letter.status === "archived" && !letter.isWaxBroken && !letter.openedAt) {
     return (
       <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">
         <div className="max-w-xl mx-auto py-8">
@@ -580,11 +580,64 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
   const pastMotivation = letter.emotionalSnapshot?.motivationLevel ?? 7;
   const currMotivation = letter.revealMotivation ?? 8;
   const motShift = currMotivation - pastMotivation;
+  const isArchived = letter.status === "archived";
 
   return (
     <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">
+      {isArchived && (
+        <div className="paper-sheet rounded-xs p-4 sm:p-5 border border-crease mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-letter">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center text-foreground-muted border border-crease bg-manila shrink-0">
+              <Archive size={18} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="postmark-stamp text-[9px] py-0.5 px-2 text-ink">
+                  {isEs ? "Expediente Archivado" : "Archived Docket"}
+                </span>
+                <span className="font-semibold text-xs text-foreground">
+                  {letter.docketNumber}
+                </span>
+              </div>
+              <p className="text-[11px] text-foreground-muted mt-0.5">
+                {isEs
+                  ? "Esta carta se encuentra archivada en la bóveda postal. Puedes restaurarla a tus cartas activas o eliminarla permanentemente."
+                  : "This letter is archived in the postal vault. You can restore it to your vault or permanently delete it."}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={async () => {
+                const updated = await restoreCapsule(letter.id);
+                setLocalLetter(updated);
+              }}
+              className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-3.5 py-2 text-xs font-medium uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer bg-transparent"
+            >
+              <RotateCcw size={13} />
+              <span>{isEs ? "Restaurar" : "Restore"}</span>
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                const confirmMsg = isEs
+                  ? "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer."
+                  : "Are you sure you want to permanently delete this letter? This action cannot be undone.";
+                if (window.confirm(confirmMsg)) {
+                  await deleteCapsule(letter.id);
+                  router.push("/dashboard");
+                }
+              }}
+              className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-3.5 py-2 text-xs font-medium uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer bg-transparent"
+            >
+              <Trash2 size={13} />
+              <span>{isEs ? "Eliminar" : "Delete"}</span>
+            </button>
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Letter Manuscript + Predictions vs Reality Ledger */}
         <div className="lg:col-span-8 space-y-6">
           <div className="paper-sheet rounded-xs p-6 sm:p-10 space-y-6 border border-crease">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-4 text-xs font-letter">
