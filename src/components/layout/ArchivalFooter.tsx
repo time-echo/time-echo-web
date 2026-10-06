@@ -20,13 +20,13 @@ export function ArchivalFooter() {
           </span>
         </div>
         <nav className="flex gap-4 items-center font-sans-ui">
-          <Link href="/" className="hover:text-wax transition-colors">
+          <Link href="/about" className="hover:text-wax transition-colors">
             {isEs ? "Acerca de" : "About"}
           </Link>
-          <Link href="/" className="hover:text-wax transition-colors">
+          <Link href="/privacy" className="hover:text-wax transition-colors">
             {isEs ? "Privacidad" : "Privacy"}
           </Link>
-          <Link href="/" className="hover:text-wax transition-colors">
+          <Link href="/terms" className="hover:text-wax transition-colors">
             {isEs ? "Términos" : "Terms"}
           </Link>
           <span className="font-serif-editorial italic text-foreground-muted/60 hidden sm:inline">
