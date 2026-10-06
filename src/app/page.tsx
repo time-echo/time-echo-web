@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { PredictionCategory } from "@/types/timeecho";
@@ -20,6 +20,30 @@ export default function HomePage() {
   const router = useRouter();
   const { locale, createCapsule } = useTimeEcho();
   const isEs = locale === "es";
+
+  useEffect(() => {
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const targetElement = document.getElementById(hash.slice(1));
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    scrollToHash();
+    const frameId = requestAnimationFrame(scrollToHash);
+    const timeoutId = setTimeout(scrollToHash, 150);
+    window.addEventListener("hashchange", scrollToHash);
+    window.addEventListener("popstate", scrollToHash);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(timeoutId);
+      window.removeEventListener("hashchange", scrollToHash);
+      window.removeEventListener("popstate", scrollToHash);
+    };
+  }, []);
 
   const [content, setContent] = useState("");
   const [email, setEmail] = useState("");

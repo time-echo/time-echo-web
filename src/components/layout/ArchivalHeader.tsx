@@ -2,13 +2,26 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Globe, Mail, LogIn } from "lucide-react";
 
 export function ArchivalHeader() {
+  const pathname = usePathname();
   const { locale, toggleLocale, capsules } = useTimeEcho();
   const isEs = locale === "es";
   const hasLetters = capsules.length > 0;
+
+  const handleHowItWorksClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      const element = document.getElementById("how-it-works");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+      window.history.pushState(null, "", "/#how-it-works");
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-parchment/90 backdrop-blur-md border-b border-crease/60 font-sans-ui select-none">
@@ -37,6 +50,7 @@ export function ArchivalHeader() {
 
           <Link
             href="/#how-it-works"
+            onClick={handleHowItWorksClick}
             className="hidden sm:block text-foreground-muted hover:text-wax transition-colors whitespace-nowrap"
           >
             {isEs ? "Cómo funciona" : "How It Works"}
