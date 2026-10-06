@@ -13,7 +13,7 @@ import {
   CheckCircle,
   Archive,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface CapsuleCardProps {
@@ -22,22 +22,18 @@ export interface CapsuleCardProps {
 }
 
 export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { locale, t } = useTimeEcho();
 
   const isPending = capsule.status === "pending";
   const isDelivered = capsule.status === "delivered";
   const isOpened = capsule.status === "opened";
   const isArchived = capsule.status === "archived";
 
-  const scheduledFormatted = new Date(capsule.scheduledAt).toLocaleDateString(
-    isEs ? "es-ES" : "en-US",
-    {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    },
-  );
+  const scheduledFormatted = formatLocaleDate(capsule.scheduledAt, locale, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 
   return (
     <article
@@ -86,25 +82,21 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
           {isDelivered && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-wax bg-wax/10 text-wax font-letter text-[11px] font-bold tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-wax animate-pulse" />
-              <span>
-                {isEs
-                  ? "DESBLOQUEADA // SELLO INTACTO"
-                  : "UNLOCKED // SEAL INTACT"}
-              </span>
+              <span>{t("dashboard.unlockedSealIntact")}</span>
             </span>
           )}
 
           {isOpened && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-ink/40 bg-ink/10 text-ink font-letter text-[11px] font-semibold tracking-wider uppercase">
               <CheckCircle size={12} />
-              <span>{isEs ? "DESPRECINTADA" : "UNSEALED"}</span>
+              <span>{t("common.opened").toUpperCase()}</span>
             </span>
           )}
 
           {isArchived && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-crease bg-crease/40 text-foreground-muted font-letter text-[11px] tracking-wider uppercase">
               <Archive size={12} />
-              <span>{isEs ? "EXPEDIENTE ARCHIVADO" : "ARCHIVED"}</span>
+              <span>{t("common.archived").toUpperCase()}</span>
             </span>
           )}
 
@@ -124,11 +116,7 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
           {isPending ? (
             <span className="italic opacity-70 flex items-center gap-1.5">
               <Lock size={12} className="shrink-0" />
-              <span>
-                {isEs
-                  ? "El contenido epistolar permanece sellado bajo bóveda cifrada hasta la fecha de entrega."
-                  : "Correspondence is safeguarded under encrypted vault custody until arrival."}
-              </span>
+              <span>{t("dashboard.sealedNotice")}</span>
             </span>
           ) : (
             capsule.content
@@ -142,8 +130,7 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
             <span className="inline-flex items-center gap-1 text-[11px]">
               <Compass size={13} className="text-ink" />
               <span>
-                {capsule.predictions.length}{" "}
-                {isEs ? "predicciones" : "predictions"}
+                {capsule.predictions.length} {t("dashboard.predictionsCount")}
               </span>
             </span>
           )}
@@ -160,12 +147,8 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
         >
           <span>
             {isDelivered
-              ? isEs
-                ? "Quebrar sello"
-                : "Break seal"
-              : isEs
-                ? "Inspeccionar"
-                : "Inspect"}
+              ? t("dashboard.breakSeal")
+              : t("common.inspect")}
           </span>
           <ArrowRight size={13} />
         </Link>

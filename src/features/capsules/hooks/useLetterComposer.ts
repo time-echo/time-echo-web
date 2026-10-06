@@ -75,8 +75,7 @@ const DEFAULT_STATE: LetterComposerState = {
 export function useLetterComposer(
   initialValues?: Partial<LetterComposerState>,
 ) {
-  const { createCapsule, locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { createCapsule, locale, t } = useTimeEcho();
 
   const [form, setForm] = useState<LetterComposerState>(() => ({
     ...DEFAULT_STATE,
@@ -141,44 +140,30 @@ export function useLetterComposer(
     const errs: Record<string, string> = {};
 
     if (!form.title.trim()) {
-      errs.title = isEs
-        ? "El título de la cápsula es obligatorio."
-        : "The capsule title is required.";
+      errs.title = t("composer.errors.titleRequired");
     } else if (form.title.trim().length < 3) {
-      errs.title = isEs
-        ? "El título debe tener al menos 3 caracteres."
-        : "The title must be at least 3 characters.";
+      errs.title = t("composer.errors.titleLength");
     }
 
     if (!form.content.trim()) {
-      errs.content = isEs
-        ? "Escribe un mensaje para tu yo del futuro."
-        : "Write a message for your future self.";
+      errs.content = t("composer.errors.contentRequired");
     } else if (form.content.trim().length < 10) {
-      errs.content = isEs
-        ? "El contenido debe tener al menos 10 caracteres."
-        : "Content must be at least 10 characters.";
+      errs.content = t("composer.errors.contentLength");
     }
 
     if (!form.email.trim()) {
-      errs.email = isEs
-        ? "El correo de entrega es requerido."
-        : "Delivery email is required.";
+      errs.email = t("composer.errors.emailRequired");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      errs.email = isEs
-        ? "Ingresa un correo electrónico válido."
-        : "Please enter a valid email address.";
+      errs.email = t("composer.errors.emailInvalid");
     }
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
     if (!form.scheduledAt || isNaN(scheduledTime)) {
-      errs.scheduledAt = isEs
-        ? "Selecciona una fecha de entrega válida."
-        : "Please select a valid delivery date.";
+      errs.scheduledAt = t("composer.errors.dateRequired");
     }
 
     return errs;
-  }, [form.title, form.content, form.email, form.scheduledAt, isEs]);
+  }, [form.title, form.content, form.email, form.scheduledAt, t]);
 
   const isValid = Object.keys(validationErrors).length === 0;
 
@@ -191,9 +176,7 @@ export function useLetterComposer(
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
     if (scheduledTime <= Date.now()) {
-      const dateErr = isEs
-        ? "La fecha de entrega debe situarse en el futuro."
-        : "Delivery date must be in the future.";
+      const dateErr = t("composer.errors.dateFuture");
       setError(dateErr);
       throw new Error(dateErr);
     }
@@ -225,16 +208,14 @@ export function useLetterComposer(
       const msg =
         err instanceof Error
           ? err.message
-          : isEs
-            ? "Error al sellar la cápsula"
-            : "Error sealing capsule";
+          : t("composer.errors.sealError");
       setError(msg);
       throw err;
     } finally {
       setIsSubmitting(false);
       setIsSealing(false);
     }
-  }, [isValid, validationErrors, form, createCapsule, isEs]);
+  }, [isValid, validationErrors, form, createCapsule, t]);
 
   const resetComposer = useCallback(() => {
     setForm(DEFAULT_STATE);

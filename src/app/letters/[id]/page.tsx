@@ -22,28 +22,23 @@ interface LetterPageProps {
   params: Promise<{ id: string }>;
 }
 
-function getPredictionQuestion(category: string, isEs: boolean): string {
+function getPredictionQuestion(
+  category: string,
+  t: (key: string, params?: Record<string, string | number>) => string,
+): string {
   switch (category) {
     case "city":
-      return isEs ? "¿Dónde vives hoy en día?" : "Where do you live today?";
+      return t("reality.questions.city");
     case "career":
-      return isEs ? "¿En qué trabajas hoy en día?" : "What do you do today?";
+      return t("reality.questions.career");
     case "salary":
-      return isEs
-        ? "¿Cuánto ganas hoy al mes?"
-        : "How much do you earn per month?";
+      return t("reality.questions.salary");
     case "relationship":
-      return isEs
-        ? "¿Cómo está tu relación sentimental hoy?"
-        : "How is your relationship today?";
+      return t("reality.questions.relationship");
     case "achievement":
-      return isEs
-        ? "¿Cuál terminó siendo tu mayor logro?"
-        : "What was your greatest achievement?";
+      return t("reality.questions.achievement");
     default:
-      return isEs
-        ? `¿Qué ocurrió con: ${category}?`
-        : `What happened with: ${category}?`;
+      return t("reality.questions.defaultQuestion", { category });
   }
 }
 
@@ -59,9 +54,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     restoreCapsule,
     deleteCapsule,
     locale,
+    t,
   } = useTimeEcho();
-
-  const isEs = locale === "es";
 
   const contextLetter = getCapsuleById(id);
   const [localLetter, setLocalLetter] = useState<Letter | null>(null);
@@ -119,9 +113,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
   if (isLoading || !letter) {
     return (
       <div className="max-w-xl mx-auto py-16 text-center font-letter text-xs text-foreground-muted animate-pulse">
-        {isEs
-          ? "Accediendo al expediente postal..."
-          : "Accessing postal docket..."}
+        {t("reveal.loadingDocket")}
       </div>
     );
   }
@@ -160,7 +152,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
       };
       return {
         id: p.id || String(idx),
-        reality: ans.reality || (isEs ? "Confirmado" : "Confirmed"),
+        reality: ans.reality || t("reveal.confirmed"),
         matched: ans.matched,
       };
     });
@@ -188,15 +180,13 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
 
             <div className="space-y-2">
               <span className="postmark-stamp text-[10px] py-0.5 px-2.5 text-ink">
-                {isEs ? "Expediente Archivado" : "Archived Docket"}
+                {t("reveal.archivedDocket")}
               </span>
               <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
                 {letter.title}
               </h1>
               <p className="text-xs font-letter text-foreground-muted max-w-sm mx-auto leading-relaxed">
-                {isEs
-                  ? "Esta carta se encuentra archivada en la bóveda postal. Puedes restaurarla para reintegrarla o eliminarla permanentemente."
-                  : "This letter is archived in the postal vault. You can restore it to your vault or permanently delete it."}
+                {t("reveal.archivedDocketDesc")}
               </p>
             </div>
 
@@ -206,7 +196,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors"
               >
                 <ArrowLeft size={14} />
-                <span>{isEs ? "Volver a mis cartas" : "Back to Vault"}</span>
+                <span>{t("reveal.backToVault")}</span>
               </Link>
               <button
                 type="button"
@@ -217,14 +207,12 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
               >
                 <RotateCcw size={14} />
-                <span>{isEs ? "Restaurar" : "Restore"}</span>
+                <span>{t("reveal.restore")}</span>
               </button>
               <button
                 type="button"
                 onClick={async () => {
-                  const confirmMsg = isEs
-                    ? "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer."
-                    : "Are you sure you want to permanently delete this letter? This action cannot be undone.";
+                  const confirmMsg = t("reveal.deleteConfirm");
                   if (window.confirm(confirmMsg)) {
                     await deleteCapsule(letter.id);
                     router.push("/dashboard");
@@ -233,7 +221,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
               >
                 <Trash2 size={14} />
-                <span>{isEs ? "Eliminar" : "Delete"}</span>
+                <span>{t("reveal.delete")}</span>
               </button>
             </div>
           </div>
@@ -254,25 +242,22 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
 
             <div className="space-y-2">
               <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
-                {isEs ? "Esta cápsula está sellada" : "This capsule is sealed"}
+                {t("reveal.lockedTitle")}
               </h1>
               <p className="text-xs font-letter text-foreground-muted max-w-sm mx-auto leading-relaxed">
-                {isEs
-                  ? `Este mensaje fue sellado por ${letter.email} y actualmente está viajando a través del tiempo.`
-                  : `This message was sealed by ${letter.email} and is currently voyaging across time.`}
+                {t("reveal.lockedDesc", { email: letter.email })}
               </p>
             </div>
 
             <div className="space-y-3">
               <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
-                {isEs ? "Tiempo restante" : "Time remaining"}
+                {t("reveal.remainingTime")}
               </span>
               <div className="postmark-stamp text-2xl font-letter py-2.5 px-6">
-                {isEs ? `Faltan ${daysLeft} días` : `${daysLeft} days left`}
+                {t("reveal.daysRemaining", { days: daysLeft })}
               </div>
               <p className="text-xs font-letter text-foreground-muted">
-                {isEs ? "Se entregará el" : "Will be delivered on"}{" "}
-                {formattedScheduled}
+                {t("reveal.willBeDeliveredOn", { date: formattedScheduled })}
               </p>
             </div>
 
@@ -282,7 +267,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors"
               >
                 <ArrowLeft size={14} />
-                <span>{isEs ? "Volver a mis cartas" : "Back to Vault"}</span>
+                <span>{t("reveal.backToVault")}</span>
               </Link>
               <button
                 type="button"
@@ -293,7 +278,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
               >
                 <Archive size={14} />
-                <span>{isEs ? "Archivar carta" : "Archive Letter"}</span>
+                <span>{t("reveal.archiveLetter")}</span>
               </button>
             </div>
           </div>
@@ -312,17 +297,13 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             <div className="lg:col-span-4 paper-sheet rounded-xs p-6 sm:p-8 text-center space-y-6 border border-crease">
               <div className="space-y-2">
                 <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
-                  {isEs ? "Cápsula Desbloqueada" : "Capsule Unlocked"}
+                  {t("reveal.capsuleUnlockedTitle")}
                 </span>
                 <h2 className="font-serif-editorial text-2xl font-semibold text-foreground leading-snug">
-                  {isEs
-                    ? "Tu carta del pasado te está esperando."
-                    : "Your letter from the past awaits."}
+                  {t("reveal.unlockedAwaits")}
                 </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "Antes de leerla, cuéntanos qué pasó realmente. Esto nos permitirá calcular el score de predicciones y shifts emocionales."
-                    : "Before reading it, tell us what actually unfolded. This enables the calculation of your reality score and emotional shift."}
+                  {t("reveal.unlockedAwaitsDesc")}
                 </p>
               </div>
 
@@ -334,12 +315,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
 
               <div className="archival-folder rounded-xs p-4 text-xs font-letter text-foreground/80 space-y-1 text-left border border-manila-border">
                 <p className="font-semibold uppercase tracking-wider text-[10px] text-foreground">
-                  {isEs ? "Consejo de reflexión:" : "Reflection tip:"}
+                  {t("reveal.reflectionTipTitle")}
                 </p>
                 <p className="leading-relaxed">
-                  {isEs
-                    ? "Sé honesto contigo mismo. No hay respuestas correctas o incorrectas. Esta experiencia es 100% tuya y te ayuda a ver lo mucho que has crecido."
-                    : "Be honest with yourself. There are no right or wrong answers. This reflection is entirely yours."}
+                  {t("reveal.reflectionTipDesc")}
                 </p>
               </div>
             </div>
@@ -348,17 +327,13 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             <div className="lg:col-span-5 archival-folder rounded-xs p-6 sm:p-8 space-y-6 border border-manila-border">
               <div className="border-b border-manila-border pb-3">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
-                  {isEs ? "COTEJO DE HECHOS" : "FACT MATCHING"}
+                  {t("reveal.factMatching")}
                 </span>
                 <h3 className="font-serif-editorial text-xl font-semibold text-foreground mt-0.5">
-                  {isEs
-                    ? "Cuéntanos tu realidad actual"
-                    : "Tell Us Your Present Reality"}
+                  {t("reveal.presentRealityTitle")}
                 </h3>
                 <p className="text-xs font-letter text-foreground-muted mt-1">
-                  {isEs
-                    ? "Responde estas preguntas para comparar tu pasado con tu yo actual."
-                    : "Answer these questions to contrast your past mindset with your present reality."}
+                  {t("reveal.presentRealityDesc")}
                 </p>
               </div>
 
@@ -378,14 +353,12 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                       >
                         <label className="text-xs font-semibold text-foreground flex items-center gap-2 font-letter">
                           <span>
-                            {getPredictionQuestion(pred.category, isEs)}
+                            {getPredictionQuestion(pred.category, t)}
                           </span>
                         </label>
 
                         <div className="text-xs text-foreground-muted italic font-letter bg-manila/40 px-3 py-1.5 rounded-xs border border-crease/50">
-                          {isEs
-                            ? "Tu predicción del pasado:"
-                            : "Past prediction:"}{" "}
+                          {t("reveal.pastPredictionLabel")}{" "}
                           &ldquo;{pred.prediction}&rdquo;
                         </div>
 
@@ -402,20 +375,14 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                                 },
                               })
                             }
-                            placeholder={
-                              isEs
-                                ? "Describe tu realidad ahora..."
-                                : "Describe your reality now..."
-                            }
+                            placeholder={t("reveal.describeRealityPlaceholder")}
                             required
                             className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease text-foreground font-letter placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                           />
 
                           <div className="space-y-1.5">
                             <label className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                              {isEs
-                                ? "¿Se cumplió tu predicción?"
-                                : "Did this prediction come true?"}
+                              {t("reveal.didPredictionComeTrue")}
                             </label>
                             <div className="grid grid-cols-2 gap-2">
                               <button
@@ -435,7 +402,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                               >
                                 <Check size={13} />
                                 <span>
-                                  {isEs ? "Sí, lo logré" : "Yes, I did it"}
+                                  {t("reveal.yesDidIt")}
                                 </span>
                               </button>
                               <button
@@ -455,7 +422,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                               >
                                 <X size={13} />
                                 <span>
-                                  {isEs ? "No exactamente" : "Not exactly"}
+                                  {t("reveal.notExactly")}
                                 </span>
                               </button>
                             </div>
@@ -473,22 +440,20 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
                 <div className="border-b border-manila-border pb-3">
                   <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
-                    {isEs ? "ESTADO ACTUAL" : "CURRENT STATE"}
+                    {t("reveal.currentState")}
                   </span>
                   <h3 className="font-serif-editorial text-lg font-semibold text-foreground mt-0.5">
-                    {isEs ? "Estado emocional hoy" : "Emotional baseline today"}
+                    {t("reveal.emotionalBaselineToday")}
                   </h3>
                   <p className="text-xs font-letter text-foreground-muted mt-1">
-                    {isEs
-                      ? "¿Cómo te sientes en este momento?"
-                      : "How do you feel right now?"}
+                    {t("reveal.howFeelRightNow")}
                   </p>
                 </div>
 
                 <div className="space-y-4 font-letter text-xs">
                   <div className="space-y-1">
                     <div className="flex justify-between items-center font-semibold text-foreground">
-                      <span>{isEs ? "Felicidad" : "Happiness"}</span>
+                      <span>{t("common.happiness")}</span>
                       <span className="text-foreground-muted">
                         {revealHappiness} / 10
                       </span>
@@ -501,14 +466,14 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                       onChange={(e) =>
                         setRevealHappiness(Number(e.target.value))
                       }
-                      aria-label={isEs ? "Felicidad" : "Happiness"}
+                      aria-label={t("common.happiness")}
                       className="w-full accent-wax cursor-pointer"
                     />
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex justify-between items-center font-semibold text-foreground">
-                      <span>{isEs ? "Ansiedad" : "Anxiety"}</span>
+                      <span>{t("common.anxiety")}</span>
                       <span className="text-foreground-muted">
                         {revealAnxiety} / 10
                       </span>
@@ -519,14 +484,14 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                       max={10}
                       value={revealAnxiety}
                       onChange={(e) => setRevealAnxiety(Number(e.target.value))}
-                      aria-label={isEs ? "Ansiedad" : "Anxiety"}
+                      aria-label={t("common.anxiety")}
                       className="w-full accent-wax cursor-pointer"
                     />
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex justify-between items-center font-semibold text-foreground">
-                      <span>{isEs ? "Motivación" : "Motivation"}</span>
+                      <span>{t("common.motivation")}</span>
                       <span className="text-foreground-muted">
                         {revealMotivation} / 10
                       </span>
@@ -539,7 +504,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                       onChange={(e) =>
                         setRevealMotivation(Number(e.target.value))
                       }
-                      aria-label={isEs ? "Motivación" : "Motivation"}
+                      aria-label={t("common.motivation")}
                       className="w-full accent-wax cursor-pointer"
                     />
                   </div>
@@ -552,7 +517,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               >
                 <Unlock size={16} />
                 <span>
-                  {isEs ? "Guardar y ver mi carta" : "Save & View My Letter"}
+                  {t("reveal.saveAndViewLetter")}
                 </span>
               </button>
             </div>
@@ -593,16 +558,14 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             <div>
               <div className="flex items-center gap-2">
                 <span className="postmark-stamp text-[9px] py-0.5 px-2 text-ink">
-                  {isEs ? "Expediente Archivado" : "Archived Docket"}
+                  {t("reveal.archivedDocket")}
                 </span>
                 <span className="font-semibold text-xs text-foreground">
                   {letter.docketNumber}
                 </span>
               </div>
               <p className="text-[11px] text-foreground-muted mt-0.5">
-                {isEs
-                  ? "Esta carta se encuentra archivada en la bóveda postal. Puedes restaurarla a tus cartas activas o eliminarla permanentemente."
-                  : "This letter is archived in the postal vault. You can restore it to your vault or permanently delete it."}
+                {t("reveal.archivedDocketDesc")}
               </p>
             </div>
           </div>
@@ -616,14 +579,12 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-3.5 py-2 text-xs font-medium uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer bg-transparent"
             >
               <RotateCcw size={13} />
-              <span>{isEs ? "Restaurar" : "Restore"}</span>
+              <span>{t("reveal.restore")}</span>
             </button>
             <button
               type="button"
               onClick={async () => {
-                const confirmMsg = isEs
-                  ? "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer."
-                  : "Are you sure you want to permanently delete this letter? This action cannot be undone.";
+                const confirmMsg = t("reveal.deleteConfirm");
                 if (window.confirm(confirmMsg)) {
                   await deleteCapsule(letter.id);
                   router.push("/dashboard");
@@ -632,7 +593,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-3.5 py-2 text-xs font-medium uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer bg-transparent"
             >
               <Trash2 size={13} />
-              <span>{isEs ? "Eliminar" : "Delete"}</span>
+              <span>{t("reveal.delete")}</span>
             </button>
           </div>
         </div>
@@ -643,7 +604,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-4 text-xs font-letter">
               <div>
                 <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
-                  {isEs ? "Escrito" : "Written"}
+                  {t("reveal.written")}
                 </p>
                 <p className="font-semibold text-foreground text-xs">
                   {formattedCreated}
@@ -651,12 +612,12 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               </div>
               <div className="text-center">
                 <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
-                  {isEs ? "Carta del pasado" : "Letter from Past"}
+                  {t("reveal.letterFromPast")}
                 </span>
               </div>
               <div className="sm:text-right">
                 <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
-                  {isEs ? "Entregado" : "Delivered"}
+                  {t("reveal.delivered")}
                 </p>
                 <p className="font-semibold text-foreground text-xs">
                   {formattedScheduled}
@@ -674,7 +635,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 className="hover:text-foreground text-foreground-muted transition-colors flex items-center gap-1.5 font-semibold uppercase tracking-wider"
               >
                 <ArrowLeft size={14} />
-                <span>{isEs ? "Volver a mis cartas" : "Back to Vault"}</span>
+                <span>{t("reveal.backToVault")}</span>
               </Link>
             </div>
           </div>
@@ -683,12 +644,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             <div className="archival-folder rounded-xs p-6 sm:p-8 space-y-5 border border-manila-border">
               <div className="border-b border-manila-border pb-3">
                 <h2 className="font-serif-editorial text-xl font-semibold text-foreground">
-                  {isEs ? "Predicciones vs Realidad" : "Predictions vs Reality"}
+                  {t("reveal.predictionsVsReality")}
                 </h2>
                 <p className="text-xs font-letter text-foreground-muted mt-1">
-                  {isEs
-                    ? "Compara lo que imaginabas hace un tiempo con la vida que estás viviendo hoy."
-                    : "Compare what you once envisioned with the life you are actively living today."}
+                  {t("reveal.predictionsVsRealityDesc")}
                 </p>
               </div>
 
@@ -700,7 +659,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                   >
                     <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                        {getPredictionQuestion(pred.category, isEs)}
+                        {getPredictionQuestion(pred.category, t)}
                       </span>
                       <span
                         className={cn(
@@ -713,12 +672,8 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                         {pred.matched ? <Check size={12} /> : <X size={12} />}
                         <span>
                           {pred.matched
-                            ? isEs
-                              ? "¡LO LOGRASTE!"
-                              : "ACCOMPLISHED"
-                            : isEs
-                              ? "NO EXACTAMENTE"
-                              : "DIVERGED"}
+                            ? t("reveal.accomplished")
+                            : t("reveal.diverged")}
                         </span>
                       </span>
                     </div>
@@ -726,7 +681,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                     <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
                       <div className="p-4 space-y-1">
                         <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                          {isEs ? "Predicción del pasado:" : "Past Prediction:"}
+                          {t("reveal.pastPrediction")}
                         </span>
                         <p className="text-foreground/80 leading-relaxed italic">
                           &ldquo;{pred.prediction}&rdquo;
@@ -735,11 +690,11 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
 
                       <div className="p-4 space-y-1 bg-manila/10">
                         <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                          {isEs ? "Realidad hoy en día:" : "Reality Today:"}
+                          {t("reveal.realityToday")}
                         </span>
                         <p className="text-foreground/90 leading-relaxed font-semibold">
                           &ldquo;
-                          {pred.reality || (isEs ? "Cumplida" : "Fulfilled")}
+                          {pred.reality || t("reveal.fulfilled")}
                           &rdquo;
                         </p>
                       </div>
@@ -757,9 +712,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
           <div className="paper-sheet rounded-xs p-6 space-y-4 text-center border border-crease">
             <div className="border-b border-crease pb-2.5">
               <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
-                {isEs
-                  ? "Tu Score de Predicciones"
-                  : "Prediction Accuracy Score"}
+                {t("reveal.accuracyScore")}
               </h3>
             </div>
 
@@ -784,30 +737,24 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
 
                 <div className="space-y-1 text-xs font-letter">
                   <p className="font-semibold text-foreground">
-                    {isEs
-                      ? `Acertaste ${matchedCount} de ${totalCount} predicciones (${accuracyPct}%).`
-                      : `You matched ${matchedCount} of ${totalCount} predictions (${accuracyPct}%).`}
+                    {t("reveal.accuracySummary", {
+                      matched: matchedCount,
+                      total: totalCount,
+                      percent: accuracyPct,
+                    })}
                   </p>
                   <p className="text-foreground-muted leading-relaxed max-w-xs mx-auto">
                     {accuracyPct >= 70
-                      ? isEs
-                        ? "¡Tu brújula del futuro está sumamente afilada! Excelente intuición."
-                        : "Your future compass is sharp! Remarkable intuition."
+                      ? t("reveal.accuracyHigh")
                       : accuracyPct >= 40
-                        ? isEs
-                          ? "Vas por un gran camino. Muchas cosas cambiaron, pero tu rumbo sigue claro."
-                          : "You are on a good path. Circumstances shifted, but your compass remains steadfast."
-                        : isEs
-                          ? "¡La vida te sorprendió con giros inesperados! Y eso hace el camino más interesante."
-                          : "Life gifted you unexpected twists and growth!"}
+                        ? t("reveal.accuracyMedium")
+                        : t("reveal.accuracyLow")}
                   </p>
                 </div>
               </>
             ) : (
               <p className="text-xs font-letter text-foreground-muted py-3">
-                {isEs
-                  ? "No registraste predicciones para esta carta."
-                  : "No predictions registered for this capsule."}
+                {t("reveal.noPredictions")}
               </p>
             )}
           </div>
@@ -816,12 +763,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
           <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
             <div className="border-b border-manila-border pb-2.5">
               <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
-                {isEs ? "Evolución emocional" : "Emotional Evolution"}
+                {t("reveal.emotionalEvolution")}
               </h3>
               <p className="text-[10px] font-letter text-foreground-muted uppercase tracking-wider mt-0.5">
-                {isEs
-                  ? "Cambio en tu bienestar interno"
-                  : "Shift in your internal wellbeing"}
+                {t("reveal.emotionalShiftDesc")}
               </p>
             </div>
 
@@ -829,30 +774,30 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-foreground">
-                    {isEs ? "Felicidad" : "Happiness"}
+                    {t("common.happiness")}
                   </span>
                   {hapShift > 0 ? (
                     <span className="text-[10px] font-semibold text-ink">
-                      +{hapShift} {isEs ? "Crecimiento" : "Growth"}
+                      +{hapShift} {t("reveal.growth")}
                     </span>
                   ) : hapShift < 0 ? (
                     <span className="text-[10px] font-semibold text-wax">
-                      {hapShift} {isEs ? "Descenso" : "Decline"}
+                      {hapShift} {t("reveal.decline")}
                     </span>
                   ) : (
                     <span className="text-[10px] text-foreground-muted">
-                      {isEs ? "Estable" : "Steady"}
+                      {t("reveal.steady")}
                     </span>
                   )}
                 </div>
                 <div className="flex justify-between text-[11px] text-foreground-muted">
                   <span>
-                    {isEs ? "Pasado:" : "Past:"}{" "}
+                    {t("reveal.past")}{" "}
                     <strong>{pastHappiness}</strong>
                   </span>
                   <span>&rarr;</span>
                   <span>
-                    {isEs ? "Hoy:" : "Today:"} <strong>{currHappiness}</strong>
+                    {t("reveal.today")} <strong>{currHappiness}</strong>
                   </span>
                 </div>
               </div>
@@ -860,29 +805,29 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-foreground">
-                    {isEs ? "Ansiedad" : "Anxiety"}
+                    {t("common.anxiety")}
                   </span>
                   {anxShift < 0 ? (
                     <span className="text-[10px] font-semibold text-ink">
-                      {anxShift} {isEs ? "Más Calma" : "Calmer"}
+                      {anxShift} {t("reveal.calmer")}
                     </span>
                   ) : anxShift > 0 ? (
                     <span className="text-[10px] font-semibold text-wax">
-                      +{anxShift} {isEs ? "Estrés" : "Stress"}
+                      +{anxShift} {t("reveal.stress")}
                     </span>
                   ) : (
                     <span className="text-[10px] text-foreground-muted">
-                      {isEs ? "Estable" : "Steady"}
+                      {t("reveal.steady")}
                     </span>
                   )}
                 </div>
                 <div className="flex justify-between text-[11px] text-foreground-muted">
                   <span>
-                    {isEs ? "Pasado:" : "Past:"} <strong>{pastAnxiety}</strong>
+                    {t("reveal.past")} <strong>{pastAnxiety}</strong>
                   </span>
                   <span>&rarr;</span>
                   <span>
-                    {isEs ? "Hoy:" : "Today:"} <strong>{currAnxiety}</strong>
+                    {t("reveal.today")} <strong>{currAnxiety}</strong>
                   </span>
                 </div>
               </div>
@@ -890,30 +835,30 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-foreground">
-                    {isEs ? "Motivación" : "Motivation"}
+                    {t("common.motivation")}
                   </span>
                   {motShift > 0 ? (
                     <span className="text-[10px] font-semibold text-ink">
-                      +{motShift} {isEs ? "Inspirado" : "Inspired"}
+                      +{motShift} {t("reveal.inspired")}
                     </span>
                   ) : motShift < 0 ? (
                     <span className="text-[10px] font-semibold text-wax">
-                      {motShift} {isEs ? "Descenso" : "Decline"}
+                      {motShift} {t("reveal.decline")}
                     </span>
                   ) : (
                     <span className="text-[10px] text-foreground-muted">
-                      {isEs ? "Estable" : "Steady"}
+                      {t("reveal.steady")}
                     </span>
                   )}
                 </div>
                 <div className="flex justify-between text-[11px] text-foreground-muted">
                   <span>
-                    {isEs ? "Pasado:" : "Past:"}{" "}
+                    {t("reveal.past")}{" "}
                     <strong>{pastMotivation}</strong>
                   </span>
                   <span>&rarr;</span>
                   <span>
-                    {isEs ? "Hoy:" : "Today:"} <strong>{currMotivation}</strong>
+                    {t("reveal.today")} <strong>{currMotivation}</strong>
                   </span>
                 </div>
               </div>

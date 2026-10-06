@@ -15,8 +15,7 @@ import {
 } from "lucide-react";
 
 export default function PrivacyPage() {
-  const { locale, t } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
 
   const collectItems = [
     t("privacy.sections.collect.item_email"),
@@ -56,14 +55,14 @@ export default function PrivacyPage() {
           className="inline-flex items-center gap-2 text-xs font-letter uppercase tracking-wider text-foreground-muted hover:text-wax transition-colors"
         >
           <ArrowLeft size={14} />
-          <span>{isEs ? "Volver al inicio" : "Return to Home"}</span>
+          <span>{t("privacy.returnHome")}</span>
         </Link>
 
         <PostmarkStamp
-          city={isEs ? "BÓVEDA // CUSTODIA" : "VAULT // CUSTODY"}
+          city={t("privacy.postmarkCity")}
           docketId="TE-PRIVACY"
           date="2026"
-          subtext={isEs ? "CIFRADO EN REPOSO" : "ENCRYPTED AT REST"}
+          subtext={t("privacy.postmarkSubtext")}
           variant="boxed"
           size="sm"
           inkColor="ink"

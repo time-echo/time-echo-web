@@ -1,35 +1,60 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { cookies, headers } from "next/headers";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import { fraunces, courierPrime, plexSans } from "@/lib/fonts";
 import { TimeEchoProvider } from "@/lib/context/TimeEchoContext";
 import { AppShell } from "@/components/layout/AppShell";
+import { SupportedLanguage } from "@/types/timeecho";
+import { getTranslation } from "@/lib/i18n";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "TimeEcho — Una cápsula del tiempo digital para el alma",
-  description:
-    "Escribe hoy a la persona en la que te convertirás. Bóveda epistolar cifrada con lacre y verificación de realidad.",
-  icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const headerList = await headers();
+  const cookieVal =
+    cookieStore.get("timeecho_locale")?.value ||
+    cookieStore.get("NEXT_LOCALE")?.value;
+  const headerVal = headerList.get("x-locale");
+  const locale: SupportedLanguage =
+    cookieVal === "en" || headerVal === "en" ? "en" : "es";
 
-export default function RootLayout({
+  return {
+    title: getTranslation(locale, "metadata.title"),
+    description: getTranslation(locale, "metadata.description"),
+    icons: {
+      icon: [
+        { url: "/icon.svg", type: "image/svg+xml" },
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      ],
+      apple: [
+        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      ],
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const headerList = await headers();
+  const cookieVal =
+    cookieStore.get("timeecho_locale")?.value ||
+    cookieStore.get("NEXT_LOCALE")?.value;
+  const headerVal = headerList.get("x-locale");
+  const locale: SupportedLanguage =
+    cookieVal === "en" || headerVal === "en" ? "en" : "es";
+  const messages = await getMessages();
+
   return (
     <html
-      lang="es"
+      lang={locale}
       className={`${fraunces.variable} ${courierPrime.variable} ${plexSans.variable}`}
       suppressHydrationWarning
     >
@@ -37,11 +62,13 @@ export default function RootLayout({
         className="bg-parchment text-foreground font-ui antialiased min-h-screen flex flex-col"
         suppressHydrationWarning
       >
-        <TimeEchoProvider>
-          <Suspense fallback={<div className="min-h-screen bg-parchment" />}>
-            <AppShell>{children}</AppShell>
-          </Suspense>
-        </TimeEchoProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <TimeEchoProvider defaultLocale={locale}>
+            <Suspense fallback={<div className="min-h-screen bg-parchment" />}>
+              <AppShell>{children}</AppShell>
+            </Suspense>
+          </TimeEchoProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

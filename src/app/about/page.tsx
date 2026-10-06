@@ -17,8 +17,7 @@ import {
 } from "lucide-react";
 
 export default function AboutPage() {
-  const { locale, t } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 font-ui animate-fade-in text-foreground space-y-10">
@@ -29,14 +28,14 @@ export default function AboutPage() {
           className="inline-flex items-center gap-2 text-xs font-letter uppercase tracking-wider text-foreground-muted hover:text-wax transition-colors"
         >
           <ArrowLeft size={14} />
-          <span>{isEs ? "Volver al inicio" : "Return to Home"}</span>
+          <span>{t("about.returnHome")}</span>
         </Link>
 
         <PostmarkStamp
-          city={isEs ? "CÁPSULA // CENTRAL" : "TIME VAULT // ARCHIVE"}
+          city={t("about.postmarkCity")}
           docketId="TE-ABOUT"
           date="2026"
-          subtext={isEs ? "MEMORIA VIVA" : "LIVING MEMORY"}
+          subtext={t("about.postmarkSubtext")}
           variant="boxed"
           size="sm"
           inkColor="ink"
@@ -47,7 +46,7 @@ export default function AboutPage() {
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-manila border border-manila-border text-foreground-muted text-xs font-letter">
           <Sparkles size={13} className="text-wax" />
-          <span>{isEs ? "Manifiesto Epistolar" : "Epistolary Manifesto"}</span>
+          <span>{t("about.manifestoBadge")}</span>
         </div>
         <h1 className="font-serif-editorial text-3xl sm:text-5xl text-foreground font-semibold tracking-tight leading-tight">
           {t("about.title")}
@@ -63,7 +62,7 @@ export default function AboutPage() {
         <PaperSheet
           elevation="raised"
           docketFolio="FOLIO № 01 // ORIGEN"
-          dateStamp={isEs ? "PROPÓSITO" : "PURPOSE"}
+          dateStamp={t("about.stamps.purpose")}
           className="p-6 sm:p-8"
         >
           <div className="space-y-3">
@@ -93,7 +92,7 @@ export default function AboutPage() {
                   <span>№ 01</span>
                 </span>
                 <span className="text-[10px] text-foreground-muted uppercase tracking-widest">
-                  {isEs ? "Composición" : "Composition"}
+                  {t("about.steps.composition")}
                 </span>
               </div>
               <h3 className="font-serif-editorial font-semibold text-base text-foreground">
@@ -112,7 +111,7 @@ export default function AboutPage() {
                   <span>№ 02</span>
                 </span>
                 <span className="text-[10px] text-foreground-muted uppercase tracking-widest">
-                  {isEs ? "Custodia" : "Custody"}
+                  {t("about.steps.custody")}
                 </span>
               </div>
               <h3 className="font-serif-editorial font-semibold text-base text-foreground">
@@ -131,7 +130,7 @@ export default function AboutPage() {
                   <span>№ 03</span>
                 </span>
                 <span className="text-[10px] text-foreground-muted uppercase tracking-widest">
-                  {isEs ? "Tránsito" : "Transit"}
+                  {t("about.steps.transit")}
                 </span>
               </div>
               <h3 className="font-serif-editorial font-semibold text-base text-foreground">
@@ -150,7 +149,7 @@ export default function AboutPage() {
                   <span>№ 04</span>
                 </span>
                 <span className="text-[10px] text-foreground-muted uppercase tracking-widest">
-                  {isEs ? "Apertura" : "Unsealing"}
+                  {t("about.steps.unsealing")}
                 </span>
               </div>
               <h3 className="font-serif-editorial font-semibold text-base text-foreground">
@@ -167,7 +166,7 @@ export default function AboutPage() {
         <PaperSheet
           elevation="raised"
           docketFolio="FOLIO № 02 // INTIMIDAD"
-          dateStamp={isEs ? "REFLEXIÓN" : "REFLECTION"}
+          dateStamp={t("about.stamps.reflection")}
           className="p-6 sm:p-8"
         >
           <div className="space-y-3">
@@ -184,7 +183,7 @@ export default function AboutPage() {
         <PaperSheet
           elevation="raised"
           docketFolio="FOLIO № 03 // CIFRADO"
-          dateStamp={isEs ? "GARANTÍA" : "SECURITY"}
+          dateStamp={t("about.stamps.security")}
           className="p-6 sm:p-8"
         >
           <div className="space-y-3">
@@ -204,7 +203,7 @@ export default function AboutPage() {
         <PaperSheet
           elevation="raised"
           docketFolio="FOLIO № 04 // CONTACTO"
-          dateStamp={isEs ? "CORRESPONDENCIA" : "CORRESPONDENCE"}
+          dateStamp={t("about.stamps.correspondence")}
           className="p-6 sm:p-8"
         >
           <div className="space-y-4">
@@ -242,7 +241,7 @@ export default function AboutPage() {
             className="inline-flex items-center gap-2 bg-wax hover:bg-wax-hover text-on-wax px-6 py-3 rounded-xs font-letter text-xs uppercase tracking-wider font-semibold shadow-xs transition-colors"
           >
             <Send size={15} />
-            <span>{isEs ? "Escribir una carta al futuro" : "Write a letter to the future"}</span>
+            <span>{t("about.cta")}</span>
           </Link>
         </div>
       </div>

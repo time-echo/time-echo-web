@@ -11,8 +11,7 @@ import {
 import { ArrowLeft } from "lucide-react";
 
 export default function AnalyticsPage() {
-  const { capsules, locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { capsules, t } = useTimeEcho();
 
   const metrics = calculateAnalyticsMetrics(capsules);
 
@@ -57,14 +56,10 @@ export default function AnalyticsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-crease">
         <div className="space-y-1">
           <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
-            {isEs
-              ? "Reflexión y Estadísticas del Baúl"
-              : "Vault Reflection & Analytics"}
+            {t("analytics.title")}
           </h1>
           <p className="text-xs font-letter text-foreground-muted tracking-wider">
-            {isEs
-              ? "Una retrospectiva pacífica de tu evolución emocional, predicciones y métricas de entrega de tus cápsulas."
-              : "A serene retrospective of your emotional evolution, predictions, and delivery metrics."}
+            {t("analytics.description")}
           </p>
         </div>
         <div className="shrink-0">
@@ -73,7 +68,7 @@ export default function AnalyticsPage() {
             className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-wax"
           >
             <ArrowLeft size={14} />
-            <span>{isEs ? "Volver al Baúl" : "Back to Vault"}</span>
+            <span>{t("settings.backToVault")}</span>
           </Link>
         </div>
       </div>
@@ -81,7 +76,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 font-letter">
         <div className="paper-sheet border border-crease p-5 rounded-xs text-center shadow-xs">
           <p className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">
-            {isEs ? "Total Cápsulas" : "Total Capsules"}
+            {t("analytics.totalCapsules")}
           </p>
           <p className="text-2xl font-bold text-foreground mt-1">
             {metrics.totalLetters}
@@ -89,7 +84,7 @@ export default function AnalyticsPage() {
         </div>
         <div className="paper-sheet border border-crease p-5 rounded-xs text-center shadow-xs">
           <p className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">
-            {isEs ? "Entregadas" : "Delivered"}
+            {t("common.delivered")}
           </p>
           <p className="text-2xl font-bold text-ink mt-1">
             {metrics.deliveredCount + metrics.openedCount}
@@ -97,7 +92,7 @@ export default function AnalyticsPage() {
         </div>
         <div className="paper-sheet border border-crease p-5 rounded-xs text-center shadow-xs col-span-2 md:col-span-1">
           <p className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">
-            {isEs ? "En Tránsito" : "In Transit"}
+            {t("analytics.inTransit")}
           </p>
           <p className="text-2xl font-bold text-wax mt-1">
             {metrics.inTransitCount}

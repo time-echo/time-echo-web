@@ -15,8 +15,7 @@ import {
 } from "lucide-react";
 
 export default function TermsPage() {
-  const { locale, t } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
 
   const prohibitedItems = [
     t("terms.sections.prohibited.item_spam"),
@@ -40,14 +39,14 @@ export default function TermsPage() {
           className="inline-flex items-center gap-2 text-xs font-letter uppercase tracking-wider text-foreground-muted hover:text-wax transition-colors"
         >
           <ArrowLeft size={14} />
-          <span>{isEs ? "Volver al inicio" : "Return to Home"}</span>
+          <span>{t("terms.returnHome")}</span>
         </Link>
 
         <PostmarkStamp
-          city={isEs ? "BÓVEDA // LEGAL" : "VAULT // LEGAL"}
+          city={t("terms.postmarkCity")}
           docketId="TE-TERMS"
           date="2026"
-          subtext={isEs ? "ACUERDO FORMAL" : "FORMAL COVENANT"}
+          subtext={t("terms.postmarkSubtext")}
           variant="boxed"
           size="sm"
           inkColor="ink"

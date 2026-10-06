@@ -53,8 +53,7 @@ export function WaxSeal({
   disabled = false,
   className,
 }: WaxSealProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
   const shouldReduceMotion = useReducedMotion();
   const [internalBroken, setInternalBroken] = useState(isBroken);
   const [isFracturing, setIsFracturing] = useState(false);
@@ -101,12 +100,12 @@ export function WaxSeal({
             config.container,
             "rounded-full border-2 border-dashed border-wax/40 opacity-40 flex items-center justify-center font-mono text-xs text-wax rotate-[-12deg]",
           )}
-          title={isEs ? "Sello quebrado" : "Broken seal"}
+          title={t("common.brokenSeal")}
         >
           <span className="text-[10px] tracking-wider uppercase font-bold text-center leading-none">
             {monogram}
             <br />
-            {isEs ? "ROTO" : "BROKEN"}
+            {t("common.broken")}
           </span>
         </div>
       ) : (
@@ -139,7 +138,6 @@ export function WaxSeal({
                     config={config}
                     monogram={monogram}
                     isLocked={isLocked}
-                    isEs={isEs}
                   />
                 </motion.div>
 
@@ -162,7 +160,6 @@ export function WaxSeal({
                     config={config}
                     monogram={monogram}
                     isLocked={isLocked}
-                    isEs={isEs}
                   />
                 </motion.div>
 
@@ -188,12 +185,8 @@ export function WaxSeal({
                 disabled={!canInteract}
                 aria-label={
                   isLocked
-                    ? isEs
-                      ? "Sello de lacre protegido en tránsito"
-                      : "Wax seal protected in transit"
-                    : isEs
-                      ? "Romper sello de lacre carmesí"
-                      : "Break the carmine wax seal"
+                    ? t("common.waxSealLockedAria")
+                    : t("common.waxSealBreakAria")
                 }
                 whileHover={
                   canInteract
@@ -222,7 +215,6 @@ export function WaxSeal({
                   config={config}
                   monogram={monogram}
                   isLocked={isLocked}
-                  isEs={isEs}
                 />
               </motion.button>
             )}
@@ -240,12 +232,8 @@ export function WaxSeal({
           <span>
             {promptText ||
               (isHovered
-                ? isEs
-                  ? "¡Clic para quebrar!"
-                  : "Click to break!"
-                : isEs
-                  ? "Romper sello"
-                  : "Break seal")}
+                ? t("reveal.breakSealPrompt")
+                : t("common.breakSeal"))}
           </span>
         </motion.div>
       )}
@@ -257,13 +245,12 @@ function SealBody({
   config,
   monogram,
   isLocked,
-  isEs,
 }: {
   config: (typeof SIZE_CONFIGS)["md"];
   monogram: string;
   isLocked: boolean;
-  isEs: boolean;
 }) {
+  const { t } = useTimeEcho();
   return (
     <div
       className={cn(
@@ -299,7 +286,7 @@ function SealBody({
                 "font-mono mt-0.5 uppercase tracking-widest opacity-80",
               )}
             >
-              {isEs ? "Bóveda" : "Vault"}
+              {t("common.vault")}
             </span>
           </div>
         ) : (
@@ -318,7 +305,7 @@ function SealBody({
                 "font-mono uppercase tracking-[0.2em] text-on-wax/70 leading-none mt-1 scale-90 select-none",
               )}
             >
-              VAULT
+              {t("common.vault")}
             </span>
           </div>
         )}

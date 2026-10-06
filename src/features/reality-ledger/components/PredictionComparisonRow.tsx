@@ -25,8 +25,7 @@ export function PredictionComparisonRow({
   readOnly = false,
   className,
 }: PredictionComparisonRowProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
 
   const outcomeOptions: Array<{
     value: PredictionOutcome;
@@ -37,28 +36,22 @@ export function PredictionComparisonRow({
   }> = [
     {
       value: "fulfilled",
-      label: isEs ? "Cumplido" : "Fulfilled",
-      subtext: isEs
-        ? "La visión se materializó"
-        : "Vision manifested into truth",
+      label: t("reality.row.fulfilledLabel"),
+      subtext: t("reality.row.fulfilledSubtext"),
       icon: Check,
       activeClass: "border-fulfilled-border bg-fulfilled-bg text-fulfilled",
     },
     {
       value: "diverged",
-      label: isEs ? "Tomó otro rumbo" : "Diverged",
-      subtext: isEs
-        ? "El destino cambió de cauce"
-        : "Destiny took a different course",
+      label: t("reality.row.divergedLabel"),
+      subtext: t("reality.row.divergedSubtext"),
       icon: Shuffle,
       activeClass: "border-wax bg-wax/10 text-wax",
     },
     {
       value: "unfulfilled",
-      label: isEs ? "No cumplido" : "Unfulfilled",
-      subtext: isEs
-        ? "Aún no alcanzado o pospuesto"
-        : "Postponed or left unrealized",
+      label: t("reality.row.unfulfilledLabel"),
+      subtext: t("reality.row.unfulfilledSubtext"),
       icon: X,
       activeClass: "border-ink bg-ink/10 text-ink",
     },
@@ -76,7 +69,7 @@ export function PredictionComparisonRow({
         <div className="flex items-center gap-1.5 uppercase tracking-wider font-semibold text-ink">
           <Compass size={13} className="text-wax" />
           <span>
-            {isEs ? "CATEGORÍA" : "CATEGORY"}: {prediction.category}
+            {t("reality.row.category")}: {prediction.category}
           </span>
         </div>
 
@@ -89,9 +82,7 @@ export function PredictionComparisonRow({
         <div className="p-4 rounded border border-crease bg-manila/40 flex flex-col justify-between space-y-3">
           <div>
             <span className="font-letter text-[10px] uppercase tracking-widest text-foreground-muted block mb-1">
-              {isEs
-                ? "Lo que predijiste en el pasado:"
-                : "What you predicted in the past:"}
+              {t("reality.row.predictedPast")}
             </span>
             <div className="flex items-start gap-2">
               <Quote size={16} className="text-wax/60 shrink-0 mt-1" />
@@ -102,9 +93,7 @@ export function PredictionComparisonRow({
           </div>
 
           <div className="pt-2 border-t border-crease/50 text-[10px] font-letter text-foreground-muted/70">
-            {isEs
-              ? "Sellado en fecha de emisión original"
-              : "Sealed on original dispatch date"}
+            {t("reality.row.sealedOriginalDate")}
           </div>
         </div>
 
@@ -114,18 +103,14 @@ export function PredictionComparisonRow({
               htmlFor={`reality-${prediction.id}`}
               className="font-letter text-[10px] uppercase tracking-widest text-foreground-muted block mb-1"
             >
-              {isEs
-                ? "Lo que realmente sucedió:"
-                : "What actually transpired in reality:"}
+              {t("reality.row.actualTranspired")}
             </label>
 
             {readOnly ? (
               <p className="font-letter text-xs sm:text-sm text-foreground leading-relaxed">
                 {realityText || (
                   <span className="italic text-foreground-muted">
-                    {isEs
-                      ? "Sin testimonio registrado."
-                      : "No testimony recorded."}
+                    {t("reality.row.noTestimony")}
                   </span>
                 )}
               </p>
@@ -135,33 +120,27 @@ export function PredictionComparisonRow({
                 rows={3}
                 value={realityText}
                 onChange={(e) => onRealityTextChange?.(e.target.value)}
-                placeholder={
-                  isEs
-                    ? "Describe con honestidad qué ocurrió con este anhelo o predicción..."
-                    : "Record candidly what happened to this prediction..."
-                }
+                placeholder={t("reality.row.testimonyPlaceholder")}
                 className="w-full p-2.5 rounded border border-crease bg-manila/20 font-letter text-xs sm:text-sm text-foreground placeholder:text-foreground-muted/40 focus:outline-none focus:border-ink resize-none leading-relaxed"
               />
             )}
           </div>
 
           <div className="pt-2 border-t border-crease/50 text-[10px] font-letter text-foreground-muted/70 flex items-center justify-between">
-            <span>
-              {isEs ? "EXPEDIENTE DE REALIDAD" : "REALITY LEDGER"}
-            </span>
-            <span>{isEs ? "VERIFICACIÓN HOY" : "VERIFIED TODAY"}</span>
+            <span>{t("reality.row.ledgerTitle")}</span>
+            <span>{t("reality.row.verifiedToday")}</span>
           </div>
         </div>
       </div>
 
       <div className="pt-2 border-t border-crease/60 space-y-2">
         <span className="font-letter text-[10px] uppercase tracking-wider text-foreground-muted block">
-          {isEs ? "Dictamen del Hito:" : "Outcome Ruling:"}
+          {t("reality.row.outcomeRuling")}
         </span>
 
         <div
           role="radiogroup"
-          aria-label={isEs ? "Dictamen del hito" : "Outcome ruling"}
+          aria-label={t("reality.row.outcomeRulingAria")}
           className="grid grid-cols-1 sm:grid-cols-3 gap-2"
         >
           {outcomeOptions.map((opt) => {

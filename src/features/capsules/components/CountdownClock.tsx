@@ -7,7 +7,7 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import { Clock, ShieldCheck, Calendar, Lock } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface CountdownClockProps {
@@ -35,8 +35,7 @@ export function CountdownClock({
   onArrival,
   className,
 }: CountdownClockProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { locale, t } = useTimeEcho();
 
   const isMounted = useIsMounted();
   const targetDate = useMemo(() => new Date(scheduledAt), [scheduledAt]);
@@ -90,23 +89,18 @@ export function CountdownClock({
         <div className="flex items-center gap-2 text-ink">
           <Clock size={16} className="text-wax animate-pulse" />
           <span className="font-bold tracking-wider uppercase">
-            {isEs
-              ? `CÁPSULA EN TRÁNSITO // ${docketNumber}`
-              : `CAPSULE IN TRANSIT // ${docketNumber}`}
+            {t("reveal.capsuleInTransit", { docket: docketNumber })}
           </span>
         </div>
 
         <div className="flex items-center gap-1.5 text-foreground-muted text-[11px]">
           <Calendar size={13} />
           <span>
-            {new Date(scheduledAt).toLocaleDateString(
-              isEs ? "es-ES" : "en-US",
-              {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              },
-            )}
+            {formatLocaleDate(scheduledAt, locale, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </span>
         </div>
       </div>
@@ -117,33 +111,29 @@ export function CountdownClock({
             <ShieldCheck size={32} />
           </div>
           <h4 className="font-serif-editorial text-2xl text-ink font-bold">
-            {isEs
-              ? "El tiempo convenido ha llegado"
-              : "The Appointed Hour Has Arrived"}
+            {t("reveal.unlockableBadge")}
           </h4>
           <p className="font-letter text-xs text-foreground-muted max-w-md mx-auto">
-            {isEs
-              ? "La bóveda postal ha liberado el sello carmesí. Puedes quebrar el lacre para revelar el contenido epistolar."
-              : "The postal vault has unlocked the crimson seal. You may break the wax to reveal the letter within."}
+            {t("reveal.unlockedNotice")}
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-4 gap-2 sm:gap-4 text-center">
           <TimeBlock
             value={isMounted ? days : 0}
-            label={isEs ? "DÍAS" : "DAYS"}
+            label={t("common.days").toUpperCase()}
           />
           <TimeBlock
             value={isMounted ? format2(hours) : "00"}
-            label={isEs ? "HORAS" : "HOURS"}
+            label={t("common.hours").toUpperCase()}
           />
           <TimeBlock
             value={isMounted ? format2(minutes) : "00"}
-            label={isEs ? "MINUTOS" : "MINUTES"}
+            label={t("common.minutes").toUpperCase()}
           />
           <TimeBlock
             value={isMounted ? format2(seconds) : "00"}
-            label={isEs ? "SEGUNDOS" : "SECONDS"}
+            label={t("common.seconds").toUpperCase()}
             highlight
           />
         </div>
@@ -151,7 +141,7 @@ export function CountdownClock({
 
       <div className="space-y-1.5 pt-2">
         <div className="flex justify-between items-center text-[10px] font-letter text-foreground-muted uppercase tracking-widest">
-          <span>{isEs ? "Trayecto transcurrido" : "Voyage elapsed"}</span>
+          <span>{t("reveal.voyageElapsed")}</span>
           <span className="font-mono font-bold text-ink">
             {isMounted ? `${progressPercent.toFixed(1)}%` : "0%"}
           </span>
@@ -162,7 +152,7 @@ export function CountdownClock({
           aria-valuenow={Math.round(progressPercent)}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={isEs ? "Trayecto transcurrido" : "Voyage elapsed"}
+          aria-label={t("reveal.voyageElapsed")}
           className="h-2 w-full rounded-full bg-crease/60 overflow-hidden border border-crease shadow-inner"
         >
           <div
@@ -175,25 +165,7 @@ export function CountdownClock({
       <div className="p-3 rounded border border-crease bg-parchment/80 flex items-start gap-2.5 font-letter text-[11px] text-foreground-muted">
         <Lock size={14} className="text-ink shrink-0 mt-0.5" />
         <p className="leading-relaxed">
-          {isEs ? (
-            <>
-              Esta carta permanece{" "}
-              <strong className="text-ink font-semibold">
-                cifrada en reposo
-              </strong>
-              . El sello de lacre carmesí estará bloqueado contra aperturas
-              prematuras hasta que el cronómetro marque cero.
-            </>
-          ) : (
-            <>
-              This letter remains{" "}
-              <strong className="text-ink font-semibold">
-                encrypted at rest
-              </strong>
-              . The crimson wax seal is guarded against premature unsealing
-              until the clock reaches zero.
-            </>
-          )}
+          {t("reveal.encryptedAtRest")}
         </p>
       </div>
     </div>

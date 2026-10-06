@@ -25,18 +25,10 @@ export function LinedPaperCanvas({
   className,
   ariaLabel,
 }: LinedPaperCanvasProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
 
-  const defaultPlaceholder = isEs
-    ? "Querido yo:\nHoy tomo la pluma para recordarte lo que sentías al comenzar este camino...\nNo olvides tus promesas silenciosas."
-    : "Dear future self:\nToday I take the pen to remind you of who you were at this threshold...\nDo not forget the quiet promises you made.";
-
-  const effectiveAriaLabel =
-    ariaLabel ||
-    (isEs
-      ? "Contenido de la carta al futuro"
-      : "Letter content to future self");
+  const defaultPlaceholder = t("composer.stationeryDefaultPlaceholder");
+  const effectiveAriaLabel = ariaLabel || t("composer.stationeryAria");
 
   const words = value.trim() ? value.trim().split(/\s+/).length : 0;
   const chars = value.length;
@@ -70,16 +62,16 @@ export function LinedPaperCanvas({
         <div className="px-4 py-2 border-t border-crease/60 bg-crease/20 flex items-center justify-between font-letter text-[11px] text-foreground-muted select-none">
           <span className="flex items-center gap-1.5 uppercase tracking-widest text-[10px]">
             <span className="w-1.5 h-1.5 rounded-full bg-ink/60" />
-            <span>{isEs ? "TINTA Y CUADERNO POSTAL" : "POSTAL INK & STATIONERY"}</span>
+            <span>{t("composer.stationeryFooterTitle")}</span>
           </span>
 
           <div className="flex items-center gap-3 font-mono text-[11px]">
             <span>
-              {words} {isEs ? "palabras" : "words"}
+              {words} {t("composer.wordsCount")}
             </span>
             <span className="opacity-40">•</span>
             <span>
-              {chars} {isEs ? "caracteres" : "characters"}
+              {chars} {t("composer.charsCount")}
             </span>
           </div>
         </div>

@@ -23,8 +23,7 @@ export function AccuracyMeter({
   size = 180,
   className,
 }: AccuracyMeterProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
   const shouldReduceMotion = useReducedMotion();
 
   const strokeWidth = 10;
@@ -45,17 +44,15 @@ export function AccuracyMeter({
       aria-valuenow={rate}
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label={
-        isEs ? "Tasa de acierto predictivo" : "Predictive accuracy rate"
-      }
+      aria-label={t("analytics.accuracyRateAria")}
     >
       <div className="w-full flex items-center justify-between border-b border-crease pb-3 font-letter text-xs text-foreground-muted mb-4">
         <div className="flex items-center gap-1.5 uppercase font-semibold text-ink">
           <Target size={14} className="text-wax" />
-          <span>{isEs ? "Tasa de Acierto" : "Accuracy Rate"}</span>
+          <span>{t("analytics.accuracyRate")}</span>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-widest">
-          {isEs ? "Expediente Predictivo" : "Predictive Ledger"}
+          {t("analytics.predictiveLedger")}
         </span>
       </div>
 
@@ -112,7 +109,7 @@ export function AccuracyMeter({
             {rate}%
           </motion.span>
           <span className="font-letter text-[9px] uppercase tracking-widest text-foreground-muted mt-1">
-            {isEs ? "Cumplimiento" : "Fulfillment"}
+            {t("analytics.fulfillment")}
           </span>
         </div>
       </div>
@@ -124,7 +121,7 @@ export function AccuracyMeter({
             <span>{matchedCount}</span>
           </div>
           <span className="text-[9px] uppercase tracking-tight mt-0.5">
-            {isEs ? "Cumplidas" : "Fulfilled"}
+            {t("analytics.fulfilled")}
           </span>
         </div>
 
@@ -134,7 +131,7 @@ export function AccuracyMeter({
             <span>{Math.max(0, evaluatedCount - matchedCount)}</span>
           </div>
           <span className="text-[9px] uppercase tracking-tight mt-0.5">
-            {isEs ? "Divergentes" : "Diverged"}
+            {t("analytics.diverged")}
           </span>
         </div>
 
@@ -144,7 +141,7 @@ export function AccuracyMeter({
             <span>{pendingCount}</span>
           </div>
           <span className="text-[9px] uppercase tracking-tight mt-0.5">
-            {isEs ? "En Tránsito" : "In Transit"}
+            {t("analytics.inTransit")}
           </span>
         </div>
       </div>

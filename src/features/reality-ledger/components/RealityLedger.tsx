@@ -33,8 +33,7 @@ export function RealityLedger({
   readOnly = false,
   className,
 }: RealityLedgerProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
 
   const {
     revealHappiness,
@@ -74,25 +73,22 @@ export function RealityLedger({
           <div className="flex items-center gap-2">
             <Scale size={18} className="text-wax" />
             <h2 className="font-serif-editorial text-xl sm:text-2xl font-bold text-ink">
-              {isEs ? "Expediente de Realidad" : "Reality Ledger"}
+              {t("reality.title")}
             </h2>
           </div>
           <p className="text-xs text-foreground-muted">
-            {isEs ? "Folio №" : "Docket №"}{" "}
+            {t("reality.docketNo")}{" "}
             <strong className="text-ink font-semibold">
               {capsule.docketNumber}
             </strong>{" "}
-            •{" "}
-            {isEs
-              ? "Confrontación entre expectativas y destino."
-              : "Confrontation between past expectations and destiny."}
+            • {t("reality.subtitle")}
           </p>
         </div>
 
         {isSaved && (
           <div className="flex items-center gap-2 px-3 py-1.5 rounded border border-fulfilled-border bg-fulfilled-bg text-fulfilled text-xs font-bold uppercase tracking-wider">
             <CheckCircle2 size={14} />
-            <span>{isEs ? "EXPEDIENTE ASENTADO" : "LEDGER SETTLED"}</span>
+            <span>{t("reality.settledBadge")}</span>
           </div>
         )}
       </div>
@@ -102,92 +98,79 @@ export function RealityLedger({
           <div className="flex items-center gap-2">
             <Activity size={16} className="text-wax" />
             <h3 className="font-letter font-bold text-xs uppercase tracking-wider text-ink">
-              {isEs
-                ? "Evolución Emocional (Ayer vs Hoy)"
-                : "Emotional Evolution (Yesterday vs Today)"}
+              {t("reality.evolutionTitle")}
             </h3>
           </div>
 
           <span className="font-mono text-[10px] text-foreground-muted uppercase tracking-widest">
-            {isEs ? "CALIBRACIÓN RETROSPECTIVA" : "RETROSPECTIVE CALIBRATION"}
+            {t("reality.retrospectiveCalibration")}
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <DeltaCard
-            label={isEs ? "Felicidad" : "Happiness"}
+            label={t("common.happiness")}
             pastValue={baseSnapshot.happinessLevel}
             currentValue={revealHappiness}
             delta={emotionalDeltas.happiness}
-            isEs={isEs}
+            pastLabel={t("reality.past")}
+            todayLabel={t("reality.today")}
           />
           <DeltaCard
-            label={isEs ? "Ansiedad" : "Anxiety"}
+            label={t("common.anxiety")}
             pastValue={baseSnapshot.anxietyLevel}
             currentValue={revealAnxiety}
             delta={emotionalDeltas.anxiety}
             invertColors
-            isEs={isEs}
+            pastLabel={t("reality.past")}
+            todayLabel={t("reality.today")}
           />
           <DeltaCard
-            label={isEs ? "Motivación" : "Motivation"}
+            label={t("common.motivation")}
             pastValue={baseSnapshot.motivationLevel}
             currentValue={revealMotivation}
             delta={emotionalDeltas.motivation}
-            isEs={isEs}
+            pastLabel={t("reality.past")}
+            todayLabel={t("reality.today")}
           />
         </div>
 
         {!isFormLocked && (
           <div className="pt-4 border-t border-crease/60 space-y-5">
             <span className="font-letter text-xs font-semibold text-foreground-muted block uppercase tracking-wider">
-              {isEs
-                ? "Calibra tus sentimientos en este momento de apertura:"
-                : "Calibrate your feelings in this moment of unsealing:"}
+              {t("reality.calibrateFeelings")}
             </span>
 
             <Slider
-              label={
-                isEs
-                  ? "Felicidad al abrir la carta"
-                  : "Happiness upon unsealing"
-              }
+              label={t("reality.happinessUnsealing")}
               value={revealHappiness}
               onChange={(v) => setRevealRating("happiness", v)}
               min={1}
               max={10}
-              lowLabel={isEs ? "Sombrío / Difícil (1)" : "Somber (1)"}
-              highLabel={isEs ? "Pleno / Sereno (10)" : "Radiant (10)"}
+              lowLabel={t("reality.happinessLow")}
+              highLabel={t("reality.happinessHigh")}
               accentColor="wax"
             />
 
             <Slider
-              label={
-                isEs
-                  ? "Ansiedad / Incertidumbre actual"
-                  : "Current Anxiety / Uncertainty"
-              }
+              label={t("reality.anxietyCurrent")}
               value={revealAnxiety}
               onChange={(v) => setRevealRating("anxiety", v)}
               min={1}
               max={10}
-              lowLabel={isEs ? "En Paz (1)" : "At peace (1)"}
-              highLabel={isEs ? "Abrumado (10)" : "Overwhelmed (10)"}
+              lowLabel={t("reality.anxietyLow")}
+              highLabel={t("reality.anxietyHigh")}
               accentColor="ink"
             />
 
             <Slider
-              label={
-                isEs
-                  ? "Motivación de cara al futuro"
-                  : "Motivation facing the future"
-              }
+              label={t("reality.motivationFuture")}
               value={revealMotivation}
               onChange={(v) => setRevealRating("motivation", v)}
               min={1}
               max={10}
-              lowLabel={isEs ? "Desganado (1)" : "Lethargic (1)"}
-              highLabel={isEs ? "Con Foco e Ímpetu (10)" : "Focused & Driven (10)"}
+              lowLabel={t("reality.motivationLow")}
+              highLabel={t("reality.motivationHigh")}
               accentColor="wax"
             />
           </div>
@@ -199,28 +182,24 @@ export function RealityLedger({
           <div className="flex items-center gap-2">
             <History size={16} className="text-ink" />
             <h3 className="font-bold uppercase tracking-wider">
-              {isEs
-                ? `Verificación de Predicciones (${capsule.predictions.length})`
-                : `Prediction Verification (${capsule.predictions.length})`}
+              {t("reality.predictionsTitle")} ({capsule.predictions.length})
             </h3>
           </div>
 
           <div className="flex items-center gap-3 font-mono text-[11px] text-foreground-muted">
             <span className="text-fulfilled font-bold">
-              {fulfillmentStats.fulfilled} {isEs ? "cumplidas" : "fulfilled"}
+              {fulfillmentStats.fulfilled} {t("reality.fulfilledCount")}
             </span>
             <span>•</span>
             <span className="text-wax font-bold">
-              {fulfillmentStats.diverged} {isEs ? "divergentes" : "diverged"}
+              {fulfillmentStats.diverged} {t("reality.divergedCount")}
             </span>
           </div>
         </div>
 
         {capsule.predictions.length === 0 ? (
           <div className="p-8 text-center border border-dashed border-crease rounded bg-parchment font-letter text-xs text-foreground-muted">
-            {isEs
-              ? "Esta cápsula no incluyó predicciones estructuradas al momento de sellado."
-              : "This capsule did not include structured predictions at composition time."}
+            {t("reality.noPredictions")}
           </div>
         ) : (
           capsule.predictions.map((p) => {
@@ -248,12 +227,10 @@ export function RealityLedger({
       <div className="p-6 rounded border border-crease bg-manila/50 flex flex-wrap items-center justify-between gap-4 font-letter">
         <div className="space-y-1">
           <span className="text-xs uppercase tracking-wider font-semibold text-ink block">
-            {isEs ? "Cierre de Expediente Postal" : "Postal Ledger Closing"}
+            {t("reality.closingTitle")}
           </span>
           <p className="text-[11px] text-foreground-muted max-w-md">
-            {isEs
-              ? "Al asentar el expediente, las reflexiones y calificaciones emocionales quedarán registradas permanentemente en la bóveda histórica."
-              : "Settling the ledger permanently records your retrospective notes and psychological shift into historical vault custody."}
+            {t("reality.closingDesc")}
           </p>
         </div>
 
@@ -269,16 +246,12 @@ export function RealityLedger({
             <div className="flex items-center gap-3">
               <span className="font-letter text-xs text-ink font-semibold flex items-center gap-1.5">
                 <CheckCircle2 size={15} className="text-fulfilled" />
-                <span>
-                  {isEs
-                    ? "Reflexión guardada en el historial"
-                    : "Retrospective recorded in archive"}
-                </span>
+                <span>{t("reality.recordedInArchive")}</span>
               </span>
 
               <PostmarkStamp
                 docketId={capsule.docketNumber}
-                date={isEs ? "AUDITADO" : "AUDITED"}
+                date={t("reality.audited")}
                 variant="boxed"
                 size="sm"
                 inkColor="ink"
@@ -299,12 +272,8 @@ export function RealityLedger({
               <Save size={14} />
               <span>
                 {isSaving
-                  ? isEs
-                    ? "Asentando expediente..."
-                    : "Settling ledger..."
-                  : isEs
-                    ? "Asentar Expediente de Realidad"
-                    : "Settle Reality Ledger"}
+                  ? t("reality.settlingLedger")
+                  : t("reality.settleButton")}
               </span>
             </button>
           )}
@@ -320,14 +289,16 @@ function DeltaCard({
   currentValue,
   delta,
   invertColors = false,
-  isEs = false,
+  pastLabel,
+  todayLabel,
 }: {
   label: string;
   pastValue: number;
   currentValue: number;
   delta: number;
   invertColors?: boolean;
-  isEs?: boolean;
+  pastLabel: string;
+  todayLabel: string;
 }) {
   const isPositive = delta > 0;
   const isZero = delta === 0;
@@ -338,7 +309,7 @@ function DeltaCard({
       <div>
         <span className="text-xs font-semibold text-ink block">{label}</span>
         <span className="text-[10px] text-foreground-muted font-mono">
-          {isEs ? "Ayer" : "Past"}: {pastValue} → {isEs ? "Hoy" : "Today"}: {currentValue}
+          {pastLabel}: {pastValue} → {todayLabel}: {currentValue}
         </span>
       </div>
 

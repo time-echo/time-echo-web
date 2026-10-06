@@ -28,12 +28,9 @@ export function EmotionalSliders({
   title,
   className,
 }: EmotionalSlidersProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
 
-  const defaultTitle = isEs
-    ? "Snapshot Emocional de Partida (1 – 10)"
-    : "Baseline Emotional Snapshot (1 – 10)";
+  const defaultTitle = t("composer.emotionalSectionTitle");
 
   const handleChange = (
     field: "happinessLevel" | "anxietyLevel" | "motivationLevel",
@@ -59,65 +56,51 @@ export function EmotionalSliders({
         </div>
         <span className="font-mono text-[10px] text-foreground-muted tracking-widest uppercase">
           {readOnly
-            ? isEs
-              ? "REGISTRO CERRADO"
-              : "LOCKED RECORD"
-            : isEs
-              ? "CALIBRACIÓN ACTUAL"
-              : "CURRENT CALIBRATION"}
+            ? t("composer.emotions.lockedRecord")
+            : t("composer.emotions.currentCalibration")}
         </span>
       </div>
 
       <div className="space-y-6">
         <Slider
-          label={isEs ? "Nivel de Felicidad" : "Happiness Level"}
+          label={t("composer.emotions.happinessLabel")}
           value={values.happinessLevel}
           onChange={(v) => handleChange("happinessLevel", v)}
           min={1}
           max={10}
-          lowLabel={isEs ? "Sombrío / Difícil (1)" : "Somber / Heavy (1)"}
-          highLabel={isEs ? "Radiante / Pleno (10)" : "Radiant / Full (10)"}
+          lowLabel={t("composer.emotions.happinessLow")}
+          highLabel={t("composer.emotions.happinessHigh")}
           accentColor="wax"
           disabled={readOnly}
         />
 
         <Slider
-          label={
-            isEs
-              ? "Nivel de Ansiedad / Incertidumbre"
-              : "Anxiety & Uncertainty Level"
-          }
+          label={t("composer.emotions.anxietyLabel")}
           value={values.anxietyLevel}
           onChange={(v) => handleChange("anxietyLevel", v)}
           min={1}
           max={10}
-          lowLabel={isEs ? "En Calma / Seguro (1)" : "Serene / Grounded (1)"}
-          highLabel={isEs ? "Abrumado / Incierto (10)" : "Overwhelmed (10)"}
+          lowLabel={t("composer.emotions.anxietyLow")}
+          highLabel={t("composer.emotions.anxietyHigh")}
           accentColor="ink"
           disabled={readOnly}
         />
 
         <Slider
-          label={
-            isEs
-              ? "Nivel de Motivación / Impulso"
-              : "Motivation & Drive Level"
-          }
+          label={t("composer.emotions.motivationLabel")}
           value={values.motivationLevel}
           onChange={(v) => handleChange("motivationLevel", v)}
           min={1}
           max={10}
-          lowLabel={isEs ? "Desganado (1)" : "Lethargic (1)"}
-          highLabel={isEs ? "Imparable / Con Foco (10)" : "Unstoppable (10)"}
+          lowLabel={t("composer.emotions.motivationLow")}
+          highLabel={t("composer.emotions.motivationHigh")}
           accentColor="wax"
           disabled={readOnly}
         />
       </div>
 
       <div className="pt-2 border-t border-crease/50 text-[10px] font-letter text-foreground-muted/80 leading-relaxed select-none">
-        {isEs
-          ? "* Este snapshot quedará sellado en la cápsula. Cuando la abras en el futuro, podrás comparar cómo evolucionaron tus sentimientos mediante el Expediente de Realidad."
-          : "* This snapshot will be preserved in the sealed capsule. When unsealed in the future, you can contrast your psychological shift through the Reality Ledger."}
+        {t("composer.emotions.snapshotNotice")}
       </div>
     </div>
   );

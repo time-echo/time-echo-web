@@ -22,8 +22,7 @@ import { cn } from "@/lib/utils";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { locale, toggleLocale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { locale, toggleLocale, t } = useTimeEcho();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -43,7 +42,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
         >
-          {isEs ? "Saltar al contenido" : "Skip to content"}
+          {t("header.skipToContent")}
         </a>
         <ArchivalHeader />
         <main
@@ -69,7 +68,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
       >
-        {isEs ? "Saltar al contenido" : "Skip to content"}
+        {t("header.skipToContent")}
       </a>
       <aside className="hidden md:flex w-72 h-screen sticky top-0 bg-manila/50 border-r border-crease p-8 flex-col justify-between shrink-0 font-ui select-none">
         <div className="space-y-10">
@@ -84,13 +83,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={toggleLocale}
-              className="flex items-center justify-center gap-1.5 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-2 font-ui text-xs font-medium min-h-[44px] min-w-[44px] focus-visible:outline-2 focus-visible:outline-wax"
-              aria-label={
-                isEs ? "Switch language to English" : "Cambiar idioma a español"
-              }
+              className="flex items-center gap-1.5 border border-crease hover:border-wax/60 rounded-xs px-2.5 py-1 text-xs font-letter transition-colors cursor-pointer bg-transparent hover:bg-manila/50 shrink-0 min-h-[36px] focus-visible:outline-2 focus-visible:outline-wax"
+              aria-label={t("header.switchLanguage")}
             >
-              <Globe size={16} />
-              <span>{isEs ? "ES" : "EN"}</span>
+              <Globe size={13} className="text-foreground-muted shrink-0" />
+              <span
+                className={
+                  locale === "es"
+                    ? "text-wax font-bold"
+                    : "text-foreground-muted/60 font-medium"
+                }
+              >
+                ES
+              </span>
+              <span className="text-crease font-mono text-[10px]">/</span>
+              <span
+                className={
+                  locale !== "es"
+                    ? "text-wax font-bold"
+                    : "text-foreground-muted/60 font-medium"
+                }
+              >
+                EN
+              </span>
             </button>
           </div>
 
@@ -105,7 +120,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <PenTool size={18} />
-              <span>{isEs ? "Escribir una Carta" : "Write a Letter"}</span>
+              <span>{t("nav.compose")}</span>
             </Link>
 
             <Link
@@ -118,7 +133,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <Mail size={18} />
-              <span>{isEs ? "Mis Cartas" : "My Letters"}</span>
+              <span>{t("nav.letters")}</span>
             </Link>
 
             <Link
@@ -131,7 +146,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <Clock size={18} />
-              <span>{isEs ? "Línea de Tiempo" : "Timeline"}</span>
+              <span>{t("nav.timeline")}</span>
             </Link>
 
             <Link
@@ -144,7 +159,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <BarChart3 size={18} />
-              <span>{isEs ? "Estadísticas" : "Analytics"}</span>
+              <span>{t("nav.analytics")}</span>
             </Link>
 
             <Link
@@ -157,7 +172,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <Settings size={18} />
-              <span>{isEs ? "Ajustes" : "Settings"}</span>
+              <span>{t("nav.settings")}</span>
             </Link>
           </nav>
         </div>
@@ -165,9 +180,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="space-y-6">
           <div className="border border-crease bg-manila/60 p-4 rounded-xl space-y-2 select-none">
             <p className="text-xs font-serif-editorial italic text-foreground-muted leading-relaxed font-normal">
-              {isEs
-                ? "«La mejor manera de predecir el futuro es crearlo.»"
-                : "“The best way to predict the future is to create it.”"}
+              {t("nav.quote")}
             </p>
           </div>
 
@@ -180,8 +193,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/login"
               className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full hover:bg-wax/10 text-wax transition-colors focus-visible:outline-2 focus-visible:outline-wax"
-              title={isEs ? "Cerrar Sesión" : "Sign Out"}
-              aria-label={isEs ? "Cerrar Sesión" : "Sign Out"}
+              title={t("header.signOut")}
+              aria-label={t("header.signOut")}
             >
               <LogOut size={16} />
             </Link>
@@ -201,28 +214,36 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={toggleLocale}
-            className="flex items-center justify-center gap-1 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-2 font-ui text-xs font-medium min-h-[44px] min-w-[44px] focus-visible:outline-2 focus-visible:outline-wax"
-            aria-label={
-              isEs ? "Switch language to English" : "Cambiar idioma a español"
-            }
+            className="flex items-center gap-1.5 border border-crease hover:border-wax/60 rounded-xs px-2 py-1 text-xs font-letter transition-colors cursor-pointer bg-transparent hover:bg-manila/50 shrink-0 min-h-[36px] focus-visible:outline-2 focus-visible:outline-wax"
+            aria-label={t("header.switchLanguage")}
           >
-            <Globe size={16} />
-            <span>{isEs ? "ES" : "EN"}</span>
+            <Globe size={13} className="text-foreground-muted shrink-0" />
+            <span
+              className={
+                locale === "es"
+                  ? "text-wax font-bold"
+                  : "text-foreground-muted/60 font-medium"
+              }
+            >
+              ES
+            </span>
+            <span className="text-crease font-mono text-[10px]">/</span>
+            <span
+              className={
+                locale !== "es"
+                  ? "text-wax font-bold"
+                  : "text-foreground-muted/60 font-medium"
+              }
+            >
+              EN
+            </span>
           </button>
 
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded text-foreground-muted hover:text-foreground cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-wax"
-            aria-label={
-              mobileMenuOpen
-                ? isEs
-                  ? "Cerrar menú"
-                  : "Close menu"
-                : isEs
-                  ? "Abrir menú"
-                  : "Open menu"
-            }
+            aria-label={mobileMenuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -238,7 +259,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <PenTool size={16} />
-            <span>{isEs ? "Escribir una Carta" : "Write a Letter"}</span>
+            <span>{t("nav.compose")}</span>
           </Link>
           <Link
             href="/dashboard"
@@ -246,7 +267,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <Mail size={16} />
-            <span>{isEs ? "Mis Cartas" : "My Letters"}</span>
+            <span>{t("nav.letters")}</span>
           </Link>
           <Link
             href="/dashboard?timeline=true"
@@ -254,7 +275,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <Clock size={16} />
-            <span>{isEs ? "Línea de Tiempo" : "Timeline"}</span>
+            <span>{t("nav.timeline")}</span>
           </Link>
           <Link
             href="/analytics"
@@ -262,7 +283,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <BarChart3 size={16} />
-            <span>{isEs ? "Estadísticas" : "Analytics"}</span>
+            <span>{t("nav.analytics")}</span>
           </Link>
           <Link
             href="/settings"
@@ -270,7 +291,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
           >
             <Settings size={16} />
-            <span>{isEs ? "Ajustes" : "Settings"}</span>
+            <span>{t("nav.settings")}</span>
           </Link>
           <div className="border-t border-crease pt-2 flex items-center justify-between text-xs text-foreground-muted">
             <span>user@timeecho.me</span>
@@ -280,7 +301,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className="text-wax flex items-center gap-1 min-h-[44px] px-2 py-1 focus-visible:outline-2 focus-visible:outline-wax"
             >
               <LogOut size={14} />
-              <span>{isEs ? "Cerrar Sesión" : "Sign Out"}</span>
+              <span>{t("header.signOut")}</span>
             </Link>
           </div>
         </div>

@@ -20,8 +20,7 @@ import { cn, formatLocaleDate } from "@/lib/utils";
 
 export default function HomePage() {
   const router = useRouter();
-  const { locale, createCapsule } = useTimeEcho();
-  const isEs = locale === "es";
+  const { locale, createCapsule, t } = useTimeEcho();
 
   useEffect(() => {
     const scrollToHash = () => {
@@ -114,7 +113,7 @@ export default function HomePage() {
 
     try {
       const capsule = await createCapsule({
-        title: isEs ? "Tu carta para el futuro" : "Your letter to the future",
+        title: t("landing.defaultTitle"),
         content,
         email,
         scheduledAt: deliverDate.toISOString(),
@@ -146,25 +145,13 @@ export default function HomePage() {
         <div className="lg:col-span-5 space-y-7 lg:sticky lg:top-24">
           <div className="space-y-4">
             <h1 className="font-serif-editorial text-4xl sm:text-6xl font-normal text-foreground leading-tight tracking-tight">
-              {isEs ? (
-                <>
-                  Escribe hoy.
-                  <br />
-                  Descubre mañana.
-                </>
-              ) : (
-                <>
-                  Write today.
-                  <br />
-                  Discover tomorrow.
-                </>
-              )}
+              {t("landing.heroTitleLine1")}
+              <br />
+              {t("landing.heroTitleLine2")}
             </h1>
 
             <p className="font-letter text-xs sm:text-sm text-foreground-muted leading-relaxed max-w-xl">
-              {isEs
-                ? "Escribe una carta a tu yo del futuro, registra tu estado emocional y formula predicciones de vida. Une a quien eres hoy con la persona en la que te convertirás."
-                : "Write a letter to your future self, calibrate your emotional baseline, and forecast your life milestones. Compare who you are today with who you will become."}
+              {t("landing.heroSubtitle")}
             </p>
           </div>
 
@@ -174,13 +161,11 @@ export default function HomePage() {
                 <Lock size={16} />
               </div>
               <div className="space-y-0.5">
-              <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
-                {isEs ? "100% Privado y Seguro" : "100% Private & Sealed"}
-              </h2>
+                <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
+                  {t("landing.trustPrivate")}
+                </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "Solo tú puedes leer tu carta. Permanece resguardada de forma segura en tu bóveda personal hasta la fecha que elijas."
-                    : "Only you can read your letter. It remains securely locked in your personal vault until your delivery date."}
+                  {t("landing.trustPrivateDesc")}
                 </p>
               </div>
             </div>
@@ -190,13 +175,11 @@ export default function HomePage() {
                 <Clock size={16} />
               </div>
               <div className="space-y-0.5">
-              <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
-                {isEs ? "Entrega a Tiempo" : "Delivered on Schedule"}
-              </h2>
+                <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
+                  {t("landing.trustSchedule")}
+                </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "Llega directo a tu bandeja de entrada en la mañana exacta que elegiste, en tu horario local."
-                    : "Arrives straight to your inbox on the exact morning you chose, in your local timezone."}
+                  {t("landing.trustScheduleDesc")}
                 </p>
               </div>
             </div>
@@ -207,33 +190,24 @@ export default function HomePage() {
               </div>
               <div className="space-y-0.5">
                 <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
-                  {isEs
-                    ? "Predicciones vs. Realidad"
-                    : "Predictions vs. Reality"}
+                  {t("landing.trustReality")}
                 </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "Compara lo que imaginabas con lo que realmente viviste y descubre cuánto has evolucionado."
-                    : "Put your past expectations side-by-side with real life to see how much you’ve evolved."}
+                  {t("landing.trustRealityDesc")}
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Live Letter Composition Paper Sheet */}
         <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-8 space-y-6 border border-crease">
           <div className="flex items-center justify-between border-b border-crease pb-4">
             <div>
               <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
-                {isEs
-                  ? "PASO 01 / REDACCIÓN INICIAL"
-                  : "STEP 01 / INITIAL DRAFT"}
+                {t("landing.step01Label")}
               </span>
               <h2 className="font-serif-editorial text-2xl text-foreground font-semibold mt-0.5">
-                {isEs
-                  ? "Escribe tu carta a tu futuro"
-                  : "Write your letter to your future"}
+                {t("landing.writeLetterToFuture")}
               </h2>
             </div>
             <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
@@ -247,15 +221,13 @@ export default function HomePage() {
                 htmlFor="landing-content"
                 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block"
               >
-                {isEs ? "Tu carta" : "Your Letter"}
+                {t("landing.yourLetter")}
               </label>
               <textarea
                 id="landing-content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder={
-                  isEs ? "Querido yo del futuro..." : "Dear future self..."
-                }
+                placeholder={t("landing.letterPlaceholder")}
                 rows={7}
                 maxLength={2000}
                 required
@@ -264,18 +236,14 @@ export default function HomePage() {
               />
               <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1">
                 <span className="italic">
-                  {isEs
-                    ? "Solo tú podrás verla"
-                    : "Only you will be able to see it"}
+                  {t("landing.onlyYouCanSee")}
                 </span>
                 <span
                   id="landing-content-counter"
                   className={cn(isUnderMinChars && "text-wax")}
                 >
                   {isUnderMinChars
-                    ? isEs
-                      ? `${charCount} / 80 mín (2000 máx)`
-                      : `${charCount} / 80 min (2000 max)`
+                    ? t("landing.charCounterMin", { count: charCount })
                     : `${charCount} / 2000`}
                 </span>
               </div>
@@ -284,27 +252,18 @@ export default function HomePage() {
                   className="text-[11px] font-letter text-wax pt-0.5"
                   aria-live="polite"
                 >
-                  {isEs
-                    ? "Escribe al menos 80 caracteres para sellar tu carta."
-                    : "Write at least 80 characters to seal your letter."}
+                  {t("landing.minCharsError")}
                 </p>
               )}
             </div>
 
-            {/* Delivery Horizon Presets */}
             <div className="space-y-2.5">
               <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block">
-                {isEs
-                  ? "¿Cuándo quieres recibirla?"
-                  : "When do you want to receive it?"}
+                {t("landing.whenToReceive")}
               </label>
               <div
                 role="group"
-                aria-label={
-                  isEs
-                    ? "Fecha de entrega"
-                    : "Delivery date"
-                }
+                aria-label={t("landing.deliveryDateAria")}
                 className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-letter"
               >
                 <button
@@ -318,7 +277,7 @@ export default function HomePage() {
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "6 meses" : "6 months"}
+                  {t("landing.horizonMonths6")}
                 </button>
                 <button
                   type="button"
@@ -331,7 +290,7 @@ export default function HomePage() {
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "1 año" : "1 year"}
+                  {t("landing.horizonYear1")}
                 </button>
                 <button
                   type="button"
@@ -344,7 +303,7 @@ export default function HomePage() {
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "3 años" : "3 years"}
+                  {t("landing.horizonYears3")}
                 </button>
                 <button
                   type="button"
@@ -357,7 +316,7 @@ export default function HomePage() {
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "5 años" : "5 years"}
+                  {t("landing.horizonYears5")}
                 </button>
                 <button
                   type="button"
@@ -370,7 +329,7 @@ export default function HomePage() {
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "Fecha personalizada" : "Custom date"}
+                  {t("landing.customDate")}
                 </button>
               </div>
 
@@ -381,9 +340,7 @@ export default function HomePage() {
                       htmlFor="landing-custom-date"
                       className="text-[10px] text-foreground-muted font-letter uppercase tracking-wider block mb-1 font-semibold"
                     >
-                      {isEs
-                        ? "Elige una fecha específica"
-                        : "Choose a specific date"}
+                      {t("landing.chooseSpecificDate")}
                     </label>
                     <input
                       id="landing-custom-date"
@@ -398,16 +355,13 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Annex I: Optional Predictions */}
             <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-4 border border-manila-border">
               <div className="border-b border-manila-border pb-2">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
-                  {isEs ? "ANEXO I / PREDICCIONES" : "ANNEX I / PREDICTIONS"}
+                  {t("landing.annexPredictions")}
                 </span>
                 <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block mt-0.5">
-                  {isEs
-                    ? "Tus predicciones (opcional)"
-                    : "Your predictions (optional)"}
+                  {t("landing.predictionsOptional")}
                 </label>
               </div>
 
@@ -419,9 +373,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">01.</span>
                     <span>
-                      {isEs
-                        ? "¿Dónde crees que vivirás?"
-                        : "Where will you live?"}
+                      {t("landing.predCityQuestion")}
                     </span>
                   </label>
                   <input
@@ -429,11 +381,7 @@ export default function HomePage() {
                     type="text"
                     value={predictionCity}
                     onChange={(e) => setPredictionCity(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
@@ -445,7 +393,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">02.</span>
                     <span>
-                      {isEs ? "¿A qué te dedicarás?" : "What work will you do?"}
+                      {t("landing.predCareerQuestion")}
                     </span>
                   </label>
                   <input
@@ -453,11 +401,7 @@ export default function HomePage() {
                     type="text"
                     value={predictionCareer}
                     onChange={(e) => setPredictionCareer(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
@@ -469,9 +413,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">03.</span>
                     <span>
-                      {isEs
-                        ? "¿Cuánto dinero ganarás?"
-                        : "How much money will you earn?"}
+                      {t("landing.predSalaryQuestion")}
                     </span>
                   </label>
                   <input
@@ -479,11 +421,7 @@ export default function HomePage() {
                     type="text"
                     value={predictionSalary}
                     onChange={(e) => setPredictionSalary(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
@@ -495,9 +433,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">04.</span>
                     <span>
-                      {isEs
-                        ? "¿Cómo será tu relación sentimental?"
-                        : "How will your relationship be?"}
+                      {t("landing.predRelationshipQuestion")}
                     </span>
                   </label>
                   <input
@@ -505,11 +441,7 @@ export default function HomePage() {
                     type="text"
                     value={predictionRelationship}
                     onChange={(e) => setPredictionRelationship(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
@@ -521,9 +453,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">05.</span>
                     <span>
-                      {isEs
-                        ? "¿Cuál será tu mayor logro?"
-                        : "What will be your greatest achievement?"}
+                      {t("landing.predAchievementQuestion")}
                     </span>
                   </label>
                   <input
@@ -531,34 +461,27 @@ export default function HomePage() {
                     type="text"
                     value={predictionAchievement}
                     onChange={(e) => setPredictionAchievement(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Annex II: Emotional Baseline Sliders */}
             <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-3 border border-manila-border">
               <div className="border-b border-manila-border pb-1.5">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
-                  {isEs
-                    ? "ANEXO II / ESTADO EMOCIONAL"
-                    : "ANNEX II / EMOTIONAL BASELINE"}
+                  {t("landing.annexEmotionalBadge")}
                 </span>
                 <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block mt-0.5">
-                  {isEs ? "¿Cómo te sientes hoy?" : "How do you feel today?"}
+                  {t("landing.howDoYouFeelToday")}
                 </label>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-letter">
                 <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
-                    <span>{isEs ? "Felicidad" : "Happiness"}</span>
+                    <span>{t("landing.happiness")}</span>
                     <span className="text-foreground-muted">
                       {happiness} / 10
                     </span>
@@ -569,14 +492,14 @@ export default function HomePage() {
                     max={10}
                     value={happiness}
                     onChange={(e) => setHappiness(Number(e.target.value))}
-                    aria-label={isEs ? "Felicidad" : "Happiness"}
+                    aria-label={t("landing.happiness")}
                     className="w-full accent-wax cursor-pointer"
                   />
                 </div>
 
                 <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
-                    <span>{isEs ? "Ansiedad" : "Anxiety"}</span>
+                    <span>{t("landing.anxiety")}</span>
                     <span className="text-foreground-muted">
                       {anxiety} / 10
                     </span>
@@ -587,14 +510,14 @@ export default function HomePage() {
                     max={10}
                     value={anxiety}
                     onChange={(e) => setAnxiety(Number(e.target.value))}
-                    aria-label={isEs ? "Ansiedad" : "Anxiety"}
+                    aria-label={t("landing.anxiety")}
                     className="w-full accent-wax cursor-pointer"
                   />
                 </div>
 
                 <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
-                    <span>{isEs ? "Motivación" : "Motivation"}</span>
+                    <span>{t("landing.motivation")}</span>
                     <span className="text-foreground-muted">
                       {motivation} / 10
                     </span>
@@ -605,22 +528,19 @@ export default function HomePage() {
                     max={10}
                     value={motivation}
                     onChange={(e) => setMotivation(Number(e.target.value))}
-                    aria-label={isEs ? "Motivación" : "Motivation"}
+                    aria-label={t("landing.motivation")}
                     className="w-full accent-wax cursor-pointer"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Email Field and Submit Button */}
             <div className="space-y-2.5 pt-1">
               <label
                 htmlFor="landing-email"
                 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block"
               >
-                {isEs
-                  ? "¿A dónde te enviamos tu carta?"
-                  : "Where should we deliver your letter?"}
+                {t("landing.whereDeliverEmail")}
               </label>
               <div className="flex flex-col sm:flex-row gap-2.5">
                 <input
@@ -643,12 +563,8 @@ export default function HomePage() {
                 >
                   <span>
                     {isSubmitting
-                      ? isEs
-                        ? "Sellando..."
-                        : "Sealing..."
-                      : isEs
-                        ? "Sellar y Enviar a mi Yo Futuro"
-                        : "Seal & Send to Future Self"}
+                      ? t("landing.sealing")
+                      : t("landing.sealAndSend")}
                   </span>
                   <Mail size={15} />
                 </button>
@@ -658,9 +574,7 @@ export default function HomePage() {
             <div className="flex items-center justify-center gap-2 text-[11px] font-letter text-foreground-muted pt-2 border-t border-crease">
               <ShieldCheck size={14} className="text-ink" />
               <span>
-                {isEs
-                  ? "Tu carta es 100% privada y segura."
-                  : "Your letter is 100% private and encrypted."}
+                {t("landing.privateAndEncrypted")}
               </span>
             </div>
           </form>
@@ -673,14 +587,10 @@ export default function HomePage() {
       <section className="space-y-10">
         <div className="text-center space-y-2">
           <h2 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold">
-            {isEs
-              ? "Así se verá cuando abras tu carta"
-              : "This is how it will look when you open your letter"}
+            {t("landing.demoTitle")}
           </h2>
           <p className="text-xs font-letter text-foreground-muted max-w-md mx-auto leading-relaxed">
-            {isEs
-              ? "Compara tus predicciones con tu realidad y reflexiona sobre tu evolución."
-              : "Compare your past predictions with your reality and reflect on your personal evolution."}
+            {t("landing.demoDossierSubtitle")}
           </p>
         </div>
 
@@ -691,23 +601,23 @@ export default function HomePage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-4 text-xs font-letter">
                   <div>
                     <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
-                      {isEs ? "Escrito" : "Written"}
+                      {t("landing.demoWritten")}
                     </p>
                     <p className="font-semibold text-foreground text-xs">
-                      {isEs ? "15 sep 2022" : "Sep 15, 2022"}
+                      {t("landing.demoDate")}
                     </p>
                   </div>
                   <div className="text-center">
                     <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
-                      {isEs ? "Carta del pasado" : "Letter from Past"}
+                      {t("landing.demoLetterFromPast")}
                     </span>
                   </div>
                   <div className="sm:text-right">
                     <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
-                      {isEs ? "Entregado" : "Delivered"}
+                      {t("landing.demoDelivered")}
                     </p>
                     <p className="font-semibold text-foreground text-xs">
-                      {isEs ? "15 sep 2022" : "Sep 15, 2022"}
+                      {t("landing.demoDate")}
                     </p>
                   </div>
                 </div>
@@ -715,9 +625,7 @@ export default function HomePage() {
                 <div className="space-y-1">
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="font-serif-editorial text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
-                      {isEs
-                        ? "Cuaderno de bitácora: La primera chispa de la idea"
-                        : "Logbook: The First Spark of the Idea"}
+                      {t("landing.demoLetterTitle")}
                     </h3>
                     <span className="font-letter text-[10px] font-semibold text-foreground-muted uppercase tracking-widest shrink-0">
                       TE-00108
@@ -726,16 +634,12 @@ export default function HomePage() {
                 </div>
 
                 <article className="p-5 sm:p-6 border border-crease rounded-xs bg-transparent text-foreground/90 whitespace-pre-wrap break-words select-text font-letter text-sm leading-loose shadow-inner">
-                  {isEs
-                    ? `Para el expediente histórico de TimeEcho:\n\nEste folio representa el momento germinal. Aquella noche donde anoté por primera vez en un papel manila: "¿Y si pudiéramos enviar cartas al futuro con lacre físico y verificación de realidad?".\n\nTodo parecía desmedido y complejo, pero decidí confiar en la belleza de la palabra escrita y el peso del tiempo.`
-                    : `For the historical record of TimeEcho:\n\nThis sheet represents the seminal moment. That evening when I first jotted down on a manila folio: "What if we could send letters into the future with physical wax seals and reality verification?".\n\nEverything seemed daunting and complex, yet I chose to trust in the beauty of the written word and the weight of time.`}
+                  {t("landing.demoArticleContent")}
                 </article>
 
                 <div className="pt-3 border-t border-crease flex flex-wrap justify-between items-center gap-2 text-xs font-letter">
                   <span className="text-[11px] text-foreground-muted italic">
-                    {isEs
-                      ? "Sellada bajo custodia postal con lacre carmesí"
-                      : "Sealed in postal custody under crimson wax"}
+                    {t("landing.demoFootnoteSealed")}
                   </span>
                   <span className="text-[10px] uppercase tracking-wider font-semibold text-ink">
                     yo.del.futuro@timeecho.internal
@@ -746,12 +650,10 @@ export default function HomePage() {
               <div className="archival-folder rounded-xs p-6 sm:p-8 space-y-5 border border-manila-border">
                 <div className="border-b border-manila-border pb-3">
                   <h3 className="font-serif-editorial text-xl font-semibold text-foreground">
-                    {isEs ? "Predicciones vs Realidad" : "Predictions vs Reality"}
+                    {t("landing.demoPredictionsTitle")}
                   </h3>
                   <p className="text-xs font-letter text-foreground-muted mt-1">
-                    {isEs
-                      ? "Compara lo que imaginabas hace un tiempo con la vida que estás viviendo hoy."
-                      : "Compare what you once envisioned with the life you are actively living today."}
+                    {t("landing.demoPredictionsSubtitle")}
                   </p>
                 </div>
 
@@ -759,37 +661,33 @@ export default function HomePage() {
                   <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
                     <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                        {isEs ? "¿En qué trabajas hoy en día?" : "What do you do today?"}
+                        {t("landing.demoQCareer")}
                       </span>
                       <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-fulfilled-bg text-fulfilled border border-fulfilled-border">
                         <Check size={12} />
-                        <span>{isEs ? "¡LO LOGRASTE!" : "ACCOMPLISHED"}</span>
+                        <span>{t("landing.demoAccomplished")}</span>
                       </span>
                     </div>
 
                     <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
                       <div className="p-4 space-y-1">
                         <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                          {isEs ? "Predicción del pasado:" : "Past Prediction:"}
+                          {t("landing.demoPastPredLabel")}
                         </span>
                         <p className="text-foreground/80 leading-relaxed italic">
                           &ldquo;
-                          {isEs
-                            ? "Construir una arquitectura limpia basada en el patrón Adapter."
-                            : "Build a clean architecture based on the Adapter pattern."}
+                          {t("landing.demoCleanArchitecturePred")}
                           &rdquo;
                         </p>
                       </div>
 
                       <div className="p-4 space-y-1 bg-manila/10">
                         <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                          {isEs ? "Realidad hoy en día:" : "Reality Today:"}
+                          {t("landing.demoRealityLabel")}
                         </span>
                         <p className="text-foreground/90 leading-relaxed font-semibold">
                           &ldquo;
-                          {isEs
-                            ? "Completada e implementada en Next.js con soporte offline y tipado estricto."
-                            : "Completed and implemented in Next.js with offline support and strict typing."}
+                          {t("landing.demoCleanArchitectureReal")}
                           &rdquo;
                         </p>
                       </div>
@@ -799,37 +697,33 @@ export default function HomePage() {
                   <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
                     <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                        {isEs ? "¿Dónde vives hoy en día?" : "Where do you live today?"}
+                        {t("landing.demoQCity")}
                       </span>
                       <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-fulfilled-bg text-fulfilled border border-fulfilled-border">
                         <Check size={12} />
-                        <span>{isEs ? "¡LO LOGRASTE!" : "ACCOMPLISHED"}</span>
+                        <span>{t("landing.demoAccomplished")}</span>
                       </span>
                     </div>
 
                     <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
                       <div className="p-4 space-y-1">
                         <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                          {isEs ? "Predicción del pasado:" : "Past Prediction:"}
+                          {t("landing.demoPastPredLabel")}
                         </span>
                         <p className="text-foreground/80 leading-relaxed italic">
                           &ldquo;
-                          {isEs
-                            ? "Mudarme a un estudio con balcón soleado para escribir."
-                            : "Move to a studio with a sunny balcony to write."}
+                          {t("landing.demoStudioBalconyPred")}
                           &rdquo;
                         </p>
                       </div>
 
                       <div className="p-4 space-y-1 bg-manila/10">
                         <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                          {isEs ? "Realidad hoy en día:" : "Reality Today:"}
+                          {t("landing.demoRealityLabel")}
                         </span>
                         <p className="text-foreground/90 leading-relaxed font-semibold">
                           &ldquo;
-                          {isEs
-                            ? "Encontré un ático con terraza iluminada y vistas al parque."
-                            : "Found a penthouse with a sunlit terrace and park views."}
+                          {t("landing.demoStudioBalconyReal")}
                           &rdquo;
                         </p>
                       </div>
@@ -839,39 +733,33 @@ export default function HomePage() {
                   <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
                     <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                        {isEs
-                          ? "¿Cuál terminó siendo tu mayor logro?"
-                          : "What was your greatest achievement?"}
+                        {t("landing.demoQGreatestAchievement")}
                       </span>
                       <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-wax/10 text-wax border border-wax/20">
                         <X size={12} />
-                        <span>{isEs ? "NO EXACTAMENTE" : "DIVERGED"}</span>
+                        <span>{t("landing.demoDiverged")}</span>
                       </span>
                     </div>
 
                     <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
                       <div className="p-4 space-y-1">
                         <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                          {isEs ? "Predicción del pasado:" : "Past Prediction:"}
+                          {t("landing.demoPastPredLabel")}
                         </span>
                         <p className="text-foreground/80 leading-relaxed italic">
                           &ldquo;
-                          {isEs
-                            ? "Publicar una novela epistolar en formato tradicional."
-                            : "Publish an epistolary novel in traditional print format."}
+                          {t("landing.demoEpistolaryNovelPred")}
                           &rdquo;
                         </p>
                       </div>
 
                       <div className="p-4 space-y-1 bg-manila/10">
                         <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                          {isEs ? "Realidad hoy en día:" : "Reality Today:"}
+                          {t("landing.demoRealityLabel")}
                         </span>
                         <p className="text-foreground/90 leading-relaxed font-semibold">
                           &ldquo;
-                          {isEs
-                            ? "El proyecto evolucionó hacia TimeEcho en formato de cartas digitales selladas."
-                            : "The project evolved into TimeEcho in the format of sealed digital letters."}
+                          {t("landing.demoEpistolaryNovelReal")}
                           &rdquo;
                         </p>
                       </div>
@@ -885,9 +773,7 @@ export default function HomePage() {
               <div className="paper-sheet rounded-xs p-6 space-y-4 text-center border border-crease">
                 <div className="border-b border-crease pb-2.5">
                   <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
-                    {isEs
-                      ? "Tu Score de Predicciones"
-                      : "Prediction Accuracy Score"}
+                    {t("landing.demoAccuracyTitle")}
                   </h3>
                 </div>
 
@@ -910,14 +796,10 @@ export default function HomePage() {
 
                 <div className="space-y-1 text-xs font-letter">
                   <p className="font-semibold text-foreground">
-                    {isEs
-                      ? "Acertaste 2 de 3 predicciones (67%)."
-                      : "You matched 2 of 3 predictions (67%)."}
+                    {t("landing.demoAccuracySummary")}
                   </p>
                   <p className="text-foreground-muted leading-relaxed max-w-xs mx-auto">
-                    {isEs
-                      ? "Vas por un gran camino. Muchas cosas cambiaron, pero tu rumbo sigue claro."
-                      : "You are on a good path. Circumstances shifted, but your compass remains steadfast."}
+                    {t("landing.demoAccuracyMessage")}
                   </p>
                 </div>
               </div>
@@ -925,12 +807,10 @@ export default function HomePage() {
               <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
                 <div className="border-b border-manila-border pb-2.5">
                   <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
-                    {isEs ? "Evolución emocional" : "Emotional Evolution"}
+                    {t("landing.demoEmotionalTitle")}
                   </h3>
                   <p className="text-[10px] font-letter text-foreground-muted uppercase tracking-wider mt-0.5">
-                    {isEs
-                      ? "Cambio en tu bienestar interno"
-                      : "Shift in your internal wellbeing"}
+                    {t("landing.demoEmotionalSubtitle")}
                   </p>
                 </div>
 
@@ -938,19 +818,19 @@ export default function HomePage() {
                   <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
                     <div className="flex justify-between items-center">
                       <span className="font-semibold text-foreground">
-                        {isEs ? "Felicidad" : "Happiness"}
+                        {t("landing.happiness")}
                       </span>
                       <span className="text-[10px] font-semibold text-ink">
-                        +3 {isEs ? "Crecimiento" : "Growth"}
+                        +3 {t("landing.growth")}
                       </span>
                     </div>
                     <div className="flex justify-between text-[11px] text-foreground-muted">
                       <span>
-                        {isEs ? "Pasado:" : "Past:"} <strong>6</strong>
+                        {t("landing.past")} <strong>6</strong>
                       </span>
                       <span>&rarr;</span>
                       <span>
-                        {isEs ? "Hoy:" : "Today:"} <strong>9</strong>
+                        {t("landing.today")} <strong>9</strong>
                       </span>
                     </div>
                   </div>
@@ -958,19 +838,19 @@ export default function HomePage() {
                   <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
                     <div className="flex justify-between items-center">
                       <span className="font-semibold text-foreground">
-                        {isEs ? "Ansiedad" : "Anxiety"}
+                        {t("landing.anxiety")}
                       </span>
                       <span className="text-[10px] font-semibold text-ink">
-                        -4 {isEs ? "Más Calma" : "Calmer"}
+                        -4 {t("landing.calmer")}
                       </span>
                     </div>
                     <div className="flex justify-between text-[11px] text-foreground-muted">
                       <span>
-                        {isEs ? "Pasado:" : "Past:"} <strong>7</strong>
+                        {t("landing.past")} <strong>7</strong>
                       </span>
                       <span>&rarr;</span>
                       <span>
-                        {isEs ? "Hoy:" : "Today:"} <strong>3</strong>
+                        {t("landing.today")} <strong>3</strong>
                       </span>
                     </div>
                   </div>
@@ -978,19 +858,19 @@ export default function HomePage() {
                   <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
                     <div className="flex justify-between items-center">
                       <span className="font-semibold text-foreground">
-                        {isEs ? "Motivación" : "Motivation"}
+                        {t("landing.motivation")}
                       </span>
                       <span className="text-[10px] font-semibold text-ink">
-                        +1 {isEs ? "Inspirado" : "Inspired"}
+                        +1 {t("landing.inspired")}
                       </span>
                     </div>
                     <div className="flex justify-between text-[11px] text-foreground-muted">
                       <span>
-                        {isEs ? "Pasado:" : "Past:"} <strong>7</strong>
+                        {t("landing.past")} <strong>7</strong>
                       </span>
                       <span>&rarr;</span>
                       <span>
-                        {isEs ? "Hoy:" : "Today:"} <strong>8</strong>
+                        {t("landing.today")} <strong>8</strong>
                       </span>
                     </div>
                   </div>
@@ -1005,12 +885,10 @@ export default function HomePage() {
                   <FileText size={16} className="text-ink shrink-0" />
                   <div>
                     <span className="font-semibold text-foreground block group-hover:text-wax transition-colors">
-                      {isEs
-                        ? "Ver este folio en la bóveda"
-                        : "View this folio in the vault"}
+                      {t("landing.viewFolioInVault")}
                     </span>
                     <span className="text-[10px] text-foreground-muted block">
-                      TE-00108 · {isEs ? "Expediente histórico abierto" : "Opened historical docket"}
+                      TE-00108 · {t("landing.demoDocketOpened")}
                     </span>
                   </div>
                 </div>
@@ -1024,21 +902,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===================================================================
-          SECTION 3: HOW IT WORKS (WAX SEALS 01, 02, 03)
-          =================================================================== */}
       <section id="how-it-works" className="space-y-12 scroll-mt-24">
         <div className="text-center space-y-2">
           <div className="postmark-stamp text-[10px] py-0.5 px-2.5 mx-auto">
-            {isEs ? "SIMPLE Y SIGNIFICATIVO" : "SIMPLE & MEANINGFUL"}
+            {t("landing.howItWorksBadge")}
           </div>
           <h2 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold">
-            {isEs ? "Cómo funciona" : "How It Works"}
+            {t("landing.howItWorksTitle")}
           </h2>
           <p className="text-xs font-letter text-foreground-muted max-w-xs mx-auto leading-relaxed">
-            {isEs
-              ? "Un viaje simple hacia tu mejor yo."
-              : "A simple journey toward your best self."}
+            {t("landing.howItWorksSub")}
           </p>
         </div>
 
@@ -1049,12 +922,10 @@ export default function HomePage() {
             </div>
             <div className="space-y-1">
               <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {isEs ? "1. Escribe y Predice" : "1. Write & Predict"}
+                {t("landing.step1Title")}
               </h3>
               <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {isEs
-                  ? "Escribe con honestidad a tu futuro yo. Registra cómo te sientes hoy y haz predicciones sobre tu trabajo, relaciones y metas."
-                  : "Write honestly to your future self. Record how you feel today and make predictions about your career, relationships, and life goals."}
+                {t("landing.step1Text")}
               </p>
             </div>
           </div>
@@ -1065,12 +936,10 @@ export default function HomePage() {
             </div>
             <div className="space-y-1">
               <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {isEs ? "2. Sella y Programa" : "2. Seal & Schedule"}
+                {t("landing.step2Title")}
               </h3>
               <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {isEs
-                  ? "Elige cuándo quieres recibirla, desde 6 meses hasta 5 años. Tus palabras quedan completamente cifradas y resguardadas en tu bóveda privada hasta ese día."
-                  : "Pick when you want it back—from 6 months to 5 years. Your words are securely encrypted and locked in your private vault until that exact day."}
+                {t("landing.step2Text")}
               </p>
             </div>
           </div>
@@ -1081,27 +950,22 @@ export default function HomePage() {
             </div>
             <div className="space-y-1">
               <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {isEs ? "3. Desbloquea y Compara" : "3. Unlock & Compare"}
+                {t("landing.step3Title")}
               </h3>
               <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {isEs
-                  ? "El día señalado, tu carta llega a tu correo. Reencuéntrate con quién eras, comprueba qué predicciones se cumplieron y descubre cuánto has crecido."
-                  : "When the day arrives, your letter lands in your inbox. Rediscover who you were, see which predictions came true, and reflect on how much you’ve grown."}
+                {t("landing.step3Text")}
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Archival Closing Tag */}
       <footer className="max-w-5xl mx-auto px-4 border-t border-crease pt-8 text-center space-y-3">
         <div className="flex items-center justify-center gap-1.5 text-xl font-serif-editorial text-foreground select-none font-semibold">
           <span>TimeEcho</span>
         </div>
         <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-          {isEs
-            ? "Enviado con esperanza, recibido con nostalgia."
-            : "Sent with hope, received with nostalgia."}
+          {t("footer.sentWithHope")}
         </p>
       </footer>
     </div>

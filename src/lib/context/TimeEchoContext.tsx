@@ -10,6 +10,7 @@ import React, {
   useSyncExternalStore,
   ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import {
   Letter,
   CreateLetterInput,
@@ -41,6 +42,16 @@ function getLocaleSnapshot(): SupportedLanguage {
     const saved = window.localStorage.getItem("timeecho_locale");
     if (saved === "es" || saved === "en") {
       return saved;
+    }
+    const cookieMatch = document.cookie.match(
+      /(?:^|;\s*)(?:timeecho_locale|NEXT_LOCALE)=([^;]+)/,
+    );
+    if (cookieMatch && (cookieMatch[1] === "es" || cookieMatch[1] === "en")) {
+      return cookieMatch[1] as SupportedLanguage;
+    }
+    const htmlLang = document.documentElement.lang;
+    if (htmlLang === "es" || htmlLang === "en") {
+      return htmlLang;
     }
   }
   return "es";
@@ -83,6 +94,7 @@ export function TimeEchoProvider({
   repository: customRepo,
   defaultLocale = "es",
 }: TimeEchoProviderProps) {
+  const router = useRouter();
   const repository = useMemo<ICapsuleRepository>(
     () => customRepo || new HttpApiRepository(),
     [customRepo],
@@ -109,6 +121,10 @@ export function TimeEchoProvider({
 
   useEffect(() => {
     document.documentElement.lang = locale;
+    if (typeof document !== "undefined") {
+      document.cookie = `timeecho_locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+      document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+    }
   }, [locale]);
 
   const setAppearanceMode = useCallback((mode: AppearanceMode) => {
@@ -135,12 +151,19 @@ export function TimeEchoProvider({
     return () => mediaQuery.removeEventListener("change", apply);
   }, [appearanceMode]);
 
-  const setLocale = useCallback((newLocale: SupportedLanguage) => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("timeecho_locale", newLocale);
-      localeListeners.forEach((listener) => listener());
-    }
-  }, []);
+  const setLocale = useCallback(
+    (newLocale: SupportedLanguage) => {
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("timeecho_locale", newLocale);
+        document.cookie = `timeecho_locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+        document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+        document.documentElement.lang = newLocale;
+        localeListeners.forEach((listener) => listener());
+        router.refresh();
+      }
+    },
+    [router],
+  );
 
   const toggleLocale = useCallback(() => {
     setLocale(locale === "es" ? "en" : "es");

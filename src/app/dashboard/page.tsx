@@ -21,11 +21,10 @@ export default function DashboardPage() {
   const searchParams = useSearchParams();
   const isTimeline = searchParams.get("timeline") === "true";
 
-  const { capsules, archiveCapsule, restoreCapsule, deleteCapsule, locale } =
+  const { capsules, archiveCapsule, restoreCapsule, deleteCapsule, locale, t } =
     useTimeEcho();
 
   const [currentTime] = useState(() => Date.now());
-  const isEs = locale === "es";
 
   const activeCapsules = capsules.filter((c) => c.status !== "archived");
   const archivedCapsules = capsules.filter((c) => c.status === "archived");
@@ -43,7 +42,7 @@ export default function DashboardPage() {
   };
 
   const formatDate = (iso: string) => {
-    return formatLocaleDate(iso, isEs ? "es" : "en");
+    return formatLocaleDate(iso, locale);
   };
 
   if (isTimeline) {
@@ -53,12 +52,10 @@ export default function DashboardPage() {
         <div className="border-b border-crease pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-1">
             <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
-              {isEs ? "Línea de Tiempo" : "Timeline"}
+              {t("dashboard.timelineTitle")}
             </h1>
             <p className="text-xs font-letter text-foreground-muted tracking-wider">
-              {isEs
-                ? "Tu historia de crecimiento personal a través del tiempo."
-                : "Your journey of personal growth charted across time."}
+              {t("dashboard.timelineDesc")}
             </p>
           </div>
           <div className="flex gap-3 shrink-0 items-center">
@@ -67,14 +64,14 @@ export default function DashboardPage() {
               className="border border-crease text-foreground hover:bg-manila/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[44px] font-letter inline-flex items-center gap-1.5 transition-colors"
             >
               <Mail size={15} />
-              <span>{isEs ? "Mis cartas" : "My Letters"}</span>
+              <span>{t("dashboard.myLetters")}</span>
             </Link>
             <Link
               href="/letters/new"
               className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2 px-5 text-xs font-medium border-none cursor-pointer tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
             >
               <Plus size={15} />
-              <span>{isEs ? "Escribir carta" : "Write Letter"}</span>
+              <span>{t("dashboard.writeLetter")}</span>
             </Link>
           </div>
         </div>
@@ -117,19 +114,15 @@ export default function DashboardPage() {
                               <Unlock size={13} />
                               <span>
                                 {hasRevealedReality
-                                  ? isEs
-                                    ? "Revelada & Comparada"
-                                    : "Revealed & Compared"
-                                  : isEs
-                                    ? "Pendiente por revelación"
-                                    : "Pending Revelation"}
+                                  ? t("dashboard.revealedCompared")
+                                  : t("dashboard.pendingRevelation")}
                               </span>
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1">
                               <Lock size={13} />
                               <span>
-                                {isEs ? "Cápsula Sellada" : "Sealed Capsule"}
+                                {t("dashboard.sealedCapsule")}
                               </span>
                             </span>
                           )}
@@ -138,7 +131,7 @@ export default function DashboardPage() {
                       <span className="font-letter text-xs text-foreground-muted inline-flex items-center gap-1.5">
                         <Calendar size={13} />
                         <span>
-                          {isEs ? "Creado el:" : "Created on:"}{" "}
+                          {t("dashboard.createdOn")}{" "}
                           {formatDate(letter.createdAt)}
                         </span>
                       </span>
@@ -150,8 +143,8 @@ export default function DashboardPage() {
                       </h2>
                       <p className="font-letter text-xs text-foreground-muted">
                         {isDelivered
-                          ? `${isEs ? "Entregada el" : "Delivered on"} ${formatDate(letter.scheduledAt)}`
-                          : `${isEs ? "Se abrirá el" : "Will open on"} ${formatDate(letter.scheduledAt)}`}
+                          ? `${t("dashboard.deliveredOn")} ${formatDate(letter.scheduledAt)}`
+                          : `${t("dashboard.willOpenOn")} ${formatDate(letter.scheduledAt)}`}
                       </p>
                     </div>
 
@@ -165,18 +158,16 @@ export default function DashboardPage() {
                           {letter.emotionalSnapshot && (
                             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                               <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
-                                {isEs
-                                  ? "Evolución emocional:"
-                                  : "Emotional evolution:"}
+                                {t("dashboard.emotionalEvolutionLabel")}
                               </span>
                               <span>
-                                {isEs ? "Felicidad:" : "Happiness:"}{" "}
+                                {t("dashboard.happinessLabel")}{" "}
                                 <strong>
                                   {letter.emotionalSnapshot.happinessLevel}
                                 </strong>
                               </span>
                               <span>
-                                {isEs ? "Ansiedad:" : "Anxiety:"}{" "}
+                                {t("dashboard.anxietyLabel")}{" "}
                                 <strong>
                                   {letter.emotionalSnapshot.anxietyLevel}
                                 </strong>
@@ -188,13 +179,12 @@ export default function DashboardPage() {
                             letter.predictions.length > 0 && (
                               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-manila-border pt-2">
                                 <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
-                                  {isEs ? "Predicciones:" : "Predictions:"}
+                                  {t("dashboard.predictionsLabel")}
                                 </span>
                                 <span>
-                                  {letter.predictions.length}{" "}
-                                  {isEs
-                                    ? "predicciones selladas"
-                                    : "sealed predictions"}
+                                  {t("dashboard.sealedPredictionsCount", {
+                                    count: letter.predictions.length,
+                                  })}
                                 </span>
                               </div>
                             )}
@@ -208,12 +198,8 @@ export default function DashboardPage() {
                             <Eye size={14} />
                             <span>
                               {hasRevealedReality
-                                ? isEs
-                                  ? "Ver comparación completa"
-                                  : "View Full Comparison"
-                                : isEs
-                                  ? "Completar comparación"
-                                  : "Complete Comparison"}
+                                ? t("dashboard.viewFullComparison")
+                                : t("dashboard.completeComparison")}
                             </span>
                           </Link>
                         </div>
@@ -222,14 +208,12 @@ export default function DashboardPage() {
                       <div className="archival-folder rounded-xs p-4 text-xs font-letter flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-foreground/80">
                         <div className="space-y-1">
                           <p className="font-semibold uppercase tracking-wider text-[10px] text-foreground">
-                            {isEs
-                              ? "Cápsula del tiempo sellada"
-                              : "Time capsule sealed"}
+                            {t("dashboard.timeCapsuleSealed")}
                           </p>
                           <p className="text-foreground-muted">
-                            {isEs
-                              ? `Esta carta viaja de forma privada y encriptada hacia el futuro. Quedan aproximadamente ${daysLeft} días.`
-                              : `This letter voyages securely towards the future. Approximately ${daysLeft} days remaining.`}
+                            {t("dashboard.timeCapsuleSealedDesc", {
+                              days: daysLeft,
+                            })}
                           </p>
                         </div>
                         <div className="flex items-center gap-2 self-start sm:self-center">
@@ -238,19 +222,17 @@ export default function DashboardPage() {
                             className="postmark-stamp text-[11px] py-1 px-3 hover:bg-manila/40 transition-colors"
                           >
                             <span>
-                              {isEs
-                                ? `Se abre en ${daysLeft} días`
-                                : `Opens in ${daysLeft} days`}
+                              {t("dashboard.opensInDays", { days: daysLeft })}
                             </span>
                           </Link>
                           <button
                             type="button"
                             onClick={() => archiveCapsule(letter.id)}
                             className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-2.5 py-1 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1 min-h-[44px] transition-colors cursor-pointer bg-transparent"
-                            title={isEs ? "Archivar carta" : "Archive letter"}
+                            title={t("dashboard.archiveLetter")}
                           >
                             <Archive size={13} />
-                            <span>{isEs ? "Archivar" : "Archive"}</span>
+                            <span>{t("dashboard.archive")}</span>
                           </button>
                         </div>
                       </div>
@@ -266,21 +248,17 @@ export default function DashboardPage() {
               <Mail size={40} />
             </div>
             <h2 className="font-serif-editorial text-2xl font-semibold text-foreground">
-              {isEs
-                ? "Tu línea de tiempo está vacía"
-                : "Your timeline is empty"}
+              {t("dashboard.emptyTimelineTitle")}
             </h2>
             <p className="text-xs font-letter text-foreground-muted leading-relaxed max-w-sm mx-auto">
-              {isEs
-                ? "Escribe tu primera carta al futuro para comenzar a graficar tu historia de crecimiento."
-                : "Write your first letter to the future to begin charting your journey of growth."}
+              {t("dashboard.emptyTimelineDesc")}
             </p>
             <Link
               href="/letters/new"
               className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2 px-6 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
             >
               <Plus size={15} />
-              <span>{isEs ? "Comenzar a escribir" : "Start Writing"}</span>
+              <span>{t("dashboard.startWriting")}</span>
             </Link>
           </div>
         )}
@@ -288,19 +266,15 @@ export default function DashboardPage() {
     );
   }
 
-  // Ledger Mode (Default)
   return (
     <div className="space-y-8 max-w-6xl mx-auto py-4 font-ui animate-fade-in text-foreground">
-      {/* Top Ledger Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-crease pb-6">
         <div className="space-y-1">
           <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
-            {isEs ? "Mis cartas" : "My Letters"}
+            {t("dashboard.myLetters")}
           </h1>
           <p className="text-xs font-letter text-foreground-muted tracking-wider">
-            {isEs
-              ? "Administra tus cápsulas del tiempo digital, estados emocionales y predicciones."
-              : "Manage your digital time capsules, emotional baselines, and predictions."}
+            {t("dashboard.lettersSubtitle")}
           </p>
         </div>
         <div className="flex gap-3 shrink-0 items-center">
@@ -309,53 +283,52 @@ export default function DashboardPage() {
             className="border border-crease text-foreground hover:bg-manila/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[44px] font-letter inline-flex items-center gap-1.5 transition-colors"
           >
             <Calendar size={15} />
-            <span>{isEs ? "Ver línea de tiempo" : "View Timeline"}</span>
+            <span>{t("dashboard.viewTimeline")}</span>
           </Link>
           <Link
             href="/letters/new"
             className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2.5 px-5 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
           >
             <Plus size={15} />
-            <span>{isEs ? "Escribir carta" : "Write Letter"}</span>
+            <span>{t("dashboard.writeLetter")}</span>
           </Link>
         </div>
       </div>
 
-      {/* 3 Stat Metric Paper Sheets */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="paper-sheet rounded-xs p-5 space-y-1 border border-crease">
           <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
-            {isEs ? "Cápsulas totales" : "Total Capsules"}
+            {t("dashboard.totalCapsules")}
           </span>
           <span className="font-serif-editorial text-3xl font-semibold text-foreground block">
             {capsules.length}
           </span>
           <span className="text-[11px] font-letter text-foreground-muted pt-1 block">
-            {isEs ? "Mensajes al futuro" : "Messages to future"}
+            {t("dashboard.messagesToFuture")}
           </span>
         </div>
 
         <div className="paper-sheet rounded-xs p-5 space-y-1 border border-crease">
           <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
-            {isEs ? "Abiertas" : "Delivered"}
+            {t("dashboard.openedCountLabel")}
           </span>
           <span className="font-serif-editorial text-3xl font-semibold text-ink block">
             {deliveredCapsules.length}
           </span>
           <span className="text-[11px] font-letter text-foreground-muted pt-1 block">
-            {isEs ? "Listas para comparar" : "Ready to compare"}
+            {t("dashboard.readyToCompare")}
           </span>
         </div>
 
         <div className="paper-sheet rounded-xs p-5 space-y-1 border border-crease">
           <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
-            {isEs ? "Selladas en el tiempo" : "Sealed in Time"}
+            {t("dashboard.sealedInTime")}
           </span>
           <span className="font-serif-editorial text-3xl font-semibold text-wax block">
             {scheduledCapsules.length}
           </span>
           <span className="text-[11px] font-letter text-foreground-muted pt-1 block">
-            {isEs ? "En tránsito" : "In transit"}
+            {t("dashboard.inTransit")}
           </span>
         </div>
       </div>
@@ -388,21 +361,15 @@ export default function DashboardPage() {
                           <Unlock size={13} />
                           <span>
                             {hasRevealedReality
-                              ? isEs
-                                ? "Revelada & Comparada"
-                                : "Revealed & Compared"
-                              : isEs
-                                ? "Pendiente por revelación"
-                                : "Pending Revelation"}
+                              ? t("dashboard.revealedCompared")
+                              : t("dashboard.pendingRevelation")}
                           </span>
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1">
                           <Lock size={13} />
                           <span>
-                            {isEs
-                              ? "En tránsito al futuro"
-                              : "In Transit to Future"}
+                            {t("dashboard.inTransitToFuture")}
                           </span>
                         </span>
                       )}
@@ -411,7 +378,7 @@ export default function DashboardPage() {
                   <span className="font-letter text-xs text-foreground-muted inline-flex items-center gap-1.5">
                     <Calendar size={13} />
                     <span>
-                      {isEs ? "Creado el:" : "Created on:"}{" "}
+                      {t("dashboard.createdOn")}{" "}
                       {formatDate(letter.createdAt)}
                     </span>
                   </span>
@@ -423,8 +390,8 @@ export default function DashboardPage() {
                   </h2>
                   <p className="font-letter text-xs text-foreground-muted">
                     {isDelivered
-                      ? `${isEs ? "Entregada el" : "Delivered on"} ${formatDate(letter.scheduledAt)}`
-                      : `${isEs ? "Abriéndose en" : "Opening in"} ${formatDate(letter.scheduledAt)}`}
+                      ? `${t("dashboard.deliveredOn")} ${formatDate(letter.scheduledAt)}`
+                      : `${t("dashboard.openingIn")} ${formatDate(letter.scheduledAt)}`}
                   </p>
                 </div>
 
@@ -438,24 +405,22 @@ export default function DashboardPage() {
                       <div className="archival-folder rounded-xs p-4 text-xs font-letter space-y-2 text-foreground/80">
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                           <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
-                            {isEs
-                              ? "Instantánea Emocional:"
-                              : "Emotional Snapshot:"}
+                            {t("dashboard.emotionalSnapshotLabel")}
                           </span>
                           <span>
-                            {isEs ? "Felicidad:" : "Happiness:"}{" "}
+                            {t("dashboard.happinessLabel")}{" "}
                             <strong>
                               {letter.emotionalSnapshot.happinessLevel}
                             </strong>
                           </span>
                           <span>
-                            {isEs ? "Ansiedad:" : "Anxiety:"}{" "}
+                            {t("dashboard.anxietyLabel")}{" "}
                             <strong>
                               {letter.emotionalSnapshot.anxietyLevel}
                             </strong>
                           </span>
                           <span>
-                            {isEs ? "Motivación:" : "Motivation:"}{" "}
+                            {t("dashboard.motivationLabel")}{" "}
                             <strong>
                               {letter.emotionalSnapshot.motivationLevel}
                             </strong>
@@ -466,15 +431,16 @@ export default function DashboardPage() {
                           letter.predictions.length > 0 && (
                             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-manila-border pt-2">
                               <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
-                                {isEs ? "Predicciones:" : "Predictions:"}
+                                {t("dashboard.predictionsLabel")}
                               </span>
                               <span>
-                                {letter.predictions.length}{" "}
-                                {isEs
-                                  ? hasRevealedReality
-                                    ? "predicciones selladas. Comparación completada."
-                                    : "predicciones selladas. Pendiente por comparar."
-                                  : "sealed predictions."}
+                                {hasRevealedReality
+                                  ? t("dashboard.sealedComparisonDone", {
+                                      count: letter.predictions.length,
+                                    })
+                                  : t("dashboard.sealedComparisonPending", {
+                                      count: letter.predictions.length,
+                                    })}
                               </span>
                             </div>
                           )}
@@ -489,9 +455,7 @@ export default function DashboardPage() {
                         >
                           <Eye size={14} />
                           <span>
-                            {isEs
-                              ? "Ver predicciones vs realidad"
-                              : "View Predictions vs Reality"}
+                            {t("dashboard.viewPredictionsVsReality")}
                           </span>
                         </Link>
                       ) : (
@@ -501,9 +465,7 @@ export default function DashboardPage() {
                         >
                           <Unlock size={14} />
                           <span>
-                            {isEs
-                              ? "Completar revelación"
-                              : "Complete Revelation"}
+                            {t("dashboard.completeRevelation")}
                           </span>
                         </Link>
                       )}
@@ -517,14 +479,12 @@ export default function DashboardPage() {
                       </span>
                       <div className="space-y-0.5">
                         <p className="font-semibold text-foreground uppercase tracking-wider text-[10px]">
-                          {isEs
-                            ? "Cápsula del tiempo sellada"
-                            : "Time capsule sealed"}
+                          {t("dashboard.timeCapsuleSealed")}
                         </p>
                         <p className="text-foreground-muted">
-                          {isEs
-                            ? `Esta carta viaja de forma privada hacia el futuro. Quedan aproximadamente ${daysLeft} días.`
-                            : `This letter voyages securely towards the future. Approximately ${daysLeft} days remaining.`}
+                          {t("dashboard.timeCapsuleSealedDesc", {
+                            days: daysLeft,
+                          })}
                         </p>
                       </div>
                     </div>
@@ -535,19 +495,17 @@ export default function DashboardPage() {
                         className="postmark-stamp text-[11px] py-1 px-3 hover:bg-manila/40 transition-colors"
                       >
                         <span>
-                          {isEs
-                            ? `Se abre en ${daysLeft} días`
-                            : `Opens in ${daysLeft} days`}
+                          {t("dashboard.opensInDays", { days: daysLeft })}
                         </span>
                       </Link>
                       <button
                         type="button"
                         onClick={() => archiveCapsule(letter.id)}
                         className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-2.5 py-1 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1 min-h-[44px] transition-colors cursor-pointer bg-transparent"
-                        title={isEs ? "Archivar carta" : "Archive letter"}
+                        title={t("dashboard.archiveLetter")}
                       >
                         <Archive size={13} />
-                        <span>{isEs ? "Archivar" : "Archive"}</span>
+                        <span>{t("dashboard.archive")}</span>
                       </button>
                     </div>
                   </div>
@@ -562,12 +520,10 @@ export default function DashboardPage() {
             <Mail size={40} />
           </div>
           <h2 className="font-serif-editorial text-2xl font-semibold text-foreground">
-            {isEs ? "Tu baúl está vacío" : "Your vault is empty"}
+            {t("dashboard.emptyVault")}
           </h2>
           <p className="text-xs font-letter text-foreground-muted leading-relaxed max-w-sm mx-auto">
-            {isEs
-              ? "No has escrito ninguna carta todavía. Las cartas al futuro te ayudan a reflexionar y comparar tus predicciones con la realidad."
-              : "You have not written any letters yet. Letters to the future help you reflect and compare past predictions with reality."}
+            {t("dashboard.emptyVaultDesc")}
           </p>
           <Link
             href="/letters/new"
@@ -575,13 +531,12 @@ export default function DashboardPage() {
           >
             <Plus size={15} />
             <span>
-              {isEs ? "Escribir mi primera carta" : "Write First Letter"}
+              {t("dashboard.writeFirstLetter")}
             </span>
           </Link>
         </div>
       )}
 
-      {/* Archived Letters Section */}
       {archivedCapsules.length > 0 && (
         <div className="mt-12 pt-8 border-t border-crease space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -591,17 +546,15 @@ export default function DashboardPage() {
                   <Archive size={18} />
                 </span>
                 <h2 className="font-serif-editorial text-2xl font-semibold text-foreground tracking-tight">
-                  {isEs ? "Cartas Archivadas" : "Archived Letters"}
+                  {t("dashboard.archivedLetters")}
                 </h2>
               </div>
               <p className="text-xs font-letter text-foreground-muted tracking-wider">
-                {isEs
-                  ? "Cartas que has archivado. No se enviarán a menos que las restaures."
-                  : "Letters you have archived. They will remain silent unless restored."}
+                {t("dashboard.archivedSilentNotice")}
               </p>
             </div>
             <span className="postmark-stamp text-xs font-letter py-1 px-3 self-start sm:self-auto">
-              {archivedCapsules.length} {isEs ? "Archivadas" : "Archived"}
+              {archivedCapsules.length} {t("dashboard.archivedCount")}
             </span>
           </div>
 
@@ -619,11 +572,11 @@ export default function DashboardPage() {
                         letter.id.slice(0, 5).toUpperCase()}
                     </span>
                     <span className="postmark-stamp text-[10px] py-0.5 px-2 text-ink">
-                      {isEs ? "Archivada" : "Archived"}
+                      {t("dashboard.archivedSingle")}
                     </span>
                     <span className="text-foreground-muted text-[11px] inline-flex items-center gap-1">
                       <Calendar size={12} />
-                      {isEs ? "Creado el:" : "Created on:"}{" "}
+                      {t("dashboard.createdOn")}{" "}
                       {formatDate(letter.createdAt)}
                     </span>
                   </div>
@@ -637,26 +590,24 @@ export default function DashboardPage() {
                     type="button"
                     onClick={() => restoreCapsule(letter.id)}
                     className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
-                    title={isEs ? "Restaurar carta" : "Restore letter"}
+                    title={t("dashboard.restoreLetter")}
                   >
                     <RotateCcw size={14} />
-                    <span>{isEs ? "Restaurar" : "Restore"}</span>
+                    <span>{t("dashboard.restore")}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => {
-                      const confirmMsg = isEs
-                        ? "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer."
-                        : "Are you sure you want to permanently delete this letter? This action cannot be undone.";
+                      const confirmMsg = t("dashboard.deleteConfirm");
                       if (window.confirm(confirmMsg)) {
                         deleteCapsule(letter.id);
                       }
                     }}
                     className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
-                    title={isEs ? "Eliminar carta" : "Delete letter"}
+                    title={t("dashboard.deleteLetter")}
                   >
                     <Trash2 size={14} />
-                    <span>{isEs ? "Eliminar" : "Delete"}</span>
+                    <span>{t("dashboard.delete")}</span>
                   </button>
                 </div>
               </div>

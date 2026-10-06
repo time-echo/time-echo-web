@@ -24,10 +24,6 @@ export interface EmotionalShiftGaugeProps {
 
 interface MetricDisplayConfig {
   key: keyof EmotionalMetricSet;
-  labelEs: string;
-  labelEn: string;
-  sublabelEs: string;
-  sublabelEn: string;
   icon: React.ElementType;
   invertColor?: boolean;
 }
@@ -35,27 +31,15 @@ interface MetricDisplayConfig {
 const METRICS_CONFIG: MetricDisplayConfig[] = [
   {
     key: "happiness",
-    labelEs: "Felicidad",
-    labelEn: "Happiness",
-    sublabelEs: "Bienestar y alegría",
-    sublabelEn: "Well-being and joy",
     icon: Smile,
   },
   {
     key: "anxiety",
-    labelEs: "Ansiedad",
-    labelEn: "Anxiety",
-    sublabelEs: "Incertidumbre y tensión",
-    sublabelEn: "Uncertainty and tension",
     icon: AlertCircle,
     invertColor: true,
   },
   {
     key: "motivation",
-    labelEs: "Motivación",
-    labelEn: "Motivation",
-    sublabelEs: "Ímpetu y energía vital",
-    sublabelEn: "Vital energy and drive",
     icon: Zap,
   },
 ];
@@ -66,8 +50,7 @@ export function EmotionalShiftGauge({
   delta,
   className,
 }: EmotionalShiftGaugeProps) {
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -80,12 +63,10 @@ export function EmotionalShiftGauge({
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-crease pb-3 font-letter text-xs text-foreground-muted">
         <div className="flex items-center gap-1.5 uppercase font-semibold text-ink">
           <HeartHandshake size={14} className="text-wax" />
-          <span>
-            {isEs ? "Evolución Retrospectiva" : "Retrospective Shift"}
-          </span>
+          <span>{t("analytics.shift.title")}</span>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-widest">
-          {isEs ? "Comparativa de Sentimientos" : "Emotional Comparison"}
+          {t("analytics.shift.subtitle")}
         </span>
       </div>
 
@@ -119,10 +100,10 @@ export function EmotionalShiftGauge({
                   </span>
                   <div>
                     <h4 className="font-letter font-bold text-xs uppercase tracking-wider text-ink">
-                      {isEs ? metric.labelEs : metric.labelEn}
+                      {t(`analytics.shift.${metric.key}`)}
                     </h4>
                     <span className="text-[10px] text-foreground-muted leading-none">
-                      {isEs ? metric.sublabelEs : metric.sublabelEn}
+                      {t(`analytics.shift.${metric.key}Sub`)}
                     </span>
                   </div>
                 </div>
@@ -155,7 +136,7 @@ export function EmotionalShiftGauge({
                 <div className="space-y-1">
                   <div className="flex justify-between items-center text-[10px] font-mono text-foreground-muted">
                     <span className="uppercase tracking-wider">
-                      {isEs ? "Ayer (Sellado)" : "Past (Sealed)"}
+                      {t("analytics.shift.pastSealed")}
                     </span>
                     <span className="font-bold">{baseVal} / 10</span>
                   </div>
@@ -175,7 +156,7 @@ export function EmotionalShiftGauge({
                 <div className="space-y-1">
                   <div className="flex justify-between items-center text-[10px] font-mono text-foreground-muted">
                     <span className="uppercase tracking-wider">
-                      {isEs ? "Hoy (Desprecintado)" : "Present (Unsealed)"}
+                      {t("analytics.shift.presentUnsealed")}
                     </span>
                     <span className="font-bold text-wax">{revealVal} / 10</span>
                   </div>
@@ -195,7 +176,7 @@ export function EmotionalShiftGauge({
               </div>
 
               <div className="pt-2 border-t border-crease/50 text-[10px] font-mono text-foreground-muted/70 text-right">
-                {isEs ? "Escala epistolar de 1 a 10" : "Epistolary scale 1 to 10"}
+                {t("analytics.shift.scale")}
               </div>
             </div>
           );
