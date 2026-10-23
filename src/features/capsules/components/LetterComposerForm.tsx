@@ -4,13 +4,12 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLetterComposer, HorizonPreset } from "@/features/capsules";
-import { LinedPaperCanvas } from "./LinedPaperCanvas";
 import { ArchivalAccordion } from "@/components/ui/ArchivalAccordion";
 import { WaxSeal } from "@/components/ui/WaxSeal";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle } from "lucide-react";
-import { cn, formatLocaleDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
@@ -26,7 +25,7 @@ export function LetterComposerForm({
   defaultHorizon,
 }: LetterComposerFormProps) {
   const router = useRouter();
-  const { t, locale } = useTimeEcho();
+  const { t } = useTimeEcho();
 
   const presets: Array<{ id: HorizonPreset; label: string }> = [
     { id: "6m", label: t("letters.six_months") },
@@ -83,20 +82,6 @@ export function LetterComposerForm({
       setPredictions(existing);
     }
   };
-
-  const targetDate = new Date(form.scheduledAt);
-  const formattedDeliveryDate = isNaN(targetDate.getTime())
-    ? form.scheduledAt
-    : formatLocaleDate(targetDate.toISOString(), locale);
-
-  const countdownDays = isNaN(targetDate.getTime())
-    ? 0
-    : Math.max(
-        0,
-        Math.ceil((targetDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
-      );
-
-  const todayFormatted = formatLocaleDate(new Date().toISOString(), locale);
 
   return (
     <div className={cn("space-y-6 max-w-7xl mx-auto font-ui", className)}>
@@ -193,19 +178,25 @@ export function LetterComposerForm({
             {/* Content field */}
             <div className="space-y-2 relative">
               <label
-                htmlFor="letter-content-area"
+                htmlFor="letter_content_area"
                 className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
               >
                 {t("letters.content_label")} *
               </label>
-              <LinedPaperCanvas
+              <textarea
+                id="letter_content_area"
                 value={form.content}
-                onChange={(v) => setField("content", v)}
+                onChange={(e) => setField("content", e.target.value)}
                 placeholder={t("letters.content_placeholder_form")}
-                minRows={14}
-                showWordCount={false}
+                rows={15}
+                minLength={80}
+                maxLength={2000}
+                className="w-full p-5 sm:p-6 rounded-xs bg-transparent border border-crease font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none transition-all shadow-inner"
+                required
+                aria-required="true"
+                aria-describedby="char_counter"
               />
-              <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1">
+              <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1" aria-live="polite" aria-atomic="true">
                 <span className="italic">{t("letters.only_you_can_see")}</span>
                 <span id="char_counter">
                   {t("letters.min_chars_progress", {

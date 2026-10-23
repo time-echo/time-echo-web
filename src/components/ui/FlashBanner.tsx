@@ -53,7 +53,7 @@ function SingleFlashToast({
   const [isPaused, setIsPaused] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const remainingTimeRef = useRef(item.duration ?? 5000);
-  const startTimeRef = useRef(Date.now());
+  const startTimeRef = useRef(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const startTimer = useCallback(() => {

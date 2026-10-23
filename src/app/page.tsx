@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { PredictionCategory } from "@/types/timeecho";
@@ -12,14 +11,6 @@ import {
   ShieldCheck,
   Mail,
   FileText,
-  Check,
-  X,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  RotateCw,
-  ExternalLink,
-  Plus,
   Calendar,
   BarChart2,
 } from "lucide-react";
@@ -641,7 +632,7 @@ export default function HomePage() {
 
               <div className="border-t border-manila-border pt-4">
                 <p className="text-[11px] font-letter italic text-foreground-muted/90 leading-relaxed">
-                  "{t("nav.quote")}"
+                  &quot;{t("nav.quote")}&quot;
                 </p>
               </div>
             </aside>
