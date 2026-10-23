@@ -74,9 +74,9 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     });
     return initial;
   });
-  const [revealHappiness, setRevealHappiness] = useState(7);
-  const [revealAnxiety, setRevealAnxiety] = useState(3);
-  const [revealMotivation, setRevealMotivation] = useState(8);
+  const [revealHappiness, setRevealHappiness] = useState(5);
+  const [revealAnxiety, setRevealAnxiety] = useState(5);
+  const [revealMotivation, setRevealMotivation] = useState(5);
 
   useEffect(() => {
     let isMounted = true;
@@ -394,10 +394,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                                   })
                                 }
                                 className={cn(
-                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors",
+                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all",
                                   currentAnswer.matched
-                                    ? "bg-ink text-on-wax border-ink"
-                                    : "border-crease bg-manila/30 text-foreground-muted",
+                                    ? "bg-ink text-white border-ink shadow-2xs"
+                                    : "border-crease bg-manila/30 text-foreground-muted hover:bg-manila/50",
                                 )}
                               >
                                 <Check size={13} />
@@ -414,10 +414,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                                   })
                                 }
                                 className={cn(
-                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors",
+                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all",
                                   !currentAnswer.matched
-                                    ? "bg-wax text-on-wax border-wax"
-                                    : "border-crease bg-manila/30 text-foreground-muted",
+                                    ? "bg-wax text-white border-wax shadow-2xs"
+                                    : "border-crease bg-manila/30 text-foreground-muted hover:bg-manila/50",
                                 )}
                               >
                                 <X size={13} />
