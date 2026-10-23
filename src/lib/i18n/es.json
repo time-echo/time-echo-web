@@ -1040,9 +1040,19 @@
     "title": "Ingresa a tu baúl",
     "subtitle": "Te enviaremos un enlace seguro de inicio de sesión mágico directamente a tu correo electrónico. Sin contraseñas.",
     "dispatchedTitle": "¡Enlace enviado!",
-    "dispatchedDesc": "Hemos enviado el enlace a {email}. Redirigiendo a tu bóveda...",
+    "dispatchedDesc": "Hemos enviado el enlace a {email}.",
     "emailLabel": "Tu Dirección de Correo",
     "sendButton": "Enviar enlace mágico",
-    "backHome": "Volver a la página de inicio"
+    "backHome": "Volver a la página de inicio",
+    "errorHeader": "Error al procesar la solicitud:",
+    "invalidEmail": "Por favor ingresa un correo electrónico válido."
+  },
+  "checkEmail": {
+    "title": "Revisa tu bandeja de entrada",
+    "subtitle": "Hemos enviado un enlace de inicio de sesión mágico a",
+    "spamNotice": "Si no lo encuentras en unos minutos, revisa tu carpeta de correo no deseado (spam).",
+    "tryAnotherEmail": "Intentar con otro correo",
+    "continueDemo": "Continuar (Modo demo)",
+    "demoNotice": "Modo demostración activo: puedes ingresar a la bóveda directamente."
   }
 }

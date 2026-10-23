@@ -245,6 +245,15 @@
   }
 }
 
+@keyframes shrinkWidth {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
 .animate-fade-in {
   animation: fade-in 300ms cubic-bezier(0.25, 1, 0.5, 1) both;
 }

@@ -1040,9 +1040,19 @@
     "title": "Access Your Vault",
     "subtitle": "We will send a secure magic login link directly to your inbox. No passwords required.",
     "dispatchedTitle": "Magic link dispatched!",
-    "dispatchedDesc": "We sent the magic link to {email}. Redirecting to your vault...",
+    "dispatchedDesc": "We sent the magic link to {email}.",
     "emailLabel": "Your Email Address",
     "sendButton": "Send Magic Link",
-    "backHome": "Back to Home"
+    "backHome": "Back to Home",
+    "errorHeader": "Error processing request:",
+    "invalidEmail": "Please enter a valid email address."
+  },
+  "checkEmail": {
+    "title": "Check your inbox",
+    "subtitle": "We have dispatched a magic login link to",
+    "spamNotice": "If you do not see it within a few minutes, check your spam or junk folder.",
+    "tryAnotherEmail": "Try another email",
+    "continueDemo": "Continue (Demo mode)",
+    "demoNotice": "Demo mode active: you can enter the vault directly."
   }
 }

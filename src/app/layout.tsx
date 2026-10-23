@@ -8,6 +8,7 @@ import { TimeEchoProvider } from "@/lib/context/TimeEchoContext";
 import { AppShell } from "@/components/layout/AppShell";
 import { SupportedLanguage } from "@/types/timeecho";
 import { getTranslation } from "@/lib/i18n";
+import { FlashProvider } from "@/components/ui/FlashBanner";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -64,9 +65,11 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <TimeEchoProvider defaultLocale={locale}>
-            <Suspense fallback={<div className="min-h-screen bg-parchment" />}>
-              <AppShell>{children}</AppShell>
-            </Suspense>
+            <FlashProvider>
+              <Suspense fallback={<div className="min-h-screen bg-parchment" />}>
+                <AppShell>{children}</AppShell>
+              </Suspense>
+            </FlashProvider>
           </TimeEchoProvider>
         </NextIntlClientProvider>
       </body>
