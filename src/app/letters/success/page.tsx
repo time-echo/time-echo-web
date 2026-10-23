@@ -6,179 +6,124 @@ import { useSearchParams } from "next/navigation";
 import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { formatLocaleDate } from "@/lib/utils";
-import { PostmarkStamp } from "@/components/ui/PostmarkStamp";
-import { WaxSeal } from "@/components/ui/WaxSeal";
-import { CountdownBadge } from "@/components/ui/CountdownBadge";
-import {
-  Calendar,
-  Mail,
-  ShieldCheck,
-  Archive,
-  Eye,
-  PenTool,
-  Clock,
-} from "lucide-react";
+import { ArrowLeft, PenTool } from "lucide-react";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const letterId = searchParams.get("id");
 
   const { getCapsuleById, locale, t } = useTimeEcho();
-
   const capsule = letterId ? getCapsuleById(letterId) : undefined;
 
   useEffect(() => {
     celebrate("letter-sealed");
   }, []);
 
+  const sealDateFormatted = formatLocaleDate(
+    capsule?.createdAt || new Date().toISOString(),
+    locale,
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }
+  );
+
   const scheduledFormatted = capsule
-    ? new Date(capsule.scheduledAt).toLocaleDateString(
-        locale === "es" ? "es-ES" : "en-US",
-        {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        },
-      )
+    ? formatLocaleDate(capsule.scheduledAt, locale, {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
     : t("success.futureScheduledDate");
 
+  const recipientEmail = capsule?.email || "tu@correo.com";
+
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      <div className="relative rounded-md border border-crease bg-manila p-2 sm:p-2.5 shadow-[0_12px_36px_rgba(44,72,94,0.08)]">
-        {/* Top Tab Bar */}
-        <div className="flex items-center justify-between px-3.5 py-1.5 border-b border-crease/70 bg-crease/30 font-letter text-xs text-foreground-muted select-none">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-wax animate-pulse" />
-            <span className="font-bold text-ink uppercase tracking-wider text-[11px]">
-              {`${t("success.badge")} // TIME-ECHO`}
-            </span>
+    <div className="max-w-md mx-auto py-12 px-4 font-ui select-none animate-fade-in text-center text-foreground">
+      <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-8 relative overflow-hidden shadow-xs">
+        {/* Header & Vintage Postal Stamp Docket */}
+        <div className="space-y-4 relative">
+          <h1 className="font-serif-editorial text-3xl font-semibold text-foreground leading-tight">
+            {t("success.title")}
+          </h1>
+          <p className="text-xs font-letter text-foreground-muted leading-relaxed">
+            <span
+              dangerouslySetInnerHTML={{
+                __html: t("success.description"),
+              }}
+            />{" "}
+            <strong className="text-foreground font-semibold">
+              {scheduledFormatted}
+            </strong>
+          </p>
+
+          {/* Postal Certificate Card with Dashed Border and Cancellation Waves */}
+          <div className="relative max-w-[280px] mx-auto border-2 border-dashed border-ink/30 p-4 rounded-xs font-letter text-[9px] tracking-widest text-ink uppercase select-none space-y-1.5 shadow-3xs bg-ink/5 overflow-hidden text-left">
+            <div className="flex justify-between items-center px-1">
+              <span>
+                {t("success.seal")}: {sealDateFormatted}
+              </span>
+            </div>
+            <div className="border-t border-dashed border-ink/20 pt-1.5 flex justify-between items-center px-1 font-serif-editorial italic text-xs tracking-normal text-ink">
+              <span>{t("success.opening")}:</span>
+              <span className="font-semibold font-letter not-italic tracking-tight text-foreground">
+                {scheduledFormatted}
+              </span>
+            </div>
+
+            {/* Wavy Cancellation Stamp Lines */}
+            <div className="absolute -right-3 -top-2 opacity-15 pointer-events-none text-ink transform rotate-6">
+              <svg
+                className="w-20 h-10"
+                fill="none"
+                viewBox="0 0 100 30"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                aria-hidden="true"
+              >
+                <path d="M 0,5 Q 25,12 50,5 T 100,5" />
+                <path d="M 0,12 Q 25,19 50,12 T 100,12" />
+                <path d="M 0,19 Q 25,26 50,19 T 100,19" />
+              </svg>
+            </div>
           </div>
-          <span className="text-[10px] font-mono tracking-widest uppercase">
-            {t("success.recordConfirmed")}
-          </span>
         </div>
 
-        {/* Parchment Document Body */}
-        <div className="relative rounded border border-crease bg-parchment p-4 sm:p-6 font-letter space-y-4 overflow-hidden">
-          {/* Header Row: Title & Postmark */}
-          <div className="flex items-start justify-between gap-4 border-b border-crease/60 pb-3.5 text-left">
-            <div className="space-y-1">
-              <h1 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-ink leading-tight">
-                {t("success.title")}
-              </h1>
-              <p className="text-xs text-foreground-muted max-w-lg leading-relaxed">
-                {t("success.description")}
-              </p>
-            </div>
+        {/* What Happens Next Card */}
+        <div className="archival-folder rounded-xs p-4 space-y-1.5 border border-manila-border text-left font-letter">
+          <p className="text-[10px] font-semibold text-ink uppercase tracking-wider">
+            {t("success.nextTitle")}
+          </p>
+          <p className="text-xs text-foreground-muted leading-relaxed">
+            {t("success.nextDesc", { email: recipientEmail })}
+          </p>
+        </div>
 
-            <div className="shrink-0 pointer-events-none opacity-85 hidden sm:block">
-              <PostmarkStamp
-                city="BOGOTÁ // CENTRAL"
-                docketId={capsule?.docketNumber || "TE-00421"}
-                date={formatLocaleDate(new Date().toISOString(), locale, {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-                subtext={t("success.postmarkedAndSealed")}
-                variant="circular"
-                size="sm"
-              />
-            </div>
-          </div>
+        {/* Action Buttons */}
+        <div className="pt-6 border-t border-crease space-y-3 font-letter relative">
+          <Link
+            href="/dashboard"
+            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] flex items-center justify-center transition-colors"
+          >
+            {t("success.ctaVault")}
+          </Link>
 
-          {/* Main 2-Column Content Area */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
-            {/* Left: Wax Seal & Status */}
-            <div className="md:col-span-5 flex flex-col items-center justify-center p-3.5 rounded border border-crease/80 bg-manila/30 text-center">
-              <WaxSeal size="md" isLocked={true} />
-              <span className="text-[10px] sm:text-[11px] text-wax font-mono font-bold tracking-widest uppercase mt-2">
-                {t("success.sealIntact")}
-              </span>
+          <Link
+            href="/letters/new"
+            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs py-2.5 px-4 text-xs font-semibold uppercase tracking-wider font-letter flex items-center justify-center gap-1.5 transition-colors cursor-pointer w-full bg-transparent"
+          >
+            <PenTool size={13} />
+            <span>{t("success.ctaNew")}</span>
+          </Link>
 
-              {capsule && (
-                <div className="mt-2.5 pt-2 border-t border-crease/60 w-full flex flex-col items-center gap-1">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-foreground-muted flex items-center gap-1">
-                    <Clock size={11} className="text-wax" />
-                    <span>{t("success.remainingTime")}:</span>
-                  </span>
-                  <CountdownBadge
-                    targetDate={capsule.scheduledAt}
-                    size="sm"
-                    variant="pill"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Right: Metadata & Security Notice */}
-            <div className="md:col-span-7 flex flex-col justify-between gap-2.5">
-              <div className="p-3.5 rounded border border-crease/80 bg-manila/40 text-left text-xs space-y-2">
-                <div className="flex justify-between items-center border-b border-crease/50 pb-1.5">
-                  <span className="text-foreground-muted uppercase tracking-wider text-[11px]">
-                    {t("success.docketNumber")}:
-                  </span>
-                  <span className="font-mono font-bold text-ink">
-                    {capsule?.docketNumber || "TE-GENERADO"}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center border-b border-crease/50 pb-1.5">
-                  <span className="text-foreground-muted uppercase tracking-wider text-[11px] flex items-center gap-1">
-                    <Calendar size={12} className="text-wax" />
-                    <span>{t("success.releaseDate")}:</span>
-                  </span>
-                  <span className="font-bold text-ink">{scheduledFormatted}</span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-foreground-muted uppercase tracking-wider text-[11px] flex items-center gap-1">
-                    <Mail size={12} className="text-wax" />
-                    <span>{t("success.recipient")}:</span>
-                  </span>
-                  <span className="font-mono text-ink text-[11px] truncate max-w-[180px] sm:max-w-[220px]">
-                    {capsule?.email || "yo.del.futuro@personal.me"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded border border-crease/70 bg-crease/20 flex items-center gap-2 text-[11px] text-foreground-muted text-left">
-                <ShieldCheck size={15} className="text-wax shrink-0" />
-                <p className="leading-snug">
-                  {t("success.encryptedNotice")}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Navigation Buttons */}
-          <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-end gap-2.5 border-t border-crease/50">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-wax bg-wax text-on-wax hover:bg-wax-hover text-xs font-bold uppercase tracking-wider shadow-xs transition-all min-h-[38px] focus-visible:outline-2 focus-visible:outline-wax"
-            >
-              <Archive size={14} />
-              <span>{t("success.ctaVault")}</span>
-            </Link>
-
-            {letterId && (
-              <Link
-                href={`/letters/${letterId}`}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded border border-crease bg-parchment hover:bg-manila text-ink text-xs font-bold uppercase tracking-wider shadow-2xs transition-colors min-h-[38px] focus-visible:outline-2 focus-visible:outline-wax"
-              >
-                <Eye size={14} />
-                <span>{t("success.ctaInspect")}</span>
-              </Link>
-            )}
-
-            <Link
-              href="/letters/new"
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded border border-crease bg-parchment hover:bg-manila text-foreground-muted hover:text-ink text-xs uppercase tracking-wider transition-colors min-h-[38px] focus-visible:outline-2 focus-visible:outline-wax"
-            >
-              <PenTool size={14} />
-              <span>{t("success.ctaNew")}</span>
-            </Link>
-          </div>
+          <Link
+            href="/"
+            className="text-[10px] font-semibold text-foreground-muted hover:text-foreground transition-colors uppercase tracking-widest flex items-center justify-center gap-1.5 pt-2"
+          >
+            <ArrowLeft size={12} />
+            <span>{t("success.ctaHome")}</span>
+          </Link>
         </div>
       </div>
     </div>
@@ -189,17 +134,14 @@ export default function LetterSuccessPage() {
   const { t } = useTimeEcho();
 
   return (
-    <div className="w-full flex items-center justify-center">
-      <Suspense
-        fallback={
-          <div className="max-w-md mx-auto p-12 text-center font-letter text-xs text-foreground-muted">
-            <div className="inline-block w-6 h-6 border-2 border-wax border-t-transparent rounded-full animate-spin mb-3" />
-            <p>{t("common.loading")}</p>
-          </div>
-        }
-      >
-        <SuccessContent />
-      </Suspense>
-    </div>
+    <Suspense
+      fallback={
+        <div className="max-w-md mx-auto py-16 text-center font-letter text-xs text-foreground-muted animate-pulse">
+          <p>{t("common.loading")}</p>
+        </div>
+      }
+    >
+      <SuccessContent />
+    </Suspense>
   );
 }

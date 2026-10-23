@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useFlash } from "@/components/ui/FlashBanner";
 import { Mail, AlertTriangle, ArrowLeft, CheckCircle, Sun, Moon, Monitor, Globe } from "lucide-react";
 
 const APPEARANCE_OPTIONS: Array<{
@@ -19,6 +20,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const { locale, setLocale, resetVault, appearanceMode, setAppearanceMode, t } =
     useTimeEcho();
+  const { notice } = useFlash();
 
   const [email, setEmail] = useState("user@timeecho.me");
   const [savedNotice, setSavedNotice] = useState(false);
@@ -26,6 +28,7 @@ export default function SettingsPage() {
   const handleUpdateEmail = (e: React.FormEvent) => {
     e.preventDefault();
     setSavedNotice(true);
+    notice(t("settings.savedNotice"));
     setTimeout(() => setSavedNotice(false), 3000);
   };
 
