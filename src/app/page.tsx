@@ -15,6 +15,11 @@ import {
   Check,
   X,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  RotateCw,
+  ExternalLink,
+  Plus,
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 
@@ -594,8 +599,107 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto font-ui text-foreground space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Browser Mockup Window */}
+        <div className="max-w-5xl mx-auto rounded-xl sm:rounded-2xl border border-crease bg-manila/20 dark:bg-manila/10 shadow-2xl shadow-foreground/5 dark:shadow-black/50 overflow-hidden font-ui text-foreground transition-all duration-300">
+          {/* Top Browser Bar (Tabs & Controls) */}
+          <div className="bg-manila/50 dark:bg-manila/30 px-3 sm:px-4 pt-3 pb-2 flex items-center justify-between border-b border-crease select-none">
+            {/* Window Controls (Traffic Lights) */}
+            <div className="flex items-center gap-2 w-16 sm:w-24">
+              <span className="w-3 h-3 rounded-full bg-[#ec6a5e] border border-[#d04e41]/60 inline-block shadow-2xs hover:opacity-85 transition-opacity" />
+              <span className="w-3 h-3 rounded-full bg-[#f4bf4f] border border-[#d79f38]/60 inline-block shadow-2xs hover:opacity-85 transition-opacity" />
+              <span className="w-3 h-3 rounded-full bg-[#61c554] border border-[#4ea73b]/60 inline-block shadow-2xs hover:opacity-85 transition-opacity" />
+            </div>
+
+            {/* Active Browser Tab */}
+            <div className="flex items-center gap-1.5 flex-1 max-w-md mx-2">
+              <div className="flex items-center gap-2 bg-parchment dark:bg-parchment/90 border-t border-x border-crease rounded-t-md px-3 py-1.5 text-xs font-letter text-foreground shadow-2xs min-w-0 max-w-[280px] sm:max-w-xs">
+                <FileText size={12} className="text-ink shrink-0" />
+                <span className="truncate text-[11px] sm:text-xs font-medium">
+                  {t("landing.demoBrowserTab")}
+                </span>
+                <span className="text-foreground-muted/60 hover:text-foreground text-[10px] ml-auto pl-1 cursor-pointer">
+                  ✕
+                </span>
+              </div>
+              <button
+                type="button"
+                aria-label="New tab"
+                className="w-6 h-6 rounded flex items-center justify-center text-foreground-muted hover:text-foreground hover:bg-manila/50 transition-colors"
+              >
+                <Plus size={13} />
+              </button>
+            </div>
+
+            {/* Right Side Window Indicators */}
+            <div className="w-16 sm:w-24 flex justify-end">
+              <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-letter uppercase tracking-wider text-foreground-muted/80 bg-manila/60 dark:bg-manila/30 px-2 py-0.5 rounded-full border border-crease/80">
+                <ShieldCheck size={11} className="text-emerald-600 dark:text-emerald-400" />
+                <span>{t("landing.demoBrowserEncrypted")}</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Navigation & Omnibox (Address Bar) */}
+          <div className="bg-parchment/80 dark:bg-parchment/50 px-3 sm:px-4 py-2 border-b border-crease flex items-center gap-2 sm:gap-3">
+            {/* Nav arrows */}
+            <div className="flex items-center gap-1 text-foreground-muted/50">
+              <button
+                type="button"
+                aria-label="Back"
+                disabled
+                className="p-1 rounded hover:bg-manila/40 disabled:opacity-40 disabled:hover:bg-transparent"
+              >
+                <ChevronLeft size={15} />
+              </button>
+              <button
+                type="button"
+                aria-label="Forward"
+                disabled
+                className="p-1 rounded hover:bg-manila/40 disabled:opacity-40 disabled:hover:bg-transparent"
+              >
+                <ChevronRight size={15} />
+              </button>
+              <button
+                type="button"
+                aria-label="Reload"
+                className="p-1 rounded hover:bg-manila/40 text-foreground-muted hover:text-foreground transition-transform active:rotate-180"
+              >
+                <RotateCw size={12} />
+              </button>
+            </div>
+
+            {/* Address Bar */}
+            <div className="flex-1 max-w-xl mx-auto bg-parchment dark:bg-manila/30 border border-crease rounded-md sm:rounded-lg px-3 py-1 flex items-center justify-between text-xs font-letter shadow-inner transition-colors focus-within:border-wax">
+              <div className="flex items-center gap-2 min-w-0">
+                <Lock size={12} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span className="text-foreground-muted/60 select-none text-[11px] hidden sm:inline">
+                  https://
+                </span>
+                <span className="text-foreground font-semibold text-[11px] sm:text-xs">
+                  timeecho.me
+                </span>
+                <span className="text-foreground-muted text-[11px] sm:text-xs truncate">
+                  /vault/letters/folio-00108
+                </span>
+              </div>
+              <span className="text-[9px] uppercase tracking-wider font-semibold text-ink bg-ink/10 px-1.5 py-0.5 rounded shrink-0 hidden md:inline-block">
+                TLS 1.3
+              </span>
+            </div>
+
+            {/* Direct Vault Link */}
+            <Link
+              href="/letters/capsule-archived-2022"
+              className="p-1 text-foreground-muted hover:text-wax transition-colors"
+              title={t("landing.viewFolioInVault")}
+            >
+              <ExternalLink size={14} />
+            </Link>
+          </div>
+
+          {/* Browser Viewport Content */}
+          <div className="h-[520px] sm:h-[580px] md:h-[620px] overflow-y-auto p-4 sm:p-6 lg:p-8 bg-parchment/40 dark:bg-parchment/20 [scrollbar-width:thin] [scrollbar-color:var(--crease)_transparent]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-8 space-y-6">
               <div className="paper-sheet rounded-xs p-6 sm:p-8 space-y-6 border border-crease">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-4 text-xs font-letter">
@@ -897,6 +1001,20 @@ export default function HomePage() {
                   className="text-foreground-muted group-hover:translate-x-1 group-hover:text-wax transition-all shrink-0"
                 />
               </Link>
+            </div>
+            </div>
+          </div>
+
+          {/* Browser Status Bar (Footer) */}
+          <div className="px-4 py-2 border-t border-crease bg-manila/30 dark:bg-manila/20 flex flex-wrap items-center justify-between gap-2 text-[11px] font-letter text-foreground-muted select-none">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>{t("landing.demoBrowserStatus")}</span>
+            </div>
+            <div className="flex items-center gap-3 text-[10px] uppercase tracking-wider">
+              <span>Folio #TE-00108</span>
+              <span className="hidden sm:inline">·</span>
+              <span className="hidden sm:inline">{t("landing.demoBrowserReader")}</span>
             </div>
           </div>
         </div>
