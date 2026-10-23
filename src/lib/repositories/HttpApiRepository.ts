@@ -151,6 +151,10 @@ export class HttpApiRepository implements ICapsuleRepository {
       );
     }
 
+    if (res.status === 204 || res.headers.get("content-length") === "0") {
+      return undefined as unknown as T;
+    }
+
     return res.json() as Promise<T>;
   }
 
@@ -248,5 +252,14 @@ export class HttpApiRepository implements ICapsuleRepository {
     );
 
     return this.mapResponseToDomain(data);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.request<void>(
+      `/letters/${encodeURIComponent(id)}`,
+      {
+        method: "DELETE",
+      },
+    );
   }
 }

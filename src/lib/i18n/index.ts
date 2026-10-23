@@ -1,6 +1,10 @@
 import es from "./es.json";
 import en from "./en.json";
+import { createTranslator } from "next-intl";
 import { SupportedLanguage } from "@/types/timeecho";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+
+export { useTranslations, useLocale, useMessages, useFormatter } from "next-intl";
 
 export const translations = {
   es,
@@ -9,9 +13,6 @@ export const translations = {
 
 export type TranslationDictionary = typeof es;
 
-/**
- * Nested key paths helper (e.g., 'common.save' or 'dashboard.title')
- */
 export type NestedKeyOf<ObjectType extends object> = {
   [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
     ? `${Key}` | `${Key}.${NestedKeyOf<ObjectType[Key]>}`
@@ -20,60 +21,44 @@ export type NestedKeyOf<ObjectType extends object> = {
 
 export type TranslationKey = NestedKeyOf<TranslationDictionary>;
 
-/**
- * Retrieve translation value by dot-notated key path with interpolation support.
- * e.g., getTranslation('es', 'header.nav.vault') -> 'Bóveda'
- */
+const translators = {
+  es: createTranslator({ locale: "es", messages: es, onError: () => {} }),
+  en: createTranslator({ locale: "en", messages: en, onError: () => {} }),
+};
+
 export function getTranslation(
   locale: SupportedLanguage,
   keyPath: string,
   params?: Record<string, string | number>,
 ): string {
-  const dict = translations[locale] || translations.es;
-  const segments = keyPath.split(".");
+  const translator = (translators[locale] || translators.es) as (
+    k: string,
+    p?: Record<string, string | number>,
+  ) => string;
+  const esTranslator = translators.es as (
+    k: string,
+    p?: Record<string, string | number>,
+  ) => string;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let current: any = dict;
-  for (const seg of segments) {
-    if (current && typeof current === "object" && seg in current) {
-      current = current[seg];
-    } else {
-      // Fallback to Spanish dictionary
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let fallbackCurrent: any = translations.es;
-      for (const fSeg of segments) {
-        if (
-          fallbackCurrent &&
-          typeof fallbackCurrent === "object" &&
-          fSeg in fallbackCurrent
-        ) {
-          fallbackCurrent = fallbackCurrent[fSeg];
-        } else {
-          return keyPath;
-        }
-      }
-      current = fallbackCurrent;
-      break;
+  try {
+    const res = translator(keyPath, params);
+    if (res !== keyPath) {
+      return res;
+    }
+  } catch {
+    try {
+      return esTranslator(keyPath, params);
+    } catch {
+      return keyPath;
     }
   }
 
-  if (typeof current !== "string") {
+  try {
+    return esTranslator(keyPath, params);
+  } catch {
     return keyPath;
   }
-
-  // Parameter interpolation: {name} or {{name}}
-  if (params) {
-    return Object.entries(params).reduce((acc, [k, v]) => {
-      return acc
-        .replaceAll(`{{${k}}}`, String(v))
-        .replaceAll(`{${k}}`, String(v));
-    }, current);
-  }
-
-  return current;
 }
-
-import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export function useTranslation() {
   const { locale, setLocale, toggleLocale, t } = useTimeEcho();

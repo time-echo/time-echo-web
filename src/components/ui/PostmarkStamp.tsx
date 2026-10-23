@@ -91,7 +91,7 @@ function getDeterministicTilt(seed?: string): number {
 }
 
 /**
- * 📯 PostmarkStamp Component
+ * PostmarkStamp Component
  *
  * Vintage postal cancellation mark featuring origin city, docket folio ID,
  * cancellation date, authentic postal waves, and slight physical tilt.

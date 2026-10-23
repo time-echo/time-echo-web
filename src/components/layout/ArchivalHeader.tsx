@@ -2,13 +2,25 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Globe, Mail, LogIn } from "lucide-react";
 
 export function ArchivalHeader() {
-  const { locale, toggleLocale, capsules } = useTimeEcho();
-  const isEs = locale === "es";
+  const pathname = usePathname();
+  const { locale, toggleLocale, capsules, t } = useTimeEcho();
   const hasLetters = capsules.length > 0;
+
+  const handleHowItWorksClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      const element = document.getElementById("how-it-works");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+      window.history.pushState(null, "", "/#how-it-works");
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-parchment/90 backdrop-blur-md border-b border-crease/60 font-sans-ui select-none">
@@ -24,39 +36,56 @@ export function ArchivalHeader() {
           <button
             type="button"
             onClick={toggleLocale}
-            className="flex items-center gap-1 sm:gap-1.5 text-foreground-muted hover:text-wax transition-colors cursor-pointer bg-transparent border-none p-1 sm:p-0 hover:scale-[1.02] active:scale-[0.98] font-sans-ui shrink-0"
-            aria-label={
-              isEs ? "Switch language to English" : "Cambiar idioma a español"
-            }
+            className="flex items-center gap-1.5 border border-crease hover:border-wax/60 rounded-xs px-2.5 py-1 text-xs font-letter transition-colors cursor-pointer bg-parchment/60 hover:bg-manila/40 shrink-0 min-h-[36px]"
+            aria-label={t("header.switchLanguage")}
           >
-            <Globe size={16} />
-            <span className="text-xs sm:text-sm">{isEs ? "ES" : "EN"}</span>
+            <Globe size={13} className="text-foreground-muted shrink-0" />
+            <span
+              className={
+                locale === "es"
+                  ? "text-wax font-bold"
+                  : "text-foreground-muted/60 font-medium"
+              }
+            >
+              ES
+            </span>
+            <span className="text-crease font-mono text-[10px]">/</span>
+            <span
+              className={
+                locale !== "es"
+                  ? "text-wax font-bold"
+                  : "text-foreground-muted/60 font-medium"
+              }
+            >
+              EN
+            </span>
           </button>
 
           <div className="hidden sm:block h-5 w-px bg-crease" />
 
           <Link
             href="/#how-it-works"
+            onClick={handleHowItWorksClick}
             className="hidden sm:block text-foreground-muted hover:text-wax transition-colors whitespace-nowrap"
           >
-            {isEs ? "Cómo funciona" : "How It Works"}
+            {t("header.howItWorks")}
           </Link>
 
           {hasLetters ? (
             <Link
               href="/dashboard"
-              className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-none cursor-pointer inline-flex items-center gap-1 sm:gap-1.5 font-letter shadow-xs whitespace-nowrap shrink-0 transition-colors"
+              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-3 sm:px-4 py-1.5 sm:py-2 min-h-[44px] inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-none cursor-pointer font-letter shadow-xs whitespace-nowrap shrink-0 transition-colors"
             >
               <Mail size={14} />
-              <span>{isEs ? "Mis Cartas" : "Vault"}</span>
+              <span>{t("header.myLetters")}</span>
             </Link>
           ) : (
             <Link
               href="/login"
-              className="bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-none cursor-pointer inline-flex items-center gap-1 sm:gap-1.5 font-letter shadow-xs whitespace-nowrap shrink-0 transition-colors"
+              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-3 sm:px-4 py-1.5 sm:py-2 min-h-[44px] inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-none cursor-pointer font-letter shadow-xs whitespace-nowrap shrink-0 transition-colors"
             >
               <LogIn size={14} />
-              <span>{isEs ? "Iniciar Sesión" : "Sign In"}</span>
+              <span>{t("header.signIn")}</span>
             </Link>
           )}
         </div>

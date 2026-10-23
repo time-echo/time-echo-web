@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { PredictionCategory } from "@/types/timeecho";
@@ -11,15 +12,39 @@ import {
   ShieldCheck,
   Mail,
   FileText,
-  Calendar,
-  BarChart3,
+  Check,
+  X,
+  ArrowRight,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
 
 export default function HomePage() {
   const router = useRouter();
-  const { locale, createCapsule } = useTimeEcho();
-  const isEs = locale === "es";
+  const { locale, createCapsule, t } = useTimeEcho();
+
+  useEffect(() => {
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const targetElement = document.getElementById(hash.slice(1));
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    scrollToHash();
+    const frameId = requestAnimationFrame(scrollToHash);
+    const timeoutId = setTimeout(scrollToHash, 150);
+    window.addEventListener("hashchange", scrollToHash);
+    window.addEventListener("popstate", scrollToHash);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(timeoutId);
+      window.removeEventListener("hashchange", scrollToHash);
+      window.removeEventListener("popstate", scrollToHash);
+    };
+  }, []);
 
   const [content, setContent] = useState("");
   const [email, setEmail] = useState("");
@@ -42,9 +67,9 @@ export default function HomePage() {
     () => new Date(Date.now() + 86400000).toISOString().split("T")[0],
   );
 
-  const currentDateFormatted = new Date().toLocaleDateString(
-    isEs ? "es-ES" : "en-US",
-    { day: "numeric", month: "long", year: "numeric" },
+  const currentDateFormatted = formatLocaleDate(
+    new Date().toISOString(),
+    locale,
   );
 
   const handlePresetDate = (days: number) => {
@@ -88,7 +113,7 @@ export default function HomePage() {
 
     try {
       const capsule = await createCapsule({
-        title: isEs ? "Tu carta para el futuro" : "Your letter to the future",
+        title: t("landing.defaultTitle"),
         content,
         email,
         scheduledAt: deliverDate.toISOString(),
@@ -120,94 +145,69 @@ export default function HomePage() {
         <div className="lg:col-span-5 space-y-7 lg:sticky lg:top-24">
           <div className="space-y-4">
             <h1 className="font-serif-editorial text-4xl sm:text-6xl font-normal text-foreground leading-tight tracking-tight">
-              {isEs ? (
-                <>
-                  Escribe hoy.
-                  <br />
-                  Descubre mañana.
-                </>
-              ) : (
-                <>
-                  Write today.
-                  <br />
-                  Discover tomorrow.
-                </>
-              )}
+              {t("landing.heroTitleLine1")}
+              <br />
+              {t("landing.heroTitleLine2")}
             </h1>
 
             <p className="font-letter text-xs sm:text-sm text-foreground-muted leading-relaxed max-w-xl">
-              {isEs
-                ? "Escribe una carta a tu yo del futuro, registra tu estado emocional y formula predicciones de vida. Une a quien eres hoy con la persona en la que te convertirás."
-                : "Write a letter to your future self, calibrate your emotional baseline, and forecast your life milestones. Compare who you are today with who you will become."}
+              {t("landing.heroSubtitle")}
             </p>
           </div>
 
           <div className="space-y-3 pt-2">
             <div className="paper-sheet rounded-xs p-4 border border-crease flex items-start gap-3.5">
-              <div className="w-8 h-8 rounded-xs bg-[#8E2818]/10 text-[#8E2818] flex items-center justify-center shrink-0 border border-[#8E2818]/20">
+              <div className="w-8 h-8 rounded-xs bg-wax/10 text-wax flex items-center justify-center shrink-0 border border-wax/20">
                 <Lock size={16} />
               </div>
               <div className="space-y-0.5">
-                <h4 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
-                  {isEs ? "100% Privado y Seguro" : "100% Private & Sealed"}
-                </h4>
+                <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
+                  {t("landing.trustPrivate")}
+                </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "Solo tú puedes leer tu carta. Permanece resguardada de forma segura en tu bóveda personal hasta la fecha que elijas."
-                    : "Only you can read your letter. It remains securely locked in your personal vault until your delivery date."}
+                  {t("landing.trustPrivateDesc")}
                 </p>
               </div>
             </div>
 
             <div className="paper-sheet rounded-xs p-4 border border-crease flex items-start gap-3.5">
-              <div className="w-8 h-8 rounded-xs bg-[#2C485E]/10 text-[#2C485E] flex items-center justify-center shrink-0 border border-[#2C485E]/20">
+              <div className="w-8 h-8 rounded-xs bg-ink/10 text-ink flex items-center justify-center shrink-0 border border-ink/20">
                 <Clock size={16} />
               </div>
               <div className="space-y-0.5">
-                <h4 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
-                  {isEs ? "Entrega a Tiempo" : "Delivered on Schedule"}
-                </h4>
+                <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
+                  {t("landing.trustSchedule")}
+                </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "Llega directo a tu bandeja de entrada en la mañana exacta que elegiste, en tu horario local."
-                    : "Arrives straight to your inbox on the exact morning you chose, in your local timezone."}
+                  {t("landing.trustScheduleDesc")}
                 </p>
               </div>
             </div>
 
             <div className="paper-sheet rounded-xs p-4 border border-crease flex items-start gap-3.5">
-              <div className="w-8 h-8 rounded-xs bg-amber-600/10 text-amber-700 flex items-center justify-center shrink-0 border border-amber-600/20">
+              <div className="w-8 h-8 rounded-xs bg-ink/10 text-ink flex items-center justify-center shrink-0 border border-ink/20">
                 <Sparkles size={16} />
               </div>
               <div className="space-y-0.5">
-                <h4 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
-                  {isEs
-                    ? "Predicciones vs. Realidad"
-                    : "Predictions vs. Reality"}
-                </h4>
+                <h2 className="text-xs font-letter font-semibold uppercase tracking-wider text-foreground">
+                  {t("landing.trustReality")}
+                </h2>
                 <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "Compara lo que imaginabas con lo que realmente viviste y descubre cuánto has evolucionado."
-                    : "Put your past expectations side-by-side with real life to see how much you’ve evolved."}
+                  {t("landing.trustRealityDesc")}
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Live Letter Composition Paper Sheet */}
         <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-8 space-y-6 border border-crease">
           <div className="flex items-center justify-between border-b border-crease pb-4">
             <div>
               <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
-                {isEs
-                  ? "PASO 01 / REDACCIÓN INICIAL"
-                  : "STEP 01 / INITIAL DRAFT"}
+                {t("landing.step01Label")}
               </span>
               <h2 className="font-serif-editorial text-2xl text-foreground font-semibold mt-0.5">
-                {isEs
-                  ? "Escribe tu carta a tu futuro"
-                  : "Write your letter to your future"}
+                {t("landing.writeLetterToFuture")}
               </h2>
             </div>
             <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
@@ -221,103 +221,115 @@ export default function HomePage() {
                 htmlFor="landing-content"
                 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block"
               >
-                {isEs ? "Tu carta" : "Your Letter"}
+                {t("landing.yourLetter")}
               </label>
               <textarea
                 id="landing-content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder={
-                  isEs ? "Querido yo del futuro..." : "Dear future self..."
-                }
+                placeholder={t("landing.letterPlaceholder")}
                 rows={7}
                 maxLength={2000}
                 required
+                aria-describedby="landing-content-counter"
                 className="w-full p-4 sm:p-5 border border-crease rounded-xs font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none transition-all shadow-inner bg-transparent"
               />
               <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1">
                 <span className="italic">
-                  {isEs
-                    ? "Solo tú podrás verla"
-                    : "Only you will be able to see it"}
+                  {t("landing.onlyYouCanSee")}
                 </span>
-                <span className={cn(isUnderMinChars && "text-wax")}>
+                <span
+                  id="landing-content-counter"
+                  className={cn(isUnderMinChars && "text-wax")}
+                >
                   {isUnderMinChars
-                    ? isEs
-                      ? `${charCount} / 80 mín (2000 máx)`
-                      : `${charCount} / 80 min (2000 max)`
+                    ? t("landing.charCounterMin", { count: charCount })
                     : `${charCount} / 2000`}
                 </span>
               </div>
+              {isUnderMinChars && (
+                <p
+                  className="text-[11px] font-letter text-wax pt-0.5"
+                  aria-live="polite"
+                >
+                  {t("landing.minCharsError")}
+                </p>
+              )}
             </div>
 
-            {/* Delivery Horizon Presets */}
             <div className="space-y-2.5">
               <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block">
-                {isEs
-                  ? "¿Cuándo quieres recibirla?"
-                  : "When do you want to receive it?"}
+                {t("landing.whenToReceive")}
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-letter">
+              <div
+                role="group"
+                aria-label={t("landing.deliveryDateAria")}
+                className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-letter"
+              >
                 <button
                   type="button"
                   onClick={() => handlePresetDate(180)}
+                  aria-pressed={selectedHorizonDays === 180 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 180 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "6 meses" : "6 months"}
+                  {t("landing.horizonMonths6")}
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePresetDate(365)}
+                  aria-pressed={selectedHorizonDays === 365 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 365 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "1 año" : "1 year"}
+                  {t("landing.horizonYear1")}
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePresetDate(1095)}
+                  aria-pressed={selectedHorizonDays === 1095 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 1095 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "3 años" : "3 years"}
+                  {t("landing.horizonYears3")}
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePresetDate(1825)}
+                  aria-pressed={selectedHorizonDays === 1825 && !showCustomDate}
                   className={cn(
-                    "py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     selectedHorizonDays === 1825 && !showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "5 años" : "5 years"}
+                  {t("landing.horizonYears5")}
                 </button>
                 <button
                   type="button"
                   onClick={handleToggleCustomDate}
+                  aria-pressed={showCustomDate}
                   className={cn(
-                    "col-span-2 sm:col-span-1 py-2 rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
+                    "col-span-2 sm:col-span-1 py-2 min-h-[44px] rounded-xs uppercase tracking-wider transition-all cursor-pointer border",
                     showCustomDate
-                      ? "border-wax bg-wax text-parchment font-semibold"
+                      ? "border-wax bg-wax text-on-wax font-semibold"
                       : "border-crease hover:bg-manila/50 text-foreground",
                   )}
                 >
-                  {isEs ? "Fecha personalizada" : "Custom date"}
+                  {t("landing.customDate")}
                 </button>
               </div>
 
@@ -328,9 +340,7 @@ export default function HomePage() {
                       htmlFor="landing-custom-date"
                       className="text-[10px] text-foreground-muted font-letter uppercase tracking-wider block mb-1 font-semibold"
                     >
-                      {isEs
-                        ? "Elige una fecha específica"
-                        : "Choose a specific date"}
+                      {t("landing.chooseSpecificDate")}
                     </label>
                     <input
                       id="landing-custom-date"
@@ -345,16 +355,13 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Annex I: Optional Predictions */}
-            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-4 border border-[#D5CEBD]">
-              <div className="border-b border-[#D5CEBD] pb-2">
+            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-4 border border-manila-border">
+              <div className="border-b border-manila-border pb-2">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
-                  {isEs ? "ANEXO I / PREDICCIONES" : "ANNEX I / PREDICTIONS"}
+                  {t("landing.annexPredictions")}
                 </span>
                 <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block mt-0.5">
-                  {isEs
-                    ? "Tus predicciones (opcional)"
-                    : "Your predictions (optional)"}
+                  {t("landing.predictionsOptional")}
                 </label>
               </div>
 
@@ -366,9 +373,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">01.</span>
                     <span>
-                      {isEs
-                        ? "¿Dónde crees que vivirás?"
-                        : "Where will you live?"}
+                      {t("landing.predCityQuestion")}
                     </span>
                   </label>
                   <input
@@ -376,11 +381,7 @@ export default function HomePage() {
                     type="text"
                     value={predictionCity}
                     onChange={(e) => setPredictionCity(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
@@ -392,7 +393,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">02.</span>
                     <span>
-                      {isEs ? "¿A qué te dedicarás?" : "What work will you do?"}
+                      {t("landing.predCareerQuestion")}
                     </span>
                   </label>
                   <input
@@ -400,11 +401,7 @@ export default function HomePage() {
                     type="text"
                     value={predictionCareer}
                     onChange={(e) => setPredictionCareer(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
@@ -416,9 +413,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">03.</span>
                     <span>
-                      {isEs
-                        ? "¿Cuánto dinero ganarás?"
-                        : "How much money will you earn?"}
+                      {t("landing.predSalaryQuestion")}
                     </span>
                   </label>
                   <input
@@ -426,11 +421,7 @@ export default function HomePage() {
                     type="text"
                     value={predictionSalary}
                     onChange={(e) => setPredictionSalary(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
@@ -442,9 +433,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">04.</span>
                     <span>
-                      {isEs
-                        ? "¿Cómo será tu relación sentimental?"
-                        : "How will your relationship be?"}
+                      {t("landing.predRelationshipQuestion")}
                     </span>
                   </label>
                   <input
@@ -452,11 +441,7 @@ export default function HomePage() {
                     type="text"
                     value={predictionRelationship}
                     onChange={(e) => setPredictionRelationship(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
@@ -468,9 +453,7 @@ export default function HomePage() {
                   >
                     <span className="opacity-60">05.</span>
                     <span>
-                      {isEs
-                        ? "¿Cuál será tu mayor logro?"
-                        : "What will be your greatest achievement?"}
+                      {t("landing.predAchievementQuestion")}
                     </span>
                   </label>
                   <input
@@ -478,34 +461,27 @@ export default function HomePage() {
                     type="text"
                     value={predictionAchievement}
                     onChange={(e) => setPredictionAchievement(e.target.value)}
-                    placeholder={
-                      isEs
-                        ? "Escribe tu predicción..."
-                        : "Write your prediction..."
-                    }
+                    placeholder={t("landing.predPlaceholder")}
                     className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Annex II: Emotional Baseline Sliders */}
-            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-3 border border-[#D5CEBD]">
-              <div className="border-b border-[#D5CEBD] pb-1.5">
+            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-3 border border-manila-border">
+              <div className="border-b border-manila-border pb-1.5">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
-                  {isEs
-                    ? "ANEXO II / ESTADO EMOCIONAL"
-                    : "ANNEX II / EMOTIONAL BASELINE"}
+                  {t("landing.annexEmotionalBadge")}
                 </span>
                 <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block mt-0.5">
-                  {isEs ? "¿Cómo te sientes hoy?" : "How do you feel today?"}
+                  {t("landing.howDoYouFeelToday")}
                 </label>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-letter">
                 <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
-                    <span>{isEs ? "Felicidad" : "Happiness"}</span>
+                    <span>{t("landing.happiness")}</span>
                     <span className="text-foreground-muted">
                       {happiness} / 10
                     </span>
@@ -516,13 +492,14 @@ export default function HomePage() {
                     max={10}
                     value={happiness}
                     onChange={(e) => setHappiness(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={t("landing.happiness")}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
 
                 <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
-                    <span>{isEs ? "Ansiedad" : "Anxiety"}</span>
+                    <span>{t("landing.anxiety")}</span>
                     <span className="text-foreground-muted">
                       {anxiety} / 10
                     </span>
@@ -533,13 +510,14 @@ export default function HomePage() {
                     max={10}
                     value={anxiety}
                     onChange={(e) => setAnxiety(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={t("landing.anxiety")}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
 
                 <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
-                    <span>{isEs ? "Motivación" : "Motivation"}</span>
+                    <span>{t("landing.motivation")}</span>
                     <span className="text-foreground-muted">
                       {motivation} / 10
                     </span>
@@ -550,21 +528,19 @@ export default function HomePage() {
                     max={10}
                     value={motivation}
                     onChange={(e) => setMotivation(Number(e.target.value))}
-                    className="w-full accent-[#8E2818] cursor-pointer"
+                    aria-label={t("landing.motivation")}
+                    className="w-full accent-wax cursor-pointer"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Email Field and Submit Button */}
             <div className="space-y-2.5 pt-1">
               <label
                 htmlFor="landing-email"
                 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block"
               >
-                {isEs
-                  ? "¿A dónde te enviamos tu carta?"
-                  : "Where should we deliver your letter?"}
+                {t("landing.whereDeliverEmail")}
               </label>
               <div className="flex flex-col sm:flex-row gap-2.5">
                 <input
@@ -580,19 +556,15 @@ export default function HomePage() {
                   type="submit"
                   disabled={isSubmitting || isUnderMinChars}
                   className={cn(
-                    "bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs px-6 py-3 text-xs font-semibold tracking-widest uppercase font-letter inline-flex items-center justify-center gap-2 border-none shadow-xs shrink-0 min-h-[44px] cursor-pointer transition-colors",
+                    "bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-6 py-3 text-xs font-semibold tracking-widest uppercase font-letter inline-flex items-center justify-center gap-2 border-none shadow-xs shrink-0 min-h-[44px] cursor-pointer transition-colors",
                     (isSubmitting || isUnderMinChars) &&
                       "opacity-60 cursor-not-allowed",
                   )}
                 >
                   <span>
                     {isSubmitting
-                      ? isEs
-                        ? "Sellando..."
-                        : "Sealing..."
-                      : isEs
-                        ? "Sellar y Enviar a mi Yo Futuro"
-                        : "Seal & Send to Future Self"}
+                      ? t("landing.sealing")
+                      : t("landing.sealAndSend")}
                   </span>
                   <Mail size={15} />
                 </button>
@@ -600,11 +572,9 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center justify-center gap-2 text-[11px] font-letter text-foreground-muted pt-2 border-t border-crease">
-              <ShieldCheck size={14} className="text-[#2C485E]" />
+              <ShieldCheck size={14} className="text-ink" />
               <span>
-                {isEs
-                  ? "Tu carta es 100% privada y segura."
-                  : "Your letter is 100% private and encrypted."}
+                {t("landing.privateAndEncrypted")}
               </span>
             </div>
           </form>
@@ -617,378 +587,385 @@ export default function HomePage() {
       <section className="space-y-10">
         <div className="text-center space-y-2">
           <h2 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold">
-            {isEs
-              ? "Así se verá cuando abras tu carta"
-              : "This is how it will look when you open your letter"}
+            {t("landing.demoTitle")}
           </h2>
           <p className="text-xs font-letter text-foreground-muted max-w-md mx-auto leading-relaxed">
-            {isEs
-              ? "Compara tus predicciones con tu realidad y reflexiona sobre tu evolución."
-              : "Compare your past predictions with your reality and reflect on your personal evolution."}
+            {t("landing.demoDossierSubtitle")}
           </p>
         </div>
 
-        <div className="paper-sheet rounded-xs border border-crease shadow-sm overflow-hidden max-w-5xl mx-auto font-ui relative">
-          {/* Top Dossier Bar with 3 Dots */}
-          <div className="bg-manila/50 px-5 py-3 border-b border-crease flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#8E2818] inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#2C485E] inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-crease inline-block" />
-            </div>
-            <div className="font-letter text-[11px] text-foreground-muted tracking-wider">
-              {isEs
-                ? "CÁPSULA DESBLOQUEADA · TE-00412"
-                : "UNLOCKED DOSSIER · TE-00412"}
-            </div>
-            <div className="w-8" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 min-h-[460px]">
-            {/* Left Dossier Aside */}
-            <aside className="md:col-span-3 archival-folder border-r border-crease p-6 flex flex-col justify-between space-y-6 select-none">
-              <div className="space-y-6">
-                <span className="postmark-stamp text-[10px] py-0.5 px-2">
-                  TimeEcho
-                </span>
-
-                <nav className="space-y-1 text-xs font-letter">
-                  <div className="flex items-center gap-2.5 px-3 py-2 rounded-xs paper-sheet border border-crease font-semibold text-foreground">
-                    <FileText size={15} />
-                    <span>{isEs ? "Mis Cartas" : "My Letters"}</span>
+        <div className="max-w-5xl mx-auto font-ui text-foreground space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="lg:col-span-8 space-y-6">
+              <div className="paper-sheet rounded-xs p-6 sm:p-8 space-y-6 border border-crease">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-4 text-xs font-letter">
+                  <div>
+                    <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
+                      {t("landing.demoWritten")}
+                    </p>
+                    <p className="font-semibold text-foreground text-xs">
+                      {t("landing.demoDate")}
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2.5 px-3 py-2 text-foreground-muted">
-                    <Calendar size={15} />
-                    <span>{isEs ? "Línea de Tiempo" : "Timeline"}</span>
+                  <div className="text-center">
+                    <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
+                      {t("landing.demoLetterFromPast")}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2.5 px-3 py-2 text-foreground-muted">
-                    <BarChart3 size={15} />
-                    <span>{isEs ? "Estadísticas" : "Analytics"}</span>
+                  <div className="sm:text-right">
+                    <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
+                      {t("landing.demoDelivered")}
+                    </p>
+                    <p className="font-semibold text-foreground text-xs">
+                      {t("landing.demoDate")}
+                    </p>
                   </div>
-                </nav>
-              </div>
+                </div>
 
-              <div className="border-t border-[#D5CEBD] pt-4">
-                <p className="text-[11px] font-letter italic text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "«La mejor manera de predecir el futuro es crearlo.»"
-                    : "“The best way to predict the future is to create it.”"}
-                </p>
-              </div>
-            </aside>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-serif-editorial text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
+                      {t("landing.demoLetterTitle")}
+                    </h3>
+                    <span className="font-letter text-[10px] font-semibold text-foreground-muted uppercase tracking-widest shrink-0">
+                      TE-00108
+                    </span>
+                  </div>
+                </div>
 
-            {/* Right Dossier Area: Predictions vs Reality & Emotional Chart */}
-            <div className="md:col-span-9 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-transparent">
-              <div className="lg:col-span-7 space-y-4">
-                <div className="border-b border-crease pb-2.5 flex items-center justify-between">
-                  <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                    {isEs ? "Predicción vs Realidad" : "Prediction vs Reality"}
-                  </h3>
-                  <span className="postmark-stamp text-[10px] py-0.5 px-2">
-                    {isEs ? "Revelada & Comparada" : "Revealed & Compared"}
+                <article className="p-5 sm:p-6 border border-crease rounded-xs bg-transparent text-foreground/90 whitespace-pre-wrap break-words select-text font-letter text-sm leading-loose shadow-inner">
+                  {t("landing.demoArticleContent")}
+                </article>
+
+                <div className="pt-3 border-t border-crease flex flex-wrap justify-between items-center gap-2 text-xs font-letter">
+                  <span className="text-[11px] text-foreground-muted italic">
+                    {t("landing.demoFootnoteSealed")}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider font-semibold text-ink">
+                    yo.del.futuro@timeecho.internal
                   </span>
                 </div>
+              </div>
 
-                <div className="space-y-2.5 text-xs font-letter">
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
-                          {isEs ? "Predicción:" : "Prediction:"}
+              <div className="archival-folder rounded-xs p-6 sm:p-8 space-y-5 border border-manila-border">
+                <div className="border-b border-manila-border pb-3">
+                  <h3 className="font-serif-editorial text-xl font-semibold text-foreground">
+                    {t("landing.demoPredictionsTitle")}
+                  </h3>
+                  <p className="text-xs font-letter text-foreground-muted mt-1">
+                    {t("landing.demoPredictionsSubtitle")}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
+                    <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
+                        {t("landing.demoQCareer")}
+                      </span>
+                      <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-fulfilled-bg text-fulfilled border border-fulfilled-border">
+                        <Check size={12} />
+                        <span>{t("landing.demoAccomplished")}</span>
+                      </span>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
+                      <div className="p-4 space-y-1">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {t("landing.demoPastPredLabel")}
                         </span>
-                        <span className="italic text-foreground/80">
-                          {isEs ? "Viviré en Barcelona" : "Living in Barcelona"}
-                        </span>
+                        <p className="text-foreground/80 leading-relaxed italic">
+                          &ldquo;
+                          {t("landing.demoCleanArchitecturePred")}
+                          &rdquo;
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
-                          {isEs ? "Realidad:" : "Reality:"}
+
+                      <div className="p-4 space-y-1 bg-manila/10">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {t("landing.demoRealityLabel")}
                         </span>
-                        <span>
-                          {isEs ? "Vivo en Medellín" : "Living in Medellín"}
-                        </span>
+                        <p className="text-foreground/90 leading-relaxed font-semibold">
+                          &ldquo;
+                          {t("landing.demoCleanArchitectureReal")}
+                          &rdquo;
+                        </p>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {isEs ? "PARCIALMENTE" : "PARTIALLY"}
-                    </span>
                   </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
-                          {isEs ? "Predicción:" : "Prediction:"}
+                  <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
+                    <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
+                        {t("landing.demoQCity")}
+                      </span>
+                      <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-fulfilled-bg text-fulfilled border border-fulfilled-border">
+                        <Check size={12} />
+                        <span>{t("landing.demoAccomplished")}</span>
+                      </span>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
+                      <div className="p-4 space-y-1">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {t("landing.demoPastPredLabel")}
                         </span>
-                        <span className="italic text-foreground/80">
-                          {isEs
-                            ? "Seré diseñadora freelance"
-                            : "Freelance designer"}
-                        </span>
+                        <p className="text-foreground/80 leading-relaxed italic">
+                          &ldquo;
+                          {t("landing.demoStudioBalconyPred")}
+                          &rdquo;
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
-                          {isEs ? "Realidad:" : "Reality:"}
+
+                      <div className="p-4 space-y-1 bg-manila/10">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {t("landing.demoRealityLabel")}
                         </span>
-                        <span>Product Designer</span>
+                        <p className="text-foreground/90 leading-relaxed font-semibold">
+                          &ldquo;
+                          {t("landing.demoStudioBalconyReal")}
+                          &rdquo;
+                        </p>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {isEs ? "¡LO LOGRASTE!" : "YOU DID IT!"}
-                    </span>
                   </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
-                          {isEs ? "Predicción:" : "Prediction:"}
-                        </span>
-                        <span className="italic text-foreground/80">
-                          {isEs ? "Ganaré $5.000.000 COP" : "Earn $5,000 / mo"}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
-                          {isEs ? "Realidad:" : "Reality:"}
-                        </span>
-                        <span>
-                          {isEs ? "Gano $7.200.000 COP" : "Earning $7,200 / mo"}
-                        </span>
-                      </div>
+                  <div className="paper-sheet rounded-xs overflow-hidden border border-crease">
+                    <div className="bg-manila/40 px-4 py-2.5 flex justify-between items-center border-b border-crease font-letter">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
+                        {t("landing.demoQGreatestAchievement")}
+                      </span>
+                      <span className="py-0.5 px-2 text-[10px] font-semibold uppercase tracking-wider rounded-xs inline-flex items-center gap-1 bg-wax/10 text-wax border border-wax/20">
+                        <X size={12} />
+                        <span>{t("landing.demoDiverged")}</span>
+                      </span>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {isEs ? "¡SUPERASTE!" : "EXCEEDED!"}
-                    </span>
-                  </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
-                          {isEs ? "Predicción:" : "Prediction:"}
+                    <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-crease font-letter text-xs">
+                      <div className="p-4 space-y-1">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {t("landing.demoPastPredLabel")}
                         </span>
-                        <span className="italic text-foreground/80">
-                          8 / 10 {isEs ? "de felicidad" : "happiness"}
-                        </span>
+                        <p className="text-foreground/80 leading-relaxed italic">
+                          &ldquo;
+                          {t("landing.demoEpistolaryNovelPred")}
+                          &rdquo;
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
-                          {isEs ? "Realidad:" : "Reality:"}
+
+                      <div className="p-4 space-y-1 bg-manila/10">
+                        <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                          {t("landing.demoRealityLabel")}
                         </span>
-                        <span>
-                          7 / 10 {isEs ? "de felicidad" : "happiness"}
-                        </span>
+                        <p className="text-foreground/90 leading-relaxed font-semibold">
+                          &ldquo;
+                          {t("landing.demoEpistolaryNovelReal")}
+                          &rdquo;
+                        </p>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {isEs ? "MUY CERCA" : "VERY CLOSE"}
-                    </span>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Right Column: Emotional Evolution Graph & Radial Progress Accuracy */}
-              <div className="lg:col-span-5 space-y-4">
-                <div className="archival-folder rounded-xs p-4 border border-[#D5CEBD] space-y-3">
-                  <div>
-                    <h4 className="text-[10px] font-letter font-semibold uppercase tracking-widest text-foreground-muted">
-                      {isEs ? "Evolución emocional" : "Emotional Evolution"}
-                    </h4>
-                    <div className="flex gap-4 text-[10px] font-letter text-foreground-muted mt-1 select-none">
-                      <span className="flex items-center gap-1">
-                        <span className="border-b border-dashed border-foreground-muted w-3 inline-block" />{" "}
-                        {isEs ? "Hace 1 año" : "1 year ago"}
-                      </span>
-                      <span className="flex items-center gap-1 font-semibold text-foreground">
-                        <span className="border-b-2 border-wax w-3 inline-block" />{" "}
-                        {isEs ? "Hoy" : "Today"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="relative w-full h-32 flex items-end">
-                    <svg
-                      viewBox="0 0 100 50"
-                      className="w-full h-full overflow-visible"
-                    >
-                      <line
-                        x1="0"
-                        y1="2"
-                        x2="100"
-                        y2="2"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-                      <line
-                        x1="0"
-                        y1="23"
-                        x2="100"
-                        y2="23"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-                      <line
-                        x1="0"
-                        y1="45"
-                        x2="100"
-                        y2="45"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-
-                      {/* Past baseline (dashed indigo) */}
-                      <path
-                        d="M 15 15 L 50 36 L 85 24"
-                        fill="none"
-                        stroke="#2C485E"
-                        strokeWidth="1.5"
-                        strokeDasharray="2 2"
-                      />
-                      <circle cx="15" cy="15" r="1.5" fill="#2C485E" />
-                      <circle cx="50" cy="36" r="1.5" fill="#2C485E" />
-                      <circle cx="85" cy="24" r="1.5" fill="#2C485E" />
-
-                      {/* Present line (solid carmine) */}
-                      <path
-                        d="M 15 10 L 50 40 L 85 5"
-                        fill="none"
-                        stroke="#8E2818"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <circle cx="15" cy="10" r="2.2" fill="#8E2818" />
-                      <circle cx="50" cy="40" r="2.2" fill="#8E2818" />
-                      <circle cx="85" cy="5" r="2.2" fill="#8E2818" />
-                    </svg>
-
-                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[8px] font-letter font-semibold text-foreground-muted tracking-wider uppercase select-none">
-                      <span>{isEs ? "Felicidad" : "Happiness"}</span>
-                      <span>{isEs ? "Ansiedad" : "Anxiety"}</span>
-                      <span>{isEs ? "Motivación" : "Motivation"}</span>
-                    </div>
-                  </div>
+            <div className="lg:col-span-4 space-y-6">
+              <div className="paper-sheet rounded-xs p-6 space-y-4 text-center border border-crease">
+                <div className="border-b border-crease pb-2.5">
+                  <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
+                    {t("landing.demoAccuracyTitle")}
+                  </h3>
                 </div>
 
-                <div className="paper-sheet rounded-xs p-4 border border-crease flex items-center gap-4">
+                <div className="relative w-32 h-32 mx-auto flex items-center justify-center my-2">
                   <div
-                    className="radial-progress text-[#2C485E] font-letter text-lg font-bold shrink-0"
+                    className="radial-progress text-ink font-letter text-2xl font-bold"
                     style={{
-                      ["--value" as string]: 75,
-                      ["--size" as string]: "4.5rem",
-                      ["--thickness" as string]: "5px",
+                      ["--value" as string]: 67,
+                      ["--size" as string]: "8rem",
+                      ["--thickness" as string]: "8px",
                     }}
                     role="progressbar"
-                    aria-valuenow={75}
+                    aria-valuenow={67}
                     aria-valuemin={0}
                     aria-valuemax={100}
                   >
-                    75%
+                    67%
+                  </div>
+                </div>
+
+                <div className="space-y-1 text-xs font-letter">
+                  <p className="font-semibold text-foreground">
+                    {t("landing.demoAccuracySummary")}
+                  </p>
+                  <p className="text-foreground-muted leading-relaxed max-w-xs mx-auto">
+                    {t("landing.demoAccuracyMessage")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
+                <div className="border-b border-manila-border pb-2.5">
+                  <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
+                    {t("landing.demoEmotionalTitle")}
+                  </h3>
+                  <p className="text-[10px] font-letter text-foreground-muted uppercase tracking-wider mt-0.5">
+                    {t("landing.demoEmotionalSubtitle")}
+                  </p>
+                </div>
+
+                <div className="space-y-4 font-letter text-xs">
+                  <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">
+                        {t("landing.happiness")}
+                      </span>
+                      <span className="text-[10px] font-semibold text-ink">
+                        +3 {t("landing.growth")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-[11px] text-foreground-muted">
+                      <span>
+                        {t("landing.past")} <strong>6</strong>
+                      </span>
+                      <span>&rarr;</span>
+                      <span>
+                        {t("landing.today")} <strong>9</strong>
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="space-y-0.5 font-letter text-xs">
-                    <h5 className="font-semibold text-foreground uppercase tracking-wider text-[10px]">
-                      {isEs ? "Tu precisión general" : "Your overall accuracy"}
-                    </h5>
-                    <p className="font-semibold text-foreground/90">
-                      {isEs
-                        ? "Acertaste 3 de 4 predicciones"
-                        : "You got 3 out of 4 predictions right"}
-                    </p>
-                    <p className="text-[10px] text-foreground-muted">
-                      {isEs
-                        ? "¡Vas por buen camino!"
-                        : "You are on the right track!"}
-                    </p>
+                  <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">
+                        {t("landing.anxiety")}
+                      </span>
+                      <span className="text-[10px] font-semibold text-ink">
+                        -4 {t("landing.calmer")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-[11px] text-foreground-muted">
+                      <span>
+                        {t("landing.past")} <strong>7</strong>
+                      </span>
+                      <span>&rarr;</span>
+                      <span>
+                        {t("landing.today")} <strong>3</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="paper-sheet p-3 rounded-xs border border-crease space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">
+                        {t("landing.motivation")}
+                      </span>
+                      <span className="text-[10px] font-semibold text-ink">
+                        +1 {t("landing.inspired")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-[11px] text-foreground-muted">
+                      <span>
+                        {t("landing.past")} <strong>7</strong>
+                      </span>
+                      <span>&rarr;</span>
+                      <span>
+                        {t("landing.today")} <strong>8</strong>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <Link
+                href="/letters/capsule-archived-2022"
+                className="paper-sheet rounded-xs p-4 border border-crease hover:border-ink/50 flex items-center justify-between group transition-all text-xs font-letter"
+              >
+                <div className="flex items-center gap-2.5">
+                  <FileText size={16} className="text-ink shrink-0" />
+                  <div>
+                    <span className="font-semibold text-foreground block group-hover:text-wax transition-colors">
+                      {t("landing.viewFolioInVault")}
+                    </span>
+                    <span className="text-[10px] text-foreground-muted block">
+                      TE-00108 · {t("landing.demoDocketOpened")}
+                    </span>
+                  </div>
+                </div>
+                <ArrowRight
+                  size={14}
+                  className="text-foreground-muted group-hover:translate-x-1 group-hover:text-wax transition-all shrink-0"
+                />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===================================================================
-          SECTION 3: HOW IT WORKS (WAX SEALS 01, 02, 03)
-          =================================================================== */}
       <section id="how-it-works" className="space-y-12 scroll-mt-24">
         <div className="text-center space-y-2">
           <div className="postmark-stamp text-[10px] py-0.5 px-2.5 mx-auto">
-            {isEs ? "SIMPLE Y SIGNIFICATIVO" : "SIMPLE & MEANINGFUL"}
+            {t("landing.howItWorksBadge")}
           </div>
           <h2 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold">
-            {isEs ? "Cómo funciona" : "How It Works"}
+            {t("landing.howItWorksTitle")}
           </h2>
           <p className="text-xs font-letter text-foreground-muted max-w-xs mx-auto leading-relaxed">
-            {isEs
-              ? "Un viaje simple hacia tu mejor yo."
-              : "A simple journey toward your best self."}
+            {t("landing.howItWorksSub")}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-parchment font-letter font-bold text-sm select-none">
+            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
               01
             </div>
             <div className="space-y-1">
               <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {isEs ? "1. Escribe y Predice" : "1. Write & Predict"}
+                {t("landing.step1Title")}
               </h3>
               <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {isEs
-                  ? "Escribe con honestidad a tu futuro yo. Registra cómo te sientes hoy y haz predicciones sobre tu trabajo, relaciones y metas."
-                  : "Write honestly to your future self. Record how you feel today and make predictions about your career, relationships, and life goals."}
+                {t("landing.step1Text")}
               </p>
             </div>
           </div>
 
           <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-parchment font-letter font-bold text-sm select-none">
+            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
               02
             </div>
             <div className="space-y-1">
               <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {isEs ? "2. Sella y Programa" : "2. Seal & Schedule"}
+                {t("landing.step2Title")}
               </h3>
               <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {isEs
-                  ? "Elige cuándo quieres recibirla, desde 6 meses hasta 5 años. Tus palabras quedan completamente cifradas y resguardadas en tu bóveda privada hasta ese día."
-                  : "Pick when you want it back—from 6 months to 5 years. Your words are securely encrypted and locked in your private vault until that exact day."}
+                {t("landing.step2Text")}
               </p>
             </div>
           </div>
 
           <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-parchment font-letter font-bold text-sm select-none">
+            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
               03
             </div>
             <div className="space-y-1">
               <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {isEs ? "3. Desbloquea y Compara" : "3. Unlock & Compare"}
+                {t("landing.step3Title")}
               </h3>
               <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {isEs
-                  ? "El día señalado, tu carta llega a tu correo. Reencuéntrate con quién eras, comprueba qué predicciones se cumplieron y descubre cuánto has crecido."
-                  : "When the day arrives, your letter lands in your inbox. Rediscover who you were, see which predictions came true, and reflect on how much you’ve grown."}
+                {t("landing.step3Text")}
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Archival Closing Tag */}
       <footer className="max-w-5xl mx-auto px-4 border-t border-crease pt-8 text-center space-y-3">
         <div className="flex items-center justify-center gap-1.5 text-xl font-serif-editorial text-foreground select-none font-semibold">
           <span>TimeEcho</span>
         </div>
         <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-          {isEs
-            ? "Enviado con esperanza, recibido con nostalgia."
-            : "Sent with hope, received with nostalgia."}
+          {t("footer.sentWithHope")}
         </p>
       </footer>
     </div>

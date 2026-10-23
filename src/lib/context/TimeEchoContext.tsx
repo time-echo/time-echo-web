@@ -10,11 +10,13 @@ import React, {
   useSyncExternalStore,
   ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import {
   Letter,
   CreateLetterInput,
   UpdateRealityInput,
   SupportedLanguage,
+  AppearanceMode,
 } from "@/types/timeecho";
 import { ICapsuleRepository } from "@/lib/repositories/ICapsuleRepository";
 import { HttpApiRepository } from "@/lib/repositories/HttpApiRepository";
@@ -41,6 +43,16 @@ function getLocaleSnapshot(): SupportedLanguage {
     if (saved === "es" || saved === "en") {
       return saved;
     }
+    const cookieMatch = document.cookie.match(
+      /(?:^|;\s*)(?:timeecho_locale|NEXT_LOCALE)=([^;]+)/,
+    );
+    if (cookieMatch && (cookieMatch[1] === "es" || cookieMatch[1] === "en")) {
+      return cookieMatch[1] as SupportedLanguage;
+    }
+    const htmlLang = document.documentElement.lang;
+    if (htmlLang === "es" || htmlLang === "en") {
+      return htmlLang;
+    }
   }
   return "es";
 }
@@ -52,6 +64,8 @@ interface TimeEchoContextValue {
   locale: SupportedLanguage;
   setLocale: (locale: SupportedLanguage) => void;
   toggleLocale: () => void;
+  appearanceMode: AppearanceMode;
+  setAppearanceMode: (mode: AppearanceMode) => void;
   repository: ICapsuleRepository;
   refreshCapsules: () => Promise<void>;
   getCapsuleById: (id: string) => Letter | undefined;
@@ -59,6 +73,7 @@ interface TimeEchoContextValue {
   updateReality: (input: UpdateRealityInput) => Promise<Letter>;
   archiveCapsule: (id: string) => Promise<Letter>;
   restoreCapsule: (id: string) => Promise<Letter>;
+  deleteCapsule: (id: string) => Promise<void>;
   breakWaxSeal: (id: string) => Promise<Letter>;
   resetVault: () => Promise<void>;
   t: (key: string, params?: Record<string, string | number>) => string;
@@ -79,6 +94,7 @@ export function TimeEchoProvider({
   repository: customRepo,
   defaultLocale = "es",
 }: TimeEchoProviderProps) {
+  const router = useRouter();
   const repository = useMemo<ICapsuleRepository>(
     () => customRepo || new HttpApiRepository(),
     [customRepo],
@@ -87,6 +103,16 @@ export function TimeEchoProvider({
   const [capsules, setCapsules] = useState<Letter[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [appearanceMode, setAppearanceModeState] =
+    useState<AppearanceMode>(() => {
+      if (typeof window !== "undefined") {
+        const saved = window.localStorage.getItem("timeecho_appearance");
+        if (saved === "light" || saved === "dark" || saved === "system") {
+          return saved;
+        }
+      }
+      return "system";
+    });
   const locale = useSyncExternalStore(
     subscribeLocale,
     getLocaleSnapshot,
@@ -95,14 +121,49 @@ export function TimeEchoProvider({
 
   useEffect(() => {
     document.documentElement.lang = locale;
+    if (typeof document !== "undefined") {
+      document.cookie = `timeecho_locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+      document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+    }
   }, [locale]);
 
-  const setLocale = useCallback((newLocale: SupportedLanguage) => {
+  const setAppearanceMode = useCallback((mode: AppearanceMode) => {
     if (typeof window !== "undefined") {
-      window.localStorage.setItem("timeecho_locale", newLocale);
-      localeListeners.forEach((listener) => listener());
+      window.localStorage.setItem("timeecho_appearance", mode);
     }
+    setAppearanceModeState(mode);
   }, []);
+
+  useEffect(() => {
+    const apply = () => {
+      const systemDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      const dark = appearanceMode === "dark" ||
+        (appearanceMode === "system" && systemDark);
+      document.documentElement.classList.toggle("dark", dark);
+    };
+
+    apply();
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", apply);
+    return () => mediaQuery.removeEventListener("change", apply);
+  }, [appearanceMode]);
+
+  const setLocale = useCallback(
+    (newLocale: SupportedLanguage) => {
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("timeecho_locale", newLocale);
+        document.cookie = `timeecho_locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+        document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+        document.documentElement.lang = newLocale;
+        localeListeners.forEach((listener) => listener());
+        router.refresh();
+      }
+    },
+    [router],
+  );
 
   const toggleLocale = useCallback(() => {
     setLocale(locale === "es" ? "en" : "es");
@@ -245,6 +306,22 @@ export function TimeEchoProvider({
     [repository],
   );
 
+  const deleteCapsule = useCallback(
+    async (id: string): Promise<void> => {
+      setError(null);
+      try {
+        await repository.delete(id);
+        setCapsules((prev) => prev.filter((item) => item.id !== id));
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Error al eliminar la cápsula";
+        setError(msg);
+        throw err;
+      }
+    },
+    [repository],
+  );
+
   /**
    * Convenience action to break the wax seal and unseal the letter.
    */
@@ -282,6 +359,8 @@ export function TimeEchoProvider({
       locale,
       setLocale,
       toggleLocale,
+      appearanceMode,
+      setAppearanceMode,
       repository,
       refreshCapsules,
       getCapsuleById,
@@ -289,6 +368,7 @@ export function TimeEchoProvider({
       updateReality,
       archiveCapsule,
       restoreCapsule,
+      deleteCapsule,
       breakWaxSeal,
       resetVault,
       t,
@@ -300,6 +380,8 @@ export function TimeEchoProvider({
       locale,
       setLocale,
       toggleLocale,
+      appearanceMode,
+      setAppearanceMode,
       repository,
       refreshCapsules,
       getCapsuleById,
@@ -307,6 +389,7 @@ export function TimeEchoProvider({
       updateReality,
       archiveCapsule,
       restoreCapsule,
+      deleteCapsule,
       breakWaxSeal,
       resetVault,
       t,

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { EmotionalMetricSet } from "@/types/timeecho";
 import {
   TrendingUp,
@@ -12,6 +12,7 @@ import {
   AlertCircle,
   Zap,
 } from "lucide-react";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { cn } from "@/lib/utils";
 
 export interface EmotionalShiftGaugeProps {
@@ -23,8 +24,6 @@ export interface EmotionalShiftGaugeProps {
 
 interface MetricDisplayConfig {
   key: keyof EmotionalMetricSet;
-  label: string;
-  sublabel: string;
   icon: React.ElementType;
   invertColor?: boolean;
 }
@@ -32,56 +31,45 @@ interface MetricDisplayConfig {
 const METRICS_CONFIG: MetricDisplayConfig[] = [
   {
     key: "happiness",
-    label: "Felicidad",
-    sublabel: "Bienestar y alegría",
     icon: Smile,
   },
   {
     key: "anxiety",
-    label: "Ansiedad",
-    sublabel: "Incertidumbre y tensión",
     icon: AlertCircle,
-    invertColor: true, // Lower anxiety is positive
+    invertColor: true,
   },
   {
     key: "motivation",
-    label: "Motivación",
-    sublabel: "Ímpetu y energía vital",
     icon: Zap,
   },
 ];
 
-/**
- * 🌊 EmotionalShiftGauge Component
- *
- * Radial and progress visualization contrasting baseline emotions at time-capsule sealing
- * with revealed emotions upon unsealing, displaying net psychological deltas.
- */
 export function EmotionalShiftGauge({
   baseline,
   reveal,
   delta,
   className,
 }: EmotionalShiftGaugeProps) {
+  const { t } = useTimeEcho();
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div
       className={cn(
-        "p-6 sm:p-7 rounded border border-crease bg-parchment shadow-sm space-y-6 select-none",
+        "p-6 sm:p-7 rounded border border-crease bg-parchment shadow-xs space-y-6 select-none",
         className,
       )}
     >
-      {/* Header Docket Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-crease pb-3 font-letter text-xs text-foreground-muted">
         <div className="flex items-center gap-1.5 uppercase font-semibold text-ink">
           <HeartHandshake size={14} className="text-wax" />
-          <span>EVOLUCIÓN RETROSPECTIVA</span>
+          <span>{t("analytics.shift.title")}</span>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-widest">
-          COMPARATIVA DE SENTIMIENTOS
+          {t("analytics.shift.subtitle")}
         </span>
       </div>
 
-      {/* Triple Metric Gauges Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
         {METRICS_CONFIG.map((metric) => {
           const baseVal = baseline[metric.key];
@@ -94,7 +82,6 @@ export function EmotionalShiftGauge({
 
           const Icon = metric.icon;
 
-          // Percentage out of 10 for bar width
           const basePercent = Math.min(100, Math.max(0, (baseVal / 10) * 100));
           const revealPercent = Math.min(
             100,
@@ -106,7 +93,6 @@ export function EmotionalShiftGauge({
               key={metric.key}
               className="p-4 rounded border border-crease bg-manila/30 flex flex-col justify-between space-y-4"
             >
-              {/* Metric Title & Delta Tag */}
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span className="p-1.5 rounded bg-parchment border border-crease text-ink shadow-2xs">
@@ -114,10 +100,10 @@ export function EmotionalShiftGauge({
                   </span>
                   <div>
                     <h4 className="font-letter font-bold text-xs uppercase tracking-wider text-ink">
-                      {metric.label}
+                      {t(`analytics.shift.${metric.key}`)}
                     </h4>
                     <span className="text-[10px] text-foreground-muted leading-none">
-                      {metric.sublabel}
+                      {t(`analytics.shift.${metric.key}Sub`)}
                     </span>
                   </div>
                 </div>
@@ -129,7 +115,7 @@ export function EmotionalShiftGauge({
                       "border-crease bg-crease/20 text-foreground-muted",
                     !isZero &&
                       isFavorable &&
-                      "border-emerald-700/50 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
+                      "border-fulfilled-border bg-fulfilled-bg text-fulfilled",
                     !isZero &&
                       !isFavorable &&
                       "border-wax/50 bg-wax/10 text-wax",
@@ -146,41 +132,41 @@ export function EmotionalShiftGauge({
                 </div>
               </div>
 
-              {/* Dual Visual Bars (Baseline vs Reveal) */}
               <div className="space-y-3 pt-1">
-                {/* Past Baseline Bar */}
                 <div className="space-y-1">
                   <div className="flex justify-between items-center text-[10px] font-mono text-foreground-muted">
                     <span className="uppercase tracking-wider">
-                      Ayer (Sellado)
+                      {t("analytics.shift.pastSealed")}
                     </span>
                     <span className="font-bold">{baseVal} / 10</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-crease/50 overflow-hidden border border-crease/60">
                     <motion.div
-                      initial={{ width: 0 }}
+                      initial={{ width: shouldReduceMotion ? `${basePercent}%` : 0 }}
                       animate={{ width: `${basePercent}%` }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      transition={{
+                        duration: shouldReduceMotion ? 0 : 0.8,
+                        ease: "easeOut",
+                      }}
                       className="h-full bg-ink/60"
                     />
                   </div>
                 </div>
 
-                {/* Today Reveal Bar */}
                 <div className="space-y-1">
                   <div className="flex justify-between items-center text-[10px] font-mono text-foreground-muted">
                     <span className="uppercase tracking-wider">
-                      Hoy (Desprecintado)
+                      {t("analytics.shift.presentUnsealed")}
                     </span>
                     <span className="font-bold text-wax">{revealVal} / 10</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-crease/50 overflow-hidden border border-crease/60">
                     <motion.div
-                      initial={{ width: 0 }}
+                      initial={{ width: shouldReduceMotion ? `${revealPercent}%` : 0 }}
                       animate={{ width: `${revealPercent}%` }}
                       transition={{
-                        duration: 0.8,
-                        delay: 0.2,
+                        duration: shouldReduceMotion ? 0 : 0.8,
+                        delay: shouldReduceMotion ? 0 : 0.2,
                         ease: "easeOut",
                       }}
                       className="h-full bg-wax"
@@ -190,7 +176,7 @@ export function EmotionalShiftGauge({
               </div>
 
               <div className="pt-2 border-t border-crease/50 text-[10px] font-mono text-foreground-muted/70 text-right">
-                Escala epistolar de 1 a 10
+                {t("analytics.shift.scale")}
               </div>
             </div>
           );

@@ -224,6 +224,19 @@ class MockApiStore {
     this.letters[index] = updated;
     return updated;
   }
+
+  public delete(id: string): void {
+    const index = this.letters.findIndex((item) => item.id === id);
+    if (index === -1) {
+      throw new Error(`Capsule with id "${id}" not found.`);
+    }
+
+    if (this.letters[index].status !== "archived") {
+      throw new Error(`Cannot delete letter with id "${id}" because it is not archived.`);
+    }
+
+    this.letters.splice(index, 1);
+  }
 }
 
 // Global singleton to persist state across hot reloads in development

@@ -13,6 +13,8 @@
     "print": "Imprimir",
     "archive": "Mover a Archivo",
     "restore": "Restaurar de Archivo",
+    "delete": "Eliminar carta",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer.",
     "loading": "Cargando archivo...",
     "error": "Error",
     "search": "Buscar...",
@@ -29,21 +31,78 @@
     "seconds": "Segundos",
     "happiness": "Felicidad",
     "anxiety": "Ansiedad",
-    "motivation": "Motivación"
+    "motivation": "Motivación",
+    "skipToContent": "Saltar al contenido",
+    "signOut": "Cerrar Sesión",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "brokenSeal": "Sello quebrado",
+    "broken": "ROTO",
+    "vault": "Bóveda",
+    "waxSealLockedAria": "Sello de lacre protegido en tránsito",
+    "waxSealBreakAria": "Romper sello de lacre carmesí",
+    "breakSeal": "Romper sello"
   },
   "header": {
     "folio": "№ TE-00421",
     "vaultActive": "BÓVEDA CIFRADA ACTIVA",
+    "switchLanguage": "Cambiar idioma a inglés",
+    "howItWorks": "Cómo funciona",
+    "myLetters": "Mis Cartas",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión",
+    "skipToContent": "Saltar al contenido",
     "nav": {
       "vault": "Bóveda",
       "compose": "Redactar",
       "analytics": "Retrospectiva"
     }
   },
+  "nav": {
+    "compose": "Escribir una Carta",
+    "letters": "Mis Cartas",
+    "timeline": "Línea de Tiempo",
+    "analytics": "Estadísticas",
+    "settings": "Ajustes",
+    "quote": "«La mejor manera de predecir el futuro es crearlo.»",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "settings": {
+    "title": "Ajustes del Baúl",
+    "subtitle": "Gestiona tus preferencias de correspondencia y custodia.",
+    "backToVault": "Volver al Baúl",
+    "savedNotice": "Ajustes guardados correctamente.",
+    "appearance": "Apariencia",
+    "colorMode": "Modo de color",
+    "colorModeAria": "Modo de apariencia",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema",
+    "colorModeDesc": "Claro y oscuro siguen la paleta de la bóveda; Sistema sigue el ajuste de tu dispositivo.",
+    "vaultLanguage": "Idioma de la Bóveda",
+    "correspondenceLanguage": "Idioma de correspondencia",
+    "selectLanguage": "Seleccionar idioma",
+    "languageDesc": "Determina el idioma de los sellos postales, la interfaz y las notificaciones de entrega.",
+    "changeEmail": "Cambiar Correo Electrónico",
+    "newEmail": "Nueva Dirección de Correo",
+    "emailDesc": "Las futuras cartas desbloqueadas se enviarán a esta nueva dirección.",
+    "updateEmail": "Actualizar Correo",
+    "dangerZone": "Zona de Riesgo",
+    "deleteVaultTitle": "Eliminar cuenta y baúl permanentemente",
+    "deleteVaultDesc": "Esta acción eliminará de forma irreversible todas tus cartas en tránsito, predicciones y memorias históricas.",
+    "deleteVaultButton": "Eliminar mi Baúl",
+    "deleteConfirmPrompt": "¿Estás seguro de que deseas eliminar permanentemente todas tus cartas y registros? Esta acción no se puede deshacer."
+  },
   "footer": {
     "motto": "«El tiempo no borra las palabras que nacieron para encontrarte en el porvenir.»",
     "colophon": "Bajo custodia postal privada. Cifrado en reposo hasta su liberación estipulada.",
     "rights": "Todos los derechos reservados. Archivo Histórico Personal.",
+    "sentWithHope": "Enviado con esperanza, recibido con nostalgia.",
+    "tagline": "Una cápsula del tiempo digital para el alma.",
+    "about": "Acerca de",
+    "privacy": "Privacidad",
+    "terms": "Términos",
     "links": {
       "manifesto": "Manifiesto Epistolar",
       "security": "Custodia y Cifrado",
@@ -71,7 +130,128 @@
       "custodyDesc": "Inmune a aperturas prematuras. Tu correspondencia permanece blindada hasta que el cronómetro marque el segundo convenido.",
       "retrospectionTitle": "Expediente de Realidad",
       "retrospectionDesc": "Compara tus predicciones pasadas contra los hechos del presente y calibra la evolución de tus estados emocionales."
-    }
+    },
+    "defaultTitle": "Tu carta para el futuro",
+    "heroTitleLine1": "Escribe hoy.",
+    "heroTitleLine2": "Descubre mañana.",
+    "heroSubtitle": "Escribe una carta a tu yo del futuro, registra tu estado emocional y formula predicciones de vida. Une a quien eres hoy con la persona en la que te convertirás.",
+    "trustPrivate": "100% Privado y Seguro",
+    "trustPrivateDesc": "Solo tú puedes leer tu carta. Permanece resguardada de forma segura en tu bóveda personal hasta la fecha que elijas.",
+    "trustSchedule": "Entrega a Tiempo",
+    "trustScheduleDesc": "Llega directo a tu bandeja de entrada en la mañana exacta que elegiste, en tu horario local.",
+    "trustReality": "Predicciones vs. Realidad",
+    "trustRealityDesc": "Compara lo que imaginabas con lo que realmente viviste y descubre cuánto has evolucionado.",
+    "step01Label": "PASO 01 / REDACCIÓN INICIAL",
+    "writeLetterToFuture": "Escribe tu carta a tu futuro",
+    "yourLetter": "Tu carta",
+    "letterPlaceholder": "Querido yo del futuro...",
+    "onlyYouCanSee": "Solo tú podrás verla",
+    "charCounterMin": "{count} / 80 mín (2000 máx)",
+    "minCharsError": "Escribe al menos 80 caracteres para sellar tu carta.",
+    "wordCountLabel": "{count} palabras",
+    "minWordsLabel": "mínimo 10 palabras",
+    "deliveryEmail": "Tu Correo Electrónico",
+    "emailPlaceholder": "tu@correo.com",
+    "whenToReceive": "¿Cuándo quieres recibirla?",
+    "deliveryDateAria": "Fecha de entrega",
+    "horizonMonths6": "6 meses",
+    "horizonYear1": "1 año",
+    "horizonYears3": "3 años",
+    "horizonYears5": "5 años",
+    "customDate": "Fecha personalizada",
+    "chooseSpecificDate": "Elige una fecha específica",
+    "selectFutureDate": "Selecciona la fecha futura de entrega (mínimo mañana)",
+    "annexPredictions": "ANEXO I / PREDICCIONES",
+    "predictionsOptional": "Tus predicciones (opcional)",
+    "annexPredictionsSubtitle": "¿Cómo imaginas tu vida?",
+    "predCityQuestion": "¿Dónde crees que vivirás?",
+    "predCity": "¿Dónde vivirás?",
+    "predCityPlaceholder": "ej. Madrid, Tokio, cerca al mar...",
+    "predCareerQuestion": "¿A qué te dedicarás?",
+    "predCareer": "¿A qué te dedicarás?",
+    "predCareerPlaceholder": "ej. Diseñador Senior, fundar mi empresa...",
+    "predSalaryQuestion": "¿Cuánto dinero ganarás?",
+    "predSalary": "¿Cuánto ganarás?",
+    "predSalaryPlaceholder": "ej. El doble de hoy, ,000 USD/mes...",
+    "predRelationshipQuestion": "¿Cómo será tu relación sentimental?",
+    "predRelationship": "¿Cómo estará tu corazón?",
+    "predRelationshipPlaceholder": "ej. Viajando juntos, conociendo a alguien...",
+    "predAchievementQuestion": "¿Cuál será tu mayor logro?",
+    "predAchievement": "¿Qué gran meta habrás cumplido?",
+    "predAchievementPlaceholder": "ej. Correr una maratón, publicar un libro...",
+    "predPlaceholder": "Escribe tu predicción...",
+    "annexEmotional": "ANEXO II / LÍNEA BASE EMOCIONAL",
+    "annexEmotionalBadge": "ANEXO II / ESTADO EMOCIONAL",
+    "annexEmotionalSubtitle": "¿Cómo te sientes hoy?",
+    "howDoYouFeelToday": "¿Cómo te sientes hoy?",
+    "happiness": "Felicidad",
+    "anxiety": "Ansiedad",
+    "motivation": "Motivación",
+    "whereDeliverEmail": "¿A dónde te enviamos tu carta?",
+    "sealButton": "Sellar con Lacre Rojo y Programar",
+    "sealingButton": "Sellando...",
+    "sealing": "Sellando...",
+    "sealAndSend": "Sellar y Enviar a mi Yo Futuro",
+    "privateAndEncrypted": "Tu carta es 100% privada y segura.",
+    "demoTitle": "Así se verá cuando abras tu carta",
+    "demoSubtitle": "Una ventana al futuro: así cobra vida una carta con sus predicciones y evolución emocional una vez desprecintada.",
+    "demoDossierSubtitle": "Compara tus predicciones con tu realidad y reflexiona sobre tu evolución.",
+    "demoWritten": "Escrito",
+    "demoDate": "15 sep 2022",
+    "demoLetterFromPast": "Carta del pasado",
+    "demoDelivered": "Entregado",
+    "demoLetterTitle": "Cuaderno de bitácora: La primera chispa de la idea",
+    "demoLetterContent": "Si estás leyendo esto, han pasado dos años desde aquella tarde en la que decidiste cambiar de rumbo. Tenías miedo de dejar la estabilidad, preguntándote si tendrías la valentía de liderar algo propio.\n\nEspero que hayas aprendido a preocuparte menos por los plazos y más por estar presente. No olvides que prometiste adoptar un perro una vez tuvieras balcón.\n\nSiéntete orgulloso de dónde estás. Trabajamos duro para traerte hasta aquí.",
+    "demoArticleContent": "Para el expediente histórico de TimeEcho:\n\nEste folio representa el momento germinal. Aquella noche donde anoté por primera vez en un papel manila: \"¿Y si pudiéramos enviar cartas al futuro con lacre físico y verificación de realidad?\".\n\nTodo parecía desmedido y complejo, pero decidí confiar en la belleza de la palabra escrita y el peso del tiempo.",
+    "demoFootnoteSealed": "Sellada bajo custodia postal con lacre carmesí",
+    "demoPredictionsTitle": "Predicciones vs Realidad",
+    "demoPredictionsSubtitle": "Compara lo que imaginabas hace un tiempo con la vida que estás viviendo hoy.",
+    "demoQCareer": "¿En qué trabajas hoy en día?",
+    "demoAccomplished": "¡LO LOGRASTE!",
+    "demoPastPredLabel": "Predicción del pasado:",
+    "demoPastCareer": "Lead Design en un estudio remoto",
+    "demoRealityLabel": "Realidad hoy en día:",
+    "demoRealityCareer": "VP de Diseño en un colectivo indie",
+    "demoCleanArchitecturePred": "Construir una arquitectura limpia basada en el patrón Adapter.",
+    "demoCleanArchitectureReal": "Completada e implementada en Next.js con soporte offline y tipado estricto.",
+    "demoQCity": "¿Dónde vives hoy en día?",
+    "demoPastCity": "Apartamento con balcón en Medellín",
+    "demoRealityCity": "Viviendo en Laureles con terraza soleada",
+    "demoStudioBalconyPred": "Mudarme a un estudio con balcón soleado para escribir.",
+    "demoStudioBalconyReal": "Encontré un ático con terraza iluminada y vistas al parque.",
+    "demoQGoal": "¿Qué gran meta habrás cumplido?",
+    "demoQGreatestAchievement": "¿Cuál terminó siendo tu mayor logro?",
+    "demoDiverged": "NO EXACTAMENTE",
+    "demoPastGoal": "Correr el maratón de 42K de Chicago",
+    "demoRealityGoal": "Completé mi primer medio maratón 21K en Bogotá",
+    "demoEpistolaryNovelPred": "Publicar una novela epistolar en formato tradicional.",
+    "demoEpistolaryNovelReal": "El proyecto evolucionó hacia TimeEcho en formato de cartas digitales selladas.",
+    "demoAccuracyTitle": "Tu Score de Predicciones",
+    "demoAccuracySummary": "Acertaste 2 de 3 predicciones (67%).",
+    "demoAccuracyMessage": "Vas por un gran camino. Muchas cosas cambiaron, pero tu rumbo sigue claro.",
+    "demoEmotionalTitle": "Evolución emocional",
+    "demoEmotionalSubtitle": "Cambio en tu bienestar interno",
+    "growth": "Crecimiento",
+    "calmer": "Más Calma",
+    "inspired": "Inspirado",
+    "past": "Pasado:",
+    "today": "Hoy:",
+    "viewFolioInVault": "Ver este folio en la bóveda",
+    "demoDocketOpened": "Expediente histórico abierto",
+    "howItWorksBadge": "SIMPLE Y SIGNIFICATIVO",
+    "howItWorksTitle": "Cómo funciona",
+    "howItWorksSubtitle": "Tres pasos conscientes para conversar con tu yo del futuro.",
+    "howItWorksSub": "Un viaje simple hacia tu mejor yo.",
+    "step1Title": "1. Escribe y Predice",
+    "step1Desc": "Escribe tu carta en pliego de archivo. Registra tu estado emocional actual y anota hitos para tu yo del futuro.",
+    "step1Text": "Escribe con honestidad a tu futuro yo. Registra cómo te sientes hoy y haz predicciones sobre tu trabajo, relaciones y metas.",
+    "step2Title": "2. Sella y Programa",
+    "step2Desc": "Elige tu horizonte (6 meses a 10 años). Aplica tu sello de lacre carmesí para cerrar tu cápsula con custodia inviolable.",
+    "step2Text": "Elige cuándo quieres recibirla, desde 6 meses hasta 5 años. Tus palabras quedan completamente cifradas y resguardadas en tu bóveda privada hasta ese día.",
+    "step3Title": "3. Desbloquea y Compara",
+    "step3Desc": "En la fecha pactada, recibe tu carta sellada. Quiebra el lacre, audita tus predicciones y observa tu transformación.",
+    "step3Text": "El día señalado, tu carta llega a tu correo. Reencuéntrate con quién eras, comprueba qué predicciones se cumplieron y descubre cuánto has crecido.",
+    "startWritingNow": "Comenzar a escribir ahora"
   },
   "dashboard": {
     "badge": "REGISTRO CENTRAL // EXPEDIENTES",
@@ -89,16 +269,87 @@
       "title": "No hay correspondencia en este filtro",
       "description": "No se encontraron expedientes que coincidan con el criterio seleccionado.",
       "cta": "Redactar Primera Carta"
-    }
+    },
+    "breakSeal": "Quebrar lacre",
+    "sealedNotice": "El contenido epistolar permanece sellado bajo bóveda cifrada hasta la fecha de entrega.",
+    "predictionsCount": "predicciones",
+    "unlockedSealIntact": "DESBLOQUEADA // SELLO INTACTO",
+    "timelineTitle": "Línea de Tiempo",
+    "timelineDesc": "Tu historia de crecimiento personal a través del tiempo.",
+    "myLetters": "Mis cartas",
+    "writeLetter": "Escribir carta",
+    "createdOn": "Creado el:",
+    "deliveredOn": "Entregada el",
+    "willOpenOn": "Se abrirá el",
+    "openingIn": "Abriéndose en",
+    "sealedCapsule": "Cápsula Sellada",
+    "readLetter": "Leer carta",
+    "viewCapsule": "Ver cápsula",
+    "archiveLetter": "Archivar carta",
+    "archive": "Archivar",
+    "noTimelineLetters": "No hay cartas en la línea de tiempo",
+    "noTimelineDesc": "Escribe tu primera carta para comenzar tu viaje en el tiempo.",
+    "startWriting": "Comenzar a escribir",
+    "lettersSubtitle": "Administra tus cápsulas del tiempo digital, estados emocionales y predicciones.",
+    "viewTimeline": "Ver línea de tiempo",
+    "totalCapsules": "Cápsulas totales",
+    "messagesToFuture": "Mensajes al futuro",
+    "openedCountLabel": "Abiertas",
+    "readyToCompare": "Listas para comparar",
+    "sealedInTime": "Selladas en el tiempo",
+    "inTransit": "En tránsito",
+    "emptyVault": "Tu baúl está vacío",
+    "emptyVaultDesc": "No has escrito ninguna carta todavía. Las cartas al futuro te ayudan a reflexionar y comparar tus predicciones con la realidad.",
+    "writeFirstLetter": "Escribir mi primera carta",
+    "archivedLetters": "Cartas Archivadas",
+    "archivedDesc": "Cápsulas guardadas fuera de tu baúl activo.",
+    "archivedCount": "Archivadas",
+    "restoreLetter": "Restaurar carta",
+    "restore": "Restaurar",
+    "deleteLetter": "Eliminar carta",
+    "delete": "Eliminar",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer.",
+    "revealedCompared": "Revelada & Comparada",
+    "pendingRevelation": "Pendiente por revelación",
+    "inTransitToFuture": "En tránsito al futuro",
+    "emotionalEvolutionLabel": "Evolución emocional:",
+    "emotionalSnapshotLabel": "Instantánea Emocional:",
+    "happinessLabel": "Felicidad:",
+    "anxietyLabel": "Ansiedad:",
+    "motivationLabel": "Motivación:",
+    "predictionsLabel": "Predicciones:",
+    "sealedPredictionsCount": "{count} predicciones selladas",
+    "viewFullComparison": "Ver comparación completa",
+    "completeComparison": "Completar comparación",
+    "viewPredictionsVsReality": "Ver predicciones vs realidad",
+    "completeRevelation": "Completar revelación",
+    "timeCapsuleSealed": "Cápsula del tiempo sellada",
+    "timeCapsuleSealedDesc": "Esta carta viaja de forma privada hacia el futuro. Quedan aproximadamente {days} días.",
+    "opensInDays": "Se abre en {days} días",
+    "sealedComparisonDone": "{count} predicciones selladas. Comparación completada.",
+    "sealedComparisonPending": "{count} predicciones selladas. Pendiente por comparar.",
+    "emptyTimelineTitle": "Tu línea de tiempo está vacía",
+    "emptyTimelineDesc": "Escribe tu primera carta al futuro para comenzar a graficar tu historia de crecimiento.",
+    "archivedSilentNotice": "Cartas que has archivado. No se enviarán a menos que las restaures.",
+    "archivedSingle": "Archivada"
   },
   "composer": {
     "folio": "EXPEDICIÓN POSTAL // NUEVO PLIEGO",
+    "formFolio": "FOLIO № TE-NUEVO // COMPOSICIÓN EPISTOLAR",
     "title": "Redactar Carta al Porvenir",
     "subtitle": "Escribe tus pensamientos sin filtros. Tu carta será sellada con lacre carmesí hasta el día de su entrega.",
     "titleLabel": "Título o asunto epistolar",
     "titlePlaceholder": "ej: Reflexiones sobre el cruce del umbral",
     "recipientLabel": "Destinatario (tu correo electrónico futuro)",
     "recipientPlaceholder": "yo.del.futuro@personal.me",
+    "cipheredOnSealing": "Cifrado al sellar",
+    "dispatchDetails": "1. Datos de Expedición",
+    "requiredFields": "CAMPOS REQUERIDOS",
+    "capsuleTitle": "Título de la Cápsula",
+    "deliveryEmail": "Correo Electrónico de Entrega",
+    "deliveryAlertNotice": "Te notificaremos cuando el reloj marque el momento exacto para quebrar el sello.",
+    "scheduledHorizon": "Horizonte de Entrega Programada",
+    "customDeliveryDate": "Fecha Personalizada",
     "dateLabel": "Fecha convenida de entrega",
     "datePresets": {
       "sixMonths": "6 Meses",
@@ -107,12 +358,86 @@
       "fiveYears": "5 Años",
       "custom": "Personalizada"
     },
+    "presetsDesc": {
+      "sixMonths": "Próxima estación",
+      "oneYear": "Ciclo anual",
+      "threeYears": "Horizonte de vida",
+      "fiveYears": "Metamorfosis",
+      "custom": "Personalizado"
+    },
     "letterLabel": "Pliego de redacción",
     "letterPlaceholder": "Querido yo del porvenir:\n\nHoy tomo la pluma para escribirte porque...",
+    "ruledStationery": "2. Pliego Timbrado",
+    "cryptographicSealTitle": "Sello Carmesí Criptográfico",
+    "cryptographicSealDesc": "Una vez sellada la carta, permanecerá inaccesible en la bóveda hasta la fecha establecida.",
+    "sealingVaultModalTitle": "Sellando la Bóveda...",
+    "sealingVaultModalDesc": "Vertiendo el lacre carmesí y estampando el folio oficial en la bóveda postal cifrada.",
+    "stationeryDefaultPlaceholder": "Querido yo:\nHoy tomo la pluma para recordarte lo que sentías al comenzar este camino...\nNo olvides tus promesas silenciosas.",
+    "stationeryAria": "Contenido de la carta al futuro",
+    "stationeryFooterTitle": "TINTA Y CUADERNO POSTAL",
+    "wordsCount": "palabras",
+    "charsCount": "caracteres",
     "emotionalSectionTitle": "Calibración Emocional Basal",
     "emotionalSectionSubtitle": "¿Cómo te sientes en este instante exacto de redacción? (Escala 1 a 10)",
+    "emotions": {
+      "happinessLabel": "Nivel de Felicidad",
+      "happinessLow": "Sombrío / Difícil (1)",
+      "happinessHigh": "Radiante / Pleno (10)",
+      "anxietyLabel": "Nivel de Ansiedad / Incertidumbre",
+      "anxietyLow": "En Calma / Seguro (1)",
+      "anxietyHigh": "Abrumado / Incierto (10)",
+      "motivationLabel": "Nivel de Motivación / Impulso",
+      "motivationLow": "Desganado (1)",
+      "motivationHigh": "Imparable / Con Foco (10)",
+      "lockedRecord": "REGISTRO CERRADO",
+      "currentCalibration": "CALIBRACIÓN ACTUAL",
+      "snapshotNotice": "* Este snapshot quedará sellado en la cápsula. Cuando la abras en el futuro, podrás comparar cómo evolucionaron tus sentimientos mediante el Expediente de Realidad."
+    },
     "predictionsSectionTitle": "Hitos & Predicciones de Vida",
     "predictionsSectionSubtitle": "Formula predicciones concretas para contrastarlas cuando quebres el sello en el futuro.",
+    "categories": {
+      "city": {
+        "label": "Ciudad / Residencia",
+        "placeholder": "¿En qué ciudad o rincón del mundo estarás viviendo?"
+      },
+      "career": {
+        "label": "Carrera / Proyecto",
+        "placeholder": "¿Qué hito profesional o proyecto habrás lanzado?"
+      },
+      "achievement": {
+        "label": "Logro Personal",
+        "placeholder": "¿Qué desafío habrás superado con constancia?"
+      },
+      "salary": {
+        "label": "Finanzas / Economía",
+        "placeholder": "¿Cuál será tu meta de ingresos o ahorro?"
+      },
+      "relationship": {
+        "label": "Vínculos / Afectos",
+        "placeholder": "¿A quiénes cuidarás y mantendrás cerca?"
+      },
+      "happiness": {
+        "label": "Paz Mental",
+        "placeholder": "¿Qué hábito te traerá serenidad cotidiana?"
+      }
+    },
+    "categoryAria": "Categoría de predicción",
+    "deletePrediction": "Eliminar predicción",
+    "predictionFor": "Predicción sobre",
+    "addMilestoneByCategory": "Agregar hito por categoría:",
+    "loggedCount": "PREVISTAS",
+    "noPredictionsLogged": "No has agregado predicciones aún. Selecciona una categoría abajo para apostar con tu futuro.",
+    "errors": {
+      "titleRequired": "El título de la cápsula es obligatorio.",
+      "titleLength": "El título debe tener al menos 3 caracteres.",
+      "contentRequired": "Escribe un mensaje para tu yo del futuro.",
+      "contentLength": "El contenido debe tener al menos 10 caracteres.",
+      "emailRequired": "El correo de entrega es requerido.",
+      "emailInvalid": "Ingresa un correo electrónico válido.",
+      "dateRequired": "Selecciona una fecha de entrega válida.",
+      "dateFuture": "La fecha de entrega debe situarse en el futuro.",
+      "sealError": "Error al sellar la cápsula"
+    },
     "sealButton": "Sellar con Lacre Carmesí",
     "sealingButton": "Fundiendo y Estampando Lacre..."
   },
@@ -127,7 +452,11 @@
     "remainingTime": "Tiempo Restante",
     "ctaInspect": "Inspeccionar Carta",
     "ctaVault": "Ir al Registro Central",
-    "ctaNew": "Redactar Otra Carta"
+    "ctaNew": "Redactar Otra Carta",
+    "recordConfirmed": "REGISTRO CONFIRMADO",
+    "postmarkedAndSealed": "TIMBRADO Y SELLADO",
+    "encryptedNotice": "El archivo ha sido cifrado en reposo. Ninguna persona ajena a ti podrá inspeccionar el pliego epistolar.",
+    "futureScheduledDate": "Fecha futura programada"
   },
   "reveal": {
     "lockedTitle": "BÓVEDA DE TIEMPO TEMPORALMENTE INACCESIBLE",
@@ -145,7 +474,66 @@
     "milestonesTitle": "Predicciones e Hitos Registrados",
     "realityLedgerPromptTitle": "¿Cuánto acertó tu yo del pasado?",
     "realityLedgerPromptDesc": "Asienta el Expediente de Realidad para contrastar tus predicciones de vida con los hechos del presente, registrar tu evolución emocional y calcular tu precisión retrospectiva.",
-    "ctaOpenReality": "Asentar Expediente de Realidad"
+    "ctaOpenReality": "Asentar Expediente de Realidad",
+    "voyageElapsed": "Trayecto transcurrido",
+    "unlockedNotice": "La bóveda postal ha liberado el sello carmesí. Puedes quebrar el lacre para revelar el contenido epistolar.",
+    "encryptedAtRest": "Esta carta permanece cifrada en reposo. El sello de lacre carmesí estará bloqueado contra aperturas prematuras hasta que el cronómetro marque cero.",
+    "capsuleInTransit": "CÁPSULA EN TRÁNSITO // {docket}",
+    "daysRemaining": "Faltan {days} días",
+    "willBeDeliveredOn": "Se entregará el {date}",
+    "backToVault": "Volver a mis cartas",
+    "archiveLetter": "Archivar carta",
+    "capsuleUnlockedTitle": "Cápsula Desbloqueada",
+    "unlockedAwaits": "Tu carta del pasado te está esperando.",
+    "unlockedAwaitsDesc": "Antes de leerla, cuéntanos qué pasó realmente. Esto nos permitirá calcular el score de predicciones y shifts emocionales.",
+    "reflectionTipTitle": "Consejo de reflexión:",
+    "reflectionTipDesc": "Sé honesto contigo mismo. No hay respuestas correctas o incorrectas. Esta experiencia es 100% tuya y te ayuda a ver lo mucho que has crecido.",
+    "factMatching": "COTEJO DE HECHOS",
+    "presentRealityTitle": "Cuéntanos tu realidad actual",
+    "presentRealityDesc": "Responde estas preguntas para comparar tu pasado con tu yo actual.",
+    "pastPredictionLabel": "Tu predicción del pasado:",
+    "describeRealityPlaceholder": "Describe tu realidad ahora...",
+    "didPredictionComeTrue": "¿Se cumplió tu predicción?",
+    "yesDidIt": "Sí, lo logré",
+    "notExactly": "No exactamente",
+    "currentState": "ESTADO ACTUAL",
+    "emotionalBaselineToday": "Estado emocional hoy",
+    "howFeelRightNow": "¿Cómo te sientes en este momento?",
+    "saveAndViewLetter": "Guardar y ver mi carta",
+    "archivedDocket": "Expediente Archivado",
+    "archivedDocketDesc": "Esta carta se encuentra archivada en la bóveda postal. Puedes restaurarla a tus cartas activas o eliminarla permanentemente.",
+    "restore": "Restaurar",
+    "delete": "Eliminar",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar permanentemente esta carta? Esta acción no se puede deshacer.",
+    "written": "Escrito",
+    "delivered": "Entregado",
+    "letterFromPast": "Carta del pasado",
+    "predictionsVsReality": "Predicciones vs Realidad",
+    "predictionsVsRealityDesc": "Compara lo que imaginabas hace un tiempo con la vida que estás viviendo hoy.",
+    "accomplished": "¡LO LOGRASTE!",
+    "diverged": "NO EXACTAMENTE",
+    "pastPrediction": "Predicción del pasado:",
+    "realityToday": "Realidad hoy en día:",
+    "fulfilled": "Cumplida",
+    "accuracyScore": "Tu Score de Predicciones",
+    "accuracySummary": "Acertaste {matched} de {total} predicciones ({percent}%).",
+    "accuracyHigh": "¡Tu brújula del futuro está sumamente afilada! Excelente intuición.",
+    "accuracyMedium": "Vas por un gran camino. Muchas cosas cambiaron, pero tu rumbo sigue claro.",
+    "accuracyLow": "¡La vida te sorprendió con giros inesperados! Y eso hace el camino más interesante.",
+    "noPredictions": "No registraste predicciones para esta carta.",
+    "emotionalEvolution": "Evolución emocional",
+    "emotionalShiftDesc": "Cambio en tu bienestar interno",
+    "growth": "Crecimiento",
+    "decline": "Descenso",
+    "steady": "Estable",
+    "past": "Pasado:",
+    "today": "Hoy:",
+    "calmer": "Más Calma",
+    "stress": "Estrés",
+    "inspired": "Inspirado",
+    "loadingDocket": "Accediendo al expediente postal...",
+    "confirmed": "Confirmado",
+    "remainingTime": "Tiempo restante"
   },
   "reality": {
     "title": "Expediente de Realidad",
@@ -158,6 +546,47 @@
     "evolutionTitle": "Evolución Emocional (Ayer vs Hoy)",
     "evolutionSubtitle": "Calibra tus sentimientos en este momento de apertura:",
     "predictionsTitle": "Verificación de Predicciones",
+    "docketNo": "Folio №",
+    "retrospectiveCalibration": "CALIBRACIÓN RETROSPECTIVA",
+    "past": "Ayer",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "calibrateFeelings": "Calibra tus sentimientos en este momento de apertura:",
+    "happinessUnsealing": "Felicidad al abrir la carta",
+    "happinessLow": "Sombrío / Difícil (1)",
+    "happinessHigh": "Pleno / Sereno (10)",
+    "anxietyCurrent": "Ansiedad / Incertidumbre actual",
+    "anxietyLow": "En Paz (1)",
+    "anxietyHigh": "Abrumado (10)",
+    "motivationFuture": "Motivación de cara al futuro",
+    "motivationLow": "Desganado (1)",
+    "motivationHigh": "Con Foco e Ímpetu (10)",
+    "fulfilledCount": "cumplidas",
+    "divergedCount": "divergentes",
+    "noPredictions": "Esta cápsula no incluyó predicciones estructuradas al momento de sellado.",
+    "closingTitle": "Cierre de Expediente Postal",
+    "closingDesc": "Al asentar el expediente, las reflexiones y calificaciones emocionales quedarán registradas permanentemente en la bóveda histórica.",
+    "recordedInArchive": "Reflexión guardada en el historial",
+    "audited": "AUDITADO",
+    "settlingLedger": "Asentando expediente...",
+    "row": {
+      "category": "CATEGORÍA",
+      "predictedPast": "Lo que predijiste en el pasado:",
+      "sealedOriginalDate": "Sellado en fecha de emisión original",
+      "actualTranspired": "Lo que realmente sucedió:",
+      "noTestimony": "Sin testimonio registrado.",
+      "testimonyPlaceholder": "Describe con honestidad qué ocurrió con este anhelo o predicción...",
+      "ledgerTitle": "EXPEDIENTE DE REALIDAD",
+      "verifiedToday": "VERIFICACIÓN HOY",
+      "outcomeRuling": "Dictamen del Hito:",
+      "outcomeRulingAria": "Dictamen del hito",
+      "fulfilledLabel": "Cumplido",
+      "fulfilledSubtext": "La visión se materializó",
+      "divergedLabel": "Tomó otro rumbo",
+      "divergedSubtext": "El destino cambió de cauce",
+      "unfulfilledLabel": "No cumplido",
+      "unfulfilledSubtext": "Aún no alcanzado o pospuesto"
+    },
     "outcomes": {
       "fulfilled": "Cumplido",
       "diverged": "Tomó otro rumbo",
@@ -165,7 +594,28 @@
       "pending": "Pendiente de evaluar"
     },
     "settleButton": "Asentar Expediente de Realidad",
-    "settledBadge": "EXPEDIENTE ASENTADO"
+    "settledBadge": "EXPEDIENTE ASENTADO",
+    "docketNotFound": "Expediente no hallado en bóveda",
+    "docketNotFoundDesc": "El identificador postal solicitado no corresponde a ninguna correspondencia registrada.",
+    "returnCentralLedger": "Volver al Registro Central",
+    "notUnsealedYet": "La correspondencia aún no ha sido desprecintada",
+    "notUnsealedYetDesc": "Para asentar el Expediente de Realidad, es imprescindible que la carta haya llegado a su fecha de entrega y que el sello carmesí haya sido quebrado.",
+    "breakSealButton": "Ir a la Carta y Quebrar Lacre",
+    "backToLetterNav": "Volver al Pliego Epistolar",
+    "globalAnalyticsNav": "Ver Métricas Globales",
+    "realityRecord": "REGISTRO DE REALIDAD",
+    "settledSuccessTitle": "Expediente de Realidad Asentado con Éxito",
+    "settledSuccessDesc": "Tus notas retrospectivas y métricas emocionales han sido archivadas bajo fe de bóveda.",
+    "viewLetterButton": "Ver Carta",
+    "viewAnalyticsButton": "Ver Métricas",
+    "questions": {
+      "city": "¿Dónde vives hoy en día?",
+      "career": "¿En qué trabajas hoy en día?",
+      "salary": "¿Cuánto ganas hoy al mes?",
+      "relationship": "¿Cómo está tu relación sentimental hoy?",
+      "achievement": "¿Cuál terminó siendo tu mayor logro?",
+      "defaultQuestion": "¿Qué ocurrió con: {category}?"
+    }
   },
   "analytics": {
     "badge": "ESTADÍSTICAS RETROSPECTIVAS",
@@ -174,6 +624,12 @@
     "totalCapsules": "Cápsulas Custodiadas",
     "totalPredictions": "Predicciones Formuladas",
     "accuracyRate": "Tasa de Precisión",
+    "accuracyRateAria": "Tasa de acierto predictivo",
+    "predictiveLedger": "Expediente Predictivo",
+    "fulfillment": "Cumplimiento",
+    "fulfilled": "Cumplidas",
+    "diverged": "Divergentes",
+    "inTransit": "En Tránsito",
     "netHappiness": "Felicidad Neta (Delta)",
     "predictionAccuracyTitle": "Precisión de Predicciones",
     "categoryEffectiveness": "Efectividad por Categoría de Vida",
@@ -183,6 +639,406 @@
     "pendingAuditsDesc": "Tienes cartas desbloqueadas cuyas predicciones aún no han sido contrastadas. Al asentar su realidad, tus estadísticas y calibración predictiva se actualizarán automáticamente.",
     "auditButton": "Evaluar",
     "allAudited": "Todos los expedientes desprecintados han completado su confrontación de realidad.",
-    "composeNew": "Redactar Nueva Carta"
+    "composeNew": "Redactar Nueva Carta",
+    "shift": {
+      "title": "Evolución Retrospectiva",
+      "subtitle": "Comparativa de Sentimientos",
+      "happiness": "Felicidad",
+      "happinessSub": "Bienestar y alegría",
+      "anxiety": "Ansiedad",
+      "anxietySub": "Incertidumbre y tensión",
+      "motivation": "Motivación",
+      "motivationSub": "Ímpetu y energía vital",
+      "pastSealed": "Ayer (Sellado)",
+      "presentUnsealed": "Hoy (Desprecintado)",
+      "scale": "Escala epistolar de 1 a 10"
+    }
+  },
+  "about": {
+    "title": "Conecta a quien eres hoy con la persona en la que te convertirás mañana.",
+    "subtitle": "TimeEcho es una plataforma de cápsulas del tiempo digitales segura. Escribe cartas a tu yo del futuro, registra tu estado emocional, realiza predicciones de vida y desbloquéalas años después para comparar los resultados.",
+    "sections": {
+      "what_is": {
+        "title": "¿Por qué escribirle a tu yo del futuro?",
+        "description": "En un mundo acelerado, es fácil olvidar cuánto has crecido, qué te preocupaba o qué soñabas para tu vida. TimeEcho te permite capturar tu realidad actual (tus esperanzas, miedos, relaciones y estado emocional) y guardarla en una bóveda digital hasta la fecha futura que elijas."
+      },
+      "how_works": {
+        "title": "Cómo Funciona TimeEcho",
+        "step_write_title": "1. Escribe y Registra",
+        "step_write_desc": "Vierte tus pensamientos en una carta privada. Evalúa tu felicidad, ansiedad y motivación, y haz predicciones sobre tu futuro.",
+        "step_seal_title": "2. Sella y Programa",
+        "step_seal_desc": "Elige tu fecha de entrega y zona horaria. Tu carta se cifra de forma segura y queda guardada en tu bóveda privada hasta ese momento.",
+        "step_wait_title": "3. Vive y Evoluciona",
+        "step_wait_desc": "Concéntrate en tu vida. A medida que pasan los meses o años, tus palabras permanecen protegidas mientras creces y alcanzas nuevas metas.",
+        "step_receive_title": "4. Abre y Reflexiona",
+        "step_receive_desc": "En la fecha elegida, tu carta llega a tu correo. Lee tus palabras pasadas, revisa tus predicciones y descubre cuánto has crecido."
+      },
+      "why_exists": {
+        "title": "Diseñado para una Conversación Honesta Contigo Mismo",
+        "description": "Las redes sociales nos obligan a actuar para otros. TimeEcho está diseñado para lo opuesto: un espacio tranquilo y libre de distracciones para ser completamente honesto contigo mismo. Sin muros públicos, sin métricas de vanidad, sin anuncios. Solo un puente directo entre tu yo pasado y tu yo futuro."
+      },
+      "philosophy": {
+        "title": "Nuestra Filosofía",
+        "description": "Tus palabras importan. Tus memorias merecen ser preservadas. TimeEcho está diseñada con privacidad y simplicidad en su corazón—un rincón tranquilo de internet donde puedes ser honesto contigo mismo, sin algoritmos ni anuncios."
+      },
+      "contact": {
+        "title": "Contacto y Creadores",
+        "description": "¿Tienes preguntas, comentarios o necesitas asistencia con TimeEcho? Escríbenos directamente a los creadores:"
+      }
+    },
+    "returnHome": "Volver al inicio",
+    "postmarkCity": "CÁPSULA // CENTRAL",
+    "postmarkSubtext": "MEMORIA VIVA",
+    "manifestoBadge": "Manifiesto Epistolar",
+    "stamps": {
+      "purpose": "PROPÓSITO",
+      "reflection": "REFLEXIÓN",
+      "security": "GARANTÍA",
+      "correspondence": "CORRESPONDENCIA"
+    },
+    "steps": {
+      "composition": "Composición",
+      "custody": "Custodia",
+      "transit": "Tránsito",
+      "unsealing": "Apertura"
+    },
+    "cta": "Escribir una carta al futuro"
+  },
+  "privacy": {
+    "title": "Política de Privacidad y Compromiso de Seguridad",
+    "last_updated": "Última actualización: agosto de 2026",
+    "subtitle": "Tus cartas del futuro son privadas y sagradas. Ciframos tu contenido, nunca vendemos tus datos y no mostramos publicidad.",
+    "sections": {
+      "intro": {
+        "title": "Nuestro Compromiso con tu Privacidad",
+        "description": "TimeEcho (\"nosotros\", \"nuestro\") existe para proteger tu evolución personal y tus pensamientos. Esta Política de Privacidad describe cómo resguardamos tu información, gestionamos el cifrado de datos y aseguramos que tus cápsulas permanezcan privadas."
+      },
+      "collect": {
+        "title": "Información que Recopilamos",
+        "description": "Recopilamos únicamente lo esencial para almacenar y entregar tus cápsulas de forma segura:",
+        "item_email": "Tu correo electrónico (usado exclusivamente para inicio de sesión sin contraseña mediante enlaces mágicos y entrega de cartas)",
+        "item_letters": "Título y contenido cifrado de tus cartas (protegidos con cifrado seguro en reposo)",
+        "item_predictions": "Predicciones futuras y reflexiones retrospectivas que decidas escribir",
+        "item_emotional": "Evaluaciones de estado emocional (niveles de felicidad, ansiedad y motivación)",
+        "item_preferences": "Preferencias de interfaz (tema de color, idioma y opciones de notificación)",
+        "item_technical": "Registros técnicos esenciales para la seguridad de la cuenta y el rendimiento del servicio"
+      },
+      "how_use": {
+        "title": "Cómo Utilizamos tu Información",
+        "description": "Utilizamos tus datos únicamente para hacer posible tu experiencia en la cápsula del tiempo:",
+        "item_accounts": "Autenticar tu cuenta mediante enlaces mágicos de un solo uso",
+        "item_store": "Almacenar de forma segura tus cartas cifradas hasta su fecha de entrega programada",
+        "item_deliver": "Enviar tus cápsulas desbloqueadas a tu correo verificado según el calendario",
+        "item_communicate": "Enviar confirmaciones críticas de cuenta y notificaciones de entrega",
+        "item_improve": "Mantener la seguridad, optimizar la velocidad y mejorar la confiabilidad del servicio",
+        "item_security": "Bloquear abusos automatizados, prevenir spam y proteger los datos del usuario"
+      },
+      "encryption": {
+        "title": "Privacidad y Cifrado de Alto Nivel",
+        "description": "Los títulos y contenidos de tus cartas se cifran antes de guardarse en nuestra base de datos. Nadie, ni siquiera nuestro equipo, puede leer tus palabras mientras la carta permanezca sellada en la bóveda."
+      },
+      "retention": {
+        "title": "Retención de Datos y Eliminación Instantánea",
+        "description": "Conservamos tus cápsulas del tiempo mientras tu cuenta permanezca activa. Si decides eliminar tu cuenta en Configuración, todas tus cartas, estados emocionales, predicciones y eventos analíticos asociados se borran de manera permanente e irreversible de nuestra base de datos."
+      },
+      "third_parties": {
+        "title": "Aliados de Infraestructura Confiables",
+        "description": "Trabajamos con proveedores líderes de la industria para procesar y entregar tus cápsulas:",
+        "item_email": "Resend API para la entrega transaccional de correos electrónicos",
+        "item_hosting": "Infraestructura en la nube de alta seguridad con bases de datos aisladas y cifradas"
+      },
+      "rights": {
+        "title": "Tus Derechos y Control sobre tus Datos",
+        "description": "Mantienes la propiedad total de tus palabras. Tienes derecho a:",
+        "item_access": "Inspeccionar y exportar la cronología de tus cartas en cualquier momento",
+        "item_delete": "Eliminar cartas individuales o borrar tu cuenta completa en un solo clic",
+        "item_questions": "Contactar a nuestro equipo ante cualquier duda técnica o de privacidad"
+      },
+      "changes": {
+        "title": "Actualizaciones de la Política",
+        "description": "Si realizamos cambios significativos en esta Política de Privacidad, los publicaremos aquí y notificaremos a los usuarios activos vía correo electrónico."
+      },
+      "contact": {
+        "title": "Contacto y Soporte",
+        "description": "¿Tienes preguntas sobre cómo se almacenan o cifran tus cartas? Contáctanos directamente a:"
+      }
+    },
+    "returnHome": "Volver al inicio",
+    "postmarkCity": "BÓVEDA // CUSTODIA",
+    "postmarkSubtext": "CIFRADO EN REPOSO"
+  },
+  "terms": {
+    "title": "Términos de Servicio",
+    "last_updated": "Última actualización: agosto de 2026",
+    "subtitle": "Términos claros y humanos que definen nuestros compromisos de servicio, integridad en la entrega y propiedad de tus datos.",
+    "sections": {
+      "acceptance": {
+        "title": "Aceptación de los Términos",
+        "description": "Al crear una cápsula o utilizar TimeEcho, aceptas estos Términos de Servicio. Si no estás de acuerdo, por favor no uses la plataforma."
+      },
+      "about": {
+        "title": "Acerca de TimeEcho",
+        "description": "TimeEcho es una plataforma de cápsulas del tiempo digitales que te permite escribir cartas a tu yo futuro, registrar evaluaciones emocionales, hacer predicciones de vida y programar entregas futuras."
+      },
+      "accounts": {
+        "title": "Acceso a Cuenta Sin Contraseña",
+        "description": "TimeEcho utiliza autenticación segura mediante enlaces mágicos enviados directamente a tu bandeja de entrada. Eres responsable de mantener la seguridad de tu correo electrónico."
+      },
+      "creating": {
+        "title": "Escritura y Programación de Cápsulas",
+        "description": "Puedes programar cartas para abrirse en cualquier fecha futura. Eres responsable de asegurar que las direcciones de correo sean válidas y que el contenido cumpla con las leyes aplicables."
+      },
+      "delivery": {
+        "title": "Compromiso de Entrega Programada",
+        "description": "TimeEcho procesa las cápsulas programadas diariamente y las envía en o cerca de tu fecha de desbloqueo local mediante correos transaccionales.",
+        "disclaimer": "Aunque aplicamos los máximos esfuerzos técnicos para garantizar entregas puntuales, los horarios exactos dependen de los proveedores de correo, disponibilidad de red y filtros de spam."
+      },
+      "responsibilities": {
+        "title": "Conducta del Usuario",
+        "description": "Eres responsable de mantener la confidencialidad de tu cuenta y de utilizar TimeEcho de manera respetuosa."
+      },
+      "content": {
+        "title": "Eres Dueño del 100% de tu Contenido",
+        "description": "Conservas la propiedad absoluta de todas las cartas, predicciones y reflexiones que creas en TimeEcho. Nos otorgas una licencia limitada únicamente para almacenar, cifrar y entregar tu contenido según lo solicites.",
+        "license": "Esta licencia limitada nos permite guardar tus cartas cifradas hasta su fecha de apertura programada y transmitirlas a tu correo al desbloquearse."
+      },
+      "prohibited": {
+        "title": "Actividades Prohibidas",
+        "description": "Para mantener la seguridad de la plataforma, aceptas no utilizar TimeEcho para:",
+        "item_spam": "Enviar correos no solicitados o spam",
+        "item_harassment": "Acosar, intimidar o dañar a otros",
+        "item_threats": "Realizar amenazas de violencia o acciones ilegales",
+        "item_fraud": "Participar en prácticas engañosas, fraudulentas o maliciosas",
+        "item_impersonation": "Suplantar la identidad de otras personas o entidades",
+        "item_illegal": "Violar leyes locales o internacionales",
+        "item_malware": "Distribuir virus, troyanos o código dañino",
+        "item_abuse": "Abusar de la infraestructura, realizar ataques de denegación de servicio o extraer datos del sistema",
+        "item_unauthorized": "Intentar accesos no autorizados a servidores o bases de datos",
+        "item_infringement": "Infringir derechos de autor o propiedad intelectual de terceros"
+      },
+      "recipient": {
+        "title": "Consentimiento del Destinatario",
+        "description": "Al programar una cápsula para una dirección de correo de un tercero, confirmas que tienes permiso para enviar mensajes a dicha dirección."
+      },
+      "intellectual": {
+        "title": "Propiedad Intelectual de la Plataforma",
+        "description": "El software, diseño, componentes de interfaz y marcas de TimeEcho son propiedad intelectual protegida. Tus cartas personales siguen siendo totalmente tuyas."
+      },
+      "availability": {
+        "title": "Disponibilidad del Servicio",
+        "description": "Nos esforzamos por mantener una disponibilidad del 99.9%, pero el acceso puede interrumpirse ocasionalmente por mantenimiento programado o reparaciones de emergencia."
+      },
+      "termination": {
+        "title": "Cancelación de Cuenta",
+        "description": "Puedes eliminar tu cuenta en cualquier momento desde Configuración. Nos reservamos el derecho de suspender cuentas que violen estas reglas de conducta."
+      },
+      "liability": {
+        "title": "Limitación de Responsabilidad",
+        "description": "TimeEcho se proporciona \"tal cual\". En la máxima medida permitida por la ley, TimeEcho no será responsable por daños indirectos o consecuentes derivados del uso del servicio o retrasos de entrega."
+      },
+      "changes": {
+        "title": "Actualizaciones de los Términos",
+        "description": "Podemos actualizar estos Términos periódicamente. El uso continuado de TimeEcho tras las actualizaciones constituye la aceptación de los nuevos términos."
+      },
+      "contact": {
+        "title": "Contacto",
+        "description": "Para preguntas sobre estos Términos, puedes contactar a nuestro equipo directamente a:"
+      }
+    },
+    "returnHome": "Volver al inicio",
+    "postmarkCity": "BÓVEDA // LEGAL",
+    "postmarkSubtext": "ACUERDO FORMAL"
+  },
+  "pages": {
+    "about": {
+      "title": "Conecta a quien eres hoy con la persona en la que te convertirás mañana.",
+      "subtitle": "TimeEcho es una plataforma de cápsulas del tiempo digitales segura. Escribe cartas a tu yo del futuro, registra tu estado emocional, realiza predicciones de vida y desbloquéalas años después para comparar los resultados.",
+      "sections": {
+        "what_is": {
+          "title": "¿Por qué escribirle a tu yo del futuro?",
+          "description": "En un mundo acelerado, es fácil olvidar cuánto has crecido, qué te preocupaba o qué soñabas para tu vida. TimeEcho te permite capturar tu realidad actual (tus esperanzas, miedos, relaciones y estado emocional) y guardarla en una bóveda digital hasta la fecha futura que elijas."
+        },
+        "how_works": {
+          "title": "Cómo Funciona TimeEcho",
+          "step_write_title": "1. Escribe y Registra",
+          "step_write_desc": "Vierte tus pensamientos en una carta privada. Evalúa tu felicidad, ansiedad y motivación, y haz predicciones sobre tu futuro.",
+          "step_seal_title": "2. Sella y Programa",
+          "step_seal_desc": "Elige tu fecha de entrega y zona horaria. Tu carta se cifra de forma segura y queda guardada en tu bóveda privada hasta ese momento.",
+          "step_wait_title": "3. Vive y Evoluciona",
+          "step_wait_desc": "Concéntrate en tu vida. A medida que pasan los meses o años, tus palabras permanecen protegidas mientras creces y alcanzas nuevas metas.",
+          "step_receive_title": "4. Abre y Reflexiona",
+          "step_receive_desc": "En la fecha elegida, tu carta llega a tu correo. Lee tus palabras pasadas, revisa tus predicciones y descubre cuánto has crecido."
+        },
+        "why_exists": {
+          "title": "Diseñado para una Conversación Honesta Contigo Mismo",
+          "description": "Las redes sociales nos obligan a actuar para otros. TimeEcho está diseñado para lo opuesto: un espacio tranquilo y libre de distracciones para ser completamente honesto contigo mismo. Sin muros públicos, sin métricas de vanidad, sin anuncios. Solo un puente directo entre tu yo pasado y tu yo futuro."
+        },
+        "philosophy": {
+          "title": "Nuestra Filosofía",
+          "description": "Tus palabras importan. Tus memorias merecen ser preservadas. TimeEcho está diseñada con privacidad y simplicidad en su corazón—un rincón tranquilo de internet donde puedes ser honesto contigo mismo, sin algoritmos ni anuncios."
+        },
+        "contact": {
+          "title": "Contacto y Creadores",
+          "description": "¿Tienes preguntas, comentarios o necesitas asistencia con TimeEcho? Escríbenos directamente a los creadores:"
+        }
+      }
+    },
+    "privacy": {
+      "title": "Política de Privacidad y Compromiso de Seguridad",
+      "last_updated": "Última actualización: agosto de 2026",
+      "subtitle": "Tus cartas del futuro son privadas y sagradas. Ciframos tu contenido, nunca vendemos tus datos y no mostramos publicidad.",
+      "sections": {
+        "intro": {
+          "title": "Nuestro Compromiso con tu Privacidad",
+          "description": "TimeEcho (\"nosotros\", \"nuestro\") existe para proteger tu evolución personal y tus pensamientos. Esta Política de Privacidad describe cómo resguardamos tu información, gestionamos el cifrado de datos y aseguramos que tus cápsulas permanezcan privadas."
+        },
+        "collect": {
+          "title": "Información que Recopilamos",
+          "description": "Recopilamos únicamente lo esencial para almacenar y entregar tus cápsulas de forma segura:",
+          "item_email": "Tu correo electrónico (usado exclusivamente para inicio de sesión sin contraseña mediante enlaces mágicos y entrega de cartas)",
+          "item_letters": "Título y contenido cifrado de tus cartas (protegidos con cifrado seguro en reposo)",
+          "item_predictions": "Predicciones futuras y reflexiones retrospectivas que decidas escribir",
+          "item_emotional": "Evaluaciones de estado emocional (niveles de felicidad, ansiedad y motivación)",
+          "item_preferences": "Preferencias de interfaz (tema de color, idioma y opciones de notificación)",
+          "item_technical": "Registros técnicos esenciales para la seguridad de la cuenta y el rendimiento del servicio"
+        },
+        "how_use": {
+          "title": "Cómo Utilizamos tu Información",
+          "description": "Utilizamos tus datos únicamente para hacer posible tu experiencia en la cápsula del tiempo:",
+          "item_accounts": "Autenticar tu cuenta mediante enlaces mágicos de un solo uso",
+          "item_store": "Almacenar de forma segura tus cartas cifradas hasta su fecha de entrega programada",
+          "item_deliver": "Enviar tus cápsulas desbloqueadas a tu correo verificado según el calendario",
+          "item_communicate": "Enviar confirmaciones críticas de cuenta y notificaciones de entrega",
+          "item_improve": "Mantener la seguridad, optimizar la velocidad y mejorar la confiabilidad del servicio",
+          "item_security": "Bloquear abusos automatizados, prevenir spam y proteger los datos del usuario"
+        },
+        "encryption": {
+          "title": "Privacidad y Cifrado de Alto Nivel",
+          "description": "Los títulos y contenidos de tus cartas se cifran antes de guardarse en nuestra base de datos. Nadie, ni siquiera nuestro equipo, puede leer tus palabras mientras la carta permanezca sellada en la bóveda."
+        },
+        "retention": {
+          "title": "Retención de Datos y Eliminación Instantánea",
+          "description": "Conservamos tus cápsulas del tiempo mientras tu cuenta permanezca activa. Si decides eliminar tu cuenta en Configuración, todas tus cartas, estados emocionales, predicciones y eventos analíticos asociados se borran de manera permanente e irreversible de nuestra base de datos."
+        },
+        "third_parties": {
+          "title": "Aliados de Infraestructura Confiables",
+          "description": "Trabajamos con proveedores líderes de la industria para procesar y entregar tus cápsulas:",
+          "item_email": "Resend API para la entrega transaccional de correos electrónicos",
+          "item_hosting": "Infraestructura en la nube de alta seguridad con bases de datos aisladas y cifradas"
+        },
+        "rights": {
+          "title": "Tus Derechos y Control sobre tus Datos",
+          "description": "Mantienes la propiedad total de tus palabras. Tienes derecho a:",
+          "item_access": "Inspeccionar y exportar la cronología de tus cartas en cualquier momento",
+          "item_delete": "Eliminar cartas individuales o borrar tu cuenta completa en un solo clic",
+          "item_questions": "Contactar a nuestro equipo ante cualquier duda técnica o de privacidad"
+        },
+        "changes": {
+          "title": "Actualizaciones de la Política",
+          "description": "Si realizamos cambios significativos en esta Política de Privacidad, los publicaremos aquí y notificaremos a los usuarios activos vía correo electrónico."
+        },
+        "contact": {
+          "title": "Contacto y Soporte",
+          "description": "¿Tienes preguntas sobre cómo se almacenan o cifran tus cartas? Contáctanos directamente a:"
+        }
+      }
+    },
+    "terms": {
+      "title": "Términos de Servicio",
+      "last_updated": "Última actualización: agosto de 2026",
+      "subtitle": "Términos claros y humanos que definen nuestros compromisos de servicio, integridad en la entrega y propiedad de tus datos.",
+      "sections": {
+        "acceptance": {
+          "title": "Aceptación de los Términos",
+          "description": "Al crear una cápsula o utilizar TimeEcho, aceptas estos Términos de Servicio. Si no estás de acuerdo, por favor no uses la plataforma."
+        },
+        "about": {
+          "title": "Acerca de TimeEcho",
+          "description": "TimeEcho es una plataforma de cápsulas del tiempo digitales que te permite escribir cartas a tu yo futuro, registrar evaluaciones emocionales, hacer predicciones de vida y programar entregas futuras."
+        },
+        "accounts": {
+          "title": "Acceso a Cuenta Sin Contraseña",
+          "description": "TimeEcho utiliza autenticación segura mediante enlaces mágicos enviados directamente a tu bandeja de entrada. Eres responsable de mantener la seguridad de tu correo electrónico."
+        },
+        "creating": {
+          "title": "Escritura y Programación de Cápsulas",
+          "description": "Puedes programar cartas para abrirse en cualquier fecha futura. Eres responsable de asegurar que las direcciones de correo sean válidas y que el contenido cumpla con las leyes aplicables."
+        },
+        "delivery": {
+          "title": "Compromiso de Entrega Programada",
+          "description": "TimeEcho procesa las cápsulas programadas diariamente y las envía en o cerca de tu fecha de desbloqueo local mediante correos transaccionales.",
+          "disclaimer": "Aunque aplicamos los máximos esfuerzos técnicos para garantizar entregas puntuales, los horarios exactos dependen de los proveedores de correo, disponibilidad de red y filtros de spam."
+        },
+        "responsibilities": {
+          "title": "Conducta del Usuario",
+          "description": "Eres responsable de mantener la confidencialidad de tu cuenta y de utilizar TimeEcho de manera respetuosa."
+        },
+        "content": {
+          "title": "Eres Dueño del 100% de tu Contenido",
+          "description": "Conservas la propiedad absoluta de todas las cartas, predicciones y reflexiones que creas en TimeEcho. Nos otorgas una licencia limitada únicamente para almacenar, cifrar y entregar tu contenido según lo solicites.",
+          "license": "Esta licencia limitada nos permite guardar tus cartas cifradas hasta su fecha de apertura programada y transmitirlas a tu correo al desbloquearse."
+        },
+        "prohibited": {
+          "title": "Actividades Prohibidas",
+          "description": "Para mantener la seguridad de la plataforma, aceptas no utilizar TimeEcho para:",
+          "item_spam": "Enviar correos no solicitados o spam",
+          "item_harassment": "Acosar, intimidar o dañar a otros",
+          "item_threats": "Realizar amenazas de violencia o acciones ilegales",
+          "item_fraud": "Participar en prácticas engañosas, fraudulentas o maliciosas",
+          "item_impersonation": "Suplantar la identidad de otras personas o entidades",
+          "item_illegal": "Violar leyes locales o internacionales",
+          "item_malware": "Distribuir virus, troyanos o código dañino",
+          "item_abuse": "Abusar de la infraestructura, realizar ataques de denegación de servicio o extraer datos del sistema",
+          "item_unauthorized": "Intentar accesos no autorizados a servidores o bases de datos",
+          "item_infringement": "Infringir derechos de autor o propiedad intelectual de terceros"
+        },
+        "recipient": {
+          "title": "Consentimiento del Destinatario",
+          "description": "Al programar una cápsula para una dirección de correo de un tercero, confirmas que tienes permiso para enviar mensajes a dicha dirección."
+        },
+        "intellectual": {
+          "title": "Propiedad Intelectual de la Plataforma",
+          "description": "El software, diseño, componentes de interfaz y marcas de TimeEcho son propiedad intelectual protegida. Tus cartas personales siguen siendo totalmente tuyas."
+        },
+        "availability": {
+          "title": "Disponibilidad del Servicio",
+          "description": "Nos esforzamos por mantener una disponibilidad del 99.9%, pero el acceso puede interrumpirse ocasionalmente por mantenimiento programado o reparaciones de emergencia."
+        },
+        "termination": {
+          "title": "Cancelación de Cuenta",
+          "description": "Puedes eliminar tu cuenta en cualquier momento desde Configuración. Nos reservamos el derecho de suspender cuentas que violen estas reglas de conducta."
+        },
+        "liability": {
+          "title": "Limitación de Responsabilidad",
+          "description": "TimeEcho se proporciona \"tal cual\". En la máxima medida permitida por la ley, TimeEcho no será responsable por daños indirectos o consecuentes derivados del uso del servicio o retrasos de entrega."
+        },
+        "changes": {
+          "title": "Actualizaciones de los Términos",
+          "description": "Podemos actualizar estos Términos periódicamente. El uso continuado de TimeEcho tras las actualizaciones constituye la aceptación de los nuevos términos."
+        },
+        "contact": {
+          "title": "Contacto",
+          "description": "Para preguntas sobre estos Términos, puedes contactar a nuestro equipo directamente a:"
+        }
+      }
+    },
+    "footer": {
+      "about": "Acerca de",
+      "privacy": "Privacidad",
+      "terms": "Términos"
+    }
+  },
+  "metadata": {
+    "title": "TimeEcho — Una cápsula del tiempo digital para el alma",
+    "description": "Escribe hoy a la persona en la que te convertirás. Bóveda epistolar cifrada con lacre y verificación de realidad."
+  },
+  "login": {
+    "title": "Ingresa a tu baúl",
+    "subtitle": "Te enviaremos un enlace seguro de inicio de sesión mágico directamente a tu correo electrónico. Sin contraseñas.",
+    "dispatchedTitle": "¡Enlace enviado!",
+    "dispatchedDesc": "Hemos enviado el enlace a {email}. Redirigiendo a tu bóveda...",
+    "emailLabel": "Tu Dirección de Correo",
+    "sendButton": "Enviar enlace mágico",
+    "backHome": "Volver a la página de inicio"
   }
 }

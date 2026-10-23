@@ -22,22 +22,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const PRESETS_ES: Array<{ id: HorizonPreset; label: string; desc: string }> = [
-  { id: "6m", label: "6 Meses", desc: "Próxima estación" },
-  { id: "1y", label: "1 Año", desc: "Ciclo anual" },
-  { id: "3y", label: "3 Años", desc: "Horizonte de vida" },
-  { id: "5y", label: "5 Años", desc: "Metamorfosis" },
-  { id: "custom", label: "Elegir Fecha", desc: "Personalizado" },
-];
-
-const PRESETS_EN: Array<{ id: HorizonPreset; label: string; desc: string }> = [
-  { id: "6m", label: "6 Months", desc: "Next season" },
-  { id: "1y", label: "1 Year", desc: "Annual cycle" },
-  { id: "3y", label: "3 Years", desc: "Life milestone" },
-  { id: "5y", label: "5 Years", desc: "Metamorphosis" },
-  { id: "custom", label: "Pick Date", desc: "Custom date" },
-];
-
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
   showDocketHeader?: boolean;
@@ -52,9 +36,35 @@ export function LetterComposerForm({
   defaultHorizon,
 }: LetterComposerFormProps) {
   const router = useRouter();
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
-  const presets = isEs ? PRESETS_ES : PRESETS_EN;
+  const { t } = useTimeEcho();
+
+  const presets: Array<{ id: HorizonPreset; label: string; desc: string }> = [
+    {
+      id: "6m",
+      label: t("composer.datePresets.sixMonths"),
+      desc: t("composer.presetsDesc.sixMonths"),
+    },
+    {
+      id: "1y",
+      label: t("composer.datePresets.oneYear"),
+      desc: t("composer.presetsDesc.oneYear"),
+    },
+    {
+      id: "3y",
+      label: t("composer.datePresets.threeYears"),
+      desc: t("composer.presetsDesc.threeYears"),
+    },
+    {
+      id: "5y",
+      label: t("composer.datePresets.fiveYears"),
+      desc: t("composer.presetsDesc.fiveYears"),
+    },
+    {
+      id: "custom",
+      label: t("composer.datePresets.custom"),
+      desc: t("composer.presetsDesc.custom"),
+    },
+  ];
 
   const {
     form,
@@ -99,21 +109,19 @@ export function LetterComposerForm({
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs text-foreground-muted tracking-widest uppercase">
               <span className="w-2 h-2 rounded-full bg-wax animate-pulse" />
-              <span>FOLIO № TE-NUEVO // COMPOSICIÓN EPISTOLAR</span>
+              <span>{t("composer.formFolio")}</span>
             </div>
             <h2 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-ink">
-              {isEs ? "Redactar Carta al Futuro" : "Draft Letter to the Future"}
+              {t("composer.title")}
             </h2>
             <p className="text-xs text-foreground-muted max-w-xl">
-              {isEs
-                ? "Toma la pluma, calibra tus sentimientos actuales y proyecta tus certezas hacia el horizonte elegido."
-                : "Take up the quill, record your baseline emotions, and dispatch your reflections across time."}
+              {t("composer.subtitle")}
             </p>
           </div>
 
           <div className="flex items-center gap-2 text-xs text-foreground-muted bg-parchment/60 px-3 py-1.5 rounded border border-crease">
             <Clock size={13} className="text-ink" />
-            <span>{isEs ? "Cifrado al sellar" : "Ciphered on sealing"}</span>
+            <span>{t("composer.cipheredOnSealing")}</span>
           </div>
         </div>
       )}
@@ -123,12 +131,10 @@ export function LetterComposerForm({
           <div className="border-b border-crease pb-3 flex items-center justify-between">
             <span className="font-bold text-xs uppercase tracking-wider text-ink flex items-center gap-1.5">
               <Type size={14} className="text-wax" />
-              <span>
-                {isEs ? "1. Datos de Expedición" : "1. Dispatch Details"}
-              </span>
+              <span>{t("composer.dispatchDetails")}</span>
             </span>
             <span className="text-[10px] font-mono text-foreground-muted uppercase tracking-widest">
-              CAMPOS REQUERIDOS
+              {t("composer.requiredFields")}
             </span>
           </div>
 
@@ -137,18 +143,14 @@ export function LetterComposerForm({
               htmlFor="landing-letter-title"
               className="text-xs uppercase tracking-wider font-semibold text-ink block"
             >
-              {isEs ? "Título de la Cápsula" : "Capsule Title"} *
+              {t("composer.capsuleTitle")} *
             </label>
             <input
               id="landing-letter-title"
               type="text"
               value={form.title}
               onChange={(e) => setField("title", e.target.value)}
-              placeholder={
-                isEs
-                  ? "Ej: Reflexiones sobre una nueva etapa // El cruce del umbral"
-                  : "E.g., Reflections on a new season // Crossing the threshold"
-              }
+              placeholder={t("composer.titlePlaceholder")}
               className={cn(
                 "w-full px-3.5 py-2.5 rounded border border-crease bg-manila/30 font-serif-editorial text-base sm:text-lg text-ink placeholder:text-foreground-muted/40 focus:outline-none focus:border-ink shadow-2xs",
                 hasAttemptedSubmit &&
@@ -169,9 +171,7 @@ export function LetterComposerForm({
               className="text-xs uppercase tracking-wider font-semibold text-ink flex items-center gap-1"
             >
               <Mail size={12} className="text-ink" />
-              <span>
-                {isEs ? "Correo Electrónico de Entrega" : "Delivery Email"} *
-              </span>
+              <span>{t("composer.deliveryEmail")} *</span>
             </label>
             <input
               id="landing-letter-email"
@@ -180,7 +180,7 @@ export function LetterComposerForm({
               onChange={(e) => setField("email", e.target.value)}
               placeholder="tu.correo@personal.me"
               className={cn(
-                "w-full px-3.5 py-2 rounded border border-crease bg-manila/30 font-letter text-xs sm:text-sm text-foreground placeholder:text-foreground-muted/40 focus:outline-none focus:border-ink shadow-2xs",
+                "w-full px-3.5 py-2.5 rounded border border-crease bg-manila/30 font-letter text-xs sm:text-sm text-foreground placeholder:text-foreground-muted/40 focus:outline-none focus:border-ink shadow-2xs min-h-[44px]",
                 hasAttemptedSubmit &&
                   validationErrors.email &&
                   "border-wax bg-wax/5",
@@ -192,21 +192,14 @@ export function LetterComposerForm({
               </p>
             )}
             <span className="text-[11px] text-foreground-muted block">
-              {isEs
-                ? "Te notificaremos cuando el reloj marque el momento exacto para quebrar el sello."
-                : "We will dispatch an alert when the time arrives to break the crimson seal."}
+              {t("composer.deliveryAlertNotice")}
             </span>
           </div>
 
           <div className="space-y-2.5 pt-2 border-t border-crease/60">
             <label className="text-xs uppercase tracking-wider font-semibold text-ink flex items-center gap-1.5">
               <Calendar size={13} className="text-wax" />
-              <span>
-                {isEs
-                  ? "Horizonte de Entrega Programada"
-                  : "Scheduled Delivery Horizon"}{" "}
-                *
-              </span>
+              <span>{t("composer.scheduledHorizon")} *</span>
             </label>
 
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -218,7 +211,7 @@ export function LetterComposerForm({
                     type="button"
                     onClick={() => setHorizonPreset(p.id)}
                     className={cn(
-                      "p-2.5 rounded border text-left transition-all cursor-pointer flex flex-col justify-between",
+                      "p-3 rounded border text-left transition-all cursor-pointer flex flex-col justify-between min-h-[48px]",
                       isSelected
                         ? "border-wax bg-wax/10 text-ink shadow-xs"
                         : "border-crease bg-manila/30 hover:bg-manila/70 text-foreground-muted",
@@ -242,11 +235,18 @@ export function LetterComposerForm({
 
             {form.horizonPreset === "custom" && (
               <div className="pt-2">
+                <label
+                  htmlFor="composer-custom-date"
+                  className="block text-xs uppercase tracking-wider font-semibold text-ink mb-1.5"
+                >
+                  {t("composer.customDeliveryDate")}
+                </label>
                 <input
+                  id="composer-custom-date"
                   type="date"
                   value={form.scheduledAt}
                   onChange={(e) => setField("scheduledAt", e.target.value)}
-                  className="px-3.5 py-2 rounded border border-crease bg-manila/40 font-mono text-xs text-ink focus:outline-none focus:border-ink cursor-pointer"
+                  className="px-3.5 py-2.5 rounded border border-crease bg-manila/40 font-mono text-xs text-ink focus:outline-none focus:border-ink cursor-pointer min-h-[44px]"
                 />
               </div>
             )}
@@ -262,10 +262,7 @@ export function LetterComposerForm({
         <div className="space-y-2">
           <div className="flex items-center justify-between font-letter text-xs text-foreground-muted px-1">
             <span className="font-bold text-ink uppercase tracking-wider">
-              {isEs
-                ? "2. Pliego Timbrado (.lined-paper-canvas)"
-                : "2. Ruled Letter Stationery"}{" "}
-              *
+              {t("composer.ruledStationery")} *
             </span>
             <span className="text-[11px] font-mono">
               COURIER PRIME // 2.25rem
@@ -306,16 +303,10 @@ export function LetterComposerForm({
           <div className="space-y-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs font-bold text-ink uppercase tracking-wider">
               <ShieldCheck size={15} className="text-wax" />
-              <span>
-                {isEs
-                  ? "Sello Carmesí Criptográfico"
-                  : "Cryptographic Crimson Seal"}
-              </span>
+              <span>{t("composer.cryptographicSealTitle")}</span>
             </div>
             <p className="text-xs text-foreground-muted max-w-md">
-              {isEs
-                ? "Una vez sellada la carta, permanecerá inaccesible en la bóveda hasta la fecha establecida."
-                : "Once sealed, the letter will remain encrypted in the vault until the chosen horizon."}
+              {t("composer.cryptographicSealDesc")}
             </p>
           </div>
 
@@ -323,7 +314,7 @@ export function LetterComposerForm({
             type="submit"
             disabled={isSubmitting || isSealing}
             className={cn(
-              "inline-flex items-center justify-center gap-3 px-8 py-4 rounded border-2 border-wax bg-wax text-parchment w-full sm:w-auto",
+              "inline-flex items-center justify-center gap-3 px-8 py-4 rounded border-2 border-wax bg-wax text-on-wax w-full sm:w-auto min-h-[44px]",
               "font-letter text-sm font-bold uppercase tracking-widest shadow-lg transition-all",
               "hover:bg-wax-hover hover:scale-[1.03] active:scale-[0.97] cursor-pointer",
               (isSubmitting || isSealing) && "opacity-70 cursor-not-allowed",
@@ -332,12 +323,8 @@ export function LetterComposerForm({
             <Sparkles size={16} />
             <span>
               {isSealing
-                ? isEs
-                  ? "Sellando con Lacre..."
-                  : "Sealing with Wax..."
-                : isEs
-                  ? "Sellar con Lacre Carmesí"
-                  : "Seal with Crimson Wax"}
+                ? t("composer.sealingButton")
+                : t("composer.sealButton")}
             </span>
             <ArrowRight size={15} />
           </button>
@@ -350,6 +337,9 @@ export function LetterComposerForm({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sealing-dialog-title"
             className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center select-none"
           >
             <motion.div
@@ -360,13 +350,14 @@ export function LetterComposerForm({
               <WaxSeal size="lg" isLocked={false} />
 
               <div className="space-y-2">
-                <h3 className="font-serif-editorial text-2xl font-bold text-ink">
-                  {isEs ? "Sellando la Bóveda..." : "Sealing the Vault..."}
+                <h3
+                  id="sealing-dialog-title"
+                  className="font-serif-editorial text-2xl font-bold text-ink"
+                >
+                  {t("composer.sealingVaultModalTitle")}
                 </h3>
                 <p className="font-letter text-xs text-foreground-muted leading-relaxed">
-                  {isEs
-                    ? "Vertiendo el lacre carmesí y estampando el folio oficial en la bóveda postal cifrada."
-                    : "Pouring crimson wax and stamping official docket onto ciphered vault."}
+                  {t("composer.sealingVaultModalDesc")}
                 </p>
               </div>
 

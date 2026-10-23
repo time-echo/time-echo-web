@@ -1,48 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface WaxSealProps {
-  /**
-   * Whether the wax seal is already broken.
-   */
   isBroken?: boolean;
-  /**
-   * If true, the letter is still locked in-transit and cannot be broken.
-   */
   isLocked?: boolean;
-  /**
-   * Callback fired when the seal is clicked to break.
-   */
   onBreak?: () => void;
-  /**
-   * Size variation of the wax seal.
-   * @default 'md'
-   */
   size?: "sm" | "md" | "lg";
-  /**
-   * Monogram initials embossed in the center of the seal.
-   * @default 'TE'
-   */
   monogram?: string;
-  /**
-   * Whether to display an interactive hint badge beneath the seal.
-   */
   showPrompt?: boolean;
-  /**
-   * Custom text for the interactive prompt.
-   */
   promptText?: string;
-  /**
-   * Disabled state preventing interactions.
-   */
   disabled?: boolean;
-  /**
-   * Additional custom CSS classes.
-   */
   className?: string;
 }
 
@@ -70,12 +42,6 @@ const SIZE_CONFIGS = {
   },
 };
 
-/**
- * 🕯️ WaxSeal Component
- *
- * 3D tactile Carmine Wax Seal with radial bevel, depth shadows,
- * stamped monogram insignia, and interactive fracture split physics.
- */
 export function WaxSeal({
   isBroken = false,
   isLocked = false,
@@ -87,6 +53,8 @@ export function WaxSeal({
   disabled = false,
   className,
 }: WaxSealProps) {
+  const { t } = useTimeEcho();
+  const shouldReduceMotion = useReducedMotion();
   const [internalBroken, setInternalBroken] = useState(isBroken);
   const [isFracturing, setIsFracturing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -98,9 +66,13 @@ export function WaxSeal({
   const handleBreak = () => {
     if (!canInteract) return;
 
-    setIsFracturing(true);
+    if (shouldReduceMotion) {
+      setInternalBroken(true);
+      onBreak?.();
+      return;
+    }
 
-    // Give time for fracture animation before finalizing broken state
+    setIsFracturing(true);
     setTimeout(() => {
       setInternalBroken(true);
       setIsFracturing(false);
@@ -122,28 +94,24 @@ export function WaxSeal({
         className,
       )}
     >
-      {/* If broken and finished fracture, show broken stamp marker or null */}
       {effectivelyBroken && !isFracturing ? (
         <div
           className={cn(
             config.container,
             "rounded-full border-2 border-dashed border-wax/40 opacity-40 flex items-center justify-center font-mono text-xs text-wax rotate-[-12deg]",
           )}
-          title="Sello quebrado"
+          title={t("common.brokenSeal")}
         >
           <span className="text-[10px] tracking-wider uppercase font-bold text-center leading-none">
             {monogram}
             <br />
-            ROTO
+            {t("common.broken")}
           </span>
         </div>
       ) : (
         <div className="relative">
           <AnimatePresence mode="wait">
-            {isFracturing ? (
-              /* ==========================================================
-                 Fracture Split Physics (Framer Motion Split Halves)
-                 ========================================================== */
+            {isFracturing && !shouldReduceMotion ? (
               <div
                 key="fracturing"
                 className={cn(
@@ -151,7 +119,6 @@ export function WaxSeal({
                   config.container,
                 )}
               >
-                {/* Left Seal Half */}
                 <motion.div
                   initial={{ x: 0, y: 0, rotate: 0, opacity: 1 }}
                   animate={{
@@ -174,7 +141,6 @@ export function WaxSeal({
                   />
                 </motion.div>
 
-                {/* Right Seal Half */}
                 <motion.div
                   initial={{ x: 0, y: 0, rotate: 0, opacity: 1 }}
                   animate={{
@@ -197,7 +163,6 @@ export function WaxSeal({
                   />
                 </motion.div>
 
-                {/* Wax Fragments / Splinters */}
                 <motion.div
                   initial={{ scale: 0.8, opacity: 1 }}
                   animate={{
@@ -214,17 +179,14 @@ export function WaxSeal({
                 </motion.div>
               </div>
             ) : (
-              /* ==========================================================
-                 Intact 3D Carmine Wax Seal
-                 ========================================================== */
-              <motion.div
+              <motion.button
                 key="intact"
-                role="button"
-                tabIndex={canInteract ? 0 : -1}
+                type="button"
+                disabled={!canInteract}
                 aria-label={
                   isLocked
-                    ? "Sello de lacre protegido en tránsito"
-                    : "Romper sello de lacre carmesí"
+                    ? t("common.waxSealLockedAria")
+                    : t("common.waxSealBreakAria")
                 }
                 whileHover={
                   canInteract
@@ -240,7 +202,8 @@ export function WaxSeal({
                 onMouseLeave={() => setIsHovered(false)}
                 className={cn(
                   config.container,
-                  "relative rounded-full transition-shadow duration-300",
+                  "relative rounded-full transition-shadow duration-300 p-0 border-0 bg-transparent text-left",
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-wax focus-visible:ring-offset-2",
                   canInteract
                     ? "cursor-pointer"
                     : isLocked
@@ -253,13 +216,12 @@ export function WaxSeal({
                   monogram={monogram}
                   isLocked={isLocked}
                 />
-              </motion.div>
+              </motion.button>
             )}
           </AnimatePresence>
         </div>
       )}
 
-      {/* Interactive Helper Hint */}
       {showPrompt && canInteract && !effectivelyBroken && (
         <motion.div
           initial={{ opacity: 0, y: -4 }}
@@ -268,7 +230,10 @@ export function WaxSeal({
         >
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-wax animate-pulse" />
           <span>
-            {promptText || (isHovered ? "¡Clic para quebrar!" : "Romper sello")}
+            {promptText ||
+              (isHovered
+                ? t("reveal.breakSealPrompt")
+                : t("common.breakSeal"))}
           </span>
         </motion.div>
       )}
@@ -276,10 +241,6 @@ export function WaxSeal({
   );
 }
 
-/**
- * Renders the physical 3D embossed Carmine Wax material with organic rim,
- * beveled rings, and monogram emblem.
- */
 function SealBody({
   config,
   monogram,
@@ -289,6 +250,7 @@ function SealBody({
   monogram: string;
   isLocked: boolean;
 }) {
+  const { t } = useTimeEcho();
   return (
     <div
       className={cn(
@@ -301,10 +263,8 @@ function SealBody({
         border: "2px solid rgba(178, 51, 32, 0.7)",
       }}
     >
-      {/* Organic scalloped wax drip outer ring */}
       <div className="absolute inset-0.5 rounded-full border border-white/20 pointer-events-none" />
 
-      {/* Inner Debossed Ring */}
       <div
         className="w-full h-full rounded-full flex flex-col items-center justify-center relative border border-[#52150d]/80 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5),0_1px_1px_rgba(255,255,255,0.25)]"
         style={{
@@ -312,11 +272,10 @@ function SealBody({
             "radial-gradient(circle at 40% 35%, #9c2b1a 0%, #832415 60%, #5d170e 100%)",
         }}
       >
-        {/* Subtle Fine Beading Dots */}
         <div className="absolute inset-1 rounded-full border border-dashed border-white/15 pointer-events-none" />
 
         {isLocked ? (
-          <div className="flex flex-col items-center justify-center text-parchment/90">
+          <div className="flex flex-col items-center justify-center text-on-wax/90">
             <Lock
               size={config.iconSize}
               className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
@@ -327,7 +286,7 @@ function SealBody({
                 "font-mono mt-0.5 uppercase tracking-widest opacity-80",
               )}
             >
-              Bóveda
+              {t("common.vault")}
             </span>
           </div>
         ) : (
@@ -335,7 +294,7 @@ function SealBody({
             <span
               className={cn(
                 config.monogram,
-                "font-serif-editorial text-parchment drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)] select-none leading-none",
+                "font-serif-editorial text-on-wax drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)] select-none leading-none",
               )}
             >
               {monogram}
@@ -343,15 +302,14 @@ function SealBody({
             <span
               className={cn(
                 config.subtext,
-                "font-mono uppercase tracking-[0.2em] text-parchment/70 leading-none mt-1 scale-90 select-none",
+                "font-mono uppercase tracking-[0.2em] text-on-wax/70 leading-none mt-1 scale-90 select-none",
               )}
             >
-              VAULT
+              {t("common.vault")}
             </span>
           </div>
         )}
 
-        {/* Specular Light Reflection Sheen */}
         <div className="absolute top-1 left-2 w-3.5 h-2 rounded-full bg-white/30 blur-[0.8px] -rotate-45 pointer-events-none" />
       </div>
     </div>

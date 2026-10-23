@@ -30,9 +30,6 @@ export interface LetterComposerState {
   }>;
 }
 
-/**
- * Calculates a future ISO timestamp based on preset duration.
- */
 function getPresetDate(preset: HorizonPreset): string {
   const date = new Date();
   switch (preset) {
@@ -53,7 +50,7 @@ function getPresetDate(preset: HorizonPreset): string {
       date.setFullYear(date.getFullYear() + 1);
       break;
   }
-  return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+  return date.toISOString().split("T")[0];
 }
 
 const DEFAULT_STATE: LetterComposerState = {
@@ -75,16 +72,10 @@ const DEFAULT_STATE: LetterComposerState = {
   ],
 };
 
-/**
- * ✍️ useLetterComposer Hook
- *
- * Feature hook orchestrating new letter drafting, horizon calculations,
- * baseline emotional calibration, milestone predictions, and sealing operations.
- */
 export function useLetterComposer(
   initialValues?: Partial<LetterComposerState>,
 ) {
-  const { createCapsule, locale } = useTimeEcho();
+  const { createCapsule, locale, t } = useTimeEcho();
 
   const [form, setForm] = useState<LetterComposerState>(() => ({
     ...DEFAULT_STATE,
@@ -101,7 +92,6 @@ export function useLetterComposer(
   const [error, setError] = useState<string | null>(null);
   const [createdLetter, setCreatedLetter] = useState<Letter | null>(null);
 
-  // Field updates
   const setField = useCallback(
     <K extends keyof LetterComposerState>(
       key: K,
@@ -146,39 +136,37 @@ export function useLetterComposer(
     [],
   );
 
-  // Pure structural validation for rendering hints
   const validationErrors = useMemo(() => {
     const errs: Record<string, string> = {};
 
     if (!form.title.trim()) {
-      errs.title = "El título de la cápsula es obligatorio.";
+      errs.title = t("composer.errors.titleRequired");
     } else if (form.title.trim().length < 3) {
-      errs.title = "El título debe tener al menos 3 caracteres.";
+      errs.title = t("composer.errors.titleLength");
     }
 
     if (!form.content.trim()) {
-      errs.content = "Escribe un mensaje para tu yo del futuro.";
+      errs.content = t("composer.errors.contentRequired");
     } else if (form.content.trim().length < 10) {
-      errs.content = "El contenido debe tener al menos 10 caracteres.";
+      errs.content = t("composer.errors.contentLength");
     }
 
     if (!form.email.trim()) {
-      errs.email = "El correo de entrega es requerido.";
+      errs.email = t("composer.errors.emailRequired");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      errs.email = "Ingresa un correo electrónico válido.";
+      errs.email = t("composer.errors.emailInvalid");
     }
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
     if (!form.scheduledAt || isNaN(scheduledTime)) {
-      errs.scheduledAt = "Selecciona una fecha de entrega válida.";
+      errs.scheduledAt = t("composer.errors.dateRequired");
     }
 
     return errs;
-  }, [form.title, form.content, form.email, form.scheduledAt]);
+  }, [form.title, form.content, form.email, form.scheduledAt, t]);
 
   const isValid = Object.keys(validationErrors).length === 0;
 
-  // Submit and Seal
   const submitLetter = useCallback(async (): Promise<Letter> => {
     if (!isValid) {
       const firstErr = Object.values(validationErrors)[0];
@@ -188,7 +176,7 @@ export function useLetterComposer(
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
     if (scheduledTime <= Date.now()) {
-      const dateErr = "La fecha de entrega debe situarse en el futuro.";
+      const dateErr = t("composer.errors.dateFuture");
       setError(dateErr);
       throw new Error(dateErr);
     }
@@ -198,7 +186,6 @@ export function useLetterComposer(
     setError(null);
 
     try {
-      // Filter out empty predictions
       const validPredictions = form.predictions.filter(
         (p) => p.prediction.trim() !== "",
       );
@@ -219,14 +206,16 @@ export function useLetterComposer(
       return result;
     } catch (err) {
       const msg =
-        err instanceof Error ? err.message : "Error al sellar la cápsula";
+        err instanceof Error
+          ? err.message
+          : t("composer.errors.sealError");
       setError(msg);
       throw err;
     } finally {
       setIsSubmitting(false);
       setIsSealing(false);
     }
-  }, [isValid, validationErrors, form, createCapsule]);
+  }, [isValid, validationErrors, form, createCapsule, t]);
 
   const resetComposer = useCallback(() => {
     setForm(DEFAULT_STATE);

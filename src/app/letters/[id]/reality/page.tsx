@@ -3,8 +3,9 @@
 import React, { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import confetti from "canvas-confetti";
+import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { formatLocaleDate } from "@/lib/utils";
 import { Letter } from "@/types/timeecho";
 import { RealityLedger } from "@/features/reality-ledger/components/RealityLedger";
 import { ArchivalFolder } from "@/components/ui/ArchivalFolder";
@@ -34,9 +35,8 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     repository,
     isLoading: isGlobalLoading,
     locale,
+    t,
   } = useTimeEcho();
-
-  const isEs = locale === "es";
 
   // Check context first
   const contextLetter = getCapsuleById(id);
@@ -82,12 +82,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     setIsSettled(true);
 
     try {
-      confetti({
-        particleCount: 75,
-        spread: 65,
-        origin: { y: 0.6 },
-        colors: ["#8e2818", "#2c485e", "#efece3", "#059669", "#b23320"],
-      });
+      celebrate("reality-settled");
     } catch {
       // Confetti fallback for environments without canvas
     }
@@ -116,14 +111,10 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
               FOLIO № {id} {"//"} NO ENCONTRADO
             </span>
             <h1 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-ink">
-              {isEs
-                ? "Expediente no hallado en bóveda"
-                : "Docket Not Found in Vault"}
+              {t("reality.docketNotFound")}
             </h1>
             <p className="font-letter text-xs sm:text-sm text-foreground-muted max-w-md mx-auto">
-              {isEs
-                ? "El identificador postal solicitado no corresponde a ninguna correspondencia registrada."
-                : "The requested postal identifier does not correspond to any registered letter."}
+              {t("reality.docketNotFoundDesc")}
             </p>
           </div>
           <Link
@@ -132,7 +123,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
           >
             <ArrowLeft size={14} />
             <span>
-              {isEs ? "Volver al Registro Central" : "Return to Central Ledger"}
+              {t("reality.returnCentralLedger")}
             </span>
           </Link>
         </div>
@@ -155,27 +146,21 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
               ACCESO DENEGADO // BÓVEDA CERRADA
             </span>
             <h1 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-ink">
-              {isEs
-                ? "La correspondencia aún no ha sido desprecintada"
-                : "The letter has not been unsealed yet"}
+              {t("reality.notUnsealedYet")}
             </h1>
             <p className="font-letter text-xs sm:text-sm text-foreground-muted max-w-lg mx-auto leading-relaxed">
-              {isEs
-                ? "Para asentar el Expediente de Realidad, es imprescindible que la carta haya llegado a su fecha de entrega y que el sello carmesí haya sido quebrado."
-                : "To settle the Reality Ledger, the letter must have reached its release date and the crimson seal must be broken."}
+              {t("reality.notUnsealedYetDesc")}
             </p>
           </div>
 
           <div className="pt-2">
             <button
               onClick={() => router.push(`/letters/${letter.id}`)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded bg-wax hover:bg-[#a42c19] text-parchment font-letter text-xs uppercase tracking-wider font-bold shadow transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded bg-wax hover:bg-wax-hover text-on-wax font-letter text-xs uppercase tracking-wider font-bold shadow transition-all"
             >
               <ArrowLeft size={14} />
               <span>
-                {isEs
-                  ? "Ir a la Carta y Quebrar Lacre"
-                  : "Go to Letter & Break Seal"}
+                {t("reality.breakSealButton")}
               </span>
             </button>
           </div>
@@ -184,14 +169,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     );
   }
 
-  const createdFormatted = new Date(letter.createdAt).toLocaleDateString(
-    isEs ? "es-ES" : "en-US",
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    },
-  );
+  const createdFormatted = formatLocaleDate(letter.createdAt, locale);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-16">
@@ -208,7 +186,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
             size={14}
             className="group-hover:-translate-x-1 transition-transform"
           />
-          <span>{isEs ? "Volver al Pliego Epistolar" : "Back to Letter"}</span>
+          <span>{t("reality.backToLetterNav")}</span>
         </Link>
 
         <div className="flex items-center gap-3">
@@ -217,7 +195,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
             className="inline-flex items-center gap-1.5 text-[11px] text-ink hover:text-wax transition-colors uppercase tracking-wider font-bold"
           >
             <BarChart3 size={13} />
-            <span>{isEs ? "Ver Métricas Globales" : "Global Analytics"}</span>
+            <span>{t("reality.globalAnalyticsNav")}</span>
           </Link>
         </div>
       </nav>
@@ -242,7 +220,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
                 city="BOGOTÁ // CENTRAL"
                 docketId={letter.docketNumber}
                 date={createdFormatted}
-                subtext="REGISTRO DE REALIDAD"
+                subtext={t("reality.realityRecord")}
                 variant="circular"
                 size="sm"
               />
@@ -256,30 +234,23 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
                 {letter.title}
               </h1>
               <p className="font-letter text-xs sm:text-sm text-foreground-muted leading-relaxed">
-                {isEs
-                  ? "Examina las convicciones de tu antiguo yo frente a la realidad del presente. Registra tus estados de ánimo actuales y califica si tus predicciones se cumplieron, se pospusieron o tomaron otro rumbo."
-                  : "Examine your past self’s convictions against the present reality. Record your current emotional baseline and evaluate whether your predictions were fulfilled, unfulfilled, or diverged."}
+                {t("reality.subtitle")}
               </p>
             </div>
           </div>
 
-          {/* Settlement Success Banner */}
           {isSettled && (
-            <div className="rounded-md border-2 border-emerald-600/40 bg-emerald-50 dark:bg-emerald-950/40 p-5 flex flex-col sm:flex-row items-center justify-between gap-4 font-letter text-xs shadow-sm">
+            <div className="rounded-md border border-fulfilled-border bg-fulfilled-bg p-5 flex flex-col sm:flex-row items-center justify-between gap-4 font-letter text-xs shadow-xs">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-fulfilled text-parchment flex items-center justify-center shrink-0">
                   <CheckCircle2 size={20} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-emerald-950 dark:text-emerald-100 text-sm">
-                    {isEs
-                      ? "Expediente de Realidad Asentado con Éxito"
-                      : "Reality Ledger Settled Successfully"}
+                  <h4 className="font-bold text-foreground text-sm">
+                    {t("reality.settledSuccessTitle")}
                   </h4>
-                  <p className="text-emerald-800 dark:text-emerald-300 text-[11px] mt-0.5">
-                    {isEs
-                      ? "Tus notas retrospectivas y métricas emocionales han sido archivadas bajo fe de bóveda."
-                      : "Your retrospective notes and emotional ratings have been preserved in the vault."}
+                  <p className="text-foreground-muted text-[11px] mt-0.5">
+                    {t("reality.settledSuccessDesc")}
                   </p>
                 </div>
               </div>
@@ -290,15 +261,15 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded border border-crease bg-parchment hover:border-ink text-ink font-bold transition-colors"
                 >
                   <FileText size={13} />
-                  <span>{isEs ? "Ver Carta" : "View Letter"}</span>
+                  <span>{t("reality.viewLetterButton")}</span>
                 </Link>
 
                 <Link
                   href="/analytics"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-wax hover:bg-[#a42c19] text-parchment font-bold shadow transition-all"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-wax hover:bg-wax-hover text-on-wax font-bold shadow transition-all"
                 >
                   <Sparkles size={13} />
-                  <span>{isEs ? "Ver Métricas" : "View Analytics"}</span>
+                  <span>{t("reality.viewAnalyticsButton")}</span>
                   <ArrowRight size={13} />
                 </Link>
               </div>

@@ -13,6 +13,8 @@
     "print": "Print",
     "archive": "Archive Letter",
     "restore": "Restore Letter",
+    "delete": "Delete Letter",
+    "confirmDelete": "Are you sure you want to permanently delete this letter? This action cannot be undone.",
     "loading": "Loading archive...",
     "error": "Error",
     "search": "Search...",
@@ -29,21 +31,78 @@
     "seconds": "Seconds",
     "happiness": "Happiness",
     "anxiety": "Anxiety",
-    "motivation": "Motivation"
+    "motivation": "Motivation",
+    "skipToContent": "Skip to content",
+    "signOut": "Sign Out",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "brokenSeal": "Broken seal",
+    "broken": "BROKEN",
+    "vault": "Vault",
+    "waxSealLockedAria": "Wax seal protected in transit",
+    "waxSealBreakAria": "Break the carmine wax seal",
+    "breakSeal": "Break seal"
   },
   "header": {
     "folio": "№ TE-00421",
     "vaultActive": "CIPHERED VAULT ACTIVE",
+    "switchLanguage": "Switch language to Spanish",
+    "howItWorks": "How It Works",
+    "myLetters": "Vault",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "skipToContent": "Skip to content",
     "nav": {
       "vault": "Vault",
       "compose": "Compose",
       "analytics": "Analytics"
     }
   },
+  "nav": {
+    "compose": "Write a Letter",
+    "letters": "My Letters",
+    "timeline": "Timeline",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "quote": "“The best way to predict the future is to create it.”",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "settings": {
+    "title": "Vault Settings",
+    "subtitle": "Manage correspondence preferences and custody.",
+    "backToVault": "Back to Vault",
+    "savedNotice": "Settings saved successfully.",
+    "appearance": "Appearance",
+    "colorMode": "Color mode",
+    "colorModeAria": "Appearance mode",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "colorModeDesc": "Light and dark follow the vault palette; System follows your device setting.",
+    "vaultLanguage": "Vault Language",
+    "correspondenceLanguage": "Correspondence language",
+    "selectLanguage": "Select language",
+    "languageDesc": "Determines the language of postal stamps, the interface, and delivery notifications.",
+    "changeEmail": "Change Email Address",
+    "newEmail": "New Email Address",
+    "emailDesc": "Future unlocked letters will be dispatched to this new address.",
+    "updateEmail": "Update Email",
+    "dangerZone": "Danger Zone",
+    "deleteVaultTitle": "Permanently Delete Vault",
+    "deleteVaultDesc": "This action will irreversibly wipe all capsules in transit, predictions, and historical records.",
+    "deleteVaultButton": "Delete My Vault",
+    "deleteConfirmPrompt": "Are you sure you want to permanently delete all your capsules and records? This action cannot be undone."
+  },
   "footer": {
     "motto": "“Time does not erase the words written to meet you in the future.”",
     "colophon": "Held under private postal custody. Encrypted at rest until scheduled release.",
     "rights": "All rights reserved. Personal Archival Vault.",
+    "sentWithHope": "Sent with hope, received with nostalgia.",
+    "tagline": "A digital time capsule for the soul.",
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms",
     "links": {
       "manifesto": "Epistolary Manifesto",
       "security": "Custody & Ciphering",
@@ -71,7 +130,128 @@
       "custodyDesc": "Immune to premature opening. Your words remain encrypted until the clock strikes the appointed second.",
       "retrospectionTitle": "Reality Ledger",
       "retrospectionDesc": "Compare past milestone predictions against present reality and calibrate your psychological emotional shift."
-    }
+    },
+    "defaultTitle": "Your letter to the future",
+    "heroTitleLine1": "Write today.",
+    "heroTitleLine2": "Discover tomorrow.",
+    "heroSubtitle": "Write a letter to your future self, calibrate your emotional baseline, and forecast your life milestones. Compare who you are today with who you will become.",
+    "trustPrivate": "100% Private & Sealed",
+    "trustPrivateDesc": "Only you can read your letter. It remains securely locked in your personal vault until your delivery date.",
+    "trustSchedule": "Delivered on Schedule",
+    "trustScheduleDesc": "Arrives straight to your inbox on the exact morning you chose, in your local timezone.",
+    "trustReality": "Predictions vs. Reality",
+    "trustRealityDesc": "Put your past expectations side-by-side with real life to see how much you’ve evolved.",
+    "step01Label": "STEP 01 / INITIAL DRAFT",
+    "writeLetterToFuture": "Write your letter to your future",
+    "yourLetter": "Your Letter",
+    "letterPlaceholder": "Dear future self...",
+    "onlyYouCanSee": "Only you will be able to see it",
+    "charCounterMin": "{count} / 80 min (2000 max)",
+    "minCharsError": "Write at least 80 characters to seal your letter.",
+    "wordCountLabel": "{count} words",
+    "minWordsLabel": "10 words minimum",
+    "deliveryEmail": "Delivery Email",
+    "emailPlaceholder": "you@example.com",
+    "whenToReceive": "When do you want to receive it?",
+    "deliveryDateAria": "Delivery date",
+    "horizonMonths6": "6 months",
+    "horizonYear1": "1 year",
+    "horizonYears3": "3 years",
+    "horizonYears5": "5 years",
+    "customDate": "Custom date",
+    "chooseSpecificDate": "Choose a specific date",
+    "selectFutureDate": "Select future delivery date (minimum tomorrow)",
+    "annexPredictions": "ANNEX I / PREDICTIONS",
+    "predictionsOptional": "Your predictions (optional)",
+    "annexPredictionsSubtitle": "How do you picture your life?",
+    "predCityQuestion": "Where will you live?",
+    "predCity": "Where will you live?",
+    "predCityPlaceholder": "e.g., Madrid, Tokyo, by the ocean...",
+    "predCareerQuestion": "What work will you do?",
+    "predCareer": "What work will you do?",
+    "predCareerPlaceholder": "e.g., Senior Architect, running my bakery...",
+    "predSalaryQuestion": "How much money will you earn?",
+    "predSalary": "What will you earn?",
+    "predSalaryPlaceholder": "e.g., Double my income, €60k/year...",
+    "predRelationshipQuestion": "How will your relationship be?",
+    "predRelationship": "How will your heart be?",
+    "predRelationshipPlaceholder": "e.g., Living together, deeper friendships...",
+    "predAchievementQuestion": "What will be your greatest achievement?",
+    "predAchievement": "What milestone will you achieve?",
+    "predAchievementPlaceholder": "e.g., Run a marathon, finish my book...",
+    "predPlaceholder": "Write your prediction...",
+    "annexEmotional": "ANNEX II / EMOTIONAL BASELINE",
+    "annexEmotionalBadge": "ANNEX II / EMOTIONAL BASELINE",
+    "annexEmotionalSubtitle": "How do you feel today?",
+    "howDoYouFeelToday": "How do you feel today?",
+    "happiness": "Happiness",
+    "anxiety": "Anxiety",
+    "motivation": "Motivation",
+    "whereDeliverEmail": "Where should we deliver your letter?",
+    "sealButton": "Seal with Crimson Wax & Schedule",
+    "sealingButton": "Sealing...",
+    "sealing": "Sealing...",
+    "sealAndSend": "Seal & Send to Future Self",
+    "privateAndEncrypted": "Your letter is 100% private and encrypted.",
+    "demoTitle": "This is how it will look when you open your letter",
+    "demoSubtitle": "A window into the future: how a letter comes alive with its predictions and emotional evolution once unsealed.",
+    "demoDossierSubtitle": "Compare your past predictions with your reality and reflect on your personal evolution.",
+    "demoWritten": "Written",
+    "demoDate": "Sep 15, 2022",
+    "demoLetterFromPast": "Letter from Past",
+    "demoDelivered": "Delivered",
+    "demoLetterTitle": "Logbook: The First Spark of the Idea",
+    "demoLetterContent": "If you are reading this, two years have elapsed since the afternoon you decided to change course. You were terrified of leaving stability, wondering if you had the courage to lead something of your own.\n\nI hope you learned to worry less about timelines and more about being present. Don't forget that you promised to adopt a dog once you had a balcony.\n\nBe proud of where you are. We worked hard to bring you here.",
+    "demoArticleContent": "For the historical record of TimeEcho:\n\nThis sheet represents the seminal moment. That evening when I first jotted down on a manila folio: \"What if we could send letters into the future with physical wax seals and reality verification?\".\n\nEverything seemed daunting and complex, yet I chose to trust in the beauty of the written word and the weight of time.",
+    "demoFootnoteSealed": "Sealed in postal custody under crimson wax",
+    "demoPredictionsTitle": "Predictions vs Reality",
+    "demoPredictionsSubtitle": "Compare what you once envisioned with the life you are actively living today.",
+    "demoQCareer": "What do you do today?",
+    "demoAccomplished": "ACCOMPLISHED",
+    "demoPastPredLabel": "Past Prediction:",
+    "demoPastCareer": "Lead Design at a remote studio",
+    "demoRealityLabel": "Reality Today:",
+    "demoRealityCareer": "VP of Design at an indie collective",
+    "demoCleanArchitecturePred": "Build a clean architecture based on the Adapter pattern.",
+    "demoCleanArchitectureReal": "Completed and implemented in Next.js with offline support and strict typing.",
+    "demoQCity": "Where do you live today?",
+    "demoPastCity": "Apartment with a balcony in Medellín",
+    "demoRealityCity": "Living in Laureles with a sunny terrace",
+    "demoStudioBalconyPred": "Move to a studio with a sunny balcony to write.",
+    "demoStudioBalconyReal": "Found a penthouse with a sunlit terrace and park views.",
+    "demoQGoal": "What milestone will you achieve?",
+    "demoQGreatestAchievement": "What was your greatest achievement?",
+    "demoDiverged": "DIVERGED",
+    "demoPastGoal": "Run the 42K Marathon in Chicago",
+    "demoRealityGoal": "Completed my first 21K half marathon in Bogotá",
+    "demoEpistolaryNovelPred": "Publish an epistolary novel in traditional print format.",
+    "demoEpistolaryNovelReal": "The project evolved into TimeEcho in the format of sealed digital letters.",
+    "demoAccuracyTitle": "Prediction Accuracy Score",
+    "demoAccuracySummary": "You matched 2 of 3 predictions (67%).",
+    "demoAccuracyMessage": "You are on a good path. Circumstances shifted, but your compass remains steadfast.",
+    "demoEmotionalTitle": "Emotional Evolution",
+    "demoEmotionalSubtitle": "Shift in your internal wellbeing",
+    "growth": "Growth",
+    "calmer": "Calmer",
+    "inspired": "Inspired",
+    "past": "Past:",
+    "today": "Today:",
+    "viewFolioInVault": "View this folio in the vault",
+    "demoDocketOpened": "Opened historical docket",
+    "howItWorksBadge": "SIMPLE & MEANINGFUL",
+    "howItWorksTitle": "How It Works",
+    "howItWorksSubtitle": "Three intentional steps to converse with your future self.",
+    "howItWorksSub": "A simple journey toward your best self.",
+    "step1Title": "1. Write & Predict",
+    "step1Desc": "Compose your letter on archival parchment. Record your current emotional baseline and register milestones for your future self.",
+    "step1Text": "Write honestly to your future self. Record how you feel today and make predictions about your career, relationships, and life goals.",
+    "step2Title": "2. Seal & Schedule",
+    "step2Desc": "Choose your horizon (6 months to 10 years). Apply your crimson wax seal to lock your capsule with cryptographic integrity.",
+    "step2Text": "Pick when you want it back—from 6 months to 5 years. Your words are securely encrypted and locked in your private vault until that exact day.",
+    "step3Title": "3. Unlock & Compare",
+    "step3Desc": "On the appointed date, receive your sealed letter. Crack the seal, verify your predictions, and trace how you've grown.",
+    "step3Text": "When the day arrives, your letter lands in your inbox. Rediscover who you were, see which predictions came true, and reflect on how much you’ve grown.",
+    "startWritingNow": "Start Writing Now"
   },
   "dashboard": {
     "badge": "CENTRAL ARCHIVE // DOCKETS",
@@ -89,16 +269,87 @@
       "title": "No letters match this filter",
       "description": "No archival dockets were found matching the selected criteria.",
       "cta": "Compose First Letter"
-    }
+    },
+    "breakSeal": "Break seal",
+    "sealedNotice": "Correspondence is safeguarded under encrypted vault custody until arrival.",
+    "predictionsCount": "predictions",
+    "unlockedSealIntact": "UNLOCKED // SEAL INTACT",
+    "timelineTitle": "Timeline",
+    "timelineDesc": "Your journey of personal growth charted across time.",
+    "myLetters": "My Letters",
+    "writeLetter": "Write Letter",
+    "createdOn": "Created on:",
+    "deliveredOn": "Delivered on",
+    "willOpenOn": "Will open on",
+    "openingIn": "Opening in",
+    "sealedCapsule": "Sealed Capsule",
+    "readLetter": "Read letter",
+    "viewCapsule": "View capsule",
+    "archiveLetter": "Archive letter",
+    "archive": "Archive",
+    "noTimelineLetters": "No letters on timeline",
+    "noTimelineDesc": "Write your first letter to begin your journey through time.",
+    "startWriting": "Start Writing",
+    "lettersSubtitle": "Manage your digital time capsules, emotional baselines, and predictions.",
+    "viewTimeline": "View Timeline",
+    "totalCapsules": "Total Capsules",
+    "messagesToFuture": "Messages to future",
+    "openedCountLabel": "Delivered",
+    "readyToCompare": "Ready to compare",
+    "sealedInTime": "Sealed in Time",
+    "inTransit": "In transit",
+    "emptyVault": "Your vault is empty",
+    "emptyVaultDesc": "You have not written any letters yet. Letters to the future help you reflect and compare past predictions with reality.",
+    "writeFirstLetter": "Write First Letter",
+    "archivedLetters": "Archived Letters",
+    "archivedDesc": "Capsules kept outside your active vault.",
+    "archivedCount": "Archived",
+    "restoreLetter": "Restore letter",
+    "restore": "Restore",
+    "deleteLetter": "Delete letter",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to permanently delete this letter? This action cannot be undone.",
+    "revealedCompared": "Revealed & Compared",
+    "pendingRevelation": "Pending Revelation",
+    "inTransitToFuture": "In Transit to Future",
+    "emotionalEvolutionLabel": "Emotional evolution:",
+    "emotionalSnapshotLabel": "Emotional Snapshot:",
+    "happinessLabel": "Happiness:",
+    "anxietyLabel": "Anxiety:",
+    "motivationLabel": "Motivation:",
+    "predictionsLabel": "Predictions:",
+    "sealedPredictionsCount": "{count} sealed predictions",
+    "viewFullComparison": "View Full Comparison",
+    "completeComparison": "Complete Comparison",
+    "viewPredictionsVsReality": "View Predictions vs Reality",
+    "completeRevelation": "Complete Revelation",
+    "timeCapsuleSealed": "Time capsule sealed",
+    "timeCapsuleSealedDesc": "This letter voyages securely towards the future. Approximately {days} days remaining.",
+    "opensInDays": "Opens in {days} days",
+    "sealedComparisonDone": "{count} sealed predictions. Comparison completed.",
+    "sealedComparisonPending": "{count} sealed predictions. Pending comparison.",
+    "emptyTimelineTitle": "Your timeline is empty",
+    "emptyTimelineDesc": "Write your first letter to the future to begin charting your journey of growth.",
+    "archivedSilentNotice": "Letters you have archived. They will remain silent unless restored.",
+    "archivedSingle": "Archived"
   },
   "composer": {
     "folio": "POSTAL DISPATCH // NEW FOLIO",
+    "formFolio": "DOCKET № TE-NEW // EPISTOLARY COMPOSITION",
     "title": "Write a Letter to the Future",
     "subtitle": "Pen your honest thoughts. Your letter will be sealed with crimson wax until the appointed arrival day.",
     "titleLabel": "Letter subject or title",
     "titlePlaceholder": "e.g., Reflections on Crossing the Threshold",
     "recipientLabel": "Recipient (your future email address)",
     "recipientPlaceholder": "future.self@personal.me",
+    "cipheredOnSealing": "Ciphered on sealing",
+    "dispatchDetails": "1. Dispatch Details",
+    "requiredFields": "REQUIRED FIELDS",
+    "capsuleTitle": "Capsule Title",
+    "deliveryEmail": "Delivery Email",
+    "deliveryAlertNotice": "We will dispatch an alert when the time arrives to break the crimson seal.",
+    "scheduledHorizon": "Scheduled Delivery Horizon",
+    "customDeliveryDate": "Custom Delivery Date",
     "dateLabel": "Scheduled delivery date",
     "datePresets": {
       "sixMonths": "6 Months",
@@ -107,12 +358,86 @@
       "fiveYears": "5 Years",
       "custom": "Custom Date"
     },
+    "presetsDesc": {
+      "sixMonths": "Next season",
+      "oneYear": "Annual cycle",
+      "threeYears": "Life milestone",
+      "fiveYears": "Metamorphosis",
+      "custom": "Custom date"
+    },
     "letterLabel": "Stationery paper sheet",
     "letterPlaceholder": "Dear future self:\n\nToday I take the pen to write to you because...",
+    "ruledStationery": "2. Ruled Letter Stationery",
+    "cryptographicSealTitle": "Cryptographic Crimson Seal",
+    "cryptographicSealDesc": "Once sealed, the letter will remain encrypted in the vault until the chosen horizon.",
+    "sealingVaultModalTitle": "Sealing the Vault...",
+    "sealingVaultModalDesc": "Pouring crimson wax and stamping official docket onto ciphered vault.",
+    "stationeryDefaultPlaceholder": "Dear future self:\nToday I take the pen to remind you of who you were at this threshold...\nDo not forget the quiet promises you made.",
+    "stationeryAria": "Letter content to future self",
+    "stationeryFooterTitle": "POSTAL INK & STATIONERY",
+    "wordsCount": "words",
+    "charsCount": "characters",
     "emotionalSectionTitle": "Baseline Emotional State",
     "emotionalSectionSubtitle": "How do you feel in this exact moment of writing? (Scale 1 to 10)",
+    "emotions": {
+      "happinessLabel": "Happiness Level",
+      "happinessLow": "Somber / Heavy (1)",
+      "happinessHigh": "Radiant / Full (10)",
+      "anxietyLabel": "Anxiety & Uncertainty Level",
+      "anxietyLow": "Serene / Grounded (1)",
+      "anxietyHigh": "Overwhelmed (10)",
+      "motivationLabel": "Motivation & Drive Level",
+      "motivationLow": "Lethargic (1)",
+      "motivationHigh": "Unstoppable (10)",
+      "lockedRecord": "LOCKED RECORD",
+      "currentCalibration": "CURRENT CALIBRATION",
+      "snapshotNotice": "* This snapshot will be preserved in the sealed capsule. When unsealed in the future, you can contrast your psychological shift through the Reality Ledger."
+    },
     "predictionsSectionTitle": "Life Milestones & Predictions",
     "predictionsSectionSubtitle": "State concrete predictions to contrast when you break the seal in the future.",
+    "categories": {
+      "city": {
+        "label": "City & Residence",
+        "placeholder": "In which city or corner of the world will you reside?"
+      },
+      "career": {
+        "label": "Career & Work",
+        "placeholder": "What professional milestone or craft will you pursue?"
+      },
+      "achievement": {
+        "label": "Personal Achievement",
+        "placeholder": "What personal summit will you have reached?"
+      },
+      "salary": {
+        "label": "Wealth & Finance",
+        "placeholder": "What is your target income, savings, or independence?"
+      },
+      "relationship": {
+        "label": "Relationships & Love",
+        "placeholder": "Who will you cherish and hold close to your heart?"
+      },
+      "happiness": {
+        "label": "Peace of Mind",
+        "placeholder": "What daily habit will bring you quiet serenity?"
+      }
+    },
+    "categoryAria": "Prediction category",
+    "deletePrediction": "Delete prediction",
+    "predictionFor": "Prediction for",
+    "addMilestoneByCategory": "Add milestone by category:",
+    "loggedCount": "LOGGED",
+    "noPredictionsLogged": "No predictions recorded yet. Choose a category below to wager with your future self.",
+    "errors": {
+      "titleRequired": "The capsule title is required.",
+      "titleLength": "The title must be at least 3 characters.",
+      "contentRequired": "Write a message for your future self.",
+      "contentLength": "Content must be at least 10 characters.",
+      "emailRequired": "Delivery email is required.",
+      "emailInvalid": "Please enter a valid email address.",
+      "dateRequired": "Please select a valid delivery date.",
+      "dateFuture": "Delivery date must be in the future.",
+      "sealError": "Error sealing capsule"
+    },
     "sealButton": "Seal with Crimson Wax",
     "sealingButton": "Melting & Stamping Wax..."
   },
@@ -127,7 +452,11 @@
     "remainingTime": "Remaining Time",
     "ctaInspect": "Inspect Letter",
     "ctaVault": "Go to Central Ledger",
-    "ctaNew": "Compose Another Letter"
+    "ctaNew": "Compose Another Letter",
+    "recordConfirmed": "RECORD CONFIRMED",
+    "postmarkedAndSealed": "POSTMARKED & SEALED",
+    "encryptedNotice": "The letter is encrypted at rest. No external entity will be able to inspect your words.",
+    "futureScheduledDate": "Scheduled future date"
   },
   "reveal": {
     "lockedTitle": "VAULT TEMPORARILY INACCESSIBLE",
@@ -145,7 +474,66 @@
     "milestonesTitle": "Registered Predictions & Milestones",
     "realityLedgerPromptTitle": "How accurate was your past self?",
     "realityLedgerPromptDesc": "Submit your Reality Ledger to contrast past predictions with present facts, record emotional shifts, and compute your accuracy score.",
-    "ctaOpenReality": "Open Reality Ledger"
+    "ctaOpenReality": "Open Reality Ledger",
+    "voyageElapsed": "Voyage elapsed",
+    "unlockedNotice": "The postal vault has unlocked the crimson seal. You may break the wax to reveal the letter within.",
+    "encryptedAtRest": "This capsule remains encrypted at rest. The wax seal is locked against premature openings until the clock reaches zero.",
+    "capsuleInTransit": "CAPSULE IN TRANSIT // {docket}",
+    "daysRemaining": "{days} days left",
+    "willBeDeliveredOn": "Will be delivered on {date}",
+    "backToVault": "Back to Vault",
+    "archiveLetter": "Archive Letter",
+    "capsuleUnlockedTitle": "Capsule Unlocked",
+    "unlockedAwaits": "Your letter from the past awaits.",
+    "unlockedAwaitsDesc": "Before reading it, tell us what actually unfolded. This enables the calculation of your reality score and emotional shift.",
+    "reflectionTipTitle": "Reflection tip:",
+    "reflectionTipDesc": "Be honest with yourself. There are no right or wrong answers. This reflection is entirely yours.",
+    "factMatching": "FACT MATCHING",
+    "presentRealityTitle": "Tell Us Your Present Reality",
+    "presentRealityDesc": "Answer these questions to contrast your past mindset with your present reality.",
+    "pastPredictionLabel": "Past prediction:",
+    "describeRealityPlaceholder": "Describe your reality now...",
+    "didPredictionComeTrue": "Did this prediction come true?",
+    "yesDidIt": "Yes, I did it",
+    "notExactly": "Not exactly",
+    "currentState": "CURRENT STATE",
+    "emotionalBaselineToday": "Emotional baseline today",
+    "howFeelRightNow": "How do you feel right now?",
+    "saveAndViewLetter": "Save & View My Letter",
+    "archivedDocket": "Archived Docket",
+    "archivedDocketDesc": "This letter is archived in the postal vault. You can restore it to your vault or permanently delete it.",
+    "restore": "Restore",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to permanently delete this letter? This action cannot be undone.",
+    "written": "Written",
+    "delivered": "Delivered",
+    "letterFromPast": "Letter from Past",
+    "predictionsVsReality": "Predictions vs Reality",
+    "predictionsVsRealityDesc": "Compare what you once envisioned with the life you are actively living today.",
+    "accomplished": "ACCOMPLISHED",
+    "diverged": "DIVERGED",
+    "pastPrediction": "Past Prediction:",
+    "realityToday": "Reality Today:",
+    "fulfilled": "Fulfilled",
+    "accuracyScore": "Prediction Accuracy Score",
+    "accuracySummary": "You matched {matched} of {total} predictions ({percent}%).",
+    "accuracyHigh": "Your future compass is sharp! Remarkable intuition.",
+    "accuracyMedium": "You are on a good path. Circumstances shifted, but your compass remains steadfast.",
+    "accuracyLow": "Life gifted you unexpected twists and growth!",
+    "noPredictions": "No predictions registered for this capsule.",
+    "emotionalEvolution": "Emotional Evolution",
+    "emotionalShiftDesc": "Shift in your internal wellbeing",
+    "growth": "Growth",
+    "decline": "Decline",
+    "steady": "Steady",
+    "past": "Past:",
+    "today": "Today:",
+    "calmer": "Calmer",
+    "stress": "Stress",
+    "inspired": "Inspired",
+    "loadingDocket": "Accessing postal docket...",
+    "confirmed": "Confirmed",
+    "remainingTime": "Time remaining"
   },
   "reality": {
     "title": "Reality Ledger",
@@ -158,6 +546,47 @@
     "evolutionTitle": "Emotional Trajectory (Past vs Present)",
     "evolutionSubtitle": "Calibrate your feelings at this moment of unsealing:",
     "predictionsTitle": "Prediction Verification",
+    "docketNo": "Docket №",
+    "retrospectiveCalibration": "RETROSPECTIVE CALIBRATION",
+    "past": "Past",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "calibrateFeelings": "Calibrate your feelings in this moment of unsealing:",
+    "happinessUnsealing": "Happiness upon unsealing",
+    "happinessLow": "Somber (1)",
+    "happinessHigh": "Radiant (10)",
+    "anxietyCurrent": "Current Anxiety / Uncertainty",
+    "anxietyLow": "At peace (1)",
+    "anxietyHigh": "Overwhelmed (10)",
+    "motivationFuture": "Motivation facing the future",
+    "motivationLow": "Lethargic (1)",
+    "motivationHigh": "Focused & Driven (10)",
+    "fulfilledCount": "fulfilled",
+    "divergedCount": "diverged",
+    "noPredictions": "This capsule did not include structured predictions at composition time.",
+    "closingTitle": "Postal Ledger Closing",
+    "closingDesc": "Settling the ledger permanently records your retrospective notes and psychological shift into historical vault custody.",
+    "recordedInArchive": "Retrospective recorded in archive",
+    "audited": "AUDITED",
+    "settlingLedger": "Settling ledger...",
+    "row": {
+      "category": "CATEGORY",
+      "predictedPast": "What you predicted in the past:",
+      "sealedOriginalDate": "Sealed on original dispatch date",
+      "actualTranspired": "What actually transpired in reality:",
+      "noTestimony": "No testimony recorded.",
+      "testimonyPlaceholder": "Record candidly what happened to this prediction...",
+      "ledgerTitle": "REALITY LEDGER",
+      "verifiedToday": "VERIFIED TODAY",
+      "outcomeRuling": "Outcome Ruling:",
+      "outcomeRulingAria": "Outcome ruling",
+      "fulfilledLabel": "Fulfilled",
+      "fulfilledSubtext": "Vision manifested into truth",
+      "divergedLabel": "Diverged",
+      "divergedSubtext": "Destiny took a different course",
+      "unfulfilledLabel": "Unfulfilled",
+      "unfulfilledSubtext": "Postponed or left unrealized"
+    },
     "outcomes": {
       "fulfilled": "Fulfilled",
       "diverged": "Diverged",
@@ -165,7 +594,28 @@
       "pending": "Pending Evaluation"
     },
     "settleButton": "Settle Reality Ledger",
-    "settledBadge": "LEDGER SETTLED"
+    "settledBadge": "LEDGER SETTLED",
+    "docketNotFound": "Docket Not Found in Vault",
+    "docketNotFoundDesc": "The requested postal identifier does not correspond to any registered letter.",
+    "returnCentralLedger": "Return to Central Ledger",
+    "notUnsealedYet": "The letter has not been unsealed yet",
+    "notUnsealedYetDesc": "To settle the Reality Ledger, the letter must have reached its release date and the crimson seal must be broken.",
+    "breakSealButton": "Go to Letter & Break Seal",
+    "backToLetterNav": "Back to Letter",
+    "globalAnalyticsNav": "Global Analytics",
+    "realityRecord": "REALITY RECORD",
+    "settledSuccessTitle": "Reality Ledger Settled Successfully",
+    "settledSuccessDesc": "Your retrospective notes and emotional ratings have been preserved in the vault.",
+    "viewLetterButton": "View Letter",
+    "viewAnalyticsButton": "View Analytics",
+    "questions": {
+      "city": "Where do you live today?",
+      "career": "What do you do today?",
+      "salary": "How much do you earn per month?",
+      "relationship": "How is your relationship today?",
+      "achievement": "What was your greatest achievement?",
+      "defaultQuestion": "What happened with: {category}?"
+    }
   },
   "analytics": {
     "badge": "RETROSPECTIVE STATISTICS",
@@ -174,6 +624,12 @@
     "totalCapsules": "Total Capsules",
     "totalPredictions": "Total Predictions",
     "accuracyRate": "Accuracy Rate",
+    "accuracyRateAria": "Predictive accuracy rate",
+    "predictiveLedger": "Predictive Ledger",
+    "fulfillment": "Fulfillment",
+    "fulfilled": "Fulfilled",
+    "diverged": "Diverged",
+    "inTransit": "In Transit",
     "netHappiness": "Net Happiness (Delta)",
     "predictionAccuracyTitle": "Prediction Accuracy",
     "categoryEffectiveness": "Effectiveness by Category",
@@ -183,6 +639,406 @@
     "pendingAuditsDesc": "You have unsealed letters with pending predictions. Settle their reality to automatically update your global statistics.",
     "auditButton": "Audit",
     "allAudited": "All unsealed letters have completed their reality evaluation.",
-    "composeNew": "Compose New Letter"
+    "composeNew": "Compose New Letter",
+    "shift": {
+      "title": "Retrospective Shift",
+      "subtitle": "Emotional Comparison",
+      "happiness": "Happiness",
+      "happinessSub": "Well-being and joy",
+      "anxiety": "Anxiety",
+      "anxietySub": "Uncertainty and tension",
+      "motivation": "Motivation",
+      "motivationSub": "Vital energy and drive",
+      "pastSealed": "Past (Sealed)",
+      "presentUnsealed": "Present (Unsealed)",
+      "scale": "Epistolary scale 1 to 10"
+    }
+  },
+  "about": {
+    "title": "Bridge who you are today with who you become tomorrow.",
+    "subtitle": "TimeEcho is a secure digital time capsule platform. Write deeply private letters, track your emotional baseline, make bold life predictions, and unlock them years later to compare outcomes.",
+    "sections": {
+      "what_is": {
+        "title": "Why Write to Your Future Self?",
+        "description": "In a fast-moving world, it’s easy to forget how much you’ve grown, what you cared about, or what you predicted for your life. TimeEcho lets you capture your present reality — your hopes, fears, relationships, and emotional baseline — and lock them in a digital vault until your chosen future date."
+      },
+      "how_works": {
+        "title": "How TimeEcho Works",
+        "step_write_title": "1. Write & Capture",
+        "step_write_desc": "Pour your thoughts into a private letter. Capture your happiness, anxiety, and motivation levels, and make predictions about your future.",
+        "step_seal_title": "2. Seal & Schedule",
+        "step_seal_desc": "Pick your delivery date and timezone. Your letter is securely encrypted and locked in your private vault until that day arrives.",
+        "step_wait_title": "3. Live & Evolve",
+        "step_wait_desc": "Focus on your life. As months or years pass, your memories stay safe while you grow and reach new milestones.",
+        "step_receive_title": "4. Open & Reflect",
+        "step_receive_desc": "When your date arrives, your letter unlocks in your inbox. Read your past words, check your predictions, and see how much you’ve grown."
+      },
+      "why_exists": {
+        "title": "Built for Honest Self-Conversation",
+        "description": "Social media forces us to perform for others. TimeEcho is designed for the opposite — a quiet, distraction-free space to be completely honest with yourself. No public feeds, no vanity metrics, no ads. Just a direct link between past you and future you."
+      },
+      "philosophy": {
+        "title": "Our Privacy Philosophy",
+        "description": "Your memories belong to you. We never sell user data, track you with advertising cookies, or analyze your letter contents. When you delete your account, your data is permanently purged from our database forever."
+      },
+      "contact": {
+        "title": "Contact & Creators",
+        "description": "Have questions, feedback, or need assistance with TimeEcho? Reach out to our team directly:"
+      }
+    },
+    "returnHome": "Return to Home",
+    "postmarkCity": "TIME VAULT // ARCHIVE",
+    "postmarkSubtext": "LIVING MEMORY",
+    "manifestoBadge": "Epistolary Manifesto",
+    "stamps": {
+      "purpose": "PURPOSE",
+      "reflection": "REFLECTION",
+      "security": "SECURITY",
+      "correspondence": "CORRESPONDENCE"
+    },
+    "steps": {
+      "composition": "Composition",
+      "custody": "Custody",
+      "transit": "Transit",
+      "unsealing": "Unsealing"
+    },
+    "cta": "Write a letter to the future"
+  },
+  "privacy": {
+    "title": "Privacy Policy & Security Promise",
+    "last_updated": "Last updated August 2026",
+    "subtitle": "Your future letters are private and sacred. We encrypt your content, never sell your data, and run zero advertisements.",
+    "sections": {
+      "intro": {
+        "title": "Our Commitment to Your Privacy",
+        "description": "TimeEcho (\"we\", \"us\", or \"our\") exists to protect your personal evolution and private thoughts. This Privacy Policy outlines how we safeguard your information, handle data encryption, and ensure your time capsules remain private."
+      },
+      "collect": {
+        "title": "What Information We Collect",
+        "description": "We collect only what is essential to store and deliver your time capsules securely:",
+        "item_email": "Your email address (used strictly for passwordless magic-link sign-ins and letter delivery)",
+        "item_letters": "Encrypted letter content and titles (protected with zero-knowledge encryption at rest)",
+        "item_predictions": "Future predictions and retrospective reflections you choose to write",
+        "item_emotional": "Emotional snapshot ratings (happiness, anxiety, and motivation levels)",
+        "item_preferences": "Interface settings (color theme, language, and notification choices)",
+        "item_technical": "Essential technical logs necessary for account security and service performance"
+      },
+      "how_use": {
+        "title": "How We Use Your Information",
+        "description": "We use your data solely to fulfill your time capsule experience:",
+        "item_accounts": "Authenticate your account via single-use magic links",
+        "item_store": "Safely store your encrypted letters until your chosen delivery date",
+        "item_deliver": "Send your unsealed capsules to your verified email address on schedule",
+        "item_communicate": "Send critical account confirmations and delivery notifications",
+        "item_improve": "Maintain security, optimize page load speed, and enhance reliability",
+        "item_security": "Block automated abuse, prevent spam, and protect user data"
+      },
+      "encryption": {
+        "title": "End-to-End Privacy & Encryption",
+        "description": "Letter titles and personal thoughts are encrypted before being stored. Nobody—not even our team—can read your words while your letter remains sealed in the vault."
+      },
+      "retention": {
+        "title": "Data Retention & Instant Deletion",
+        "description": "We retain your time capsules for as long as your account remains active. If you choose to delete your account in Settings, all associated letters, emotional snapshots, predictions, and analytics events are permanently and irreversibly purged from our database."
+      },
+      "third_parties": {
+        "title": "Trusted Infrastructure Partners",
+        "description": "We work with trusted industry providers to process and deliver your capsules:",
+        "item_email": "Resend API for transactional email delivery",
+        "item_hosting": "Hardened cloud infrastructure with isolated, encrypted databases"
+      },
+      "rights": {
+        "title": "Your Data Rights & Control",
+        "description": "You retain total ownership of your words. You have the right to:",
+        "item_access": "Inspect and export your letter timeline at any time",
+        "item_delete": "Delete individual letters or purge your entire account in one click",
+        "item_questions": "Reach out to our team with privacy or technical data inquiries"
+      },
+      "changes": {
+        "title": "Policy Updates",
+        "description": "If we make material updates to this Privacy Policy, we will post the changes here and notify active users via email."
+      },
+      "contact": {
+        "title": "Contact & Support",
+        "description": "Have questions about how your letters are stored or encrypted? Reach out to our team directly at:"
+      }
+    },
+    "returnHome": "Return to Home",
+    "postmarkCity": "VAULT // CUSTODY",
+    "postmarkSubtext": "ENCRYPTED AT REST"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "last_updated": "Last updated August 2026",
+    "subtitle": "Clear, human-readable terms outlining service commitments, letter scheduling integrity, and data ownership.",
+    "sections": {
+      "acceptance": {
+        "title": "Agreement to Terms",
+        "description": "By creating a capsule or using TimeEcho, you agree to these Terms of Service. If you do not agree, please do not access or use the platform."
+      },
+      "about": {
+        "title": "About TimeEcho",
+        "description": "TimeEcho is a digital time capsule platform where you can write letters to your future self, record emotional baseline snapshots, make life predictions, and schedule delivery for future dates."
+      },
+      "accounts": {
+        "title": "Passwordless Account Access",
+        "description": "TimeEcho uses secure magic-link authentication sent directly to your email inbox. You are responsible for keeping your email account secure."
+      },
+      "creating": {
+        "title": "Writing and Scheduling Capsules",
+        "description": "You can schedule letters to unlock on any future date. You are responsible for ensuring the recipient email address is valid and that your content complies with applicable laws."
+      },
+      "delivery": {
+        "title": "Scheduled Delivery Commitment",
+        "description": "TimeEcho processes scheduled capsules daily and sends them on or near your requested local unlock date using transactional mailers.",
+        "disclaimer": "While we make every technical effort to ensure prompt delivery, delivery dates depend on email provider acceptance, network availability, and spam filter settings."
+      },
+      "responsibilities": {
+        "title": "User Conduct",
+        "description": "You are responsible for maintaining account confidentiality and using TimeEcho respectfully."
+      },
+      "content": {
+        "title": "You Own 100% of Your Content",
+        "description": "You retain full ownership of all letters, predictions, and reflections you create on TimeEcho. You grant us a limited license solely to store, encrypt, and deliver your content as requested.",
+        "license": "This limited license permits us to hold your encrypted letters until their scheduled release date and transmit them to your email address upon unlock."
+      },
+      "prohibited": {
+        "title": "Prohibited Activities",
+        "description": "To maintain platform safety, you agree not to use TimeEcho to:",
+        "item_spam": "Send unsolicited emails or spam",
+        "item_harassment": "Harass, intimidate, or harm others",
+        "item_threats": "Issue threats of violence or illegal action",
+        "item_fraud": "Engage in deceptive, fraudulent, or malicious practices",
+        "item_impersonation": "Impersonate other individuals or entities",
+        "item_illegal": "Violate local or international laws",
+        "item_malware": "Distribute viruses, trojans, or harmful code",
+        "item_abuse": "Abuse infrastructure, perform denial-of-service, or scrape system data",
+        "item_unauthorized": "Attempt unauthorized database or server access",
+        "item_infringement": "Infringe upon third-party copyrights or intellectual property"
+      },
+      "recipient": {
+        "title": "Recipient Email Consent",
+        "description": "When scheduling a capsule to a recipient email address, you confirm that you have permission to send messages to that address."
+      },
+      "intellectual": {
+        "title": "Platform Intellectual Property",
+        "description": "TimeEcho software, branding, UI components, and logos are protected intellectual property. Your personal letters remain entirely yours."
+      },
+      "availability": {
+        "title": "Service Availability",
+        "description": "We strive for 99.9% uptime, but access may occasionally be interrupted for scheduled maintenance, system updates, or emergency server repairs."
+      },
+      "termination": {
+        "title": "Account Cancellation",
+        "description": "You may delete your account at any time via Settings. We reserve the right to suspend accounts that violate these prohibited conduct rules."
+      },
+      "liability": {
+        "title": "Limitation of Liability",
+        "description": "TimeEcho is provided \"as is\". To the maximum extent permitted by law, TimeEcho shall not be liable for indirect or consequential damages arising from service usage or delivery delays."
+      },
+      "changes": {
+        "title": "Updates to Terms",
+        "description": "We may update these Terms from time to time. Continued use of TimeEcho after updates constitutes acceptance of the new terms."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "description": "For questions regarding these Terms, contact our team directly at:"
+      }
+    },
+    "returnHome": "Return to Home",
+    "postmarkCity": "VAULT // LEGAL",
+    "postmarkSubtext": "FORMAL COVENANT"
+  },
+  "pages": {
+    "about": {
+      "title": "Bridge who you are today with who you become tomorrow.",
+      "subtitle": "TimeEcho is a secure digital time capsule platform. Write deeply private letters, track your emotional baseline, make bold life predictions, and unlock them years later to compare outcomes.",
+      "sections": {
+        "what_is": {
+          "title": "Why Write to Your Future Self?",
+          "description": "In a fast-moving world, it’s easy to forget how much you’ve grown, what you cared about, or what you predicted for your life. TimeEcho lets you capture your present reality — your hopes, fears, relationships, and emotional baseline — and lock them in a digital vault until your chosen future date."
+        },
+        "how_works": {
+          "title": "How TimeEcho Works",
+          "step_write_title": "1. Write & Capture",
+          "step_write_desc": "Pour your thoughts into a private letter. Capture your happiness, anxiety, and motivation levels, and make predictions about your future.",
+          "step_seal_title": "2. Seal & Schedule",
+          "step_seal_desc": "Pick your delivery date and timezone. Your letter is securely encrypted and locked in your private vault until that day arrives.",
+          "step_wait_title": "3. Live & Evolve",
+          "step_wait_desc": "Focus on your life. As months or years pass, your memories stay safe while you grow and reach new milestones.",
+          "step_receive_title": "4. Open & Reflect",
+          "step_receive_desc": "When your date arrives, your letter unlocks in your inbox. Read your past words, check your predictions, and see how much you’ve grown."
+        },
+        "why_exists": {
+          "title": "Built for Honest Self-Conversation",
+          "description": "Social media forces us to perform for others. TimeEcho is designed for the opposite — a quiet, distraction-free space to be completely honest with yourself. No public feeds, no vanity metrics, no ads. Just a direct link between past you and future you."
+        },
+        "philosophy": {
+          "title": "Our Privacy Philosophy",
+          "description": "Your memories belong to you. We never sell user data, track you with advertising cookies, or analyze your letter contents. When you delete your account, your data is permanently purged from our database forever."
+        },
+        "contact": {
+          "title": "Contact & Creators",
+          "description": "Have questions, feedback, or need assistance with TimeEcho? Reach out to our team directly:"
+        }
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy & Security Promise",
+      "last_updated": "Last updated August 2026",
+      "subtitle": "Your future letters are private and sacred. We encrypt your content, never sell your data, and run zero advertisements.",
+      "sections": {
+        "intro": {
+          "title": "Our Commitment to Your Privacy",
+          "description": "TimeEcho (\"we\", \"us\", or \"our\") exists to protect your personal evolution and private thoughts. This Privacy Policy outlines how we safeguard your information, handle data encryption, and ensure your time capsules remain private."
+        },
+        "collect": {
+          "title": "What Information We Collect",
+          "description": "We collect only what is essential to store and deliver your time capsules securely:",
+          "item_email": "Your email address (used strictly for passwordless magic-link sign-ins and letter delivery)",
+          "item_letters": "Encrypted letter content and titles (protected with zero-knowledge encryption at rest)",
+          "item_predictions": "Future predictions and retrospective reflections you choose to write",
+          "item_emotional": "Emotional snapshot ratings (happiness, anxiety, and motivation levels)",
+          "item_preferences": "Interface settings (color theme, language, and notification choices)",
+          "item_technical": "Essential technical logs necessary for account security and service performance"
+        },
+        "how_use": {
+          "title": "How We Use Your Information",
+          "description": "We use your data solely to fulfill your time capsule experience:",
+          "item_accounts": "Authenticate your account via single-use magic links",
+          "item_store": "Safely store your encrypted letters until your chosen delivery date",
+          "item_deliver": "Send your unsealed capsules to your verified email address on schedule",
+          "item_communicate": "Send critical account confirmations and delivery notifications",
+          "item_improve": "Maintain security, optimize page load speed, and enhance reliability",
+          "item_security": "Block automated abuse, prevent spam, and protect user data"
+        },
+        "encryption": {
+          "title": "End-to-End Privacy & Encryption",
+          "description": "Letter titles and personal thoughts are encrypted before being stored. Nobody—not even our team—can read your words while your letter remains sealed in the vault."
+        },
+        "retention": {
+          "title": "Data Retention & Instant Deletion",
+          "description": "We retain your time capsules for as long as your account remains active. If you choose to delete your account in Settings, all associated letters, emotional snapshots, predictions, and analytics events are permanently and irreversibly purged from our database."
+        },
+        "third_parties": {
+          "title": "Trusted Infrastructure Partners",
+          "description": "We work with trusted industry providers to process and deliver your capsules:",
+          "item_email": "Resend API for transactional email delivery",
+          "item_hosting": "Hardened cloud infrastructure with isolated, encrypted databases"
+        },
+        "rights": {
+          "title": "Your Data Rights & Control",
+          "description": "You retain total ownership of your words. You have the right to:",
+          "item_access": "Inspect and export your letter timeline at any time",
+          "item_delete": "Delete individual letters or purge your entire account in one click",
+          "item_questions": "Reach out to our team with privacy or technical data inquiries"
+        },
+        "changes": {
+          "title": "Policy Updates",
+          "description": "If we make material updates to this Privacy Policy, we will post the changes here and notify active users via email."
+        },
+        "contact": {
+          "title": "Contact & Support",
+          "description": "Have questions about how your letters are stored or encrypted? Reach out to our team directly at:"
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "last_updated": "Last updated August 2026",
+      "subtitle": "Clear, human-readable terms outlining service commitments, letter scheduling integrity, and data ownership.",
+      "sections": {
+        "acceptance": {
+          "title": "Agreement to Terms",
+          "description": "By creating a capsule or using TimeEcho, you agree to these Terms of Service. If you do not agree, please do not access or use the platform."
+        },
+        "about": {
+          "title": "About TimeEcho",
+          "description": "TimeEcho is a digital time capsule platform where you can write letters to your future self, record emotional baseline snapshots, make life predictions, and schedule delivery for future dates."
+        },
+        "accounts": {
+          "title": "Passwordless Account Access",
+          "description": "TimeEcho uses secure magic-link authentication sent directly to your email inbox. You are responsible for keeping your email account secure."
+        },
+        "creating": {
+          "title": "Writing and Scheduling Capsules",
+          "description": "You can schedule letters to unlock on any future date. You are responsible for ensuring the recipient email address is valid and that your content complies with applicable laws."
+        },
+        "delivery": {
+          "title": "Scheduled Delivery Commitment",
+          "description": "TimeEcho processes scheduled capsules daily and sends them on or near your requested local unlock date using transactional mailers.",
+          "disclaimer": "While we make every technical effort to ensure prompt delivery, delivery dates depend on email provider acceptance, network availability, and spam filter settings."
+        },
+        "responsibilities": {
+          "title": "User Conduct",
+          "description": "You are responsible for maintaining account confidentiality and using TimeEcho respectfully."
+        },
+        "content": {
+          "title": "You Own 100% of Your Content",
+          "description": "You retain full ownership of all letters, predictions, and reflections you create on TimeEcho. You grant us a limited license solely to store, encrypt, and deliver your content as requested.",
+          "license": "This limited license permits us to hold your encrypted letters until their scheduled release date and transmit them to your email address upon unlock."
+        },
+        "prohibited": {
+          "title": "Prohibited Activities",
+          "description": "To maintain platform safety, you agree not to use TimeEcho to:",
+          "item_spam": "Send unsolicited emails or spam",
+          "item_harassment": "Harass, intimidate, or harm others",
+          "item_threats": "Issue threats of violence or illegal action",
+          "item_fraud": "Engage in deceptive, fraudulent, or malicious practices",
+          "item_impersonation": "Impersonate other individuals or entities",
+          "item_illegal": "Violate local or international laws",
+          "item_malware": "Distribute viruses, trojans, or harmful code",
+          "item_abuse": "Abuse infrastructure, perform denial-of-service, or scrape system data",
+          "item_unauthorized": "Attempt unauthorized database or server access",
+          "item_infringement": "Infringe upon third-party copyrights or intellectual property"
+        },
+        "recipient": {
+          "title": "Recipient Email Consent",
+          "description": "When scheduling a capsule to a recipient email address, you confirm that you have permission to send messages to that address."
+        },
+        "intellectual": {
+          "title": "Platform Intellectual Property",
+          "description": "TimeEcho software, branding, UI components, and logos are protected intellectual property. Your personal letters remain entirely yours."
+        },
+        "availability": {
+          "title": "Service Availability",
+          "description": "We strive for 99.9% uptime, but access may occasionally be interrupted for scheduled maintenance, system updates, or emergency server repairs."
+        },
+        "termination": {
+          "title": "Account Cancellation",
+          "description": "You may delete your account at any time via Settings. We reserve the right to suspend accounts that violate these prohibited conduct rules."
+        },
+        "liability": {
+          "title": "Limitation of Liability",
+          "description": "TimeEcho is provided \"as is\". To the maximum extent permitted by law, TimeEcho shall not be liable for indirect or consequential damages arising from service usage or delivery delays."
+        },
+        "changes": {
+          "title": "Updates to Terms",
+          "description": "We may update these Terms from time to time. Continued use of TimeEcho after updates constitutes acceptance of the new terms."
+        },
+        "contact": {
+          "title": "Contact Us",
+          "description": "For questions regarding these Terms, contact our team directly at:"
+        }
+      }
+    },
+    "footer": {
+      "about": "About",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    }
+  },
+  "metadata": {
+    "title": "TimeEcho — A Digital Time Capsule for the Soul",
+    "description": "Write today to the person you will become. Encrypted epistolary vault with wax seals and reality verification."
+  },
+  "login": {
+    "title": "Access Your Vault",
+    "subtitle": "We will send a secure magic login link directly to your inbox. No passwords required.",
+    "dispatchedTitle": "Magic link dispatched!",
+    "dispatchedDesc": "We sent the magic link to {email}. Redirecting to your vault...",
+    "emailLabel": "Your Email Address",
+    "sendButton": "Send Magic Link",
+    "backHome": "Back to Home"
   }
 }

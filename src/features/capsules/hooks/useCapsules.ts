@@ -6,11 +6,6 @@ import { Letter, LetterStatus } from "@/types/timeecho";
 
 export type CapsuleFilterStatus = "all" | LetterStatus;
 
-/**
- * 🗃️ useCapsules Hook
- *
- * Feature hook for querying, categorizing, and searching time-capsule dossiers.
- */
 export function useCapsules() {
   const {
     capsules,
@@ -20,13 +15,13 @@ export function useCapsules() {
     getCapsuleById,
     archiveCapsule,
     restoreCapsule,
+    deleteCapsule,
     breakWaxSeal,
   } = useTimeEcho();
 
   const [filter, setFilter] = useState<CapsuleFilterStatus>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Categorized lists
   const inTransitCapsules = useMemo(
     () => capsules.filter((c) => c.status === "pending"),
     [capsules],
@@ -47,7 +42,6 @@ export function useCapsules() {
     [capsules],
   );
 
-  // Filtered and searched list
   const filteredCapsules = useMemo(() => {
     let result = capsules;
 
@@ -68,7 +62,6 @@ export function useCapsules() {
     return result;
   }, [capsules, filter, searchQuery]);
 
-  // Aggregate counts
   const counts = useMemo(
     () => ({
       total: capsules.length,
@@ -100,6 +93,13 @@ export function useCapsules() {
     [restoreCapsule],
   );
 
+  const handleDelete = useCallback(
+    async (id: string): Promise<void> => {
+      return deleteCapsule(id);
+    },
+    [deleteCapsule],
+  );
+
   return {
     capsules,
     filteredCapsules,
@@ -118,6 +118,7 @@ export function useCapsules() {
     getCapsuleById,
     archiveCapsule: handleArchive,
     restoreCapsule: handleRestore,
+    deleteCapsule: handleDelete,
     breakWaxSeal,
   };
 }

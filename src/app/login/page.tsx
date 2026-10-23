@@ -8,8 +8,7 @@ import { Mail, ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { locale } = useTimeEcho();
-  const isEs = locale === "es";
+  const { t } = useTimeEcho();
 
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -27,28 +26,24 @@ export default function LoginPage() {
     <div className="max-w-md mx-auto py-12 px-4 font-ui select-none animate-fade-in text-foreground">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs">
         <div className="text-center space-y-3">
-          <div className="wax-seal w-14 h-14 rounded-full mx-auto flex items-center justify-center text-parchment select-none shadow-xs">
+          <div className="wax-seal w-14 h-14 rounded-full mx-auto flex items-center justify-center text-on-wax select-none shadow-xs">
             <Mail size={24} />
           </div>
           <h1 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold leading-tight">
-            {isEs ? "Ingresa a tu baúl" : "Access Your Vault"}
+            {t("login.title")}
           </h1>
           <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-            {isEs
-              ? "Te enviaremos un enlace seguro de inicio de sesión mágico directamente a tu correo electrónico. Sin contraseñas."
-              : "We will send a secure magic login link directly to your inbox. No passwords required."}
+            {t("login.subtitle")}
           </p>
         </div>
 
         {submitted ? (
           <div className="p-4 rounded-xs border border-crease bg-manila/50 text-center font-letter text-xs text-foreground space-y-2">
             <span className="font-semibold text-wax block">
-              {isEs ? "¡Enlace enviado!" : "Magic link dispatched!"}
+              {t("login.dispatchedTitle")}
             </span>
             <p className="text-foreground-muted">
-              {isEs
-                ? `Hemos enviado el enlace a ${email}. Redirigiendo a tu bóveda...`
-                : `We sent the magic link to ${email}. Redirecting to your vault...`}
+              {t("login.dispatchedDesc", { email })}
             </p>
           </div>
         ) : (
@@ -58,7 +53,7 @@ export default function LoginPage() {
                 htmlFor="login-email"
                 className="text-[10px] font-letter font-semibold text-foreground-muted uppercase tracking-wider block"
               >
-                {isEs ? "Tu Dirección de Correo" : "Your Email Address"}
+                {t("login.emailLabel")}
               </label>
               <input
                 id="login-email"
@@ -73,9 +68,9 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-[#8E2818] hover:bg-[#6A1E12] text-[#FAF9F5] rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
+              className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
             >
-              {isEs ? "Enviar enlace mágico" : "Send Magic Link"}
+              {t("login.sendButton")}
             </button>
           </form>
         )}
@@ -86,9 +81,7 @@ export default function LoginPage() {
             className="text-xs font-letter font-semibold text-foreground-muted hover:text-foreground transition-colors uppercase tracking-wider inline-flex items-center gap-1.5"
           >
             <ArrowLeft size={13} />
-            <span>
-              {isEs ? "Volver a la página de inicio" : "Back to Home"}
-            </span>
+            <span>{t("login.backHome")}</span>
           </Link>
         </div>
       </div>

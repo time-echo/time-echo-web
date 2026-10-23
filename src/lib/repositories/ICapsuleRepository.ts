@@ -42,4 +42,5 @@ export interface ICapsuleRepository {
    * Restores an archived capsule back to active status (opened or delivered).
    */
   restore(id: string): Promise<Letter>;
+  delete(id: string): Promise<void>;
 }

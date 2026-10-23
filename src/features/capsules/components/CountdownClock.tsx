@@ -7,24 +7,13 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import { Clock, ShieldCheck, Calendar, Lock } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface CountdownClockProps {
-  /**
-   * Target delivery timestamp.
-   */
   scheduledAt: string;
-  /**
-   * Letter composition timestamp.
-   */
   createdAt: string;
-  /**
-   * Postal docket folio.
-   */
   docketNumber?: string;
-  /**
-   * Callback fired when arrival time is reached.
-   */
   onArrival?: () => void;
   className?: string;
 }
@@ -39,12 +28,6 @@ function useIsMounted(): boolean {
   );
 }
 
-/**
- * ⏰ CountdownClock Component
- *
- * Prominent archival ticking clock for in-transit sealed capsules,
- * featuring voyage progress bar, postal security notes, and split numerals.
- */
 export function CountdownClock({
   scheduledAt,
   createdAt,
@@ -52,6 +35,8 @@ export function CountdownClock({
   onArrival,
   className,
 }: CountdownClockProps) {
+  const { locale, t } = useTimeEcho();
+
   const isMounted = useIsMounted();
   const targetDate = useMemo(() => new Date(scheduledAt), [scheduledAt]);
   const createdDate = useMemo(() => new Date(createdAt), [createdAt]);
@@ -72,7 +57,6 @@ export function CountdownClock({
     return () => clearInterval(timer);
   }, [targetDate, onArrival]);
 
-  // Remaining calculations
   const totalDuration = Math.max(
     1,
     targetDate.getTime() - createdDate.getTime(),
@@ -101,19 +85,18 @@ export function CountdownClock({
         className,
       )}
     >
-      {/* Header Docket Strip */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-crease pb-4 font-letter text-xs">
         <div className="flex items-center gap-2 text-ink">
           <Clock size={16} className="text-wax animate-pulse" />
           <span className="font-bold tracking-wider uppercase">
-            CÁPSULA EN TRÁNSITO // {docketNumber}
+            {t("reveal.capsuleInTransit", { docket: docketNumber })}
           </span>
         </div>
 
         <div className="flex items-center gap-1.5 text-foreground-muted text-[11px]">
           <Calendar size={13} />
           <span>
-            {new Date(scheduledAt).toLocaleDateString("es-ES", {
+            {formatLocaleDate(scheduledAt, locale, {
               year: "numeric",
               month: "long",
               day: "numeric",
@@ -122,46 +105,56 @@ export function CountdownClock({
         </div>
       </div>
 
-      {/* Main Countdown Display */}
       {isCompleted ? (
         <div className="text-center py-6 space-y-2">
           <div className="inline-flex p-3 rounded-full bg-wax/10 text-wax border border-wax/30 mb-2">
             <ShieldCheck size={32} />
           </div>
           <h4 className="font-serif-editorial text-2xl text-ink font-bold">
-            El tiempo convenido ha llegado
+            {t("reveal.unlockableBadge")}
           </h4>
           <p className="font-letter text-xs text-foreground-muted max-w-md mx-auto">
-            La bóveda postal ha liberado el sello carmesí. Puedes quebrar el
-            lacre para revelar el contenido epistolar.
+            {t("reveal.unlockedNotice")}
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-4 gap-2 sm:gap-4 text-center">
-          <TimeBlock value={isMounted ? days : 0} label="DÍAS" />
-          <TimeBlock value={isMounted ? format2(hours) : "00"} label="HORAS" />
+          <TimeBlock
+            value={isMounted ? days : 0}
+            label={t("common.days").toUpperCase()}
+          />
+          <TimeBlock
+            value={isMounted ? format2(hours) : "00"}
+            label={t("common.hours").toUpperCase()}
+          />
           <TimeBlock
             value={isMounted ? format2(minutes) : "00"}
-            label="MINUTOS"
+            label={t("common.minutes").toUpperCase()}
           />
           <TimeBlock
             value={isMounted ? format2(seconds) : "00"}
-            label="SEGUNDOS"
+            label={t("common.seconds").toUpperCase()}
             highlight
           />
         </div>
       )}
 
-      {/* Transit Voyage Progress Bar */}
       <div className="space-y-1.5 pt-2">
         <div className="flex justify-between items-center text-[10px] font-letter text-foreground-muted uppercase tracking-widest">
-          <span>Trayecto transcurrido</span>
+          <span>{t("reveal.voyageElapsed")}</span>
           <span className="font-mono font-bold text-ink">
             {isMounted ? `${progressPercent.toFixed(1)}%` : "0%"}
           </span>
         </div>
 
-        <div className="h-2 w-full rounded-full bg-crease/60 overflow-hidden border border-crease shadow-inner">
+        <div
+          role="progressbar"
+          aria-valuenow={Math.round(progressPercent)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={t("reveal.voyageElapsed")}
+          className="h-2 w-full rounded-full bg-crease/60 overflow-hidden border border-crease shadow-inner"
+        >
           <div
             className="h-full bg-wax transition-[width] duration-300"
             style={{ width: `${progressPercent}%` }}
@@ -169,14 +162,10 @@ export function CountdownClock({
         </div>
       </div>
 
-      {/* Security Vault Advisory */}
       <div className="p-3 rounded border border-crease bg-parchment/80 flex items-start gap-2.5 font-letter text-[11px] text-foreground-muted">
         <Lock size={14} className="text-ink shrink-0 mt-0.5" />
         <p className="leading-relaxed">
-          Esta carta permanece{" "}
-          <strong className="text-ink font-semibold">cifrada en reposo</strong>.
-          El sello de lacre carmesí estará bloqueado contra aperturas prematuras
-          hasta que el cronómetro marque cero.
+          {t("reveal.encryptedAtRest")}
         </p>
       </div>
     </div>
