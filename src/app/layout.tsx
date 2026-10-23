@@ -24,6 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: getTranslation(locale, "metadata.title"),
     description: getTranslation(locale, "metadata.description"),
+    colorScheme: "light",
     icons: {
       icon: [
         { url: "/icon.svg", type: "image/svg+xml" },

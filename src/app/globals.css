@@ -3,6 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  color-scheme: light;
   --wax: #8e2818;
   --wax-hover: #6a1e12;
   --on-wax: #faf9f5;
