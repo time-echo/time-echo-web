@@ -629,12 +629,6 @@ export default function HomePage() {
                   </div>
                 </nav>
               </div>
-
-              <div className="border-t border-manila-border pt-4">
-                <p className="text-[11px] font-letter italic text-foreground-muted/90 leading-relaxed">
-                  &quot;{t("nav.quote")}&quot;
-                </p>
-              </div>
             </aside>
 
             <main className="md:col-span-9 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-transparent">
