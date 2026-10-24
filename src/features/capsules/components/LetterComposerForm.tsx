@@ -9,7 +9,7 @@ import { WaxSeal } from "@/components/ui/WaxSeal";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatLocaleDate } from "@/lib/utils";
 
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
@@ -25,7 +25,7 @@ export function LetterComposerForm({
   defaultHorizon,
 }: LetterComposerFormProps) {
   const router = useRouter();
-  const { t } = useTimeEcho();
+  const { t, locale } = useTimeEcho();
 
   const presets: Array<{ id: HorizonPreset; label: string }> = [
     { id: "6m", label: t("letters.six_months") },
@@ -82,6 +82,22 @@ export function LetterComposerForm({
       setPredictions(existing);
     }
   };
+
+  const [now] = useState(() => Date.now());
+
+  const targetDate = new Date(form.scheduledAt);
+  const formattedDeliveryDate = isNaN(targetDate.getTime())
+    ? form.scheduledAt
+    : formatLocaleDate(targetDate.toISOString(), locale);
+
+  const countdownDays = isNaN(targetDate.getTime())
+    ? 0
+    : Math.max(
+        0,
+        Math.ceil((targetDate.getTime() - now) / (1000 * 60 * 60 * 24)),
+      );
+
+  const todayFormatted = formatLocaleDate(new Date(now).toISOString(), locale);
 
   return (
     <div className={cn("space-y-6 max-w-7xl mx-auto font-ui", className)}>
