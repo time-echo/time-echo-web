@@ -106,7 +106,7 @@ export const ArchivalFolder = React.forwardRef<
           <div className="p-6 sm:p-8">{children}</div>
 
           {/* Bottom Crease Subtle Stitch Rule */}
-          <div className="px-6 py-2 border-t border-crease/50 bg-manila/80 font-letter text-[10px] text-foreground-muted/70 tracking-widest uppercase flex items-center justify-between select-none">
+          <div className="px-6 py-2 border-t border-crease/50 bg-manila/80 font-letter text-[11px] text-foreground-muted tracking-widest uppercase flex items-center justify-between select-none">
             <span>REGISTRO DE BÓVEDA // TIME-ECHO</span>
             <span>TIMBRADO Y ARCHIVADO</span>
           </div>

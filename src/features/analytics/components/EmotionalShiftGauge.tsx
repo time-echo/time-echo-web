@@ -65,7 +65,7 @@ export function EmotionalShiftGauge({
           <HeartHandshake size={14} className="text-wax" />
           <span>{t("analytics.shift.title")}</span>
         </div>
-        <span className="font-mono text-[10px] uppercase tracking-widest">
+        <span className="font-mono text-[11px] uppercase tracking-widest">
           {t("analytics.shift.subtitle")}
         </span>
       </div>
@@ -102,7 +102,7 @@ export function EmotionalShiftGauge({
                     <h4 className="font-letter font-bold text-xs uppercase tracking-wider text-ink">
                       {t(`analytics.shift.${metric.key}`)}
                     </h4>
-                    <span className="text-[10px] text-foreground-muted leading-none">
+                    <span className="text-[11px] text-foreground-muted leading-none">
                       {t(`analytics.shift.${metric.key}Sub`)}
                     </span>
                   </div>
@@ -134,7 +134,7 @@ export function EmotionalShiftGauge({
 
               <div className="space-y-3 pt-1">
                 <div className="space-y-1">
-                  <div className="flex justify-between items-center text-[10px] font-mono text-foreground-muted">
+                  <div className="flex justify-between items-center text-[11px] font-mono text-foreground-muted">
                     <span className="uppercase tracking-wider">
                       {t("analytics.shift.pastSealed")}
                     </span>
@@ -142,7 +142,9 @@ export function EmotionalShiftGauge({
                   </div>
                   <div className="h-2 w-full rounded-full bg-crease/50 overflow-hidden border border-crease/60">
                     <motion.div
-                      initial={{ width: shouldReduceMotion ? `${basePercent}%` : 0 }}
+                      initial={{
+                        width: shouldReduceMotion ? `${basePercent}%` : 0,
+                      }}
                       animate={{ width: `${basePercent}%` }}
                       transition={{
                         duration: shouldReduceMotion ? 0 : 0.8,
@@ -154,7 +156,7 @@ export function EmotionalShiftGauge({
                 </div>
 
                 <div className="space-y-1">
-                  <div className="flex justify-between items-center text-[10px] font-mono text-foreground-muted">
+                  <div className="flex justify-between items-center text-[11px] font-mono text-foreground-muted">
                     <span className="uppercase tracking-wider">
                       {t("analytics.shift.presentUnsealed")}
                     </span>
@@ -162,7 +164,9 @@ export function EmotionalShiftGauge({
                   </div>
                   <div className="h-2 w-full rounded-full bg-crease/50 overflow-hidden border border-crease/60">
                     <motion.div
-                      initial={{ width: shouldReduceMotion ? `${revealPercent}%` : 0 }}
+                      initial={{
+                        width: shouldReduceMotion ? `${revealPercent}%` : 0,
+                      }}
                       animate={{ width: `${revealPercent}%` }}
                       transition={{
                         duration: shouldReduceMotion ? 0 : 0.8,
@@ -175,7 +179,7 @@ export function EmotionalShiftGauge({
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-crease/50 text-[10px] font-mono text-foreground-muted/70 text-right">
+              <div className="pt-2 border-t border-crease/50 text-[11px] font-mono text-foreground-muted text-right">
                 {t("analytics.shift.scale")}
               </div>
             </div>

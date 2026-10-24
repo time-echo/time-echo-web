@@ -36,7 +36,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto py-12 px-4 font-ui select-none animate-fade-in text-foreground">
+    <div className="max-w-md mx-auto py-12 px-4 font-ui animate-fade-in text-foreground">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs">
         {/* Header Icon, Title & Subtitle */}
         <div className="text-center space-y-3">
@@ -69,7 +69,7 @@ export default function LoginPage() {
           <div className="space-y-1.5">
             <label
               htmlFor="login-email"
-              className="text-[10px] font-letter font-semibold text-foreground-muted uppercase tracking-wider block"
+              className="text-xs font-letter font-semibold text-foreground-muted uppercase tracking-wider block"
             >
               {t("login.emailLabel")}
             </label>
@@ -82,7 +82,7 @@ export default function LoginPage() {
                 if (error) setError(null);
               }}
               placeholder="you@example.com"
-              className="w-full paper-sheet rounded-xs px-3.5 py-2.5 text-xs font-letter text-foreground border border-crease placeholder:text-foreground-muted/50 focus:border-wax focus:outline-none min-h-[44px]"
+              className="w-full paper-sheet rounded-xs px-3.5 py-2.5 text-xs font-letter text-foreground border border-crease placeholder:text-foreground-muted focus:border-wax focus:outline-none min-h-[44px]"
               required
             />
           </div>

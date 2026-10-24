@@ -12,7 +12,7 @@ function CheckEmailContent() {
   const email = searchParams.get("email") || "tu@email.com";
 
   return (
-    <div className="max-w-md mx-auto py-12 px-4 font-ui text-center text-foreground animate-fade-in select-none">
+    <div className="max-w-md mx-auto py-12 px-4 font-ui text-center text-foreground animate-fade-in">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs">
         {/* Seal Icon */}
         <div className="wax-seal w-16 h-16 rounded-full mx-auto flex items-center justify-center text-on-wax select-none shadow-xs">

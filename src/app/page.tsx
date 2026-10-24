@@ -201,14 +201,14 @@ export default function HomePage() {
         <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-8 space-y-6 border border-crease">
           <div className="flex items-center justify-between border-b border-crease pb-4">
             <div>
-              <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
+              <span className="text-xs font-letter uppercase tracking-widest text-foreground-muted block">
                 {t("landing.step01Label")}
               </span>
               <h2 className="font-serif-editorial text-2xl text-foreground font-semibold mt-0.5">
                 {t("landing.writeLetterToFuture")}
               </h2>
             </div>
-            <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
+            <span className="postmark-stamp text-xs py-0.5 px-2.5">
               {currentDateFormatted}
             </span>
           </div>
@@ -230,12 +230,10 @@ export default function HomePage() {
                 maxLength={2000}
                 required
                 aria-describedby="landing-content-counter"
-                className="w-full p-4 sm:p-5 border border-crease rounded-xs font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none transition-all shadow-inner bg-transparent"
+                className="w-full p-4 sm:p-5 border border-crease rounded-xs font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none transition-all shadow-inner bg-transparent"
               />
               <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1">
-                <span className="italic">
-                  {t("landing.onlyYouCanSee")}
-                </span>
+                <span className="italic">{t("landing.onlyYouCanSee")}</span>
                 <span
                   id="landing-content-counter"
                   className={cn(isUnderMinChars && "text-wax")}
@@ -336,7 +334,7 @@ export default function HomePage() {
                   <div className="archival-folder rounded-xs p-3 border border-crease">
                     <label
                       htmlFor="landing-custom-date"
-                      className="text-[10px] text-foreground-muted font-letter uppercase tracking-wider block mb-1 font-semibold"
+                      className="text-xs text-foreground-muted font-letter uppercase tracking-wider block mb-1 font-semibold"
                     >
                       {t("landing.chooseSpecificDate")}
                     </label>
@@ -353,9 +351,9 @@ export default function HomePage() {
               )}
             </div>
 
-            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-4 border border-manila-border">
-              <div className="border-b border-manila-border pb-2">
-                <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
+            <div className="border-t border-crease pt-5 space-y-4">
+              <div className="border-b border-crease pb-2">
+                <span className="text-xs font-letter uppercase tracking-widest text-foreground-muted block">
                   {t("landing.annexPredictions")}
                 </span>
                 <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block mt-0.5">
@@ -367,12 +365,10 @@ export default function HomePage() {
                 <div className="space-y-1">
                   <label
                     htmlFor="pred-city"
-                    className="text-[10px] font-semibold text-foreground-muted flex items-center gap-1"
+                    className="text-xs font-semibold text-foreground-muted flex items-center gap-1.5"
                   >
-                    <span className="opacity-60">01.</span>
-                    <span>
-                      {t("landing.predCityQuestion")}
-                    </span>
+                    <span className="opacity-70">01.</span>
+                    <span>{t("landing.predCityQuestion")}</span>
                   </label>
                   <input
                     id="pred-city"
@@ -380,19 +376,17 @@ export default function HomePage() {
                     value={predictionCity}
                     onChange={(e) => setPredictionCity(e.target.value)}
                     placeholder={t("landing.predPlaceholder")}
-                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
+                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none"
                   />
                 </div>
 
                 <div className="space-y-1">
                   <label
                     htmlFor="pred-career"
-                    className="text-[10px] font-semibold text-foreground-muted flex items-center gap-1"
+                    className="text-xs font-semibold text-foreground-muted flex items-center gap-1.5"
                   >
-                    <span className="opacity-60">02.</span>
-                    <span>
-                      {t("landing.predCareerQuestion")}
-                    </span>
+                    <span className="opacity-70">02.</span>
+                    <span>{t("landing.predCareerQuestion")}</span>
                   </label>
                   <input
                     id="pred-career"
@@ -400,19 +394,17 @@ export default function HomePage() {
                     value={predictionCareer}
                     onChange={(e) => setPredictionCareer(e.target.value)}
                     placeholder={t("landing.predPlaceholder")}
-                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
+                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none"
                   />
                 </div>
 
                 <div className="space-y-1">
                   <label
                     htmlFor="pred-salary"
-                    className="text-[10px] font-semibold text-foreground-muted flex items-center gap-1"
+                    className="text-xs font-semibold text-foreground-muted flex items-center gap-1.5"
                   >
-                    <span className="opacity-60">03.</span>
-                    <span>
-                      {t("landing.predSalaryQuestion")}
-                    </span>
+                    <span className="opacity-70">03.</span>
+                    <span>{t("landing.predSalaryQuestion")}</span>
                   </label>
                   <input
                     id="pred-salary"
@@ -420,19 +412,17 @@ export default function HomePage() {
                     value={predictionSalary}
                     onChange={(e) => setPredictionSalary(e.target.value)}
                     placeholder={t("landing.predPlaceholder")}
-                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
+                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none"
                   />
                 </div>
 
                 <div className="space-y-1">
                   <label
                     htmlFor="pred-relationship"
-                    className="text-[10px] font-semibold text-foreground-muted flex items-center gap-1"
+                    className="text-xs font-semibold text-foreground-muted flex items-center gap-1.5"
                   >
-                    <span className="opacity-60">04.</span>
-                    <span>
-                      {t("landing.predRelationshipQuestion")}
-                    </span>
+                    <span className="opacity-70">04.</span>
+                    <span>{t("landing.predRelationshipQuestion")}</span>
                   </label>
                   <input
                     id="pred-relationship"
@@ -440,19 +430,17 @@ export default function HomePage() {
                     value={predictionRelationship}
                     onChange={(e) => setPredictionRelationship(e.target.value)}
                     placeholder={t("landing.predPlaceholder")}
-                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
+                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none"
                   />
                 </div>
 
                 <div className="space-y-1 md:col-span-2">
                   <label
                     htmlFor="pred-achievement"
-                    className="text-[10px] font-semibold text-foreground-muted flex items-center gap-1"
+                    className="text-xs font-semibold text-foreground-muted flex items-center gap-1.5"
                   >
-                    <span className="opacity-60">05.</span>
-                    <span>
-                      {t("landing.predAchievementQuestion")}
-                    </span>
+                    <span className="opacity-70">05.</span>
+                    <span>{t("landing.predAchievementQuestion")}</span>
                   </label>
                   <input
                     id="pred-achievement"
@@ -460,15 +448,15 @@ export default function HomePage() {
                     value={predictionAchievement}
                     onChange={(e) => setPredictionAchievement(e.target.value)}
                     placeholder={t("landing.predPlaceholder")}
-                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
+                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="archival-folder rounded-xs p-4 sm:p-5 space-y-3 border border-manila-border">
-              <div className="border-b border-manila-border pb-1.5">
-                <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
+            <div className="border-t border-crease pt-5 space-y-3">
+              <div className="border-b border-crease pb-1.5">
+                <span className="text-xs font-letter uppercase tracking-widest text-foreground-muted block">
                   {t("landing.annexEmotionalBadge")}
                 </span>
                 <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block mt-0.5">
@@ -477,7 +465,7 @@ export default function HomePage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-letter">
-                <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
+                <div className="rounded-xs p-3 bg-crease/15 border border-crease/60 space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
                     <span>{t("landing.happiness")}</span>
                     <span className="text-foreground-muted">
@@ -495,7 +483,7 @@ export default function HomePage() {
                   />
                 </div>
 
-                <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
+                <div className="rounded-xs p-3 bg-crease/15 border border-crease/60 space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
                     <span>{t("landing.anxiety")}</span>
                     <span className="text-foreground-muted">
@@ -513,7 +501,7 @@ export default function HomePage() {
                   />
                 </div>
 
-                <div className="paper-sheet rounded-xs p-3 border border-crease space-y-1.5">
+                <div className="rounded-xs p-3 bg-crease/15 border border-crease/60 space-y-1.5">
                   <div className="flex justify-between items-center font-semibold text-foreground">
                     <span>{t("landing.motivation")}</span>
                     <span className="text-foreground-muted">
@@ -548,7 +536,7 @@ export default function HomePage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="tu@email.com"
                   required
-                  className="w-full paper-sheet rounded-xs px-3.5 py-2.5 text-xs font-letter text-foreground border border-crease placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none min-h-[44px]"
+                  className="w-full paper-sheet rounded-xs px-3.5 py-2.5 text-xs font-letter text-foreground border border-crease placeholder:text-foreground-muted focus:border-wax focus:outline-none min-h-[44px]"
                 />
                 <button
                   type="submit"
@@ -571,9 +559,7 @@ export default function HomePage() {
 
             <div className="flex items-center justify-center gap-2 text-[11px] font-letter text-foreground-muted pt-2 border-t border-crease">
               <ShieldCheck size={14} className="text-ink" />
-              <span>
-                {t("landing.privateAndEncrypted")}
-              </span>
+              <span>{t("landing.privateAndEncrypted")}</span>
             </div>
           </form>
         </div>
@@ -609,7 +595,7 @@ export default function HomePage() {
             <aside className="md:col-span-3 archival-folder border-r border-crease p-6 flex flex-col justify-between space-y-6 select-none">
               <div className="space-y-6">
                 <div className="flex items-center gap-2">
-                  <span className="postmark-stamp text-[10px] py-0.5 px-2">
+                  <span className="postmark-stamp text-xs py-0.5 px-2">
                     {t("common.appName")}
                   </span>
                 </div>
@@ -637,16 +623,16 @@ export default function HomePage() {
                   <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
                     {t("landing.prediction_vs_reality")}
                   </h3>
-                  <span className="postmark-stamp text-[10px] py-0.5 px-2">
+                  <span className="postmark-stamp text-[11px] py-0.5 px-2">
                     {t("letters.revealed_and_compared")}
                   </span>
                 </div>
 
                 <div className="space-y-2.5 text-xs font-letter">
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div className="rounded-xs border border-crease/70 bg-parchment/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
+                        <span className="uppercase text-[11px] font-semibold tracking-wider">
                           {t("letters.prediction")}:
                         </span>
                         <span className="italic text-foreground/80">
@@ -654,21 +640,21 @@ export default function HomePage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
+                        <span className="uppercase text-[11px] tracking-wider text-foreground-muted">
                           {t("letters.reality")}:
                         </span>
                         <span>{t("landing.mock_reality_city")}</span>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
+                    <span className="postmark-stamp text-[11px] py-0.5 px-2 self-start sm:self-auto shrink-0">
                       {t("letters.partially")}
                     </span>
                   </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div className="rounded-xs border border-crease/70 bg-parchment/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
+                        <span className="uppercase text-[11px] font-semibold tracking-wider">
                           {t("letters.prediction")}:
                         </span>
                         <span className="italic text-foreground/80">
@@ -676,21 +662,21 @@ export default function HomePage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
+                        <span className="uppercase text-[11px] tracking-wider text-foreground-muted">
                           {t("letters.reality")}:
                         </span>
                         <span>{t("landing.mock_reality_career")}</span>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
+                    <span className="postmark-stamp text-[11px] py-0.5 px-2 self-start sm:self-auto shrink-0">
                       {t("letters.you_did_it")}
                     </span>
                   </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div className="rounded-xs border border-crease/70 bg-parchment/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
+                        <span className="uppercase text-[11px] font-semibold tracking-wider">
                           {t("letters.prediction")}:
                         </span>
                         <span className="italic text-foreground/80">
@@ -698,21 +684,21 @@ export default function HomePage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
+                        <span className="uppercase text-[11px] tracking-wider text-foreground-muted">
                           {t("letters.reality")}:
                         </span>
                         <span>{t("landing.mock_reality_salary")}</span>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
+                    <span className="postmark-stamp text-[11px] py-0.5 px-2 self-start sm:self-auto shrink-0">
                       {t("letters.superaste")}
                     </span>
                   </div>
 
-                  <div className="paper-sheet border border-crease p-3 rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div className="rounded-xs border border-crease/70 bg-parchment/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[9px] font-semibold tracking-wider">
+                        <span className="uppercase text-[11px] font-semibold tracking-wider">
                           {t("letters.prediction")}:
                         </span>
                         <span className="italic text-foreground/80">
@@ -720,13 +706,13 @@ export default function HomePage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[9px] tracking-wider text-foreground-muted">
+                        <span className="uppercase text-[11px] tracking-wider text-foreground-muted">
                           {t("letters.reality")}:
                         </span>
                         <span>{t("landing.mock_reality_happiness")}</span>
                       </div>
                     </div>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 self-start sm:self-auto shrink-0">
+                    <span className="postmark-stamp text-[11px] py-0.5 px-2 self-start sm:self-auto shrink-0">
                       {t("letters.very_close")}
                     </span>
                   </div>
@@ -736,10 +722,10 @@ export default function HomePage() {
               <div className="lg:col-span-5 space-y-4">
                 <div className="archival-folder rounded-xs p-4 border border-manila-border space-y-3">
                   <div>
-                    <h4 className="text-[10px] font-letter font-semibold uppercase tracking-widest text-foreground-muted">
+                    <h4 className="text-xs font-letter font-semibold uppercase tracking-widest text-foreground-muted">
                       {t("letters.emotional_evolution")}
                     </h4>
-                    <div className="flex gap-4 text-[10px] font-letter text-foreground-muted mt-1 select-none">
+                    <div className="flex gap-4 text-[11px] font-letter text-foreground-muted mt-1 select-none">
                       <span className="flex items-center gap-1">
                         <span className="border-b border-dashed border-foreground-muted w-3 inline-block" />{" "}
                         {t("landing.one_year_ago")}
@@ -752,23 +738,85 @@ export default function HomePage() {
                   </div>
 
                   <div className="relative w-full h-32 flex items-end">
-                    <svg viewBox="0 0 100 50" className="w-full h-full overflow-visible">
-                      <line x1="0" y1="2" x2="100" y2="2" stroke="currentColor" opacity="0.1" strokeWidth="0.5" />
-                      <line x1="0" y1="23" x2="100" y2="23" stroke="currentColor" opacity="0.1" strokeWidth="0.5" />
-                      <line x1="0" y1="45" x2="100" y2="45" stroke="currentColor" opacity="0.1" strokeWidth="0.5" />
+                    <svg
+                      viewBox="0 0 100 50"
+                      className="w-full h-full overflow-visible"
+                    >
+                      <line
+                        x1="0"
+                        y1="2"
+                        x2="100"
+                        y2="2"
+                        stroke="currentColor"
+                        opacity="0.1"
+                        strokeWidth="0.5"
+                      />
+                      <line
+                        x1="0"
+                        y1="23"
+                        x2="100"
+                        y2="23"
+                        stroke="currentColor"
+                        opacity="0.1"
+                        strokeWidth="0.5"
+                      />
+                      <line
+                        x1="0"
+                        y1="45"
+                        x2="100"
+                        y2="45"
+                        stroke="currentColor"
+                        opacity="0.1"
+                        strokeWidth="0.5"
+                      />
 
-                      <path d="M 15 15 L 50 36 L 85 24" fill="none" stroke="currentColor" className="text-ink" strokeWidth="1.5" strokeDasharray="2 2" />
+                      <path
+                        d="M 15 15 L 50 36 L 85 24"
+                        fill="none"
+                        stroke="currentColor"
+                        className="text-ink"
+                        strokeWidth="1.5"
+                        strokeDasharray="2 2"
+                      />
                       <circle cx="15" cy="15" r="1.5" className="fill-ink" />
                       <circle cx="50" cy="36" r="1.5" className="fill-ink" />
                       <circle cx="85" cy="24" r="1.5" className="fill-ink" />
 
-                      <path d="M 15 10 L 50 40 L 85 5" fill="none" stroke="currentColor" className="text-wax" strokeWidth="2" strokeLinecap="round" />
-                      <circle cx="15" cy="10" r="2.2" className="fill-wax" stroke="currentColor" strokeWidth="0.5" />
-                      <circle cx="50" cy="40" r="2.2" className="fill-wax" stroke="currentColor" strokeWidth="0.5" />
-                      <circle cx="85" cy="5" r="2.2" className="fill-wax" stroke="currentColor" strokeWidth="0.5" />
+                      <path
+                        d="M 15 10 L 50 40 L 85 5"
+                        fill="none"
+                        stroke="currentColor"
+                        className="text-wax"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <circle
+                        cx="15"
+                        cy="10"
+                        r="2.2"
+                        className="fill-wax"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                      />
+                      <circle
+                        cx="50"
+                        cy="40"
+                        r="2.2"
+                        className="fill-wax"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                      />
+                      <circle
+                        cx="85"
+                        cy="5"
+                        r="2.2"
+                        className="fill-wax"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                      />
                     </svg>
 
-                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[8px] font-letter font-semibold text-foreground-muted tracking-wider uppercase select-none">
+                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[11px] font-letter font-semibold text-foreground-muted tracking-wider uppercase">
                       <span>{t("common.happiness")}</span>
                       <span>{t("common.anxiety")}</span>
                       <span>{t("common.motivation")}</span>
@@ -793,13 +841,13 @@ export default function HomePage() {
                   </div>
 
                   <div className="space-y-0.5 font-letter text-xs">
-                    <h5 className="font-semibold text-foreground uppercase tracking-wider text-[10px]">
+                    <h5 className="font-semibold text-foreground uppercase tracking-wider text-xs">
                       {t("landing.your_overall_accuracy")}
                     </h5>
                     <p className="font-semibold text-foreground/90">
                       {t("landing.accurate_predictions")}
                     </p>
-                    <p className="text-[10px] text-foreground-muted">
+                    <p className="text-xs text-foreground-muted">
                       {t("landing.you_are_on_track")}
                     </p>
                   </div>
@@ -812,9 +860,6 @@ export default function HomePage() {
 
       <section id="how-it-works" className="space-y-12 scroll-mt-24">
         <div className="text-center space-y-2">
-          <div className="postmark-stamp text-[10px] py-0.5 px-2.5 mx-auto">
-            {t("landing.howItWorksBadge")}
-          </div>
           <h2 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold">
             {t("landing.howItWorksTitle")}
           </h2>

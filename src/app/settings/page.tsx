@@ -79,7 +79,7 @@ export default function SettingsPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full paper-sheet rounded-xs border border-crease px-4 py-2.5 font-letter text-xs text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none transition-colors min-h-[44px]"
+              className="w-full paper-sheet rounded-xs border border-crease px-4 py-2.5 font-letter text-xs text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none transition-colors min-h-[44px]"
               placeholder="tu@email.com"
               required
             />
@@ -107,9 +107,9 @@ export default function SettingsPage() {
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="space-y-1">
-            <h4 className="text-xs font-letter font-semibold uppercase tracking-wider text-wax">
+            <h3 className="text-xs font-letter font-semibold uppercase tracking-wider text-wax">
               {t("settings.deleteVaultTitle")}
-            </h4>
+            </h3>
             <p className="text-xs font-letter text-foreground-muted leading-relaxed max-w-lg">
               {t("settings.deleteVaultDesc")}
             </p>

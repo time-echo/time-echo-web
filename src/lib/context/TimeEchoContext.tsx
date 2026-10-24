@@ -16,7 +16,6 @@ import {
   CreateLetterInput,
   UpdateRealityInput,
   SupportedLanguage,
-  AppearanceMode,
 } from "@/types/timeecho";
 import { ICapsuleRepository } from "@/lib/repositories/ICapsuleRepository";
 import { HttpApiRepository } from "@/lib/repositories/HttpApiRepository";
@@ -64,8 +63,6 @@ interface TimeEchoContextValue {
   locale: SupportedLanguage;
   setLocale: (locale: SupportedLanguage) => void;
   toggleLocale: () => void;
-  appearanceMode: AppearanceMode;
-  setAppearanceMode: (mode: AppearanceMode) => void;
   repository: ICapsuleRepository;
   refreshCapsules: () => Promise<void>;
   getCapsuleById: (id: string) => Letter | undefined;
@@ -103,8 +100,6 @@ export function TimeEchoProvider({
   const [capsules, setCapsules] = useState<Letter[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [appearanceMode, setAppearanceModeState] =
-    useState<AppearanceMode>("light");
   const locale = useSyncExternalStore(
     subscribeLocale,
     getLocaleSnapshot,
@@ -119,16 +114,7 @@ export function TimeEchoProvider({
     }
   }, [locale]);
 
-  const setAppearanceMode = useCallback((mode: AppearanceMode) => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("timeecho_appearance", mode);
-    }
-    setAppearanceModeState(mode);
-  }, []);
-
   useEffect(() => {
-    // Enforce default canonical light parchment appearance across all browsers:
-    // clear any legacy localStorage key and strictly remove dark class
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("timeecho_appearance");
       document.documentElement.classList.remove("dark");
@@ -343,8 +329,6 @@ export function TimeEchoProvider({
       locale,
       setLocale,
       toggleLocale,
-      appearanceMode,
-      setAppearanceMode,
       repository,
       refreshCapsules,
       getCapsuleById,
@@ -364,8 +348,6 @@ export function TimeEchoProvider({
       locale,
       setLocale,
       toggleLocale,
-      appearanceMode,
-      setAppearanceMode,
       repository,
       refreshCapsules,
       getCapsuleById,

@@ -128,7 +128,7 @@ export function LetterComposerForm({
       )}
 
       {error && (
-        <div className="paper-sheet rounded-xs p-5 border-l-4 border-l-wax text-foreground font-letter text-xs flex items-center gap-2 shadow-xs">
+        <div className="paper-sheet rounded-xs p-5 border border-wax/40 bg-wax/5 text-foreground font-letter text-xs flex items-center gap-2 shadow-xs">
           <AlertCircle size={16} className="text-wax shrink-0" />
           <span>{error}</span>
         </div>
@@ -140,14 +140,14 @@ export function LetterComposerForm({
           <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-10 space-y-6 border border-crease shadow-xs">
             <div className="flex items-center justify-between border-b border-crease pb-4">
               <div>
-                <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
+                <span className="text-xs font-letter uppercase tracking-widest text-foreground-muted block">
                   {t("common.appName")} · {t("letters.form_letter_heading")}
                 </span>
                 <h2 className="font-serif-editorial text-2xl font-semibold text-foreground mt-0.5">
                   {t("letters.form_letter_heading")}
                 </h2>
               </div>
-              <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
+              <span className="postmark-stamp text-xs py-0.5 px-2.5">
                 {todayFormatted}
               </span>
             </div>
@@ -212,7 +212,11 @@ export function LetterComposerForm({
                 aria-required="true"
                 aria-describedby="char_counter"
               />
-              <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1" aria-live="polite" aria-atomic="true">
+              <div
+                className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1"
+                aria-live="polite"
+                aria-atomic="true"
+              >
                 <span className="italic">{t("letters.only_you_can_see")}</span>
                 <span id="char_counter">
                   {t("letters.min_chars_progress", {
@@ -408,7 +412,9 @@ export function LetterComposerForm({
                     className="font-semibold text-foreground/80 flex items-center gap-1.5"
                   >
                     <span className="text-foreground-muted">05.</span>
-                    <span>{t("letters.prediction_achievement_label_form")}</span>
+                    <span>
+                      {t("letters.prediction_achievement_label_form")}
+                    </span>
                   </label>
                   <input
                     id="pred-achievement"
@@ -445,7 +451,10 @@ export function LetterComposerForm({
                     max={10}
                     value={form.emotionalSnapshot.happinessLevel}
                     onChange={(e) =>
-                      setEmotionalLevel("happinessLevel", Number(e.target.value))
+                      setEmotionalLevel(
+                        "happinessLevel",
+                        Number(e.target.value),
+                      )
                     }
                     aria-label={t("letters.emotion_happiness")}
                     className="range range-xs cursor-pointer w-full accent-wax"
@@ -540,7 +549,8 @@ export function LetterComposerForm({
                 disabled={isSubmitting || isSealing}
                 className={cn(
                   "btn bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase border-none cursor-pointer w-full min-h-[46px] shadow-xs font-letter inline-flex items-center justify-center gap-2 transition-colors",
-                  (isSubmitting || isSealing) && "opacity-70 cursor-not-allowed",
+                  (isSubmitting || isSealing) &&
+                    "opacity-70 cursor-not-allowed",
                 )}
               >
                 <Mail size={16} />

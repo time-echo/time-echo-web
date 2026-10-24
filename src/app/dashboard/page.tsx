@@ -48,7 +48,6 @@ export default function DashboardPage() {
   if (isTimeline) {
     return (
       <div className="space-y-8 max-w-4xl mx-auto py-4 font-ui animate-fade-in text-foreground">
-        {/* Timeline Header */}
         <div className="border-b border-crease pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-1">
             <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
@@ -61,14 +60,14 @@ export default function DashboardPage() {
           <div className="flex gap-3 shrink-0 items-center">
             <Link
               href="/dashboard"
-              className="border border-crease text-foreground hover:bg-manila/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[44px] font-letter inline-flex items-center gap-1.5 transition-colors"
+              className="border border-crease text-foreground hover:bg-manila/60 hover:border-wax/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[44px] font-letter inline-flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax cursor-pointer"
             >
               <Mail size={15} />
               <span>{t("dashboard.myLetters")}</span>
             </Link>
             <Link
               href="/letters/new"
-              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2 px-5 text-xs font-medium border-none cursor-pointer tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
+              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-5 min-h-[44px] text-xs font-medium border-none cursor-pointer tracking-wider uppercase font-letter inline-flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
             >
               <Plus size={15} />
               <span>{t("dashboard.writeLetter")}</span>
@@ -76,7 +75,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Timeline Stream */}
         {activeCapsules.length > 0 ? (
           <div className="relative border-l-2 border-crease pl-6 sm:pl-8 ml-3 sm:ml-5 space-y-8 select-none">
             {activeCapsules.map((letter) => {
@@ -88,7 +86,6 @@ export default function DashboardPage() {
 
               return (
                 <div key={letter.id} className="relative">
-                  {/* Timeline Dot Node */}
                   <div
                     className={cn(
                       "absolute -left-[31px] sm:-left-[39px] top-4 w-4 h-4 rounded-full border-2 border-parchment shadow-xs",
@@ -121,9 +118,7 @@ export default function DashboardPage() {
                           ) : (
                             <span className="inline-flex items-center gap-1">
                               <Lock size={13} />
-                              <span>
-                                {t("dashboard.sealedCapsule")}
-                              </span>
+                              <span>{t("dashboard.sealedCapsule")}</span>
                             </span>
                           )}
                         </span>
@@ -157,7 +152,7 @@ export default function DashboardPage() {
                         <div className="archival-folder rounded-xs p-4 text-xs font-letter space-y-2 text-foreground/80">
                           {letter.emotionalSnapshot && (
                             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                              <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
+                              <span className="font-semibold text-foreground uppercase text-xs tracking-wider">
                                 {t("dashboard.emotionalEvolutionLabel")}
                               </span>
                               <span>
@@ -178,7 +173,7 @@ export default function DashboardPage() {
                           {letter.predictions &&
                             letter.predictions.length > 0 && (
                               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-manila-border pt-2">
-                                <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
+                                <span className="font-semibold text-foreground uppercase text-xs tracking-wider">
                                   {t("dashboard.predictionsLabel")}
                                 </span>
                                 <span>
@@ -190,24 +185,40 @@ export default function DashboardPage() {
                             )}
                         </div>
 
-                        <div className="flex justify-end pt-1">
-                          <Link
-                            href={`/letters/${letter.id}`}
-                            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs px-4 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors"
+                        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                          <button
+                            type="button"
+                            onClick={() => archiveCapsule(letter.id)}
+                            className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 hover:bg-manila/40 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center justify-center gap-1.5 min-h-[44px] transition-all cursor-pointer bg-transparent active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
+                            title={t("dashboard.archiveLetter")}
                           >
-                            <Eye size={14} />
-                            <span>
-                              {hasRevealedReality
-                                ? t("dashboard.viewFullComparison")
-                                : t("dashboard.completeComparison")}
-                            </span>
-                          </Link>
+                            <Archive size={14} />
+                            <span>{t("dashboard.archive")}</span>
+                          </button>
+
+                          {hasRevealedReality ? (
+                            <Link
+                              href={`/letters/${letter.id}`}
+                              className="border border-crease text-foreground hover:bg-manila/60 hover:border-wax/50 rounded-xs px-4 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center justify-center gap-1.5 min-h-[44px] transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
+                            >
+                              <Eye size={14} />
+                              <span>{t("dashboard.viewFullComparison")}</span>
+                            </Link>
+                          ) : (
+                            <Link
+                              href={`/letters/${letter.id}`}
+                              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-5 py-2 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center justify-center gap-2 min-h-[44px] shadow-xs hover:shadow transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
+                            >
+                              <Unlock size={14} />
+                              <span>{t("dashboard.completeComparison")}</span>
+                            </Link>
+                          )}
                         </div>
                       </>
                     ) : (
                       <div className="archival-folder rounded-xs p-4 text-xs font-letter flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-foreground/80">
                         <div className="space-y-1">
-                          <p className="font-semibold uppercase tracking-wider text-[10px] text-foreground">
+                          <p className="font-semibold uppercase tracking-wider text-xs text-foreground">
                             {t("dashboard.timeCapsuleSealed")}
                           </p>
                           <p className="text-foreground-muted">
@@ -219,7 +230,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-2 self-start sm:self-center">
                           <Link
                             href={`/letters/${letter.id}`}
-                            className="postmark-stamp text-[11px] py-1 px-3 hover:bg-manila/40 transition-colors"
+                            className="postmark-stamp text-[11px] px-3.5 min-h-[44px] inline-flex items-center justify-center font-letter hover:border-ink/60 hover:bg-manila/40 transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
                           >
                             <span>
                               {t("dashboard.opensInDays", { days: daysLeft })}
@@ -228,10 +239,10 @@ export default function DashboardPage() {
                           <button
                             type="button"
                             onClick={() => archiveCapsule(letter.id)}
-                            className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-2.5 py-1 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1 min-h-[44px] transition-colors cursor-pointer bg-transparent"
+                            className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 hover:bg-manila/40 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center justify-center gap-1.5 min-h-[44px] transition-all cursor-pointer bg-transparent active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
                             title={t("dashboard.archiveLetter")}
                           >
-                            <Archive size={13} />
+                            <Archive size={14} />
                             <span>{t("dashboard.archive")}</span>
                           </button>
                         </div>
@@ -255,7 +266,7 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/letters/new"
-              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2 px-6 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
+              className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-6 min-h-[44px] text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
             >
               <Plus size={15} />
               <span>{t("dashboard.startWriting")}</span>
@@ -280,14 +291,14 @@ export default function DashboardPage() {
         <div className="flex gap-3 shrink-0 items-center">
           <Link
             href="/dashboard?timeline=true"
-            className="border border-crease text-foreground hover:bg-manila/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[44px] font-letter inline-flex items-center gap-1.5 transition-colors"
+            className="border border-crease text-foreground hover:bg-manila/60 hover:border-wax/50 rounded-xs text-xs font-medium uppercase tracking-wider px-4 min-h-[44px] font-letter inline-flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax cursor-pointer"
           >
             <Calendar size={15} />
             <span>{t("dashboard.viewTimeline")}</span>
           </Link>
           <Link
             href="/letters/new"
-            className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2.5 px-5 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
+            className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-5 min-h-[44px] text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
           >
             <Plus size={15} />
             <span>{t("dashboard.writeLetter")}</span>
@@ -297,7 +308,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="paper-sheet rounded-xs p-5 space-y-1 border border-crease">
-          <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
+          <span className="text-xs font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
             {t("dashboard.totalCapsules")}
           </span>
           <span className="font-serif-editorial text-3xl font-semibold text-foreground block">
@@ -309,7 +320,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="paper-sheet rounded-xs p-5 space-y-1 border border-crease">
-          <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
+          <span className="text-xs font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
             {t("dashboard.openedCountLabel")}
           </span>
           <span className="font-serif-editorial text-3xl font-semibold text-ink block">
@@ -321,7 +332,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="paper-sheet rounded-xs p-5 space-y-1 border border-crease">
-          <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
+          <span className="text-xs font-semibold text-foreground-muted uppercase tracking-widest block font-letter">
             {t("dashboard.sealedInTime")}
           </span>
           <span className="font-serif-editorial text-3xl font-semibold text-wax block">
@@ -333,7 +344,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Active Capsules List */}
       {activeCapsules.length > 0 ? (
         <div className="space-y-5">
           {activeCapsules.map((letter) => {
@@ -368,9 +378,7 @@ export default function DashboardPage() {
                       ) : (
                         <span className="inline-flex items-center gap-1">
                           <Lock size={13} />
-                          <span>
-                            {t("dashboard.inTransitToFuture")}
-                          </span>
+                          <span>{t("dashboard.inTransitToFuture")}</span>
                         </span>
                       )}
                     </span>
@@ -378,8 +386,7 @@ export default function DashboardPage() {
                   <span className="font-letter text-xs text-foreground-muted inline-flex items-center gap-1.5">
                     <Calendar size={13} />
                     <span>
-                      {t("dashboard.createdOn")}{" "}
-                      {formatDate(letter.createdAt)}
+                      {t("dashboard.createdOn")} {formatDate(letter.createdAt)}
                     </span>
                   </span>
                 </div>
@@ -404,7 +411,7 @@ export default function DashboardPage() {
                     {letter.emotionalSnapshot && (
                       <div className="archival-folder rounded-xs p-4 text-xs font-letter space-y-2 text-foreground/80">
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                          <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
+                          <span className="font-semibold text-foreground uppercase text-xs tracking-wider">
                             {t("dashboard.emotionalSnapshotLabel")}
                           </span>
                           <span>
@@ -430,7 +437,7 @@ export default function DashboardPage() {
                         {letter.predictions &&
                           letter.predictions.length > 0 && (
                             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-manila-border pt-2">
-                              <span className="font-semibold text-foreground uppercase text-[10px] tracking-wider">
+                              <span className="font-semibold text-foreground uppercase text-xs tracking-wider">
                                 {t("dashboard.predictionsLabel")}
                               </span>
                               <span>
@@ -447,26 +454,32 @@ export default function DashboardPage() {
                       </div>
                     )}
 
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => archiveCapsule(letter.id)}
+                        className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 hover:bg-manila/40 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center justify-center gap-1.5 min-h-[44px] transition-all cursor-pointer bg-transparent active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
+                        title={t("dashboard.archiveLetter")}
+                      >
+                        <Archive size={14} />
+                        <span>{t("dashboard.archive")}</span>
+                      </button>
+
                       {hasRevealedReality ? (
                         <Link
                           href={`/letters/${letter.id}`}
-                          className="border border-crease text-foreground hover:bg-manila/50 rounded-xs py-2 px-5 text-xs font-medium tracking-wider uppercase min-h-[44px] font-letter inline-flex items-center gap-1.5 transition-colors"
+                          className="border border-crease text-foreground hover:bg-manila/60 hover:border-wax/50 rounded-xs px-5 min-h-[44px] text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
                         >
                           <Eye size={14} />
-                          <span>
-                            {t("dashboard.viewPredictionsVsReality")}
-                          </span>
+                          <span>{t("dashboard.viewPredictionsVsReality")}</span>
                         </Link>
                       ) : (
                         <Link
                           href={`/letters/${letter.id}`}
-                          className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2 px-5 text-xs font-medium tracking-wider uppercase min-h-[44px] font-letter inline-flex items-center gap-1.5 shadow-xs transition-colors"
+                          className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-5 min-h-[44px] text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
                         >
                           <Unlock size={14} />
-                          <span>
-                            {t("dashboard.completeRevelation")}
-                          </span>
+                          <span>{t("dashboard.completeRevelation")}</span>
                         </Link>
                       )}
                     </div>
@@ -478,7 +491,7 @@ export default function DashboardPage() {
                         <Lock size={18} />
                       </span>
                       <div className="space-y-0.5">
-                        <p className="font-semibold text-foreground uppercase tracking-wider text-[10px]">
+                        <p className="font-semibold text-foreground uppercase tracking-wider text-xs">
                           {t("dashboard.timeCapsuleSealed")}
                         </p>
                         <p className="text-foreground-muted">
@@ -492,7 +505,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2 self-start sm:self-center">
                       <Link
                         href={`/letters/${letter.id}`}
-                        className="postmark-stamp text-[11px] py-1 px-3 hover:bg-manila/40 transition-colors"
+                        className="postmark-stamp text-[11px] px-3.5 min-h-[44px] inline-flex items-center justify-center font-letter hover:border-ink/60 hover:bg-manila/40 transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
                       >
                         <span>
                           {t("dashboard.opensInDays", { days: daysLeft })}
@@ -501,10 +514,10 @@ export default function DashboardPage() {
                       <button
                         type="button"
                         onClick={() => archiveCapsule(letter.id)}
-                        className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 rounded-xs px-2.5 py-1 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1 min-h-[44px] transition-colors cursor-pointer bg-transparent"
+                        className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 hover:bg-manila/40 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center justify-center gap-1.5 min-h-[44px] transition-all cursor-pointer bg-transparent active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
                         title={t("dashboard.archiveLetter")}
                       >
-                        <Archive size={13} />
+                        <Archive size={14} />
                         <span>{t("dashboard.archive")}</span>
                       </button>
                     </div>
@@ -527,12 +540,10 @@ export default function DashboardPage() {
           </p>
           <Link
             href="/letters/new"
-            className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-2.5 px-6 text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center gap-2 shadow-xs transition-colors"
+            className="bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-6 min-h-[44px] text-xs font-medium tracking-wider uppercase font-letter inline-flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
           >
             <Plus size={15} />
-            <span>
-              {t("dashboard.writeFirstLetter")}
-            </span>
+            <span>{t("dashboard.writeFirstLetter")}</span>
           </Link>
         </div>
       )}
@@ -571,13 +582,12 @@ export default function DashboardPage() {
                       {letter.docketNumber ||
                         letter.id.slice(0, 5).toUpperCase()}
                     </span>
-                    <span className="postmark-stamp text-[10px] py-0.5 px-2 text-ink">
+                    <span className="postmark-stamp text-xs py-0.5 px-2 text-ink">
                       {t("dashboard.archivedSingle")}
                     </span>
                     <span className="text-foreground-muted text-[11px] inline-flex items-center gap-1">
                       <Calendar size={12} />
-                      {t("dashboard.createdOn")}{" "}
-                      {formatDate(letter.createdAt)}
+                      {t("dashboard.createdOn")} {formatDate(letter.createdAt)}
                     </span>
                   </div>
                   <h3 className="font-serif-editorial text-lg font-semibold text-foreground break-words min-w-0">
@@ -589,7 +599,7 @@ export default function DashboardPage() {
                   <button
                     type="button"
                     onClick={() => restoreCapsule(letter.id)}
-                    className="border border-crease text-foreground hover:bg-manila hover:text-ink rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
+                    className="border border-crease text-foreground hover:bg-manila/60 hover:text-ink hover:border-wax/40 rounded-xs px-4 py-2 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center justify-center gap-1.5 min-h-[44px] transition-all cursor-pointer bg-transparent active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
                     title={t("dashboard.restoreLetter")}
                   >
                     <RotateCcw size={14} />
@@ -603,7 +613,7 @@ export default function DashboardPage() {
                         deleteCapsule(letter.id);
                       }
                     }}
-                    className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/40 hover:bg-wax/5 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
+                    className="border border-crease text-foreground-muted hover:text-wax hover:border-wax/50 hover:bg-wax/5 rounded-xs px-4 py-2 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center justify-center gap-1.5 min-h-[44px] transition-all cursor-pointer bg-transparent active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-wax"
                     title={t("dashboard.deleteLetter")}
                   >
                     <Trash2 size={14} />

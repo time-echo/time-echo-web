@@ -26,7 +26,7 @@ function SuccessContent() {
       day: "numeric",
       month: "short",
       year: "numeric",
-    }
+    },
   );
 
   const scheduledFormatted = capsule
@@ -40,7 +40,7 @@ function SuccessContent() {
   const recipientEmail = capsule?.email || "tu@correo.com";
 
   return (
-    <div className="max-w-md mx-auto py-12 px-4 font-ui select-none animate-fade-in text-center text-foreground">
+    <div className="max-w-md mx-auto py-12 px-4 font-ui animate-fade-in text-center text-foreground">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-8 relative overflow-hidden shadow-xs">
         {/* Header & Vintage Postal Stamp Docket */}
         <div className="space-y-4 relative">
@@ -59,7 +59,7 @@ function SuccessContent() {
           </p>
 
           {/* Postal Certificate Card with Dashed Border and Cancellation Waves */}
-          <div className="relative max-w-[280px] mx-auto border-2 border-dashed border-ink/30 p-4 rounded-xs font-letter text-[9px] tracking-widest text-ink uppercase select-none space-y-1.5 shadow-3xs bg-ink/5 overflow-hidden text-left">
+          <div className="relative max-w-[280px] mx-auto border-2 border-dashed border-ink/30 p-4 rounded-xs font-letter text-[11px] tracking-widest text-ink uppercase select-none space-y-1.5 shadow-3xs bg-ink/5 overflow-hidden text-left">
             <div className="flex justify-between items-center px-1">
               <span>
                 {t("success.seal")}: {sealDateFormatted}

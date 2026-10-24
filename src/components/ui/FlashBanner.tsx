@@ -70,7 +70,10 @@ function SingleFlashToast({
       clearTimeout(timerRef.current);
       timerRef.current = null;
       const elapsed = Date.now() - startTimeRef.current;
-      remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+      remainingTimeRef.current = Math.max(
+        0,
+        remainingTimeRef.current - elapsed,
+      );
     }
   }, []);
 
@@ -105,11 +108,13 @@ function SingleFlashToast({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "pointer-events-auto relative w-full paper-sheet rounded-xs border border-crease shadow-md transition-all duration-200 select-none",
+        "pointer-events-auto relative w-full paper-sheet rounded-xs border border-crease shadow-md transition-all duration-200",
         "flex items-start gap-3 py-3 px-4 font-letter text-xs text-foreground bg-parchment",
-        isNotice && "border-l-4 border-l-ink",
-        (isAlert || isError) && "border-l-4 border-l-wax",
-        isFadingOut ? "opacity-0 translate-y-[-6px]" : "opacity-100 translate-y-0 animate-fade-in"
+        isNotice && "border-ink/40 bg-ink/5",
+        (isAlert || isError) && "border-wax/40 bg-wax/5",
+        isFadingOut
+          ? "opacity-0 translate-y-[-6px]"
+          : "opacity-100 translate-y-0 animate-fade-in",
       )}
     >
       <div className="shrink-0 mt-0.5">
@@ -127,10 +132,10 @@ function SingleFlashToast({
       <button
         type="button"
         onClick={handleClose}
-        aria-label="Cerrar notificación"
-        className="shrink-0 p-1 text-foreground-muted hover:text-foreground rounded-xs transition-colors cursor-pointer -mr-1 -mt-0.5"
+        aria-label="Dismiss notification"
+        className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center text-foreground-muted hover:text-foreground rounded-xs transition-colors cursor-pointer -mr-2 -my-2"
       >
-        <X size={14} />
+        <X size={15} />
       </button>
 
       {/* Subtle indicator of timer */}
@@ -138,7 +143,7 @@ function SingleFlashToast({
         <span
           className={cn(
             "absolute bottom-0 left-0 h-[2px] opacity-40 transition-all",
-            isNotice ? "bg-ink" : "bg-wax"
+            isNotice ? "bg-ink" : "bg-wax",
           )}
           style={{
             animation: `shrinkWidth ${item.duration ?? 5000}ms linear forwards`,
@@ -170,20 +175,23 @@ export function FlashProvider({ children }: { children: React.ReactNode }) {
       setFlashes((prev) => [...prev, newItem]);
       return id;
     },
-    []
+    [],
   );
 
   const notice = useCallback(
-    (message: string, duration?: number) => showFlash("notice", message, duration),
-    [showFlash]
+    (message: string, duration?: number) =>
+      showFlash("notice", message, duration),
+    [showFlash],
   );
   const alert = useCallback(
-    (message: string, duration?: number) => showFlash("alert", message, duration),
-    [showFlash]
+    (message: string, duration?: number) =>
+      showFlash("alert", message, duration),
+    [showFlash],
   );
   const error = useCallback(
-    (message: string, duration?: number) => showFlash("error", message, duration),
-    [showFlash]
+    (message: string, duration?: number) =>
+      showFlash("error", message, duration),
+    [showFlash],
   );
 
   return (
@@ -250,9 +258,9 @@ export function FlashBanner({
     <div
       className={cn(
         "paper-sheet rounded-xs border border-crease shadow-xs flex items-center justify-between gap-3.5 py-3 px-5 mb-6 animate-fade-in max-w-5xl mx-auto w-full font-letter text-xs text-foreground bg-parchment",
-        isNotice && "border-l-4 border-l-ink",
-        (isAlert || isError) && "border-l-4 border-l-wax",
-        className
+        isNotice && "border-ink/40 bg-ink/5",
+        (isAlert || isError) && "border-wax/40 bg-wax/5",
+        className,
       )}
     >
       <div className="flex items-center gap-3.5 min-w-0">
@@ -268,10 +276,10 @@ export function FlashBanner({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Cerrar aviso"
-          className="shrink-0 p-1 text-foreground-muted hover:text-foreground rounded-xs transition-colors cursor-pointer"
+          aria-label="Dismiss notification"
+          className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center text-foreground-muted hover:text-foreground rounded-xs transition-colors cursor-pointer -mr-2"
         >
-          <X size={14} />
+          <X size={15} />
         </button>
       )}
     </div>
