@@ -1,54 +1,109 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# TimeEcho Guidelines & Rules
 
-# This is NOT the Next.js you know
+## 1. Core Agent Invariants
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+- **No Code Comments**: Do not write inline or block code comments. Write clean, self-describing code.
+- **English Only**: All identifiers, types, variables, functions, CSS tokens, commit messages, and documentation must be in English.
+- **Git Safety**: Never execute `git commit` or `git push`. Committing and pushing are reserved strictly for the user.
+- **Strict Scope Boundaries**: Execute only what is explicitly requested. Do not perform unsolicited refactoring, restyling, or file reorganizations.
+- **Ask Before Guessing**: If design requirements, flows, or mockups are missing or ambiguous, prompt the user for clarification before modifying code.
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+---
 
-<!-- END:nextjs-agent-rules -->
+## 2. Architecture & Stack
 
-# TimeEcho Frontend Rules
+- **Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS v4, Lucide React, Framer Motion.
+- **Tailwind v4 Configuration**: Pure CSS-first via `@theme inline` in `src/app/globals.css`. Never create or rely on `tailwind.config.js`.
+- **Feature Modular Structure**: Feature logic resides in `src/features/<feature-name>/` (`capsules`, `reality-ledger`, `analytics`, `settings`, `landing`).
+- **Repository Pattern & State**: Components must never call `fetch('/api/...')` directly for capsule operations. Always consume `useTimeEcho()` from `src/lib/context/TimeEchoContext.tsx`, which delegates to `ICapsuleRepository`.
+- **Domain Types**: Single source of truth is `src/types/timeecho.ts`. Never declare duplicate entity interfaces.
 
-## Core Guidelines
+```
+Next.js App Router (src/app/)
+  └── React Context (src/lib/context/TimeEchoContext.tsx)
+        └── Repository Layer (ICapsuleRepository -> HttpApiRepository / MockApiStore)
+              └── Domain Types (src/types/timeecho.ts)
+```
 
-- Do not write code comments. Keep the code clean, self-describing, and concise without inline or block comments.
-- All code, variable names, function names, CSS tokens, and documentation must be written in English.
-- Avoid generic SaaS patterns. Follow TimeEcho's epistolary, archival design principles (wax seals, parchment sheets, manila dossiers, postmark stamps, Courier Prime, Fraunces, IBM Plex Sans).
-- Use Tailwind CSS v4 with CSS-first configuration via `@theme inline`.
-- Do not run `git commit` or `git push` commands. The user will handle committing and pushing code changes manually.
+---
 
-## Documentation References
+## 3. Epistolary Design System
 
-Before making changes, consult the relevant documentation:
+Rejects generic SaaS cards and saturated neon accents in favor of physical archival materiality: parchment paper, manila folders, wax seals, postmark stamps, and typewriter typography.
 
-- **Architecture**: `docs/architecture.md` — Project structure, data flow, state management, API routes, type system, styling architecture, i18n, fonts, deployment
-- **Design System**: `docs/design.md` — Visual identity, color palette, typography, component design system, page layouts, interaction patterns, motion, accessibility, dark mode, content guidelines, design tokens
+### Design Tokens
 
-## Key Files to Know
+| Token                | Light Value | Dark Value | Role                                            |
+| -------------------- | ----------- | ---------- | ----------------------------------------------- |
+| `--wax`              | `#8E2818`   | `#D14930`  | Primary actions, wax seals, highlights          |
+| `--wax-hover`        | `#6A1E12`   | `#E05A40`  | Hover states                                    |
+| `--ink`              | `#2C485E`   | `#77A3C4`  | Borders, postmark stamps, secondary accents     |
+| `--manila`           | `#EFECE3`   | `#1C2028`  | Archival folder backgrounds, aside panels       |
+| `--manila-border`    | `#D5CEBD`   | `#2D3342`  | Folder borders                                  |
+| `--parchment`        | `#FAF9F5`   | `#16181D`  | Document surfaces, paper cards, page background |
+| `--crease`           | `#D8D2C2`   | `#2D3340`  | Paper sheet borders, divider folds              |
+| `--foreground`       | `#1C1F26`   | `#E5E7EB`  | Primary text                                    |
+| `--foreground-muted` | `#5A606B`   | `#9CA3AF`  | Captions, timestamps, placeholder text          |
 
-| Area | File |
-|------|------|
-| Design tokens & base styles | `src/app/globals.css` |
-| Domain types | `src/types/timeecho.ts` |
-| Global context & actions | `src/lib/context/TimeEchoContext.tsx` |
-| Repository interface | `src/lib/repositories/ICapsuleRepository.ts` |
-| HTTP repository impl | `src/lib/repositories/HttpApiRepository.ts` |
-| Mock API (dev) | `src/lib/mockApiStore.ts` |
-| Font loading | `src/lib/fonts.ts` |
-| Translations | `src/lib/i18n/en.json`, `src/lib/i18n/es.json` |
-| UI primitives | `src/components/ui/*.tsx` |
-| Feature components | `src/features/*/components/*.tsx` |
-| Feature hooks | `src/features/*/hooks/*.ts` |
+### Typography
 
-## Development Rules
+- **Editorial / Headings**: `Fraunces` (`--font-serif-editorial` / `font-serif-editorial`)
+- **Letter / Typewriter**: `Courier Prime` (`--font-letter` / `font-letter`)
+- **UI / Labels**: `IBM Plex Sans` (`--font-ui` / `font-ui`)
 
-- **Tailwind v4**: Use CSS-first config in `globals.css` via `@theme inline`. Do not use `tailwind.config.js`.
-- **CSS Variables**: Reference design tokens via `var(--token-name)` or Tailwind utilities (`bg-wax`, `text-ink`, `font-serif-editorial`).
-- **Components**: Prefer composing UI primitives (`PaperSheet`, `ArchivalFolder`, `PostmarkStamp`, `WaxSeal`) over custom styles.
-- **Types**: All domain types in `src/types/timeecho.ts`. Import from there.
-- **State**: Use `useTimeEcho()` context for global state/actions. Avoid local state for shared data.
-- **API**: Call context methods (`createCapsule`, `updateReality`, etc.), not `fetch` directly.
-- **i18n**: Use `t('key')` from context. Add keys to both `en.json` and `es.json`.
-- **Motion**: Respect `prefers-reduced-motion`. Use existing keyframes (`animate-fade-in`, `animate-seal-left/right`).
-- **Accessibility**: Semantic HTML, focus-visible outlines, ARIA on custom components, 44px touch targets.
+### UI Primitives (`src/components/ui/`)
+
+- `.paper-sheet`: Parchment card surface with crease border and physical shadow.
+- `.archival-folder`: Manila dossier panel with folder tabs and muted border.
+- `.postmark-stamp` & `.postmark-stamp-circle`: Dashed ink border stamp with Courier text.
+- `.wax-seal`: Radial carmine gradient seal with tactile spring dynamics.
+- `.lined-paper-canvas`: Ruled paper background pattern for letter composition.
+- `.radial-progress`: Circular accuracy meter driven by CSS variables (`--value`, `--size`, `--thickness`).
+
+---
+
+## 4. UI/UX Design Lock & Immutability
+
+- **Canonical External Reference**: Canonical mockups reside in external Figma files. See `docs/design.md#design-registry-external-references` for frame mappings (`Landing-V2`, `Composer-Full`, `Letter-Sealed`, `Letter-Opened`, `Vault-Grid`, `Analytics-Summary`, `Settings-Sections`).
+- **Zero-Image Policy**: Do not commit mockup images, screenshots (`.png`, `.jpg`, `.webp`), or vector design files (`.fig`, `.sketch`, `.psd`) into git. Visual verification is performed against the running browser instance (`pnpm dev`) and external Figma.
+- **Locked Structure**: Approved route layouts (`src/app/**`), navigation shells (`ArchivalHeader` for public routes, `AppShell` for internal routes), component hierarchies, and grid ratios are locked. Do not unilaterally restructure them.
+- **Copy Immutability**: Strings in `src/lib/i18n/en.json` and `src/lib/i18n/es.json` are an immutable user-facing contract. Never rewrite, reword, or delete existing keys without explicit instructions. When adding new copy, add symmetric keys to both `en.json` and `es.json`.
+- **No Hardcoded Strings**: Never hardcode user-facing copy in JSX. Always use `const { t } = useTimeEcho()` with translation keys.
+
+---
+
+## 5. Verification & Quality Gates
+
+Run these checks before finalizing any task:
+
+1. **Linting & Type Safety**:
+
+   ```bash
+   pnpm lint
+   ```
+
+   Zero ESLint errors and strict TypeScript compliance required.
+
+2. **Commit Conventions**:
+   Pre-commit hooks (`husky` + `lint-staged`) format staged files with Prettier and validate with ESLint. Commits must follow Conventional Commits format (`feat:`, `fix:`, `chore:`, `refactor:`, `style:`, `docs:`).
+
+3. **Visual Verification**:
+   Inspect changes at `http://localhost:3000` (`pnpm dev`) for responsive behavior, theme fidelity (light parchment / dark archival), and epistolary materiality.
+
+---
+
+## 6. Key References
+
+| Area                  | Location                                       |
+| --------------------- | ---------------------------------------------- |
+| System Architecture   | `docs/architecture.md`                         |
+| Design Specification  | `docs/design.md`                               |
+| Design Tokens         | `src/app/globals.css`                          |
+| Domain Interfaces     | `src/types/timeecho.ts`                        |
+| Context & Actions     | `src/lib/context/TimeEchoContext.tsx`          |
+| Repository Interfaces | `src/lib/repositories/ICapsuleRepository.ts`   |
+| Local Mock Store      | `src/lib/mockApiStore.ts`                      |
+| Translations          | `src/lib/i18n/en.json`, `src/lib/i18n/es.json` |
+| Font Configuration    | `src/lib/fonts.ts`                             |
+| UI Primitives         | `src/components/ui/`                           |
+| Feature Domains       | `src/features/`                                |
