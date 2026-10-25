@@ -9,3 +9,15 @@ export {
   type PostmarkOverlayProps,
   type PostmarkVariant,
 } from "./PostmarkOverlay";
+
+export {
+  STAMPS_CATALOG,
+  STAMP_CATEGORIES,
+  DEFAULT_STAMP_ID,
+  getStampById,
+  getStampsByCategory,
+  type StampCategory,
+  type StampDefinition,
+} from "./stamps.data";
+
+export * from "./icons";
