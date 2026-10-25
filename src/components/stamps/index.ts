@@ -10,6 +10,13 @@ export {
   type PostmarkVariant,
 } from "./PostmarkOverlay";
 
+export { Stamp, type StampProps } from "./Stamp";
+
+export {
+  StampPickerModal,
+  type StampPickerModalProps,
+} from "./StampPickerModal";
+
 export {
   STAMPS_CATALOG,
   STAMP_CATEGORIES,

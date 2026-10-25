@@ -1151,5 +1151,29 @@
     "tryAnotherEmail": "Intentar con otro correo",
     "continueDemo": "Continuar (Modo demo)",
     "demoNotice": "Modo demostración activo: puedes ingresar a la bóveda directamente."
+  },
+  "stamps": {
+    "title": "Estampillas Postales",
+    "subtitle": "Selecciona una estampilla conmemorativa para fijar en tu sobre",
+    "chooseStamp": "Elegir Estampilla",
+    "changeStamp": "Cambiar Estampilla",
+    "removeStamp": "Quitar Estampilla",
+    "addStamp": "Añadir Estampilla",
+    "affixStamp": "Fijar Estampilla",
+    "cancel": "Cancelar",
+    "close": "Cerrar selector de estampillas",
+    "searchPlaceholder": "Buscar estampillas...",
+    "noStampsFound": "No se encontraron estampillas coincidentes con la búsqueda",
+    "selected": "Seleccionada",
+    "preview": "Vista previa",
+    "postmark": "Matasellos Postal",
+    "categories": {
+      "all": "Todas",
+      "time": "Tiempo y Astronomía",
+      "travel": "Viajes y Mensajeros",
+      "memory": "Memoria y Efímera",
+      "milestone": "Crecimiento e Hitos",
+      "season": "Estaciones y Fiestas"
+    }
   }
 }

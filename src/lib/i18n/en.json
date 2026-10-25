@@ -1151,5 +1151,29 @@
     "tryAnotherEmail": "Try another email",
     "continueDemo": "Continue (Demo mode)",
     "demoNotice": "Demo mode active: you can enter the vault directly."
+  },
+  "stamps": {
+    "title": "Postage Stamps",
+    "subtitle": "Select a commemorative stamp to affix to your envelope",
+    "chooseStamp": "Choose Stamp",
+    "changeStamp": "Change Stamp",
+    "removeStamp": "Remove Stamp",
+    "addStamp": "Add Stamp",
+    "affixStamp": "Affix Stamp",
+    "cancel": "Cancel",
+    "close": "Close stamp picker",
+    "searchPlaceholder": "Search stamps...",
+    "noStampsFound": "No stamps found matching your search",
+    "selected": "Selected",
+    "preview": "Preview",
+    "postmark": "Postal Cancellation",
+    "categories": {
+      "all": "All",
+      "time": "Time & Astronomy",
+      "travel": "Travel & Messengers",
+      "memory": "Memory & Ephemera",
+      "milestone": "Growth & Milestones",
+      "season": "Seasons & Celebrations"
+    }
   }
 }
