@@ -16,7 +16,6 @@ import {
   CreateLetterInput,
   UpdateRealityInput,
   SupportedLanguage,
-  AppearanceMode,
 } from "@/types/timeecho";
 import { ICapsuleRepository } from "@/lib/repositories/ICapsuleRepository";
 import { HttpApiRepository } from "@/lib/repositories/HttpApiRepository";
@@ -64,8 +63,6 @@ interface TimeEchoContextValue {
   locale: SupportedLanguage;
   setLocale: (locale: SupportedLanguage) => void;
   toggleLocale: () => void;
-  appearanceMode: AppearanceMode;
-  setAppearanceMode: (mode: AppearanceMode) => void;
   repository: ICapsuleRepository;
   refreshCapsules: () => Promise<void>;
   getCapsuleById: (id: string) => Letter | undefined;
@@ -103,16 +100,6 @@ export function TimeEchoProvider({
   const [capsules, setCapsules] = useState<Letter[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [appearanceMode, setAppearanceModeState] =
-    useState<AppearanceMode>(() => {
-      if (typeof window !== "undefined") {
-        const saved = window.localStorage.getItem("timeecho_appearance");
-        if (saved === "light" || saved === "dark" || saved === "system") {
-          return saved;
-        }
-      }
-      return "system";
-    });
   const locale = useSyncExternalStore(
     subscribeLocale,
     getLocaleSnapshot,
@@ -127,29 +114,12 @@ export function TimeEchoProvider({
     }
   }, [locale]);
 
-  const setAppearanceMode = useCallback((mode: AppearanceMode) => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("timeecho_appearance", mode);
-    }
-    setAppearanceModeState(mode);
-  }, []);
-
   useEffect(() => {
-    const apply = () => {
-      const systemDark = window.matchMedia(
-        "(prefers-color-scheme: dark)",
-      ).matches;
-      const dark = appearanceMode === "dark" ||
-        (appearanceMode === "system" && systemDark);
-      document.documentElement.classList.toggle("dark", dark);
-    };
-
-    apply();
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", apply);
-    return () => mediaQuery.removeEventListener("change", apply);
-  }, [appearanceMode]);
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("timeecho_appearance");
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
 
   const setLocale = useCallback(
     (newLocale: SupportedLanguage) => {
@@ -359,8 +329,6 @@ export function TimeEchoProvider({
       locale,
       setLocale,
       toggleLocale,
-      appearanceMode,
-      setAppearanceMode,
       repository,
       refreshCapsules,
       getCapsuleById,
@@ -380,8 +348,6 @@ export function TimeEchoProvider({
       locale,
       setLocale,
       toggleLocale,
-      appearanceMode,
-      setAppearanceMode,
       repository,
       refreshCapsules,
       getCapsuleById,

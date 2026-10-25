@@ -51,7 +51,7 @@ export function AccuracyMeter({
           <Target size={14} className="text-wax" />
           <span>{t("analytics.accuracyRate")}</span>
         </div>
-        <span className="font-mono text-[10px] uppercase tracking-widest">
+        <span className="font-mono text-[11px] uppercase tracking-widest">
           {t("analytics.predictiveLedger")}
         </span>
       </div>
@@ -101,9 +101,15 @@ export function AccuracyMeter({
 
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <motion.span
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.8 }}
+            initial={{
+              opacity: shouldReduceMotion ? 1 : 0,
+              scale: shouldReduceMotion ? 1 : 0.8,
+            }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: shouldReduceMotion ? 0 : 0.2, duration: shouldReduceMotion ? 0 : 0.4 }}
+            transition={{
+              delay: shouldReduceMotion ? 0 : 0.2,
+              duration: shouldReduceMotion ? 0 : 0.4,
+            }}
             className="font-mono text-3xl sm:text-4xl font-extrabold text-ink leading-none"
           >
             {rate}%

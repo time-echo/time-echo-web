@@ -13,6 +13,12 @@
 # testing
 /coverage
 
+# visual mockups (external source of truth in Figma, zero binaries in repo)
+*.fig
+*.sketch
+*.psd
+
+
 # next.js
 /.next/
 /out/

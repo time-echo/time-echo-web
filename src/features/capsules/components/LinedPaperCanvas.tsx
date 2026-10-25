@@ -11,6 +11,7 @@ export interface LinedPaperCanvasProps {
   readOnly?: boolean;
   minRows?: number;
   showWordCount?: boolean;
+  showLines?: boolean;
   className?: string;
   ariaLabel?: string;
 }
@@ -22,6 +23,7 @@ export function LinedPaperCanvas({
   readOnly = false,
   minRows = 14,
   showWordCount = true,
+  showLines = false,
   className,
   ariaLabel,
 }: LinedPaperCanvasProps) {
@@ -40,7 +42,9 @@ export function LinedPaperCanvas({
         className,
       )}
     >
-      <div className="absolute top-0 bottom-0 left-10 sm:left-14 w-[1px] bg-wax/25 pointer-events-none z-10" />
+      {showLines && (
+        <div className="absolute top-0 bottom-0 left-10 sm:left-14 w-[1px] bg-wax/25 pointer-events-none z-10" />
+      )}
 
       <textarea
         value={value}
@@ -50,9 +54,10 @@ export function LinedPaperCanvas({
         placeholder={placeholder || defaultPlaceholder}
         aria-label={effectiveAriaLabel}
         className={cn(
-          "w-full py-4 pl-14 sm:pl-20 pr-6 bg-transparent resize-y",
+          "w-full py-4 px-6 bg-transparent resize-y",
           "font-letter text-base sm:text-lg text-foreground focus:outline-none",
-          "lined-paper-canvas leading-[2.25rem] tracking-normal",
+          showLines && "pl-14 sm:pl-20 lined-paper-canvas leading-[2.25rem] tracking-normal",
+          !showLines && "leading-loose",
           readOnly && "cursor-default select-text",
           "placeholder:text-foreground-muted/40 placeholder:font-light",
         )}

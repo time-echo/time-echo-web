@@ -74,9 +74,9 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     });
     return initial;
   });
-  const [revealHappiness, setRevealHappiness] = useState(7);
-  const [revealAnxiety, setRevealAnxiety] = useState(3);
-  const [revealMotivation, setRevealMotivation] = useState(8);
+  const [revealHappiness, setRevealHappiness] = useState(5);
+  const [revealAnxiety, setRevealAnxiety] = useState(5);
+  const [revealMotivation, setRevealMotivation] = useState(5);
 
   useEffect(() => {
     let isMounted = true;
@@ -352,14 +352,12 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                         className="paper-sheet rounded-xs p-4 space-y-3 border border-crease"
                       >
                         <label className="text-xs font-semibold text-foreground flex items-center gap-2 font-letter">
-                          <span>
-                            {getPredictionQuestion(pred.category, t)}
-                          </span>
+                          <span>{getPredictionQuestion(pred.category, t)}</span>
                         </label>
 
                         <div className="text-xs text-foreground-muted italic font-letter bg-manila/40 px-3 py-1.5 rounded-xs border border-crease/50">
-                          {t("reveal.pastPredictionLabel")}{" "}
-                          &ldquo;{pred.prediction}&rdquo;
+                          {t("reveal.pastPredictionLabel")} &ldquo;
+                          {pred.prediction}&rdquo;
                         </div>
 
                         <div className="space-y-2.5 font-letter text-xs">
@@ -394,16 +392,14 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                                   })
                                 }
                                 className={cn(
-                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors",
+                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all",
                                   currentAnswer.matched
-                                    ? "bg-ink text-on-wax border-ink"
-                                    : "border-crease bg-manila/30 text-foreground-muted",
+                                    ? "bg-ink text-on-wax border-ink shadow-2xs"
+                                    : "border-crease bg-manila/30 text-foreground-muted hover:bg-manila/50",
                                 )}
                               >
                                 <Check size={13} />
-                                <span>
-                                  {t("reveal.yesDidIt")}
-                                </span>
+                                <span>{t("reveal.yesDidIt")}</span>
                               </button>
                               <button
                                 type="button"
@@ -414,16 +410,14 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                                   })
                                 }
                                 className={cn(
-                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors",
+                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all",
                                   !currentAnswer.matched
-                                    ? "bg-wax text-on-wax border-wax"
-                                    : "border-crease bg-manila/30 text-foreground-muted",
+                                    ? "bg-wax text-on-wax border-wax shadow-2xs"
+                                    : "border-crease bg-manila/30 text-foreground-muted hover:bg-manila/50",
                                 )}
                               >
                                 <X size={13} />
-                                <span>
-                                  {t("reveal.notExactly")}
-                                </span>
+                                <span>{t("reveal.notExactly")}</span>
                               </button>
                             </div>
                           </div>
@@ -516,9 +510,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase border-none cursor-pointer min-h-[46px] shadow-xs font-letter inline-flex items-center justify-center gap-2 transition-colors"
               >
                 <Unlock size={16} />
-                <span>
-                  {t("reveal.saveAndViewLetter")}
-                </span>
+                <span>{t("reveal.saveAndViewLetter")}</span>
               </button>
             </div>
           </div>
@@ -792,8 +784,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 </div>
                 <div className="flex justify-between text-[11px] text-foreground-muted">
                   <span>
-                    {t("reveal.past")}{" "}
-                    <strong>{pastHappiness}</strong>
+                    {t("reveal.past")} <strong>{pastHappiness}</strong>
                   </span>
                   <span>&rarr;</span>
                   <span>
@@ -853,8 +844,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 </div>
                 <div className="flex justify-between text-[11px] text-foreground-muted">
                   <span>
-                    {t("reveal.past")}{" "}
-                    <strong>{pastMotivation}</strong>
+                    {t("reveal.past")} <strong>{pastMotivation}</strong>
                   </span>
                   <span>&rarr;</span>
                   <span>

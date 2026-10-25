@@ -30,6 +30,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isPublicPage =
     pathname === "/" ||
     pathname === "/login" ||
+    pathname === "/check_email" ||
     pathname === "/about" ||
     pathname === "/terms" ||
     pathname === "/privacy" ||
@@ -177,13 +178,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
 
-        <div className="space-y-6">
-          <div className="border border-crease bg-manila/60 p-4 rounded-xl space-y-2 select-none">
-            <p className="text-xs font-serif-editorial italic text-foreground-muted leading-relaxed font-normal">
-              {t("nav.quote")}
-            </p>
-          </div>
-
+        <div>
           <div className="flex items-center justify-between border-t border-crease pt-4 font-ui">
             <div className="min-w-0 flex-1">
               <p className="text-xs text-foreground-muted font-medium truncate pr-2">

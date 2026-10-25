@@ -32,14 +32,14 @@ export function ArchivalHeader() {
           <span>TimeEcho</span>
         </Link>
 
-        <div className="flex items-center gap-2.5 sm:gap-6 md:gap-8 text-xs sm:text-sm font-medium font-sans-ui shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4 md:gap-6 text-xs sm:text-sm font-medium font-sans-ui shrink-0">
           <button
             type="button"
             onClick={toggleLocale}
-            className="flex items-center gap-1.5 border border-crease hover:border-wax/60 rounded-xs px-2.5 py-1 text-xs font-letter transition-colors cursor-pointer bg-parchment/60 hover:bg-manila/40 shrink-0 min-h-[36px]"
+            className="flex items-center gap-1.5 border border-crease hover:border-wax/60 rounded-xs px-3 py-2 text-xs font-letter transition-colors cursor-pointer bg-parchment/60 hover:bg-manila/40 shrink-0 min-h-[44px]"
             aria-label={t("header.switchLanguage")}
           >
-            <Globe size={13} className="text-foreground-muted shrink-0" />
+            <Globe size={14} className="text-foreground-muted shrink-0" />
             <span
               className={
                 locale === "es"
@@ -49,7 +49,7 @@ export function ArchivalHeader() {
             >
               ES
             </span>
-            <span className="text-crease font-mono text-[10px]">/</span>
+            <span className="text-crease font-mono text-xs">/</span>
             <span
               className={
                 locale !== "es"

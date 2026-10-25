@@ -128,7 +128,7 @@ export function Slider({
         />
       </div>
 
-      <div className="flex justify-between px-1 text-[10px] font-mono text-foreground-muted select-none -mt-1">
+      <div className="flex justify-between px-1 text-[11px] font-mono text-foreground-muted select-none -mt-1">
         {ticks.map((tick) => {
           const isSelected = tick === value;
           return (
@@ -138,10 +138,10 @@ export function Slider({
               tabIndex={-1}
               onClick={() => !disabled && onChange(tick)}
               className={cn(
-                "min-h-[44px] min-w-[24px] sm:min-w-[32px] flex flex-col items-center justify-center cursor-pointer transition-colors touch-manipulation",
+                "min-h-[44px] min-w-[28px] sm:min-w-[36px] flex flex-col items-center justify-center cursor-pointer transition-colors touch-manipulation",
                 isSelected
                   ? "font-bold text-ink"
-                  : "opacity-65 hover:opacity-100",
+                  : "text-foreground-muted hover:text-foreground opacity-80 hover:opacity-100",
                 disabled && "cursor-default",
               )}
             >
@@ -153,7 +153,7 @@ export function Slider({
       </div>
 
       {(lowLabel || highLabel) && (
-        <div className="flex justify-between items-center text-[10px] text-foreground-muted/80 uppercase tracking-widest mt-1 select-none">
+        <div className="flex justify-between items-center text-[11px] text-foreground-muted uppercase tracking-widest mt-1 select-none">
           <span>{lowLabel}</span>
           <span>{highLabel}</span>
         </div>
