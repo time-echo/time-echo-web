@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { cookies, headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
@@ -10,6 +10,10 @@ import { SupportedLanguage } from "@/types/timeecho";
 import { getTranslation } from "@/lib/i18n";
 import { FlashProvider } from "@/components/ui/FlashBanner";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  colorScheme: "light",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
@@ -24,7 +28,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: getTranslation(locale, "metadata.title"),
     description: getTranslation(locale, "metadata.description"),
-    colorScheme: "light",
     icons: {
       icon: [
         { url: "/icon.svg", type: "image/svg+xml" },
@@ -67,7 +70,9 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <TimeEchoProvider defaultLocale={locale}>
             <FlashProvider>
-              <Suspense fallback={<div className="min-h-screen bg-parchment" />}>
+              <Suspense
+                fallback={<div className="min-h-screen bg-parchment" />}
+              >
                 <AppShell>{children}</AppShell>
               </Suspense>
             </FlashProvider>

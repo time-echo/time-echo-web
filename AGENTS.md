@@ -6,6 +6,7 @@
 - **English Only**: All identifiers, types, variables, functions, CSS tokens, commit messages, and documentation must be in English.
 - **Git Safety**: Never execute `git commit` or `git push`. Committing and pushing are reserved strictly for the user.
 - **Strict Scope Boundaries**: Execute only what is explicitly requested. Do not perform unsolicited refactoring, restyling, or file reorganizations.
+- **Natural Language & Words**: Always use natural, human, grounded words in mock content, UI copy, and user communication—avoiding robotic, overly technical, or artificial meta-jargon.
 - **Ask Before Guessing**: If design requirements, flows, or mockups are missing or ambiguous, prompt the user for clarification before modifying code.
 
 ---
@@ -69,6 +70,7 @@ Rejects generic SaaS cards and saturated neon accents in favor of physical archi
 - **Locked Structure**: Approved route layouts (`src/app/**`), navigation shells (`ArchivalHeader` for public routes, `AppShell` for internal routes), component hierarchies, and grid ratios are locked. Do not unilaterally restructure them.
 - **Copy Immutability**: Strings in `src/lib/i18n/en.json` and `src/lib/i18n/es.json` are an immutable user-facing contract. Never rewrite, reword, or delete existing keys without explicit instructions. When adding new copy, add symmetric keys to both `en.json` and `es.json`.
 - **No Hardcoded Strings**: Never hardcode user-facing copy in JSX. Always use `const { t } = useTimeEcho()` with translation keys.
+- **Natural & Human Voice**: All user-facing copy, mock letters, sample predictions, placeholders, and UI texts must use natural, grounded, everyday words. Avoid stiff, robotic, overly theatrical, or technical meta-jargon (e.g., sample letters must reflect what real people genuinely write to their future selves with warmth and sincerity, rather than developer notes or artificial docket entries).
 
 ---
 

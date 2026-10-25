@@ -4,15 +4,17 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { PredictionCategory } from "@/types/timeecho";
+import Image from "next/image";
 import {
   Lock,
   Clock,
   Sparkles,
   ShieldCheck,
   Mail,
-  FileText,
-  Calendar,
-  BarChart2,
+  ChevronLeft,
+  ChevronRight,
+  RotateCw,
+  ExternalLink,
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 
@@ -565,295 +567,92 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===================================================================
-          SECTION 2: HOW IT LOOKS WHEN OPENED (3-COLUMN DOSSIER PREVIEW)
-          =================================================================== */}
       <section className="space-y-10">
         <div className="text-center space-y-2">
           <h2 className="font-serif-editorial text-3xl sm:text-4xl text-foreground font-semibold">
-            {t("landing.how_it_looks")}
+            {t("landing.demoTitle")}
           </h2>
           <p className="text-xs font-letter text-foreground-muted max-w-md mx-auto leading-relaxed">
-            {t("landing.compare_reflect_desc")}
+            {t("landing.demoDossierSubtitle")}
           </p>
         </div>
 
-        <div className="paper-sheet rounded-xs border border-crease shadow-xs overflow-hidden max-w-5xl mx-auto font-ui relative">
-          <div className="bg-manila/50 dark:bg-manila/30 px-5 py-3 border-b border-crease flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-wax inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-ink inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-crease inline-block" />
+        <div className="max-w-5xl mx-auto rounded-xl sm:rounded-2xl border border-crease bg-manila/20 dark:bg-manila/10 shadow-xl overflow-hidden font-ui text-foreground transition-all duration-300">
+          <div className="bg-manila/50 dark:bg-manila/30 px-3 sm:px-4 py-2.5 flex items-center justify-between gap-3 border-b border-crease select-none">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[#ec6a5e] border border-[#d04e41]/60 inline-block shadow-2xs" />
+                <span className="w-3 h-3 rounded-full bg-[#f4bf4f] border border-[#d79f38]/60 inline-block shadow-2xs" />
+                <span className="w-3 h-3 rounded-full bg-[#61c554] border border-[#4ea73b]/60 inline-block shadow-2xs" />
+              </div>
+              <div className="hidden sm:flex items-center gap-1 text-foreground-muted/50">
+                <button
+                  type="button"
+                  aria-label="Back"
+                  disabled
+                  className="p-1 rounded opacity-40 cursor-default"
+                >
+                  <ChevronLeft size={15} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Forward"
+                  disabled
+                  className="p-1 rounded opacity-40 cursor-default"
+                >
+                  <ChevronRight size={15} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Reload"
+                  className="p-1 rounded text-foreground-muted hover:text-foreground transition-transform active:rotate-180"
+                >
+                  <RotateCw size={12} />
+                </button>
+              </div>
             </div>
-            <div className="font-letter text-[11px] text-foreground-muted tracking-wider">
-              {t("landing.dossier_revealed")}
+
+            <div className="flex-1 max-w-md sm:max-w-xl mx-auto bg-parchment dark:bg-manila/30 border border-crease rounded-md sm:rounded-lg px-3 py-1 flex items-center justify-between text-xs font-letter shadow-inner transition-colors">
+              <div className="flex items-center gap-2 min-w-0">
+                <Lock
+                  size={12}
+                  className="text-emerald-600 dark:text-emerald-400 shrink-0"
+                />
+                <span className="text-foreground-muted/60 select-none text-[11px] hidden sm:inline">
+                  https://
+                </span>
+                <span className="text-foreground font-semibold text-[11px] sm:text-xs">
+                  timeecho.me
+                </span>
+                <span className="text-foreground-muted text-[11px] sm:text-xs truncate">
+                  /letters/te-00108
+                </span>
+              </div>
             </div>
-            <div className="w-8" />
+
+            <div className="w-12 sm:w-24 flex justify-end shrink-0">
+              <span
+                className="p-1 text-foreground-muted/60 cursor-default select-none"
+                title={t("landing.viewFolioInVault")}
+              >
+                <ExternalLink size={14} />
+              </span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 min-h-[460px]">
-            <aside className="md:col-span-3 archival-folder border-r border-crease p-6 flex flex-col justify-between space-y-6 select-none">
-              <div className="space-y-6">
-                <div className="flex items-center gap-2">
-                  <span className="postmark-stamp text-xs py-0.5 px-2">
-                    {t("common.appName")}
-                  </span>
-                </div>
-
-                <nav className="space-y-1 text-xs font-letter">
-                  <div className="flex items-center gap-2.5 px-3 py-2 rounded-xs paper-sheet border border-crease font-semibold text-foreground">
-                    <FileText size={15} />
-                    <span>{t("common.vault")}</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 px-3 py-2 text-foreground-muted">
-                    <Calendar size={15} />
-                    <span>{t("nav.timeline")}</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 px-3 py-2 text-foreground-muted">
-                    <BarChart2 size={15} />
-                    <span>{t("nav.analytics")}</span>
-                  </div>
-                </nav>
-              </div>
-            </aside>
-
-            <main className="md:col-span-9 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-transparent">
-              <div className="lg:col-span-7 space-y-4">
-                <div className="border-b border-crease pb-2.5 flex items-center justify-between">
-                  <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                    {t("landing.prediction_vs_reality")}
-                  </h3>
-                  <span className="postmark-stamp text-[11px] py-0.5 px-2">
-                    {t("letters.revealed_and_compared")}
-                  </span>
-                </div>
-
-                <div className="space-y-2.5 text-xs font-letter">
-                  <div className="rounded-xs border border-crease/70 bg-parchment/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[11px] font-semibold tracking-wider">
-                          {t("letters.prediction")}:
-                        </span>
-                        <span className="italic text-foreground/80">
-                          {t("landing.mock_prediction_city")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[11px] tracking-wider text-foreground-muted">
-                          {t("letters.reality")}:
-                        </span>
-                        <span>{t("landing.mock_reality_city")}</span>
-                      </div>
-                    </div>
-                    <span className="postmark-stamp text-[11px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {t("letters.partially")}
-                    </span>
-                  </div>
-
-                  <div className="rounded-xs border border-crease/70 bg-parchment/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[11px] font-semibold tracking-wider">
-                          {t("letters.prediction")}:
-                        </span>
-                        <span className="italic text-foreground/80">
-                          {t("landing.mock_prediction_career")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[11px] tracking-wider text-foreground-muted">
-                          {t("letters.reality")}:
-                        </span>
-                        <span>{t("landing.mock_reality_career")}</span>
-                      </div>
-                    </div>
-                    <span className="postmark-stamp text-[11px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {t("letters.you_did_it")}
-                    </span>
-                  </div>
-
-                  <div className="rounded-xs border border-crease/70 bg-parchment/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[11px] font-semibold tracking-wider">
-                          {t("letters.prediction")}:
-                        </span>
-                        <span className="italic text-foreground/80">
-                          {t("landing.mock_prediction_salary")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[11px] tracking-wider text-foreground-muted">
-                          {t("letters.reality")}:
-                        </span>
-                        <span>{t("landing.mock_reality_salary")}</span>
-                      </div>
-                    </div>
-                    <span className="postmark-stamp text-[11px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {t("letters.superaste")}
-                    </span>
-                  </div>
-
-                  <div className="rounded-xs border border-crease/70 bg-parchment/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 text-foreground-muted">
-                        <span className="uppercase text-[11px] font-semibold tracking-wider">
-                          {t("letters.prediction")}:
-                        </span>
-                        <span className="italic text-foreground/80">
-                          {t("landing.mock_prediction_happiness")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-foreground font-semibold">
-                        <span className="uppercase text-[11px] tracking-wider text-foreground-muted">
-                          {t("letters.reality")}:
-                        </span>
-                        <span>{t("landing.mock_reality_happiness")}</span>
-                      </div>
-                    </div>
-                    <span className="postmark-stamp text-[11px] py-0.5 px-2 self-start sm:self-auto shrink-0">
-                      {t("letters.very_close")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-5 space-y-4">
-                <div className="archival-folder rounded-xs p-4 border border-manila-border space-y-3">
-                  <div>
-                    <h4 className="text-xs font-letter font-semibold uppercase tracking-widest text-foreground-muted">
-                      {t("letters.emotional_evolution")}
-                    </h4>
-                    <div className="flex gap-4 text-[11px] font-letter text-foreground-muted mt-1 select-none">
-                      <span className="flex items-center gap-1">
-                        <span className="border-b border-dashed border-foreground-muted w-3 inline-block" />{" "}
-                        {t("landing.one_year_ago")}
-                      </span>
-                      <span className="flex items-center gap-1 font-semibold text-foreground">
-                        <span className="border-b-2 border-wax w-3 inline-block" />{" "}
-                        {t("landing.today")}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="relative w-full h-32 flex items-end">
-                    <svg
-                      viewBox="0 0 100 50"
-                      className="w-full h-full overflow-visible"
-                    >
-                      <line
-                        x1="0"
-                        y1="2"
-                        x2="100"
-                        y2="2"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-                      <line
-                        x1="0"
-                        y1="23"
-                        x2="100"
-                        y2="23"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-                      <line
-                        x1="0"
-                        y1="45"
-                        x2="100"
-                        y2="45"
-                        stroke="currentColor"
-                        opacity="0.1"
-                        strokeWidth="0.5"
-                      />
-
-                      <path
-                        d="M 15 15 L 50 36 L 85 24"
-                        fill="none"
-                        stroke="currentColor"
-                        className="text-ink"
-                        strokeWidth="1.5"
-                        strokeDasharray="2 2"
-                      />
-                      <circle cx="15" cy="15" r="1.5" className="fill-ink" />
-                      <circle cx="50" cy="36" r="1.5" className="fill-ink" />
-                      <circle cx="85" cy="24" r="1.5" className="fill-ink" />
-
-                      <path
-                        d="M 15 10 L 50 40 L 85 5"
-                        fill="none"
-                        stroke="currentColor"
-                        className="text-wax"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <circle
-                        cx="15"
-                        cy="10"
-                        r="2.2"
-                        className="fill-wax"
-                        stroke="currentColor"
-                        strokeWidth="0.5"
-                      />
-                      <circle
-                        cx="50"
-                        cy="40"
-                        r="2.2"
-                        className="fill-wax"
-                        stroke="currentColor"
-                        strokeWidth="0.5"
-                      />
-                      <circle
-                        cx="85"
-                        cy="5"
-                        r="2.2"
-                        className="fill-wax"
-                        stroke="currentColor"
-                        strokeWidth="0.5"
-                      />
-                    </svg>
-
-                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[11px] font-letter font-semibold text-foreground-muted tracking-wider uppercase">
-                      <span>{t("common.happiness")}</span>
-                      <span>{t("common.anxiety")}</span>
-                      <span>{t("common.motivation")}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="paper-sheet rounded-xs p-4 border border-crease flex items-center gap-4">
-                  <div
-                    className="radial-progress text-ink font-letter text-lg font-bold shrink-0"
-                    style={{
-                      ["--value" as string]: 75,
-                      ["--size" as string]: "4.5rem",
-                      ["--thickness" as string]: "5px",
-                    }}
-                    role="progressbar"
-                    aria-valuenow={75}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                  >
-                    75%
-                  </div>
-
-                  <div className="space-y-0.5 font-letter text-xs">
-                    <h5 className="font-semibold text-foreground uppercase tracking-wider text-xs">
-                      {t("landing.your_overall_accuracy")}
-                    </h5>
-                    <p className="font-semibold text-foreground/90">
-                      {t("landing.accurate_predictions")}
-                    </p>
-                    <p className="text-xs text-foreground-muted">
-                      {t("landing.you_are_on_track")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </main>
+          <div className="relative w-full bg-[#FAF9F5] dark:bg-[#16181D]">
+            <Image
+              src={
+                locale === "es"
+                  ? "/images/letter-preview-es.png"
+                  : "/images/letter-preview-en.png"
+              }
+              alt={t("landing.demoTitle")}
+              width={1897}
+              height={1030}
+              className="w-full h-auto block select-none"
+              priority
+            />
           </div>
         </div>
       </section>
