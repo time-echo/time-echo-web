@@ -642,11 +642,7 @@ export default function HomePage() {
 
           <div className="relative w-full bg-[#FAF9F5] dark:bg-[#16181D]">
             <Image
-              src={
-                locale === "es"
-                  ? "/images/letter-preview-es.png"
-                  : "/images/letter-preview-en.png"
-              }
+              src={`/images/letter-preview-${locale}.png`}
               alt={t("landing.demoTitle")}
               width={1897}
               height={1030}
