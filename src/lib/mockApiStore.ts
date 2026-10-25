@@ -113,6 +113,7 @@ class MockApiStore {
         updatedAt: now.toISOString(),
       },
       predictions: newPredictions,
+      stampId: input.stampId || "hourglass",
     };
 
     this.letters.unshift(newLetter);
@@ -232,7 +233,9 @@ class MockApiStore {
     }
 
     if (this.letters[index].status !== "archived") {
-      throw new Error(`Cannot delete letter with id "${id}" because it is not archived.`);
+      throw new Error(
+        `Cannot delete letter with id "${id}" because it is not archived.`,
+      );
     }
 
     this.letters.splice(index, 1);

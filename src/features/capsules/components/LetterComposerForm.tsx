@@ -10,6 +10,7 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
+import { Stamp, StampPickerModal } from "@/components/stamps";
 
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
@@ -52,6 +53,7 @@ export function LetterComposerForm({
   );
 
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [isStampPickerOpen, setIsStampPickerOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,18 +140,53 @@ export function LetterComposerForm({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column (7 cols): Canvas, presets, and guest email */}
           <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-10 space-y-6 border border-crease shadow-xs">
-            <div className="flex items-center justify-between border-b border-crease pb-4">
-              <div>
+            <div className="flex items-start justify-between border-b border-crease pb-4 gap-4">
+              <div className="space-y-1">
                 <span className="text-xs font-letter uppercase tracking-widest text-foreground-muted block">
                   {t("common.appName")} · {t("letters.form_letter_heading")}
                 </span>
                 <h2 className="font-serif-editorial text-2xl font-semibold text-foreground mt-0.5">
                   {t("letters.form_letter_heading")}
                 </h2>
+                <span className="postmark-stamp text-xs py-0.5 px-2.5 inline-block">
+                  {todayFormatted}
+                </span>
               </div>
-              <span className="postmark-stamp text-xs py-0.5 px-2.5">
-                {todayFormatted}
-              </span>
+
+              <div className="shrink-0 flex flex-col items-end">
+                {form.stampId ? (
+                  <div className="group relative flex flex-col items-center">
+                    <Stamp
+                      id={form.stampId}
+                      size="md"
+                      interactive
+                      rotation={2.5}
+                      onClick={() => setIsStampPickerOpen(true)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setIsStampPickerOpen(true)}
+                      className="mt-1 font-letter text-[10px] text-foreground-muted hover:text-ink transition-colors cursor-pointer"
+                    >
+                      {t("stamps.changeStamp")}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsStampPickerOpen(true)}
+                    aria-label={t("stamps.addStamp")}
+                    className="w-[72px] h-[90px] border-2 border-dashed border-crease hover:border-wax hover:bg-manila/50 rounded-xs flex flex-col items-center justify-center gap-1.5 text-foreground-muted hover:text-wax transition-all cursor-pointer group select-none shadow-2xs"
+                  >
+                    <div className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                      +
+                    </div>
+                    <span className="font-letter text-[9px] uppercase tracking-wider font-semibold text-center leading-tight px-1">
+                      {t("stamps.addStamp")}
+                    </span>
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Title field */}
@@ -603,6 +640,13 @@ export function LetterComposerForm({
           </motion.div>
         )}
       </AnimatePresence>
+
+      <StampPickerModal
+        isOpen={isStampPickerOpen}
+        onClose={() => setIsStampPickerOpen(false)}
+        selectedStampId={form.stampId || undefined}
+        onSelectStamp={(id) => setField("stampId", id)}
+      />
     </div>
   );
 }

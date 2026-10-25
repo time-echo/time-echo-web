@@ -100,6 +100,7 @@ export interface Letter {
   emotionalSnapshot?: EmotionalSnapshot | null;
   /** Associated milestone predictions */
   predictions: Prediction[];
+  stampId?: string | null;
 }
 
 /**
@@ -132,6 +133,7 @@ export interface CreateLetterInput {
   scheduledAt: string;
   timezone?: string;
   language?: SupportedLanguage;
+  stampId?: string | null;
   emotionalSnapshot: {
     happinessLevel: number;
     anxietyLevel: number;
