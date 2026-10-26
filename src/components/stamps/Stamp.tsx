@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { StampPerforationFrame, type StampSize } from "./StampPerforationFrame";
 import { PostmarkOverlay } from "./PostmarkOverlay";
-import { playStampPressSound } from "./stampAudio";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import {
   getStampById,
   DEFAULT_STAMP_ID,
@@ -80,6 +80,7 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
     },
     ref,
   ) => {
+    const { t } = useTimeEcho();
     const shouldReduceMotion = useReducedMotion();
     const stamp: StampDefinition =
       getStampById(id) || getStampById(DEFAULT_STAMP_ID)!;
@@ -88,17 +89,20 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
     const textConfig =
       size !== "custom" ? TEXT_SIZE_MAP[size] : TEXT_SIZE_MAP.md;
 
+    const localizedDenomination = t(`stamps.items.${stamp.id}.denomination`);
+    const denominationText =
+      localizedDenomination &&
+      !localizedDenomination.startsWith("stamps.items.")
+        ? localizedDenomination
+        : stamp.denomination;
+
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-      if (interactive || onClick) {
-        playStampPressSound();
-      }
       onClick?.(e);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (onClick && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
-        playStampPressSound();
         onClick(e as unknown as React.MouseEvent<HTMLDivElement>);
       }
     };
@@ -186,7 +190,7 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
               )}
               style={{ color: stamp.accentColor }}
             >
-              {stamp.denomination}
+              {denominationText}
             </span>
           </div>
         </StampPerforationFrame>

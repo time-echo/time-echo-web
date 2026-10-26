@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Stamp } from "./Stamp";
-import { playStampPressSound } from "./stampAudio";
 import {
   STAMPS_CATALOG,
   STAMP_CATEGORIES,
@@ -45,6 +50,8 @@ function StampPickerContent({
     selectedStampId,
   );
 
+  const selectedStampRef = useRef<HTMLDivElement>(null);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -64,14 +71,32 @@ function StampPickerContent({
       const matchesCategory =
         activeCategory === "all" || stamp.category === activeCategory;
       const query = searchQuery.trim().toLowerCase();
+      if (!query) return matchesCategory;
+
+      const localizedName = t(`stamps.items.${stamp.id}.name`);
+      const localizedDesc = t(`stamps.items.${stamp.id}.description`);
+      const localizedDenom = t(`stamps.items.${stamp.id}.denomination`);
+
       const matchesSearch =
-        !query ||
         stamp.name.toLowerCase().includes(query) ||
+        localizedName.toLowerCase().includes(query) ||
         stamp.denomination.toLowerCase().includes(query) ||
-        stamp.description.toLowerCase().includes(query);
+        localizedDenom.toLowerCase().includes(query) ||
+        stamp.description.toLowerCase().includes(query) ||
+        localizedDesc.toLowerCase().includes(query);
+
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, t]);
+
+  useEffect(() => {
+    if (selectedStampRef.current) {
+      selectedStampRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [tempSelectedId]);
 
   const currentPreviewStamp = useMemo(() => {
     if (!tempSelectedId) return undefined;
@@ -79,7 +104,6 @@ function StampPickerContent({
   }, [tempSelectedId]);
 
   const handleApply = () => {
-    playStampPressSound();
     onSelectStamp(tempSelectedId);
     onClose();
   };
@@ -96,27 +120,27 @@ function StampPickerContent({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0"
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs"
         onClick={onClose}
       />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 12 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 12 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-3xl max-h-[90vh] flex flex-col bg-parchment border border-crease rounded-xs shadow-2xl overflow-hidden font-ui"
+        initial={{ x: "100%", opacity: 0.5 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: "100%", opacity: 0.5 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className="relative z-10 w-full max-w-md sm:max-w-lg h-full flex flex-col bg-parchment border-l border-crease shadow-2xl overflow-hidden font-ui"
       >
-        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-crease bg-manila/50">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-crease bg-manila/50 shrink-0">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
               <span className="font-letter text-[10px] uppercase tracking-widest text-ink font-bold">
-                POSTAL VAULT
+                {t("stamps.badge")}
               </span>
               <span className="text-foreground-muted text-xs">•</span>
               <h2
                 id="stamp-picker-title"
-                className="font-serif-editorial text-xl sm:text-2xl font-bold text-foreground"
+                className="font-serif-editorial text-xl font-bold text-foreground"
               >
                 {t("stamps.title")}
               </h2>
@@ -136,7 +160,7 @@ function StampPickerContent({
           </button>
         </div>
 
-        <div className="p-4 border-b border-crease space-y-3 bg-parchment">
+        <div className="p-4 border-b border-crease space-y-3 bg-parchment shrink-0">
           <div className="relative">
             <Search
               size={15}
@@ -182,10 +206,10 @@ function StampPickerContent({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-parchment/60">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 bg-parchment/60 scrollbar-thin">
           {filteredStamps.length === 0 ? (
             <div className="py-12 text-center space-y-2">
-              <p className="font-serif-editorial text-lg text-foreground-muted">
+              <p className="font-serif-editorial text-base text-foreground-muted">
                 {t("stamps.noStampsFound")}
               </p>
               <p className="font-letter text-xs text-foreground-muted">
@@ -193,18 +217,18 @@ function StampPickerContent({
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 justify-items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 justify-items-center">
               {filteredStamps.map((stamp) => {
                 const isSelected = tempSelectedId === stamp.id;
                 return (
                   <div
                     key={stamp.id}
+                    ref={isSelected ? selectedStampRef : undefined}
                     onClick={() => {
-                      playStampPressSound();
                       setTempSelectedId(stamp.id);
                     }}
                     className={cn(
-                      "group relative flex flex-col items-center p-3 rounded-xs border transition-all cursor-pointer w-full max-w-[150px]",
+                      "group relative flex flex-col items-center p-3 rounded-xs border transition-all cursor-pointer w-full max-w-[145px]",
                       isSelected
                         ? "bg-manila border-wax shadow-xs ring-1 ring-wax"
                         : "bg-parchment border-crease hover:border-ink/50 hover:bg-manila/40",
@@ -226,11 +250,14 @@ function StampPickerContent({
                     </div>
 
                     <div className="mt-2 text-center w-full space-y-0.5">
-                      <span className="block font-serif-editorial text-xs font-semibold text-foreground truncate">
-                        {stamp.name}
+                      <span
+                        className="block font-serif-editorial text-xs font-semibold text-foreground truncate"
+                        title={t(`stamps.items.${stamp.id}.name`)}
+                      >
+                        {t(`stamps.items.${stamp.id}.name`)}
                       </span>
                       <span className="block font-letter text-[9px] text-foreground-muted truncate">
-                        {stamp.denomination}
+                        {t(`stamps.items.${stamp.id}.denomination`)}
                       </span>
                     </div>
                   </div>
@@ -240,20 +267,23 @@ function StampPickerContent({
           )}
         </div>
 
-        <div className="p-4 sm:p-5 border-t border-crease bg-manila/40 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="w-full sm:w-auto text-left">
+        <div className="p-4 border-t border-crease bg-manila/50 flex flex-col gap-3 shrink-0">
+          <div className="text-left space-y-1">
             {currentPreviewStamp ? (
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-serif-editorial text-sm font-semibold text-foreground">
-                    {currentPreviewStamp.name}
+                    {t(`stamps.items.${currentPreviewStamp.id}.name`)}
                   </span>
                   <span className="font-letter text-[10px] px-1.5 py-0.5 rounded-xs bg-crease/60 text-foreground-muted">
-                    {currentPreviewStamp.denomination}
+                    {t(`stamps.items.${currentPreviewStamp.id}.denomination`)}
+                  </span>
+                  <span className="font-letter text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-xs border border-crease text-foreground-muted">
+                    {t(`stamps.categories.${currentPreviewStamp.category}`)}
                   </span>
                 </div>
-                <p className="font-letter text-[10px] text-foreground-muted">
-                  {currentPreviewStamp.description}
+                <p className="font-letter text-[10px] text-foreground-muted leading-relaxed line-clamp-2">
+                  {t(`stamps.items.${currentPreviewStamp.id}.description`)}
                 </p>
               </div>
             ) : (
@@ -263,7 +293,7 @@ function StampPickerContent({
             )}
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-2 justify-end">
             {allowRemove && tempSelectedId && (
               <button
                 type="button"
@@ -316,7 +346,7 @@ export function StampPickerModal({
           aria-modal="true"
           aria-labelledby="stamp-picker-title"
           className={cn(
-            "fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-xs select-none",
+            "fixed inset-0 z-50 flex justify-end select-none overflow-hidden",
             className,
           )}
         >

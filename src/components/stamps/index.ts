@@ -25,6 +25,7 @@ export {
   DEFAULT_STAMP_ID,
   getStampById,
   getStampsByCategory,
+  getLocalizedStamp,
   type StampCategory,
   type StampDefinition,
 } from "./stamps.data";

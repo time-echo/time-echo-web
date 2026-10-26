@@ -302,3 +302,31 @@ export function getStampsByCategory(
 ): StampDefinition[] {
   return STAMPS_CATALOG.filter((stamp) => stamp.category === category);
 }
+
+export function getLocalizedStamp(
+  id: string,
+  t: (keyPath: string) => string,
+): StampDefinition | undefined {
+  const stamp = getStampById(id);
+  if (!stamp) return undefined;
+
+  const localizedName = t(`stamps.items.${stamp.id}.name`);
+  const localizedDesc = t(`stamps.items.${stamp.id}.description`);
+  const localizedDenom = t(`stamps.items.${stamp.id}.denomination`);
+
+  return {
+    ...stamp,
+    name:
+      localizedName && !localizedName.startsWith("stamps.items.")
+        ? localizedName
+        : stamp.name,
+    description:
+      localizedDesc && !localizedDesc.startsWith("stamps.items.")
+        ? localizedDesc
+        : stamp.description,
+    denomination:
+      localizedDenom && !localizedDenom.startsWith("stamps.items.")
+        ? localizedDenom
+        : stamp.denomination,
+  };
+}

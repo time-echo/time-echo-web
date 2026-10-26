@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { PredictionCategory } from "@/types/timeecho";
@@ -82,9 +82,20 @@ export default function HomePage() {
     setSelectedHorizonDays(0);
   };
 
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [isContentTouched, setIsContentTouched] = useState(false);
+  const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content.trim() || !email.trim()) return;
+    setHasAttemptedSubmit(true);
+
+    if (content.trim().length < 80) {
+      contentTextareaRef.current?.focus();
+      return;
+    }
+
+    if (!email.trim()) return;
 
     setIsSubmitting(true);
 
@@ -133,7 +144,10 @@ export default function HomePage() {
   };
 
   const charCount = content.length;
-  const isUnderMinChars = charCount < 80;
+  const isContentTooShort = content.trim().length < 80;
+  const showContentError =
+    isContentTooShort &&
+    (hasAttemptedSubmit || (isContentTouched && content.length > 0));
 
   return (
     <div className="space-y-24 max-w-6xl mx-auto -mt-4 font-ui animate-fade-in text-foreground">
@@ -225,29 +239,49 @@ export default function HomePage() {
               </label>
               <textarea
                 id="landing-content"
+                ref={contentTextareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                onBlur={() => setIsContentTouched(true)}
                 placeholder={t("landing.letterPlaceholder")}
                 rows={7}
                 maxLength={2000}
                 required
-                aria-describedby="landing-content-counter"
-                className="w-full p-4 sm:p-5 border border-crease rounded-xs font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none transition-all shadow-inner bg-transparent"
+                aria-invalid={showContentError}
+                aria-describedby={
+                  showContentError
+                    ? "landing-content-error landing-content-counter"
+                    : "landing-content-counter"
+                }
+                className={cn(
+                  "w-full p-4 sm:p-5 border rounded-xs font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted focus:outline-none transition-all shadow-inner bg-transparent",
+                  showContentError
+                    ? "border-wax bg-wax/5 focus:border-wax"
+                    : "border-crease focus:border-wax",
+                )}
               />
               <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1">
                 <span className="italic">{t("landing.onlyYouCanSee")}</span>
                 <span
                   id="landing-content-counter"
-                  className={cn(isUnderMinChars && "text-wax")}
+                  className={cn(
+                    "transition-colors",
+                    showContentError
+                      ? "text-wax font-semibold"
+                      : charCount >= 80
+                        ? "text-foreground"
+                        : "text-foreground-muted",
+                  )}
                 >
-                  {isUnderMinChars
+                  {charCount < 80
                     ? t("landing.charCounterMin", { count: charCount })
                     : `${charCount} / 2000`}
                 </span>
               </div>
-              {isUnderMinChars && (
+              {showContentError && (
                 <p
-                  className="text-[11px] font-letter text-wax pt-0.5"
+                  id="landing-content-error"
+                  className="text-[11px] font-letter text-wax pt-0.5 animate-fade-in"
                   aria-live="polite"
                 >
                   {t("landing.minCharsError")}
@@ -542,11 +576,10 @@ export default function HomePage() {
                 />
                 <button
                   type="submit"
-                  disabled={isSubmitting || isUnderMinChars}
+                  disabled={isSubmitting}
                   className={cn(
                     "bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-6 py-3 text-xs font-semibold tracking-widest uppercase font-letter inline-flex items-center justify-center gap-2 border-none shadow-xs shrink-0 min-h-[44px] cursor-pointer transition-colors",
-                    (isSubmitting || isUnderMinChars) &&
-                      "opacity-60 cursor-not-allowed",
+                    isSubmitting && "opacity-60 cursor-not-allowed",
                   )}
                 >
                   <span>

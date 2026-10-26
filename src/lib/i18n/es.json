@@ -1155,6 +1155,7 @@
   "stamps": {
     "title": "Estampillas Postales",
     "subtitle": "Selecciona una estampilla conmemorativa para fijar en tu sobre",
+    "badge": "BÓVEDA POSTAL",
     "chooseStamp": "Elegir Estampilla",
     "changeStamp": "Cambiar Estampilla",
     "removeStamp": "Quitar Estampilla",
@@ -1167,6 +1168,8 @@
     "selected": "Seleccionada",
     "preview": "Vista previa",
     "postmark": "Matasellos Postal",
+    "scrollLeft": "Desplazar estampillas a la izquierda",
+    "scrollRight": "Desplazar estampillas a la derecha",
     "categories": {
       "all": "Todas",
       "time": "Tiempo y Astronomía",
@@ -1174,6 +1177,128 @@
       "memory": "Memoria y Efímera",
       "milestone": "Crecimiento e Hitos",
       "season": "Estaciones y Fiestas"
+    },
+    "items": {
+      "hourglass": {
+        "name": "Reloj de Arena",
+        "description": "Arenas doradas y resplandor cósmico",
+        "denomination": "TIME ECHO • 10¢"
+      },
+      "pocket-watch": {
+        "name": "Cronómetro Antiguo",
+        "description": "Reloj de bolsillo con números romanos",
+        "denomination": "CHRONOS • 25¢"
+      },
+      "crescent-dreams": {
+        "name": "Sueños Crecientes",
+        "description": "Luna reposando entre nubes nocturnas y estrellas",
+        "denomination": "NOCTURNO • 05¢"
+      },
+      "solar-alignment": {
+        "name": "Alineación Solar",
+        "description": "Corona de eclipse con rayos radiantes",
+        "denomination": "SOLARIS • 50¢"
+      },
+      "constellation": {
+        "name": "Guía Celeste",
+        "description": "Osa Mayor y Estrella Polar en cuadrícula de navegación",
+        "denomination": "CELESTE • AÉREO"
+      },
+      "time-capsule": {
+        "name": "Cápsula de Archivo",
+        "description": "Cilindro de acero con dial de combinación",
+        "denomination": "BÓVEDA • FUTURO"
+      },
+      "airmail-biplane": {
+        "name": "Biplano Postal",
+        "description": "Clásico avión de correo sobrevolando nubes",
+        "denomination": "POR AVIÓN • 40¢"
+      },
+      "paper-plane": {
+        "name": "Planeador de Papel",
+        "description": "Avión de origami trazando una estela de vuelo",
+        "denomination": "VUELO • 15¢"
+      },
+      "carrier-pigeon": {
+        "name": "Paloma Mensajera",
+        "description": "Paloma en vuelo llevando una carta sellada",
+        "denomination": "DESPACHO • 20¢"
+      },
+      "lighthouse": {
+        "name": "Faro Centinela",
+        "description": "Faro costero alumbrando aguas serenas",
+        "denomination": "FARO • 30¢"
+      },
+      "hot-air-balloon": {
+        "name": "Globo Aerostático",
+        "description": "Globo clásico a rayas con cesta de mimbre",
+        "denomination": "VIAJE • 35¢"
+      },
+      "vintage-quill": {
+        "name": "Pluma de Caligrafía",
+        "description": "Pluma sumergiéndose en tintero antiguo",
+        "denomination": "ESCRITURA • 10¢"
+      },
+      "wax-seal-heart": {
+        "name": "Lacre de Corazón",
+        "description": "Sello de lacre carmesí con emblema de corazón",
+        "denomination": "CONFIDENCIAL"
+      },
+      "polaroid-frame": {
+        "name": "Foto Instantánea",
+        "description": "Marco fotográfico con silueta de montaña",
+        "denomination": "INSTANTÁNEA • 19¢"
+      },
+      "vinyl-record": {
+        "name": "Disco de Vinilo",
+        "description": "Disco de vinilo con surcos de ondas sonoras",
+        "denomination": "ECO • ESTÉREO"
+      },
+      "steaming-mug": {
+        "name": "Mañana Serena",
+        "description": "Taza de cerámica humeante al amanecer",
+        "denomination": "MAÑANAS • 08¢"
+      },
+      "sprout-seedling": {
+        "name": "Primer Brote",
+        "description": "Pequeño retoño naciendo de tierra fértil",
+        "denomination": "NUEVA ERA • 12¢"
+      },
+      "ginkgo-leaf": {
+        "name": "Ginkgo Dorado",
+        "description": "Hoja otoñal de ginkgo en forma de abanico",
+        "denomination": "PACIENCIA • 15¢"
+      },
+      "mountain-peak": {
+        "name": "Cima del Horizonte",
+        "description": "Picos nevados bajo el sol matutino",
+        "denomination": "CIMA • 60¢"
+      },
+      "antique-key": {
+        "name": "Llave Antigua",
+        "description": "Llave de forja ornamentada con cinta",
+        "denomination": "ABRIR • 2030"
+      },
+      "compass-rose": {
+        "name": "Rosa de los Vientos",
+        "description": "Rosa náutica de 8 rumbos",
+        "denomination": "DIRECCIÓN • 45¢"
+      },
+      "cherry-blossom": {
+        "name": "Flor de Cerezo",
+        "description": "Pétalos de sakura al viento primaveral",
+        "denomination": "PRIMAVERA • 15¢"
+      },
+      "crystal-snowflake": {
+        "name": "Cristal Invernal",
+        "description": "Copito de nieve hexagonal de hielo",
+        "denomination": "INVIERNO • 20¢"
+      },
+      "summer-sunburst": {
+        "name": "Sol de Verano",
+        "description": "Sol radiante con rayos cálidos",
+        "denomination": "VERANO • 25¢"
+      }
     }
   }
 }

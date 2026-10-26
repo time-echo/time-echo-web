@@ -1155,6 +1155,7 @@
   "stamps": {
     "title": "Postage Stamps",
     "subtitle": "Select a commemorative stamp to affix to your envelope",
+    "badge": "POSTAL VAULT",
     "chooseStamp": "Choose Stamp",
     "changeStamp": "Change Stamp",
     "removeStamp": "Remove Stamp",
@@ -1167,6 +1168,8 @@
     "selected": "Selected",
     "preview": "Preview",
     "postmark": "Postal Cancellation",
+    "scrollLeft": "Scroll stamps left",
+    "scrollRight": "Scroll stamps right",
     "categories": {
       "all": "All",
       "time": "Time & Astronomy",
@@ -1174,6 +1177,128 @@
       "memory": "Memory & Ephemera",
       "milestone": "Growth & Milestones",
       "season": "Seasons & Celebrations"
+    },
+    "items": {
+      "hourglass": {
+        "name": "Hourglass of Time",
+        "description": "Golden falling sands & cosmic glow",
+        "denomination": "TIME ECHO • 10¢"
+      },
+      "pocket-watch": {
+        "name": "Antique Chronometer",
+        "description": "Antique open-face watch with roman numerals",
+        "denomination": "CHRONOS • 25¢"
+      },
+      "crescent-dreams": {
+        "name": "Crescent Dreams",
+        "description": "Moon resting on night clouds & stars",
+        "denomination": "NOCTURNE • 05¢"
+      },
+      "solar-alignment": {
+        "name": "Solar Alignment",
+        "description": "Eclipse corona ring with radiant rays",
+        "denomination": "SOLARIS • 50¢"
+      },
+      "constellation": {
+        "name": "Celestial Grid",
+        "description": "Ursa Major & Polaris navigational grid",
+        "denomination": "CELESTIAL • AIR"
+      },
+      "time-capsule": {
+        "name": "Archival Vault",
+        "description": "Vintage steel cylinder with combination dial",
+        "denomination": "VAULT • FUTURE"
+      },
+      "airmail-biplane": {
+        "name": "Airmail Biplane",
+        "description": "Classic twin-wing mail plane over clouds",
+        "denomination": "PAR AVION • 40¢"
+      },
+      "paper-plane": {
+        "name": "Origami Glider",
+        "description": "Origami paper plane trailing dashed loop",
+        "denomination": "DRIFT • 15¢"
+      },
+      "carrier-pigeon": {
+        "name": "Carrier Pigeon",
+        "description": "Flying dove carrying sealed letter",
+        "denomination": "DISPATCH • 20¢"
+      },
+      "lighthouse": {
+        "name": "Sentinel Lighthouse",
+        "description": "Cliffside beacon shining across waters",
+        "denomination": "BEACON • 30¢"
+      },
+      "hot-air-balloon": {
+        "name": "Archival Balloon",
+        "description": "Striped vintage balloon with wicker basket",
+        "denomination": "JOURNEY • 35¢"
+      },
+      "vintage-quill": {
+        "name": "Calligraphy Quill",
+        "description": "Feather dipping into antique ink pot",
+        "denomination": "SCRIPT • 10¢"
+      },
+      "wax-seal-heart": {
+        "name": "Carmine Seal Heart",
+        "description": "Wax seal stamped with heart emblem",
+        "denomination": "CONFIDENTIAL"
+      },
+      "polaroid-frame": {
+        "name": "Instant Snapshot",
+        "description": "Instant photo frame with mountain silhouette",
+        "denomination": "SNAPSHOT • 19¢"
+      },
+      "vinyl-record": {
+        "name": "Vinyl Groove",
+        "description": "Vinyl disc with sound wave grooved lines",
+        "denomination": "ECHO • STEREO"
+      },
+      "steaming-mug": {
+        "name": "Quiet Morning",
+        "description": "Warm ceramic mug with gentle vapor",
+        "denomination": "MORNINGS • 08¢"
+      },
+      "sprout-seedling": {
+        "name": "First Sprout",
+        "description": "Little sprout rising from fertile soil",
+        "denomination": "NEW ERA • 12¢"
+      },
+      "ginkgo-leaf": {
+        "name": "Golden Ginkgo",
+        "description": "Fan-shaped autumn ginkgo leaf",
+        "denomination": "PATIENCE • 15¢"
+      },
+      "mountain-peak": {
+        "name": "Summit Horizon",
+        "description": "Twin snow-capped peaks under morning sun",
+        "denomination": "SUMMIT • 60¢"
+      },
+      "antique-key": {
+        "name": "Skeleton Key",
+        "description": "Ornate skeleton key with ribbon",
+        "denomination": "UNLOCK • 2030"
+      },
+      "compass-rose": {
+        "name": "Mariner's Compass",
+        "description": "Nautical 8-point compass rose",
+        "denomination": "DIRECTION • 45¢"
+      },
+      "cherry-blossom": {
+        "name": "Sakura Bloom",
+        "description": "Delicate sakura petals blowing in the wind",
+        "denomination": "SPRING • 15¢"
+      },
+      "crystal-snowflake": {
+        "name": "Winter Crystal",
+        "description": "Hexagonal intricate ice crystal",
+        "denomination": "WINTER • 20¢"
+      },
+      "summer-sunburst": {
+        "name": "Summer Sunburst",
+        "description": "Warm radiating celestial sun face",
+        "denomination": "SUMMER • 25¢"
+      }
     }
   }
 }

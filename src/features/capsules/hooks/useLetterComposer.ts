@@ -62,7 +62,7 @@ const DEFAULT_STATE: LetterComposerState = {
   horizonPreset: "1y",
   language: "es",
   timezone: "UTC",
-  stampId: "hourglass",
+  stampId: null,
   emotionalSnapshot: {
     happinessLevel: 7,
     anxietyLevel: 5,

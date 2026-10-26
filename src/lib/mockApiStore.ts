@@ -113,7 +113,7 @@ class MockApiStore {
         updatedAt: now.toISOString(),
       },
       predictions: newPredictions,
-      stampId: input.stampId || "hourglass",
+      stampId: input.stampId || null,
     };
 
     this.letters.unshift(newLetter);
