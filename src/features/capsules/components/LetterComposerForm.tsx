@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLetterComposer, HorizonPreset } from "@/features/capsules";
 import { ArchivalAccordion } from "@/components/ui/ArchivalAccordion";
@@ -52,8 +52,16 @@ export function LetterComposerForm({
     defaultHorizon ? { horizonPreset: defaultHorizon } : undefined,
   );
 
+  const searchParams = useSearchParams();
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState(false);
+
+  useEffect(() => {
+    const stampParam = searchParams.get("stamp");
+    if (stampParam && !form.stampId) {
+      setField("stampId", stampParam);
+    }
+  }, [searchParams, form.stampId, setField]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

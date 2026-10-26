@@ -62,6 +62,7 @@
     "compose": "Escribir una Carta",
     "letters": "Mis Cartas",
     "timeline": "Línea de Tiempo",
+    "collection": "Colección",
     "analytics": "Estadísticas",
     "settings": "Ajustes",
     "openMenu": "Abrir menú",
@@ -1172,6 +1173,10 @@
     "scrollRight": "Desplazar estampillas a la derecha",
     "categories": {
       "all": "Todas",
+      "small-things": "Pequeñas cosas",
+      "places-i-inhabit": "Lugares que habito",
+      "stored-thoughts": "Pensamientos guardados",
+      "passage-of-time": "El paso del tiempo",
       "time": "Tiempo y Astronomía",
       "travel": "Viajes y Mensajeros",
       "memory": "Memoria y Efímera",
@@ -1179,6 +1184,114 @@
       "season": "Estaciones y Fiestas"
     },
     "items": {
+      "morning-coffee": {
+        "name": "El café de la mañana",
+        "description": "Una taza de café sobre una mesa iluminada por el sol",
+        "denomination": "MAÑANAS • 10¢",
+        "storyPrompt": "¿Cómo sabe el primer café de tu día y qué pensamientos te acompañan?"
+      },
+      "today-song": {
+        "name": "La canción de hoy",
+        "description": "Audífonos y un reproductor de música o casete",
+        "denomination": "RITMO • 12¢",
+        "storyPrompt": "¿Qué melodía o canción está sonando en bucle en tus días hoy?"
+      },
+      "home-cooked-meal": {
+        "name": "Lo de siempre",
+        "description": "Un plato de comida casera sobre una mesa",
+        "denomination": "SABOR • 15¢",
+        "storyPrompt": "¿Cuál es esa comida casera que siempre te devuelve a la calma?"
+      },
+      "todays-steps": {
+        "name": "Mis pasos de hoy",
+        "description": "Unas zapatillas junto a la puerta",
+        "denomination": "PASOS • 08¢",
+        "storyPrompt": "¿Hacia dónde te llevaron tus pasos hoy y qué camino estás transitando?"
+      },
+      "five-more-minutes": {
+        "name": "Cinco minutos más",
+        "description": "Un reloj despertador junto a unas pantuflas",
+        "denomination": "ALBA • 05¢",
+        "storyPrompt": "Esa pequeña tregua de la mañana antes de que empiece el mundo exterior."
+      },
+      "todays-list": {
+        "name": "La lista de hoy",
+        "description": "Una lista de compras escrita a mano y un lápiz",
+        "denomination": "NOTAS • 06¢",
+        "storyPrompt": "Las pequeñas tareas mundanas que dan estructura a tus días ordinarios."
+      },
+      "little-home": {
+        "name": "Mi pequeño hogar",
+        "description": "Una casa con plantas y ropa secándose al sol",
+        "denomination": "HOGAR • 20¢",
+        "storyPrompt": "¿Qué rincón de tu casa se siente más seguro y acogedor en este instante?"
+      },
+      "neighborhood-corner": {
+        "name": "Mi lugar de siempre",
+        "description": "Una bicicleta junto a una tienda de barrio",
+        "denomination": "BARRIO • 18¢",
+        "storyPrompt": "Esa esquina, tienda o calle por la que pasas sin pensar pero que extrañarías."
+      },
+      "way-home": {
+        "name": "Camino a casa",
+        "description": "Una parada de autobús en una calle cotidiana",
+        "denomination": "RUTA • 22¢",
+        "storyPrompt": "La sensación de volver, el trayecto de vuelta y el alivio del anochecer."
+      },
+      "favorite-spot": {
+        "name": "Mi lugar favorito",
+        "description": "Una cafetería o panadería de barrio",
+        "denomination": "CAFÉ • 25¢",
+        "storyPrompt": "¿A qué lugar vas cuando necesitas pensar, leer o simplemente respirar?"
+      },
+      "rainy-afternoon": {
+        "name": "Una tarde lluviosa",
+        "description": "Gotas de lluvia en una ventana y un interior acogedor",
+        "denomination": "LLUVIA • 14¢",
+        "storyPrompt": "El sonido de la lluvia en el cristal y el calor silencioso de estar a cubierto."
+      },
+      "personal-journal": {
+        "name": "Mi diario personal",
+        "description": "Un cuaderno abierto, un bolígrafo y una flor seca",
+        "denomination": "MEMORIA • 25¢",
+        "storyPrompt": "¿Qué secreto, anhelo o confesión guardan hoy las páginas de tu cuaderno?"
+      },
+      "ordinary-day": {
+        "name": "Un día cualquiera",
+        "description": "Una cámara instantánea con pequeñas fotografías",
+        "denomination": "FOTO • 19¢",
+        "storyPrompt": "Porque un día sin grandes aspavientos puede ser el más valioso al recordarlo."
+      },
+      "work-in-progress": {
+        "name": "En lo que estoy trabajando",
+        "description": "Un escritorio con portátil, libreta y lámpara",
+        "denomination": "TALLER • 30¢",
+        "storyPrompt": "¿En qué proyecto o desvelo estás volcando tus horas y tu energía?"
+      },
+      "something-growing": {
+        "name": "Algo está creciendo",
+        "description": "Una planta en una maceta con una hoja nueva",
+        "denomination": "BROTE • 15¢",
+        "storyPrompt": "Un nuevo hábito, una amistad o una nueva idea que comienza a brotar."
+      },
+      "first-key": {
+        "name": "Mi primera llave",
+        "description": "Una llave doméstica sobre una superficie de madera",
+        "denomination": "LLAVE • 28¢",
+        "storyPrompt": "El peso metálico de la independencia, la primera puerta que abriste por tu cuenta."
+      },
+      "one-more-year": {
+        "name": "Un año más",
+        "description": "Una pequeña torta de cumpleaños con una vela",
+        "denomination": "AÑOS • 35¢",
+        "storyPrompt": "Un año más de aprendizajes, desvíos y motivos para agradecer seguir aquí."
+      },
+      "little-companion": {
+        "name": "Mi pequeño compañero",
+        "description": "Una planta o un pequeño objeto que represente la compañía cotidiana",
+        "denomination": "CALMA • 16¢",
+        "storyPrompt": "Esa compañía silenciosa —una mascota, un amuleto o una planta— que nunca te juzga."
+      },
       "hourglass": {
         "name": "Reloj de Arena",
         "description": "Arenas doradas y resplandor cósmico",
@@ -1300,5 +1413,52 @@
         "denomination": "VERANO • 25¢"
       }
     }
+  },
+  "collection": {
+    "badge": "ÁLBUM FILATÉLICO",
+    "title": "Colección Postal",
+    "subtitle": "Estampillas conmemorativas inspiradas en objetos, rutinas y momentos cotidianos.",
+    "stats": {
+      "collectedCount": "Coleccionadas",
+      "totalCount": "Total en Álbum",
+      "progressLabel": "Progreso de tu Álbum",
+      "unlockedRatio": "{unlocked} de {total} estampillas descubiertas"
+    },
+    "tabs": {
+      "all": "Todas",
+      "small-things": "Pequeñas cosas",
+      "places-i-inhabit": "Lugares que habito",
+      "stored-thoughts": "Pensamientos guardados",
+      "passage-of-time": "El paso del tiempo"
+    },
+    "filter": {
+      "all": "Todas",
+      "unlocked": "Descubiertas",
+      "locked": "Por descubrir"
+    },
+    "status": {
+      "unlocked": "En tu colección",
+      "locked": "Por descubrir"
+    },
+    "card": {
+      "inspect": "Examinar estampilla",
+      "unlockedBadge": "COLECCIONADA",
+      "lockedBadge": "POR DESCUBRIR"
+    },
+    "dossier": {
+      "badge": "EXPEDIENTE FILATÉLICO",
+      "categoryLabel": "Serie Postal",
+      "denominationLabel": "Valor Facial",
+      "storyLabel": "Inspiración Cotidiana",
+      "statusLabel": "Estado",
+      "unlockedDesc": "Esta estampilla forma parte de tu álbum permanente. Puedes usarla en cualquier carta a tu yo futuro.",
+      "lockedDesc": "Aún no has sellado ninguna carta con esta estampilla o no la has descubierto. Puedes desbloquearla utilizándola al escribir tu próxima carta.",
+      "writeWithStamp": "Escribir carta con esta estampilla",
+      "unlockNow": "Añadir a mi colección",
+      "close": "Cerrar expediente"
+    },
+    "emptySearchTitle": "Sin resultados coincidentes",
+    "emptySearchDesc": "No encontramos estampillas que coincidan con los filtros o la búsqueda.",
+    "backToVault": "Volver a la Bóveda"
   }
 }

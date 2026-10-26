@@ -22,6 +22,7 @@ export { playStampPressSound } from "./stampAudio";
 export {
   STAMPS_CATALOG,
   STAMP_CATEGORIES,
+  INITIAL_UNLOCKED_STAMP_IDS,
   DEFAULT_STAMP_ID,
   getStampById,
   getStampsByCategory,

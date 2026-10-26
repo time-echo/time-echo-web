@@ -66,7 +66,6 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
       rotation = 0,
       hasPostmark = false,
       interactive = false,
-      selected = false,
       animateAffix = false,
       hasPaperTexture = true,
       paperColor,
@@ -143,7 +142,6 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
           "relative inline-block transition-shadow duration-200 outline-hidden select-none",
           interactive &&
             "cursor-pointer focus-visible:ring-2 focus-visible:ring-wax focus-visible:ring-offset-2",
-          selected && "ring-2 ring-wax ring-offset-2 rounded-xs shadow-md",
           className,
         )}
         style={{
@@ -155,8 +153,8 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
         <StampPerforationFrame
           size={size}
           paperColor={paperColor}
-          borderColor={selected ? "var(--wax)" : borderColor || "var(--crease)"}
-          innerBorderColor={selected ? "var(--wax)" : stamp.primaryColor}
+          borderColor={borderColor || "var(--crease)"}
+          innerBorderColor={stamp.primaryColor}
           hasPaperTexture={hasPaperTexture}
           interactive={false}
         >
