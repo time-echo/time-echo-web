@@ -15,6 +15,7 @@ export interface StampPerforationFrameProps extends React.HTMLAttributes<HTMLDiv
   borderColor?: string;
   innerBorderColor?: string;
   hasDoubleBorder?: boolean;
+  hasPaperTexture?: boolean;
   interactive?: boolean;
   children?: React.ReactNode;
 }
@@ -131,6 +132,7 @@ export const StampPerforationFrame = React.forwardRef<
       borderColor,
       innerBorderColor,
       hasDoubleBorder = true,
+      hasPaperTexture = true,
       interactive = false,
       className,
       style,
@@ -140,6 +142,7 @@ export const StampPerforationFrame = React.forwardRef<
     ref,
   ) => {
     const clipId = useId();
+    const textureId = useId();
 
     const isCustomDimensions =
       size === "custom" &&
@@ -193,7 +196,7 @@ export const StampPerforationFrame = React.forwardRef<
       >
         <svg
           viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="w-full h-full block overflow-visible drop-shadow-[0_1px_2px_rgba(28,31,38,0.12)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+          className="w-full h-full block overflow-visible drop-shadow-[0_1px_3px_rgba(28,31,38,0.12)] drop-shadow-[0_3px_6px_rgba(28,31,38,0.06)] dark:drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -201,6 +204,27 @@ export const StampPerforationFrame = React.forwardRef<
             <clipPath id={clipId}>
               <path d={pathData} />
             </clipPath>
+            {hasPaperTexture && (
+              <filter id={textureId} x="0%" y="0%" width="100%" height="100%">
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.04"
+                  numOctaves="3"
+                  result="noise"
+                />
+                <feColorMatrix
+                  type="matrix"
+                  values="0 0 0 0 0.15  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.04 0"
+                  result="coloredNoise"
+                />
+                <feComposite
+                  operator="in"
+                  in2="SourceGraphic"
+                  result="texture"
+                />
+                <feBlend mode="multiply" in="SourceGraphic" in2="texture" />
+              </filter>
+            )}
           </defs>
 
           <path
@@ -208,6 +232,7 @@ export const StampPerforationFrame = React.forwardRef<
             fill={paperColor || "var(--parchment)"}
             stroke={borderColor || "var(--crease)"}
             strokeWidth="1"
+            filter={hasPaperTexture ? `url(#${textureId})` : undefined}
             className="transition-colors duration-150"
           />
 

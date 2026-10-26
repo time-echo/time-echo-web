@@ -157,9 +157,11 @@ export function LetterComposerForm({
                 {form.stampId ? (
                   <div className="group relative flex flex-col items-center">
                     <Stamp
+                      key={form.stampId}
                       id={form.stampId}
                       size="md"
                       interactive
+                      animateAffix
                       rotation={2.5}
                       onClick={() => setIsStampPickerOpen(true)}
                     />

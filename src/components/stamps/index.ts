@@ -17,6 +17,8 @@ export {
   type StampPickerModalProps,
 } from "./StampPickerModal";
 
+export { playStampPressSound } from "./stampAudio";
+
 export {
   STAMPS_CATALOG,
   STAMP_CATEGORIES,

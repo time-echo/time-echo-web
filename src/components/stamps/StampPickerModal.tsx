@@ -6,6 +6,7 @@ import { X, Search, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Stamp } from "./Stamp";
+import { playStampPressSound } from "./stampAudio";
 import {
   STAMPS_CATALOG,
   STAMP_CATEGORIES,
@@ -78,6 +79,7 @@ function StampPickerContent({
   }, [tempSelectedId]);
 
   const handleApply = () => {
+    playStampPressSound();
     onSelectStamp(tempSelectedId);
     onClose();
   };
@@ -197,7 +199,10 @@ function StampPickerContent({
                 return (
                   <div
                     key={stamp.id}
-                    onClick={() => setTempSelectedId(stamp.id)}
+                    onClick={() => {
+                      playStampPressSound();
+                      setTempSelectedId(stamp.id);
+                    }}
                     className={cn(
                       "group relative flex flex-col items-center p-3 rounded-xs border transition-all cursor-pointer w-full max-w-[150px]",
                       isSelected

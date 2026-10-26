@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { StampPerforationFrame, type StampSize } from "./StampPerforationFrame";
 import { PostmarkOverlay } from "./PostmarkOverlay";
+import { playStampPressSound } from "./stampAudio";
 import {
   getStampById,
   DEFAULT_STAMP_ID,
@@ -17,6 +19,8 @@ export interface StampProps extends React.HTMLAttributes<HTMLDivElement> {
   hasPostmark?: boolean;
   interactive?: boolean;
   selected?: boolean;
+  animateAffix?: boolean;
+  hasPaperTexture?: boolean;
   paperColor?: string;
   borderColor?: string;
   className?: string;
@@ -59,10 +63,12 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
     {
       id,
       size = "md",
-      rotation,
+      rotation = 0,
       hasPostmark = false,
       interactive = false,
       selected = false,
+      animateAffix = false,
+      hasPaperTexture = true,
       paperColor,
       borderColor,
       postmarkVariant = "combo",
@@ -74,6 +80,7 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
     },
     ref,
   ) => {
+    const shouldReduceMotion = useReducedMotion();
     const stamp: StampDefinition =
       getStampById(id) || getStampById(DEFAULT_STAMP_ID)!;
 
@@ -81,26 +88,57 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
     const textConfig =
       size !== "custom" ? TEXT_SIZE_MAP[size] : TEXT_SIZE_MAP.md;
 
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (interactive || onClick) {
+        playStampPressSound();
+      }
+      onClick?.(e);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (onClick && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        playStampPressSound();
+        onClick(e as unknown as React.MouseEvent<HTMLDivElement>);
+      }
+    };
+
     return (
-      <div
+      <motion.div
         ref={ref}
-        onClick={onClick}
+        onClick={handleClick}
         role={onClick ? "button" : undefined}
         tabIndex={onClick ? 0 : undefined}
-        onKeyDown={
-          onClick
-            ? (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onClick(e as unknown as React.MouseEvent<HTMLDivElement>);
-                }
+        onKeyDown={handleKeyDown}
+        initial={
+          animateAffix && !shouldReduceMotion
+            ? { scale: 1.18, opacity: 0.6, y: -4 }
+            : false
+        }
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        whileHover={
+          interactive && !shouldReduceMotion
+            ? {
+                y: -3,
+                scale: 1.04,
+                rotate: rotation + (rotation >= 0 ? 0.8 : -0.8),
+                transition: { type: "spring", stiffness: 400, damping: 25 },
+              }
+            : undefined
+        }
+        whileTap={
+          interactive && !shouldReduceMotion
+            ? {
+                scale: 0.96,
+                y: 1,
+                transition: { duration: 0.1 },
               }
             : undefined
         }
         className={cn(
-          "relative inline-block transition-transform duration-200 outline-hidden",
+          "relative inline-block transition-shadow duration-200 outline-hidden select-none",
           interactive &&
-            "cursor-pointer hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-wax focus-visible:ring-offset-2",
+            "cursor-pointer focus-visible:ring-2 focus-visible:ring-wax focus-visible:ring-offset-2",
           selected && "ring-2 ring-wax ring-offset-2 rounded-xs shadow-md",
           className,
         )}
@@ -108,13 +146,14 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
           transform: rotation ? `rotate(${rotation}deg)` : undefined,
           ...style,
         }}
-        {...props}
+        {...(props as React.ComponentProps<typeof motion.div>)}
       >
         <StampPerforationFrame
           size={size}
           paperColor={paperColor}
           borderColor={selected ? "var(--wax)" : borderColor || "var(--crease)"}
           innerBorderColor={selected ? "var(--wax)" : stamp.primaryColor}
+          hasPaperTexture={hasPaperTexture}
           interactive={false}
         >
           <div className="w-full flex justify-between items-center px-1 font-letter uppercase font-semibold text-foreground-muted select-none">
@@ -159,7 +198,7 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
             rotation={rotation ? rotation * -0.4 : -2.5}
           />
         )}
-      </div>
+      </motion.div>
     );
   },
 );
