@@ -12,7 +12,6 @@ import {
   Mail,
   Clock,
   BarChart3,
-  Bookmark,
   Settings,
   LogOut,
   Menu,
@@ -44,7 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
         >
-          {t("header.skipToContent")}
+          {t("common.skipToContent")}
         </a>
         <ArchivalHeader />
         <main
@@ -62,7 +61,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isVaultActive = pathname === "/dashboard" && !isTimeline;
   const isTimelineActive = pathname === "/dashboard" && isTimeline;
   const isAnalyticsActive = pathname === "/analytics";
-  const isCollectionActive = pathname === "/stamps";
   const isSettingsActive = pathname === "/settings";
 
   return (
@@ -71,7 +69,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
       >
-        {t("header.skipToContent")}
+        {t("common.skipToContent")}
       </a>
       <aside className="hidden md:flex w-72 h-screen sticky top-0 bg-manila/50 border-r border-crease p-8 flex-col justify-between shrink-0 font-ui select-none">
         <div className="space-y-10">
@@ -163,19 +161,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <BarChart3 size={18} />
               <span>{t("nav.analytics")}</span>
-            </Link>
-
-            <Link
-              href="/stamps"
-              className={cn(
-                "flex items-center gap-3.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150 min-h-[44px] focus-visible:outline-2 focus-visible:outline-wax",
-                isCollectionActive
-                  ? "bg-wax text-on-wax"
-                  : "text-foreground-muted hover:bg-manila hover:text-wax",
-              )}
-            >
-              <Bookmark size={18} />
-              <span>{t("nav.collection")}</span>
             </Link>
 
             <Link
@@ -294,14 +279,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             <BarChart3 size={16} />
             <span>{t("nav.analytics")}</span>
-          </Link>
-          <Link
-            href="/stamps"
-            onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 py-3 px-2 min-h-[44px] text-sm text-foreground hover:text-wax focus-visible:outline-2 focus-visible:outline-wax"
-          >
-            <Bookmark size={16} />
-            <span>{t("nav.collection")}</span>
           </Link>
           <Link
             href="/settings"

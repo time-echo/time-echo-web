@@ -1,1 +1,0 @@
-export function playStampPressSound(): void {}

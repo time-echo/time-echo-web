@@ -6,7 +6,9 @@ import React, {
   useEffect,
   useCallback,
   useRef,
+  useSyncExternalStore,
 } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -60,16 +62,13 @@ function StampPickerContent({
 
     return STAMPS_CATALOG.filter((stamp) => {
       const localizedName = t(`stamps.items.${stamp.id}.name`);
-      const localizedDesc = t(`stamps.items.${stamp.id}.description`);
       const localizedDenom = t(`stamps.items.${stamp.id}.denomination`);
 
       return (
         stamp.name.toLowerCase().includes(query) ||
         localizedName.toLowerCase().includes(query) ||
         stamp.denomination.toLowerCase().includes(query) ||
-        localizedDenom.toLowerCase().includes(query) ||
-        stamp.description.toLowerCase().includes(query) ||
-        localizedDesc.toLowerCase().includes(query)
+        localizedDenom.toLowerCase().includes(query)
       );
     });
   }, [searchQuery, t]);
@@ -103,7 +102,7 @@ function StampPickerContent({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/60 backdrop-blur-xs"
+        className="fixed inset-0 bg-black/60 backdrop-blur-md"
         onClick={onClose}
       />
 
@@ -234,6 +233,8 @@ function StampPickerContent({
   );
 }
 
+const emptySubscribe = () => () => {};
+
 export function StampPickerModal({
   isOpen,
   onClose,
@@ -242,7 +243,15 @@ export function StampPickerModal({
   allowRemove = true,
   className,
 }: StampPickerModalProps) {
-  return (
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
+  if (!isClient) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div
@@ -261,6 +270,7 @@ export function StampPickerModal({
           />
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
