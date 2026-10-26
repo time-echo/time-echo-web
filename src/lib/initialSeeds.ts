@@ -42,6 +42,7 @@ Tu antiguo yo.`,
     isWaxBroken: false,
     createdAt: "2024-03-27T08:30:00.000Z",
     updatedAt: "2024-03-27T10:00:00.000Z",
+    stampId: "morning-coffee",
     emotionalSnapshot: {
       id: "snap-101",
       letterId: "capsule-unlocked-2024",
@@ -119,6 +120,7 @@ No abras esta carta hasta que llegue el día convenido. Cuida la salud, respira 
     isWaxBroken: false,
     createdAt: "2026-03-29T12:00:00.000Z",
     updatedAt: "2026-03-29T12:00:00.000Z",
+    stampId: "rainy-afternoon",
     emotionalSnapshot: {
       id: "snap-201",
       letterId: "capsule-transit-2027",
@@ -182,6 +184,7 @@ Siéntete orgulloso de dónde estás. Trabajamos muy duro para traerte hasta aqu
     isWaxBroken: true,
     createdAt: "2022-09-15T08:00:00.000Z",
     updatedAt: "2022-09-16T19:00:00.000Z",
+    stampId: "personal-journal",
     emotionalSnapshot: {
       id: "snap-301",
       letterId: "capsule-archived-2022",
@@ -255,6 +258,7 @@ Be proud of where you are. We worked hard to bring you here.`,
     isWaxBroken: true,
     createdAt: "2023-11-10T08:00:00.000Z",
     updatedAt: "2023-11-11T17:00:00.000Z",
+    stampId: "something-growing",
     emotionalSnapshot: {
       id: "snap-401",
       letterId: "capsule-revealed-2023",

@@ -28,6 +28,7 @@ export interface LetterComposerState {
     category: PredictionCategory;
     prediction: string;
   }>;
+  stampId?: string | null;
 }
 
 function getPresetDate(preset: HorizonPreset): string {
@@ -61,6 +62,7 @@ const DEFAULT_STATE: LetterComposerState = {
   horizonPreset: "1y",
   language: "es",
   timezone: "UTC",
+  stampId: null,
   emotionalSnapshot: {
     happinessLevel: 7,
     anxietyLevel: 5,
@@ -197,6 +199,7 @@ export function useLetterComposer(
         scheduledAt: new Date(form.scheduledAt).toISOString(),
         language: form.language,
         timezone: form.timezone,
+        stampId: form.stampId,
         emotionalSnapshot: form.emotionalSnapshot,
         predictions: validPredictions,
       };
@@ -206,9 +209,7 @@ export function useLetterComposer(
       return result;
     } catch (err) {
       const msg =
-        err instanceof Error
-          ? err.message
-          : t("composer.errors.sealError");
+        err instanceof Error ? err.message : t("composer.errors.sealError");
       setError(msg);
       throw err;
     } finally {

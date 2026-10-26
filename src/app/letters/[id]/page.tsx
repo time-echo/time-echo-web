@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
+import { Stamp, DEFAULT_STAMP_ID } from "@/components/stamps";
 
 interface LetterPageProps {
   params: Promise<{ id: string }>;
@@ -236,8 +237,20 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
       <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">
         <div className="max-w-xl mx-auto py-8">
           <div className="paper-sheet rounded-xs p-8 sm:p-12 text-center space-y-7 border border-crease">
-            <div className="wax-seal w-24 h-24 rounded-full mx-auto flex items-center justify-center text-on-wax select-none">
-              <Lock size={36} />
+            <div className="flex items-center justify-center gap-6 select-none my-2">
+              <div className="wax-seal w-24 h-24 rounded-full flex items-center justify-center text-on-wax shadow-md">
+                <Lock size={36} />
+              </div>
+              <div className="relative">
+                <Stamp
+                  id={letter.stampId || DEFAULT_STAMP_ID}
+                  size="lg"
+                  hasPostmark
+                  postmarkVariant="combo"
+                  postmarkDate={formattedScheduled}
+                  rotation={3.5}
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -307,9 +320,19 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 </p>
               </div>
 
-              <div className="my-6 relative select-none flex items-center justify-center h-32">
+              <div className="my-6 relative select-none flex items-center justify-center gap-6 h-32">
                 <div className="wax-seal w-20 h-20 rounded-full flex items-center justify-center text-on-wax animate-seal-left">
                   <Unlock size={28} />
+                </div>
+                <div className="relative">
+                  <Stamp
+                    id={letter.stampId || DEFAULT_STAMP_ID}
+                    size="md"
+                    hasPostmark
+                    postmarkVariant="combo"
+                    postmarkDate={formattedScheduled}
+                    rotation={3}
+                  />
                 </div>
               </div>
 
@@ -593,27 +616,41 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-8 space-y-6">
           <div className="paper-sheet rounded-xs p-6 sm:p-10 space-y-6 border border-crease">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-4 text-xs font-letter">
-              <div>
-                <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
-                  {t("reveal.written")}
-                </p>
-                <p className="font-semibold text-foreground text-xs">
-                  {formattedCreated}
-                </p>
-              </div>
-              <div className="text-center">
-                <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-crease pb-4 text-xs font-letter">
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+                  <div>
+                    <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
+                      {t("reveal.written")}
+                    </p>
+                    <p className="font-semibold text-foreground text-xs">
+                      {formattedCreated}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
+                      {t("reveal.delivered")}
+                    </p>
+                    <p className="font-semibold text-foreground text-xs">
+                      {formattedScheduled}
+                    </p>
+                  </div>
+                </div>
+
+                <span className="postmark-stamp text-[10px] py-0.5 px-2.5 inline-block">
                   {t("reveal.letterFromPast")}
                 </span>
               </div>
-              <div className="sm:text-right">
-                <p className="uppercase tracking-wider font-semibold text-[10px] text-foreground-muted">
-                  {t("reveal.delivered")}
-                </p>
-                <p className="font-semibold text-foreground text-xs">
-                  {formattedScheduled}
-                </p>
+
+              <div className="shrink-0">
+                <Stamp
+                  id={letter.stampId || DEFAULT_STAMP_ID}
+                  size="md"
+                  hasPostmark
+                  postmarkVariant="combo"
+                  postmarkDate={formattedScheduled}
+                  rotation={-2}
+                />
               </div>
             </div>
 

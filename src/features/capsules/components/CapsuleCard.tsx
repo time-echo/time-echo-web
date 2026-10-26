@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { Stamp } from "@/components/stamps";
 
 export interface CapsuleCardProps {
   capsule: Letter;
@@ -64,6 +65,14 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
           </div>
 
           <div className="flex items-center gap-2">
+            {capsule.stampId && (
+              <Stamp
+                id={capsule.stampId}
+                size="sm"
+                hasPostmark={isDelivered || isOpened}
+                rotation={-2}
+              />
+            )}
             <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded border border-crease bg-manila/50">
               {capsule.language.toUpperCase()}
             </span>
@@ -146,9 +155,7 @@ export function CapsuleCard({ capsule, className }: CapsuleCardProps) {
           )}
         >
           <span>
-            {isDelivered
-              ? t("dashboard.breakSeal")
-              : t("common.inspect")}
+            {isDelivered ? t("dashboard.breakSeal") : t("common.inspect")}
           </span>
           <ArrowRight size={13} />
         </Link>

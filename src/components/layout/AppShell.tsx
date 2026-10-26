@@ -43,7 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
         >
-          {t("header.skipToContent")}
+          {t("common.skipToContent")}
         </a>
         <ArchivalHeader />
         <main
@@ -69,7 +69,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
       >
-        {t("header.skipToContent")}
+        {t("common.skipToContent")}
       </a>
       <aside className="hidden md:flex w-72 h-screen sticky top-0 bg-manila/50 border-r border-crease p-8 flex-col justify-between shrink-0 font-ui select-none">
         <div className="space-y-10">

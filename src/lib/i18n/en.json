@@ -51,7 +51,6 @@
     "myLetters": "Vault",
     "signIn": "Sign In",
     "signOut": "Sign Out",
-    "skipToContent": "Skip to content",
     "nav": {
       "vault": "Vault",
       "compose": "Compose",
@@ -62,6 +61,7 @@
     "compose": "Write a Letter",
     "letters": "My Letters",
     "timeline": "Timeline",
+    "collection": "Collection",
     "analytics": "Analytics",
     "settings": "Settings",
     "openMenu": "Open menu",
@@ -1151,5 +1151,313 @@
     "tryAnotherEmail": "Try another email",
     "continueDemo": "Continue (Demo mode)",
     "demoNotice": "Demo mode active: you can enter the vault directly."
+  },
+  "stamps": {
+    "title": "Postage Stamps",
+    "subtitle": "Select a commemorative stamp to affix to your envelope",
+    "badge": "POSTAL VAULT",
+    "chooseStamp": "Choose Stamp",
+    "changeStamp": "Change Stamp",
+    "removeStamp": "Remove Stamp",
+    "addStamp": "Add Stamp",
+    "affixStamp": "Affix Stamp",
+    "cancel": "Cancel",
+    "close": "Close stamp picker",
+    "searchPlaceholder": "Search stamps...",
+    "noStampsFound": "No stamps found matching your search",
+    "selected": "Selected",
+    "preview": "Preview",
+    "postmark": "Postal Cancellation",
+    "scrollLeft": "Scroll stamps left",
+    "scrollRight": "Scroll stamps right",
+    "categories": {
+      "all": "All",
+      "small-things": "Small Things",
+      "places-i-inhabit": "Places I Inhabit",
+      "stored-thoughts": "Stored Thoughts",
+      "passage-of-time": "Passage of Time",
+      "time": "Time & Astronomy",
+      "travel": "Travel & Messengers",
+      "memory": "Memory & Ephemera",
+      "milestone": "Growth & Milestones",
+      "season": "Seasons & Celebrations"
+    },
+    "items": {
+      "morning-coffee": {
+        "name": "Morning Coffee",
+        "description": "A steaming cup of coffee upon a sunlit table",
+        "denomination": "MORNINGS • 10¢",
+        "storyPrompt": "How does the first coffee of your morning taste, and what thoughts keep you company?"
+      },
+      "today-song": {
+        "name": "Today's Song",
+        "description": "Headphones and a music player or vintage cassette",
+        "denomination": "RHYTHM • 12¢",
+        "storyPrompt": "What song or melody is currently playing on loop in your days?"
+      },
+      "home-cooked-meal": {
+        "name": "The Usual",
+        "description": "A plate of home-cooked food resting upon a table",
+        "denomination": "FLAVOR • 15¢",
+        "storyPrompt": "What is that comforting home-cooked meal that always brings you peace?"
+      },
+      "todays-steps": {
+        "name": "Today's Steps",
+        "description": "Worn sneakers resting quietly by the entryway door",
+        "denomination": "STEPS • 08¢",
+        "storyPrompt": "Where did your feet take you today, and what path are you treading?"
+      },
+      "five-more-minutes": {
+        "name": "Five More Minutes",
+        "description": "An alarm clock resting beside warm slippers",
+        "denomination": "DAWN • 05¢",
+        "storyPrompt": "That brief morning truce before the outside world begins."
+      },
+      "todays-list": {
+        "name": "Today's List",
+        "description": "A handwritten grocery list and a wooden pencil",
+        "denomination": "NOTES • 06¢",
+        "storyPrompt": "The quiet, mundane tasks that give structure to your ordinary days."
+      },
+      "little-home": {
+        "name": "My Little Home",
+        "description": "A quiet home with potted plants and laundry drying in the sun",
+        "denomination": "HOME • 20¢",
+        "storyPrompt": "Which corner of your home feels safest and coziest to you right now?"
+      },
+      "neighborhood-corner": {
+        "name": "The Usual Spot",
+        "description": "A bicycle parked beside a friendly neighborhood shop",
+        "denomination": "CORNER • 18¢",
+        "storyPrompt": "That corner, shop, or street you pass without thinking, but would deeply miss."
+      },
+      "way-home": {
+        "name": "The Way Home",
+        "description": "A quiet bus stop along an everyday street",
+        "denomination": "ROUTE • 22¢",
+        "storyPrompt": "The sensation of returning, the commute back, and the quiet relief of dusk."
+      },
+      "favorite-spot": {
+        "name": "Favorite Haven",
+        "description": "A cozy neighborhood café or local bakery",
+        "denomination": "CAFÉ • 25¢",
+        "storyPrompt": "Where do you escape when you need to think, read, or simply breathe?"
+      },
+      "rainy-afternoon": {
+        "name": "A Rainy Afternoon",
+        "description": "Raindrops streaking a window with a cozy interior",
+        "denomination": "RAIN • 14¢",
+        "storyPrompt": "The patter of rain against the pane and the quiet warmth of shelter."
+      },
+      "personal-journal": {
+        "name": "My Personal Journal",
+        "description": "An open notebook, a pen, and a pressed dried flower",
+        "denomination": "MEMORY • 25¢",
+        "storyPrompt": "What quiet longing, secret, or honest confession lives on your pages today?"
+      },
+      "ordinary-day": {
+        "name": "An Ordinary Day",
+        "description": "An instant camera alongside small keepsake snapshots",
+        "denomination": "PHOTO • 19¢",
+        "storyPrompt": "Because a quiet day without grand events can be the most cherished in memory."
+      },
+      "work-in-progress": {
+        "name": "Work in Progress",
+        "description": "A wooden desk with a laptop, notebook, and warm lamp",
+        "denomination": "STUDIO • 30¢",
+        "storyPrompt": "What project, craft, or labor is currently holding your focus and energy?"
+      },
+      "something-growing": {
+        "name": "Something Growing",
+        "description": "A potted plant gently unfurling a tender new leaf",
+        "denomination": "SPROUT • 15¢",
+        "storyPrompt": "A tender new habit, a budding bond, or an idea just taking root."
+      },
+      "first-key": {
+        "name": "My First Key",
+        "description": "A solitary brass key resting upon a worn wooden surface",
+        "denomination": "KEY • 28¢",
+        "storyPrompt": "The quiet weight of autonomy: the first door you unlocked entirely on your own."
+      },
+      "one-more-year": {
+        "name": "One More Year",
+        "description": "A small birthday cake lit with a single glowing candle",
+        "denomination": "YEARS • 35¢",
+        "storyPrompt": "Another year of stumbling, learning, and finding reasons to be glad you're here."
+      },
+      "little-companion": {
+        "name": "Little Companion",
+        "description": "A quiet companion or small keepsake representing everyday warmth",
+        "denomination": "PEACE • 16¢",
+        "storyPrompt": "That quiet presence—a pet, a keepsake, or a plant—that never judges and always remains."
+      },
+      "hourglass": {
+        "name": "Hourglass of Time",
+        "description": "Golden falling sands & cosmic glow",
+        "denomination": "TIME ECHO • 10¢"
+      },
+      "pocket-watch": {
+        "name": "Antique Chronometer",
+        "description": "Antique open-face watch with roman numerals",
+        "denomination": "CHRONOS • 25¢"
+      },
+      "crescent-dreams": {
+        "name": "Crescent Dreams",
+        "description": "Moon resting on night clouds & stars",
+        "denomination": "NOCTURNE • 05¢"
+      },
+      "solar-alignment": {
+        "name": "Solar Alignment",
+        "description": "Eclipse corona ring with radiant rays",
+        "denomination": "SOLARIS • 50¢"
+      },
+      "constellation": {
+        "name": "Celestial Grid",
+        "description": "Ursa Major & Polaris navigational grid",
+        "denomination": "CELESTIAL • AIR"
+      },
+      "time-capsule": {
+        "name": "Archival Vault",
+        "description": "Vintage steel cylinder with combination dial",
+        "denomination": "VAULT • FUTURE"
+      },
+      "airmail-biplane": {
+        "name": "Airmail Biplane",
+        "description": "Classic twin-wing mail plane over clouds",
+        "denomination": "PAR AVION • 40¢"
+      },
+      "paper-plane": {
+        "name": "Origami Glider",
+        "description": "Origami paper plane trailing dashed loop",
+        "denomination": "DRIFT • 15¢"
+      },
+      "carrier-pigeon": {
+        "name": "Carrier Pigeon",
+        "description": "Flying dove carrying sealed letter",
+        "denomination": "DISPATCH • 20¢"
+      },
+      "lighthouse": {
+        "name": "Sentinel Lighthouse",
+        "description": "Cliffside beacon shining across waters",
+        "denomination": "BEACON • 30¢"
+      },
+      "hot-air-balloon": {
+        "name": "Archival Balloon",
+        "description": "Striped vintage balloon with wicker basket",
+        "denomination": "JOURNEY • 35¢"
+      },
+      "vintage-quill": {
+        "name": "Calligraphy Quill",
+        "description": "Feather dipping into antique ink pot",
+        "denomination": "SCRIPT • 10¢"
+      },
+      "wax-seal-heart": {
+        "name": "Carmine Seal Heart",
+        "description": "Wax seal stamped with heart emblem",
+        "denomination": "CONFIDENTIAL"
+      },
+      "polaroid-frame": {
+        "name": "Instant Snapshot",
+        "description": "Instant photo frame with mountain silhouette",
+        "denomination": "SNAPSHOT • 19¢"
+      },
+      "vinyl-record": {
+        "name": "Vinyl Groove",
+        "description": "Vinyl disc with sound wave grooved lines",
+        "denomination": "ECHO • STEREO"
+      },
+      "steaming-mug": {
+        "name": "Quiet Morning",
+        "description": "Warm ceramic mug with gentle vapor",
+        "denomination": "MORNINGS • 08¢"
+      },
+      "sprout-seedling": {
+        "name": "First Sprout",
+        "description": "Little sprout rising from fertile soil",
+        "denomination": "NEW ERA • 12¢"
+      },
+      "ginkgo-leaf": {
+        "name": "Golden Ginkgo",
+        "description": "Fan-shaped autumn ginkgo leaf",
+        "denomination": "PATIENCE • 15¢"
+      },
+      "mountain-peak": {
+        "name": "Summit Horizon",
+        "description": "Twin snow-capped peaks under morning sun",
+        "denomination": "SUMMIT • 60¢"
+      },
+      "antique-key": {
+        "name": "Skeleton Key",
+        "description": "Ornate skeleton key with ribbon",
+        "denomination": "UNLOCK • 2030"
+      },
+      "compass-rose": {
+        "name": "Mariner's Compass",
+        "description": "Nautical 8-point compass rose",
+        "denomination": "DIRECTION • 45¢"
+      },
+      "cherry-blossom": {
+        "name": "Sakura Bloom",
+        "description": "Delicate sakura petals blowing in the wind",
+        "denomination": "SPRING • 15¢"
+      },
+      "crystal-snowflake": {
+        "name": "Winter Crystal",
+        "description": "Hexagonal intricate ice crystal",
+        "denomination": "WINTER • 20¢"
+      },
+      "summer-sunburst": {
+        "name": "Summer Sunburst",
+        "description": "Warm radiating celestial sun face",
+        "denomination": "SUMMER • 25¢"
+      }
+    }
+  },
+  "collection": {
+    "badge": "PHILATELIC ALBUM",
+    "title": "Postal Stamp Collection",
+    "subtitle": "Commemorative stamps inspired by everyday objects, routines, and quiet moments.",
+    "stats": {
+      "collectedCount": "Collected",
+      "totalCount": "Total in Album",
+      "progressLabel": "Album Progress",
+      "unlockedRatio": "{unlocked} of {total} stamps discovered"
+    },
+    "tabs": {
+      "all": "All",
+      "small-things": "Small Things",
+      "places-i-inhabit": "Places I Inhabit",
+      "stored-thoughts": "Stored Thoughts",
+      "passage-of-time": "Passage of Time"
+    },
+    "filter": {
+      "all": "All",
+      "unlocked": "Collected",
+      "locked": "To Unlock"
+    },
+    "status": {
+      "unlocked": "In Collection",
+      "locked": "To Unlock"
+    },
+    "card": {
+      "inspect": "Inspect stamp",
+      "unlockedBadge": "COLLECTED",
+      "lockedBadge": "TO UNLOCK"
+    },
+    "dossier": {
+      "badge": "PHILATELIC DOSSIER",
+      "categoryLabel": "Postal Series",
+      "denominationLabel": "Face Value",
+      "storyLabel": "Everyday Inspiration",
+      "statusLabel": "Status",
+      "unlockedDesc": "This stamp belongs to your permanent collection. You can affix it to any letter to your future self.",
+      "lockedDesc": "You haven't sealed a letter with this stamp yet. You can unlock it by affixing it to your next letter.",
+      "writeWithStamp": "Write letter with this stamp",
+      "unlockNow": "Add to my collection",
+      "close": "Close dossier"
+    },
+    "emptySearchTitle": "No matching stamps",
+    "emptySearchDesc": "No stamps found matching your filter criteria or search query.",
+    "backToVault": "Back to Vault"
   }
 }

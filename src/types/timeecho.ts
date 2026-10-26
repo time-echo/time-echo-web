@@ -100,6 +100,7 @@ export interface Letter {
   emotionalSnapshot?: EmotionalSnapshot | null;
   /** Associated milestone predictions */
   predictions: Prediction[];
+  stampId?: string | null;
 }
 
 /**
@@ -132,6 +133,7 @@ export interface CreateLetterInput {
   scheduledAt: string;
   timezone?: string;
   language?: SupportedLanguage;
+  stampId?: string | null;
   emotionalSnapshot: {
     happinessLevel: number;
     anxietyLevel: number;
@@ -186,4 +188,20 @@ export interface AnalyticsMetrics {
     reveal: EmotionalMetricSet;
     delta: EmotionalMetricSet;
   };
+}
+
+export type StampCollectionCategory =
+  "small-things" | "places-i-inhabit" | "stored-thoughts" | "passage-of-time";
+
+export interface CollectibleStamp {
+  id: string;
+  name: string;
+  category: StampCollectionCategory;
+  denomination: string;
+  primaryColor: string;
+  accentColor: string;
+  description: string;
+  storyPrompt?: string;
+  isUnlocked?: boolean;
+  unlockedAt?: string;
 }

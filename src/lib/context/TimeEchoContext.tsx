@@ -20,6 +20,7 @@ import {
 import { ICapsuleRepository } from "@/lib/repositories/ICapsuleRepository";
 import { HttpApiRepository } from "@/lib/repositories/HttpApiRepository";
 import { getTranslation } from "@/lib/i18n";
+import { INITIAL_UNLOCKED_STAMP_IDS } from "@/components/stamps";
 
 const localeListeners = new Set<() => void>();
 
@@ -73,6 +74,9 @@ interface TimeEchoContextValue {
   deleteCapsule: (id: string) => Promise<void>;
   breakWaxSeal: (id: string) => Promise<Letter>;
   resetVault: () => Promise<void>;
+  unlockedStampIds: string[];
+  unlockStamp: (id: string) => void;
+  isStampUnlocked: (id: string) => boolean;
   t: (key: string, params?: Record<string, string | number>) => string;
 }
 
@@ -138,6 +142,43 @@ export function TimeEchoProvider({
   const toggleLocale = useCallback(() => {
     setLocale(locale === "es" ? "en" : "es");
   }, [locale, setLocale]);
+
+  const [unlockedStampIds, setUnlockedStampIds] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = window.localStorage.getItem("timeecho_unlocked_stamps");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+      } catch {
+        return INITIAL_UNLOCKED_STAMP_IDS;
+      }
+    }
+    return INITIAL_UNLOCKED_STAMP_IDS;
+  });
+
+  const unlockStamp = useCallback((id: string) => {
+    setUnlockedStampIds((prev) => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem(
+            "timeecho_unlocked_stamps",
+            JSON.stringify(next),
+          );
+        } catch {
+          return next;
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const isStampUnlocked = useCallback((id: string) => Boolean(id), []);
 
   const t = useCallback(
     (key: string, params?: Record<string, string | number>) => {
@@ -205,6 +246,9 @@ export function TimeEchoProvider({
       setError(null);
       try {
         const created = await repository.create(input);
+        if (input.stampId) {
+          unlockStamp(input.stampId);
+        }
         setCapsules((prev) => [created, ...prev]);
         return created;
       } catch (err) {
@@ -214,7 +258,7 @@ export function TimeEchoProvider({
         throw err;
       }
     },
-    [repository],
+    [repository, unlockStamp],
   );
 
   const updateReality = useCallback(
@@ -339,6 +383,9 @@ export function TimeEchoProvider({
       deleteCapsule,
       breakWaxSeal,
       resetVault,
+      unlockedStampIds,
+      unlockStamp,
+      isStampUnlocked,
       t,
     }),
     [
@@ -358,6 +405,9 @@ export function TimeEchoProvider({
       deleteCapsule,
       breakWaxSeal,
       resetVault,
+      unlockedStampIds,
+      unlockStamp,
+      isStampUnlocked,
       t,
     ],
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { PredictionCategory } from "@/types/timeecho";
@@ -17,6 +17,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
+import { Stamp, StampPickerModal } from "@/components/stamps";
 
 export default function HomePage() {
   const router = useRouter();
@@ -51,6 +52,8 @@ export default function HomePage() {
   const [selectedHorizonDays, setSelectedHorizonDays] = useState<number>(365);
   const [customDate, setCustomDate] = useState<string>("");
   const [showCustomDate, setShowCustomDate] = useState<boolean>(false);
+  const [selectedStampId, setSelectedStampId] = useState<string | null>(null);
+  const [isStampPickerOpen, setIsStampPickerOpen] = useState<boolean>(false);
 
   const [predictionCity, setPredictionCity] = useState("");
   const [predictionCareer, setPredictionCareer] = useState("");
@@ -82,9 +85,20 @@ export default function HomePage() {
     setSelectedHorizonDays(0);
   };
 
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [isContentTouched, setIsContentTouched] = useState(false);
+  const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content.trim() || !email.trim()) return;
+    setHasAttemptedSubmit(true);
+
+    if (content.trim().length < 80) {
+      contentTextareaRef.current?.focus();
+      return;
+    }
+
+    if (!email.trim()) return;
 
     setIsSubmitting(true);
 
@@ -117,6 +131,7 @@ export default function HomePage() {
         content,
         email,
         scheduledAt: deliverDate.toISOString(),
+        stampId: selectedStampId || undefined,
         emotionalSnapshot: {
           happinessLevel: happiness,
           anxietyLevel: anxiety,
@@ -133,7 +148,10 @@ export default function HomePage() {
   };
 
   const charCount = content.length;
-  const isUnderMinChars = charCount < 80;
+  const isContentTooShort = content.trim().length < 80;
+  const showContentError =
+    isContentTooShort &&
+    (hasAttemptedSubmit || (isContentTouched && content.length > 0));
 
   return (
     <div className="space-y-24 max-w-6xl mx-auto -mt-4 font-ui animate-fade-in text-foreground">
@@ -201,7 +219,7 @@ export default function HomePage() {
         </div>
 
         <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-8 space-y-6 border border-crease">
-          <div className="flex items-center justify-between border-b border-crease pb-4">
+          <div className="flex items-start justify-between border-b border-crease pb-4 gap-4">
             <div>
               <span className="text-xs font-letter uppercase tracking-widest text-foreground-muted block">
                 {t("landing.step01Label")}
@@ -209,10 +227,45 @@ export default function HomePage() {
               <h2 className="font-serif-editorial text-2xl text-foreground font-semibold mt-0.5">
                 {t("landing.writeLetterToFuture")}
               </h2>
+              <span className="postmark-stamp text-xs py-0.5 px-2.5 inline-block mt-2">
+                {currentDateFormatted}
+              </span>
             </div>
-            <span className="postmark-stamp text-xs py-0.5 px-2.5">
-              {currentDateFormatted}
-            </span>
+
+            <div className="shrink-0 flex flex-col items-center">
+              {selectedStampId ? (
+                <div className="flex flex-col items-center">
+                  <Stamp
+                    id={selectedStampId}
+                    size="md"
+                    interactive
+                    rotation={2.5}
+                    onClick={() => setIsStampPickerOpen(true)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsStampPickerOpen(true)}
+                    className="mt-1 font-letter text-[10px] text-foreground-muted hover:text-ink transition-colors cursor-pointer"
+                  >
+                    {t("stamps.changeStamp")}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsStampPickerOpen(true)}
+                  aria-label={t("stamps.addStamp")}
+                  className="w-[72px] h-[90px] border-2 border-dashed border-crease hover:border-wax hover:bg-manila/50 rounded-xs flex flex-col items-center justify-center gap-1.5 text-foreground-muted hover:text-wax transition-all cursor-pointer group select-none shadow-2xs"
+                >
+                  <div className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                    +
+                  </div>
+                  <span className="font-letter text-[9px] uppercase tracking-wider font-semibold text-center leading-tight px-1">
+                    {t("stamps.addStamp")}
+                  </span>
+                </button>
+              )}
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -225,29 +278,49 @@ export default function HomePage() {
               </label>
               <textarea
                 id="landing-content"
+                ref={contentTextareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                onBlur={() => setIsContentTouched(true)}
                 placeholder={t("landing.letterPlaceholder")}
                 rows={7}
                 maxLength={2000}
                 required
-                aria-describedby="landing-content-counter"
-                className="w-full p-4 sm:p-5 border border-crease rounded-xs font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none transition-all shadow-inner bg-transparent"
+                aria-invalid={showContentError}
+                aria-describedby={
+                  showContentError
+                    ? "landing-content-error landing-content-counter"
+                    : "landing-content-counter"
+                }
+                className={cn(
+                  "w-full p-4 sm:p-5 border rounded-xs font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted focus:outline-none transition-all shadow-inner bg-transparent",
+                  showContentError
+                    ? "border-wax bg-wax/5 focus:border-wax"
+                    : "border-crease focus:border-wax",
+                )}
               />
               <div className="flex justify-between items-center text-[11px] font-letter text-foreground-muted pt-1">
                 <span className="italic">{t("landing.onlyYouCanSee")}</span>
                 <span
                   id="landing-content-counter"
-                  className={cn(isUnderMinChars && "text-wax")}
+                  className={cn(
+                    "transition-colors",
+                    showContentError
+                      ? "text-wax font-semibold"
+                      : charCount >= 80
+                        ? "text-foreground"
+                        : "text-foreground-muted",
+                  )}
                 >
-                  {isUnderMinChars
+                  {charCount < 80
                     ? t("landing.charCounterMin", { count: charCount })
                     : `${charCount} / 2000`}
                 </span>
               </div>
-              {isUnderMinChars && (
+              {showContentError && (
                 <p
-                  className="text-[11px] font-letter text-wax pt-0.5"
+                  id="landing-content-error"
+                  className="text-[11px] font-letter text-wax pt-0.5 animate-fade-in"
                   aria-live="polite"
                 >
                   {t("landing.minCharsError")}
@@ -542,11 +615,10 @@ export default function HomePage() {
                 />
                 <button
                   type="submit"
-                  disabled={isSubmitting || isUnderMinChars}
+                  disabled={isSubmitting}
                   className={cn(
                     "bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-6 py-3 text-xs font-semibold tracking-widest uppercase font-letter inline-flex items-center justify-center gap-2 border-none shadow-xs shrink-0 min-h-[44px] cursor-pointer transition-colors",
-                    (isSubmitting || isUnderMinChars) &&
-                      "opacity-60 cursor-not-allowed",
+                    isSubmitting && "opacity-60 cursor-not-allowed",
                   )}
                 >
                   <span>
@@ -664,46 +736,31 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
-              01
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {t("landing.step1Title")}
-              </h3>
-              <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {t("landing.step1Text")}
-              </p>
-            </div>
+          <div className="paper-sheet rounded-xs p-6 border border-crease space-y-2 text-center">
+            <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
+              {t("landing.step1Title")}
+            </h3>
+            <p className="text-xs font-letter text-foreground-muted leading-relaxed">
+              {t("landing.step1Text")}
+            </p>
           </div>
 
-          <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
-              02
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {t("landing.step2Title")}
-              </h3>
-              <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {t("landing.step2Text")}
-              </p>
-            </div>
+          <div className="paper-sheet rounded-xs p-6 border border-crease space-y-2 text-center">
+            <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
+              {t("landing.step2Title")}
+            </h3>
+            <p className="text-xs font-letter text-foreground-muted leading-relaxed">
+              {t("landing.step2Text")}
+            </p>
           </div>
 
-          <div className="paper-sheet rounded-xs p-6 border border-crease space-y-3 text-center">
-            <div className="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-on-wax font-letter font-bold text-sm select-none">
-              03
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
-                {t("landing.step3Title")}
-              </h3>
-              <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {t("landing.step3Text")}
-              </p>
-            </div>
+          <div className="paper-sheet rounded-xs p-6 border border-crease space-y-2 text-center">
+            <h3 className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
+              {t("landing.step3Title")}
+            </h3>
+            <p className="text-xs font-letter text-foreground-muted leading-relaxed">
+              {t("landing.step3Text")}
+            </p>
           </div>
         </div>
       </section>
@@ -716,6 +773,13 @@ export default function HomePage() {
           {t("footer.sentWithHope")}
         </p>
       </footer>
+
+      <StampPickerModal
+        isOpen={isStampPickerOpen}
+        onClose={() => setIsStampPickerOpen(false)}
+        selectedStampId={selectedStampId || undefined}
+        onSelectStamp={(id) => setSelectedStampId(id || null)}
+      />
     </div>
   );
 }
