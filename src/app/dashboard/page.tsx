@@ -30,10 +30,11 @@ export default function DashboardPage() {
   const archivedCapsules = capsules.filter((c) => c.status === "archived");
 
   const deliveredCapsules = activeCapsules.filter(
-    (c) => c.status === "delivered" || c.status === "opened",
+    (c) =>
+      c.status === "delivered" || c.status === "opened" || Boolean(c.openedAt),
   );
   const scheduledCapsules = activeCapsules.filter(
-    (c) => c.status === "pending",
+    (c) => c.status === "pending" || c.status === "queued",
   );
 
   const getDaysLeft = (targetIso: string) => {
