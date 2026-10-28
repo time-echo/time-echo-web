@@ -1142,7 +1142,14 @@
     "sendButton": "Enviar enlace mágico",
     "backHome": "Volver a la página de inicio",
     "errorHeader": "Error al procesar la solicitud:",
-    "invalidEmail": "Por favor ingresa un correo electrónico válido."
+    "invalidEmail": "Por favor ingresa un correo electrónico válido.",
+    "verifyingTitle": "Verificando enlace...",
+    "verifyingSubtitle": "Descifrando tu sesión y conectando con tu bóveda temporal...",
+    "successTitle": "¡Bienvenido a tu bóveda!",
+    "successSubtitle": "Sesión iniciada con éxito. Redirigiendo a tus cartas...",
+    "invalidTokenTitle": "Enlace no válido",
+    "invalidToken": "Este enlace mágico es inválido, ha caducado o ya fue consumido.",
+    "requestNewLink": "Solicitar nuevo enlace"
   },
   "checkEmail": {
     "title": "Revisa tu bandeja de entrada",

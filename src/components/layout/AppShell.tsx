@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
 import { ArchivalHeader } from "./ArchivalHeader";
 import { ArchivalFooter } from "./ArchivalFooter";
 import {
@@ -20,11 +21,18 @@ import {
 import { cn } from "@/lib/utils";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { locale, toggleLocale, t } = useTimeEcho();
+  const { user, logout } = useAuth();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
 
   const isTimeline = searchParams.get("timeline") === "true";
   const isPublicPage =
@@ -182,17 +190,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between border-t border-crease pt-4 font-ui">
             <div className="min-w-0 flex-1">
               <p className="text-xs text-foreground-muted font-medium truncate pr-2">
-                user@timeecho.me
+                {user?.email || "usuario@timeecho.me"}
               </p>
             </div>
-            <Link
-              href="/login"
-              className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full hover:bg-wax/10 text-wax transition-colors focus-visible:outline-2 focus-visible:outline-wax"
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full hover:bg-wax/10 text-wax transition-colors focus-visible:outline-2 focus-visible:outline-wax cursor-pointer border-none bg-transparent"
               title={t("header.signOut")}
               aria-label={t("header.signOut")}
             >
               <LogOut size={16} />
-            </Link>
+            </button>
           </div>
         </div>
       </aside>
@@ -289,15 +298,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span>{t("nav.settings")}</span>
           </Link>
           <div className="border-t border-crease pt-2 flex items-center justify-between text-xs text-foreground-muted">
-            <span>user@timeecho.me</span>
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-wax flex items-center gap-1 min-h-[44px] px-2 py-1 focus-visible:outline-2 focus-visible:outline-wax"
+            <span className="truncate pr-2">
+              {user?.email || "usuario@timeecho.me"}
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleLogout();
+              }}
+              className="text-wax flex items-center gap-1 min-h-[44px] px-2 py-1 focus-visible:outline-2 focus-visible:outline-wax cursor-pointer border-none bg-transparent"
             >
               <LogOut size={14} />
               <span>{t("header.signOut")}</span>
-            </Link>
+            </button>
           </div>
         </div>
       )}

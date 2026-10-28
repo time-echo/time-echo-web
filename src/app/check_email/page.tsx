@@ -1,15 +1,36 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
-import { Mail, ArrowLeft, ArrowRight } from "lucide-react";
+import { useAuth } from "@/lib/context/AuthContext";
+import { Mail, ArrowLeft, RefreshCw, CheckCircle2 } from "lucide-react";
 
 function CheckEmailContent() {
   const searchParams = useSearchParams();
   const { t } = useTimeEcho();
+  const { requestMagicLink } = useAuth();
   const email = searchParams.get("email") || "tu@email.com";
+
+  const [isResending, setIsResending] = useState(false);
+  const [resendNotice, setResendNotice] = useState<string | null>(null);
+
+  const handleResend = async () => {
+    if (!email || email === "tu@email.com") return;
+    setIsResending(true);
+    setResendNotice(null);
+    try {
+      await requestMagicLink(email);
+      setResendNotice(t("login.dispatchedTitle") || "¡Enlace reenviado!");
+      setTimeout(() => setResendNotice(null), 4000);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Error al reenviar.";
+      setResendNotice(msg);
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto py-12 px-4 font-ui text-center text-foreground animate-fade-in">
@@ -33,6 +54,14 @@ function CheckEmailContent() {
           </p>
         </div>
 
+        {/* Resend Notice banner if resent */}
+        {resendNotice && (
+          <div className="p-3 bg-wax/10 border border-wax/20 text-wax text-xs rounded-xs flex items-center justify-center gap-2 font-letter animate-fade-in">
+            <CheckCircle2 size={14} className="shrink-0" />
+            <span>{resendNotice}</span>
+          </div>
+        )}
+
         {/* Spam Notice Card */}
         <div className="archival-folder rounded-xs p-3.5 text-xs font-letter text-foreground-muted leading-relaxed border border-manila-border text-center">
           {t("checkEmail.spamNotice")}
@@ -40,14 +69,25 @@ function CheckEmailContent() {
 
         {/* Navigation & Actions */}
         <div className="space-y-3 pt-3 border-t border-crease">
-          {/* Temporary Demo Mode Action (as requested) */}
-          <Link
-            href="/dashboard"
-            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors inline-flex items-center justify-center gap-2"
+          {/* Resend Link button */}
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={isResending}
+            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors inline-flex items-center justify-center gap-2 disabled:opacity-60"
           >
-            <span>{t("checkEmail.continueDemo")}</span>
-            <ArrowRight size={14} />
-          </Link>
+            {isResending ? (
+              <>
+                <RefreshCw size={14} className="animate-spin" />
+                <span>Enviando...</span>
+              </>
+            ) : (
+              <>
+                <RefreshCw size={14} />
+                <span>Reenviar enlace</span>
+              </>
+            )}
+          </button>
 
           {/* Try Another Email Link */}
           <div>
