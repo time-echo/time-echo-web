@@ -18,7 +18,10 @@ import {
   SupportedLanguage,
 } from "@/types/timeecho";
 import { ICapsuleRepository } from "@/lib/repositories/ICapsuleRepository";
-import { HttpApiRepository } from "@/lib/repositories/HttpApiRepository";
+import {
+  HttpApiRepository,
+  ApiError,
+} from "@/lib/repositories/HttpApiRepository";
 import { getTranslation } from "@/lib/i18n";
 import { INITIAL_UNLOCKED_STAMP_IDS } from "@/components/stamps";
 
@@ -96,19 +99,21 @@ export function TimeEchoProvider({
   defaultLocale = "es",
 }: TimeEchoProviderProps) {
   const router = useRouter();
-  const repository = useMemo<ICapsuleRepository>(
-    () => customRepo || new HttpApiRepository(),
-    [customRepo],
-  );
 
-  const [capsules, setCapsules] = useState<Letter[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const locale = useSyncExternalStore(
     subscribeLocale,
     getLocaleSnapshot,
     () => defaultLocale,
   );
+
+  const repository = useMemo<ICapsuleRepository>(
+    () => customRepo || new HttpApiRepository({ getLocale: () => locale }),
+    [customRepo, locale],
+  );
+
+  const [capsules, setCapsules] = useState<Letter[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -195,6 +200,10 @@ export function TimeEchoProvider({
       const items = await repository.getAll();
       setCapsules(items);
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setCapsules([]);
+        return;
+      }
       const msg =
         err instanceof Error
           ? err.message
@@ -220,6 +229,11 @@ export function TimeEchoProvider({
       })
       .catch((err) => {
         if (isMounted) {
+          if (err instanceof ApiError && err.status === 401) {
+            setCapsules([]);
+            setIsLoading(false);
+            return;
+          }
           const msg =
             err instanceof Error
               ? err.message
