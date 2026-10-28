@@ -15,7 +15,7 @@ export interface ICapsuleRepository {
   /**
    * Retrieves all capsules from storage, ordered by creation or delivery schedule.
    */
-  getAll(): Promise<Letter[]>;
+  getAll(params?: { status?: string; page?: number }): Promise<Letter[]>;
 
   /**
    * Finds a specific capsule by its unique ID.
