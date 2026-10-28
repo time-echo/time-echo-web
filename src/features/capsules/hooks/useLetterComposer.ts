@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
 import {
   CreateLetterInput,
   Letter,
@@ -78,9 +79,11 @@ export function useLetterComposer(
   initialValues?: Partial<LetterComposerState>,
 ) {
   const { createCapsule, locale, t } = useTimeEcho();
+  const { user } = useAuth();
 
   const [form, setForm] = useState<LetterComposerState>(() => ({
     ...DEFAULT_STATE,
+    email: initialValues?.email || user?.email || "",
     language: locale,
     timezone:
       typeof Intl !== "undefined"

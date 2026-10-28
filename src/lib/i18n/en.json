@@ -1142,7 +1142,14 @@
     "sendButton": "Send Magic Link",
     "backHome": "Back to Home",
     "errorHeader": "Error processing request:",
-    "invalidEmail": "Please enter a valid email address."
+    "invalidEmail": "Please enter a valid email address.",
+    "verifyingTitle": "Verifying magic link...",
+    "verifyingSubtitle": "Decrypting and authenticating your temporal vault session...",
+    "successTitle": "Welcome back to your vault!",
+    "successSubtitle": "Session established successfully. Redirecting to your letters...",
+    "invalidTokenTitle": "Invalid Link",
+    "invalidToken": "This magic link is invalid, expired, or has already been used.",
+    "requestNewLink": "Request a new link"
   },
   "checkEmail": {
     "title": "Check your inbox",
