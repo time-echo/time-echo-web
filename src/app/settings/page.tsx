@@ -1,32 +1,128 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useFlash } from "@/components/ui/FlashBanner";
-import { Mail, AlertTriangle, ArrowLeft, CheckCircle } from "lucide-react";
+import { SupportedLanguage } from "@/types/timeecho";
+import {
+  Mail,
+  AlertTriangle,
+  ArrowLeft,
+  CheckCircle,
+  Globe,
+  Loader2,
+} from "lucide-react";
+
+function getBaseUrl(): string {
+  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  return "http://localhost:3000/api/v1";
+}
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { resetVault, t } = useTimeEcho();
-  const { notice } = useFlash();
+  const {
+    user,
+    token,
+    logout,
+    isAuthenticated,
+    isLoading: isAuthLoading,
+  } = useAuth();
+  const { resetVault, locale, setLocale, t } = useTimeEcho();
+  const { notice, alert } = useFlash();
 
-  const [email, setEmail] = useState("user@timeecho.me");
+  const [editedEmail, setEditedEmail] = useState<string | null>(null);
   const [savedNotice, setSavedNotice] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleUpdateEmail = (e: React.FormEvent) => {
+  const baseUrl = getBaseUrl();
+  const currentEmail = editedEmail ?? (user?.email || "");
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
+
+  const handleUpdateEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSavedNotice(true);
+    if (!currentEmail || !currentEmail.includes("@")) {
+      alert(t("composer.errors.emailInvalid"));
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      if (token) {
+        const res = await fetch(`${baseUrl}/settings`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "X-Session-Token": token,
+            "X-Locale": locale,
+          },
+          credentials: "include",
+          body: JSON.stringify({ email: currentEmail }),
+        });
+
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const errorMsg =
+            json?.error?.message || json?.message || t("settings.savedNotice");
+          alert(errorMsg);
+          return;
+        }
+      }
+
+      setSavedNotice(true);
+      notice(t("settings.savedNotice"));
+      setTimeout(() => setSavedNotice(false), 4000);
+    } catch (err) {
+      const errorMsg =
+        err instanceof Error ? err.message : t("settings.savedNotice");
+      alert(errorMsg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedLocale = e.target.value as SupportedLanguage;
+    setLocale(selectedLocale);
     notice(t("settings.savedNotice"));
-    setTimeout(() => setSavedNotice(false), 3000);
   };
 
   const handleDeleteVault = async () => {
     const confirmed = window.confirm(t("settings.deleteConfirmPrompt"));
-    if (confirmed) {
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      if (token) {
+        await fetch(`${baseUrl}/settings`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "X-Session-Token": token,
+          },
+          credentials: "include",
+        }).catch(() => {});
+      }
       await resetVault();
+      await logout();
       router.push("/");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -61,6 +157,38 @@ export default function SettingsPage() {
       <div className="paper-sheet rounded-xs border border-crease p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-crease pb-3.5">
           <h2 className="font-serif-editorial text-xl font-semibold text-foreground flex items-center gap-2">
+            <Globe size={18} className="text-ink" />
+            <span>{t("settings.vaultLanguage")}</span>
+          </h2>
+        </div>
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label
+              htmlFor="settings-language"
+              className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
+            >
+              {t("settings.correspondenceLanguage")}
+            </label>
+            <select
+              id="settings-language"
+              value={locale}
+              onChange={handleLanguageChange}
+              className="w-full paper-sheet rounded-xs border border-crease px-4 py-2.5 font-letter text-xs text-foreground bg-parchment focus:border-wax focus:outline-none transition-colors min-h-[44px]"
+            >
+              <option value="es">Español (ES)</option>
+              <option value="en">English (EN)</option>
+            </select>
+            <p className="text-[11px] font-letter text-foreground-muted leading-relaxed">
+              {t("settings.languageDesc")}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="paper-sheet rounded-xs border border-crease p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-crease pb-3.5">
+          <h2 className="font-serif-editorial text-xl font-semibold text-foreground flex items-center gap-2">
             <Mail size={18} className="text-ink" />
             <span>{t("settings.changeEmail")}</span>
           </h2>
@@ -77,8 +205,8 @@ export default function SettingsPage() {
             <input
               id="settings-email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={currentEmail}
+              onChange={(e) => setEditedEmail(e.target.value)}
               className="w-full paper-sheet rounded-xs border border-crease px-4 py-2.5 font-letter text-xs text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none transition-colors min-h-[44px]"
               placeholder="tu@email.com"
               required
@@ -90,9 +218,17 @@ export default function SettingsPage() {
 
           <button
             type="submit"
-            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-8 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
+            disabled={isSubmitting}
+            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-8 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            {t("settings.updateEmail")}
+            {isSubmitting ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>{t("settings.updateEmail")}</span>
+              </>
+            ) : (
+              <span>{t("settings.updateEmail")}</span>
+            )}
           </button>
         </form>
       </div>
@@ -118,9 +254,17 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={handleDeleteVault}
-            className="border border-wax/40 text-wax hover:bg-wax/10 rounded-xs cursor-pointer shrink-0 font-letter text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] px-5 whitespace-nowrap bg-transparent"
+            disabled={isDeleting}
+            className="border border-wax/40 text-wax hover:bg-wax/10 rounded-xs cursor-pointer shrink-0 font-letter text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] px-5 whitespace-nowrap bg-transparent flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            {t("settings.deleteVaultButton")}
+            {isDeleting ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>{t("settings.deleteVaultButton")}</span>
+              </>
+            ) : (
+              <span>{t("settings.deleteVaultButton")}</span>
+            )}
           </button>
         </div>
       </div>
