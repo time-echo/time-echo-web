@@ -35,6 +35,11 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 const TOKEN_KEY = "timeecho_session_token";
 const USER_EMAIL_KEY = "timeecho_user_email";
 
+const tokenVerificationPromises = new Map<
+  string,
+  Promise<{ email: string; token: string }>
+>();
+
 function getBaseUrl(): string {
   if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
@@ -46,17 +51,6 @@ function getStoredToken(): string | null {
   if (typeof window !== "undefined") {
     try {
       return window.localStorage.getItem(TOKEN_KEY);
-    } catch {
-      return null;
-    }
-  }
-  return null;
-}
-
-function getStoredEmail(): string | null {
-  if (typeof window !== "undefined") {
-    try {
-      return window.localStorage.getItem(USER_EMAIL_KEY);
     } catch {
       return null;
     }
@@ -89,24 +83,18 @@ function clearSession() {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(getStoredToken);
-  const [user, setUser] = useState<User | null>(() => {
-    const email = getStoredEmail();
-    return email ? { email } : null;
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(() =>
-    Boolean(getStoredToken()),
-  );
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const baseUrl = getBaseUrl();
 
-  /**
-   * Validates active session on mount by checking GET /sessions/me
-   */
   const fetchCurrentUser = useCallback(async () => {
     const currentToken = token || getStoredToken();
     if (!currentToken) {
+      clearSession();
+      setToken(null);
       setUser(null);
       setIsLoading(false);
       return;
@@ -135,10 +123,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const json = await res.json();
       const userData = json?.data || json;
       if (userData?.email) {
+        persistSession(currentToken, userData.email);
+        setToken(currentToken);
         setUser({ email: userData.email });
-        if (typeof window !== "undefined") {
-          window.localStorage.setItem(USER_EMAIL_KEY, userData.email);
-        }
       }
     } catch (err) {
       console.warn("[AuthContext] fetchCurrentUser error:", err);
@@ -148,12 +135,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [baseUrl, token]);
 
   useEffect(() => {
-    const currentToken = token || getStoredToken();
-    if (!currentToken) {
-      return;
-    }
-
     let isMounted = true;
+    const currentToken = token || getStoredToken();
+
+    if (!currentToken) {
+      clearSession();
+      Promise.resolve().then(() => {
+        if (isMounted && !getStoredToken()) {
+          setIsLoading(false);
+        }
+      });
+      return () => {
+        isMounted = false;
+      };
+    }
 
     fetch(`${baseUrl}/sessions/me`, {
       method: "GET",
@@ -180,10 +175,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isMounted) return;
         const userData = json?.data || json;
         if (userData?.email) {
+          persistSession(currentToken, userData.email);
+          setToken(currentToken);
           setUser({ email: userData.email });
-          if (typeof window !== "undefined") {
-            window.localStorage.setItem(USER_EMAIL_KEY, userData.email);
-          }
         }
         setIsLoading(false);
       })
@@ -245,6 +239,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   /**
    * Verifies a single-use magic login token and establishes a persistent session.
+   * Deduplicates concurrent/Strict-Mode calls for the same single-use token.
    * GET /api/v1/sessions/:token
    */
   const authenticateWithToken = useCallback(
@@ -252,45 +247,61 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setError(null);
       setIsLoading(true);
 
-      try {
-        const res = await fetch(
-          `${baseUrl}/sessions/${encodeURIComponent(tokenParam)}`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
+      let verificationPromise = tokenVerificationPromises.get(tokenParam);
+
+      if (!verificationPromise) {
+        verificationPromise = (async () => {
+          const res = await fetch(
+            `${baseUrl}/sessions/${encodeURIComponent(tokenParam)}`,
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+              },
+              credentials: "include",
             },
-            credentials: "include",
-          },
-        );
-
-        const json = await res.json().catch(() => ({}));
-
-        if (!res.ok) {
-          const errorMsg =
-            json?.error?.message ||
-            json?.message ||
-            "El enlace mágico es inválido o ha expirado.";
-          const apiErr = new ApiError(
-            res.status,
-            json?.error?.code || "invalid_token",
-            errorMsg,
-            json?.error?.details,
-            json?.error?.requestId,
           );
-          setError(errorMsg);
-          throw apiErr;
-        }
 
-        const sessionData = json?.data || json;
-        const activeToken = sessionData.token || tokenParam;
-        const userEmail = sessionData.email;
+          const json = await res.json().catch(() => ({}));
 
-        persistSession(activeToken, userEmail);
-        setToken(activeToken);
-        setUser({ email: userEmail });
+          if (!res.ok) {
+            const errorMsg =
+              json?.error?.message ||
+              json?.message ||
+              "El enlace mágico es inválido o ha expirado.";
+            throw new ApiError(
+              res.status,
+              json?.error?.code || "invalid_token",
+              errorMsg,
+              json?.error?.details,
+              json?.error?.requestId,
+            );
+          }
 
-        return { email: userEmail, token: activeToken };
+          const sessionData = json?.data || json;
+          const activeToken = sessionData.token || tokenParam;
+          const userEmail = sessionData.email;
+
+          persistSession(activeToken, userEmail);
+          return { email: userEmail, token: activeToken };
+        })();
+
+        tokenVerificationPromises.set(tokenParam, verificationPromise);
+      }
+
+      try {
+        const result = await verificationPromise;
+        setToken(result.token);
+        setUser({ email: result.email });
+        return result;
+      } catch (err) {
+        tokenVerificationPromises.delete(tokenParam);
+        const errorMsg =
+          err instanceof Error
+            ? err.message
+            : "El enlace mágico es inválido o ha expirado.";
+        setError(errorMsg);
+        throw err;
       } finally {
         setIsLoading(false);
       }
@@ -318,6 +329,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } finally {
       clearSession();
+      tokenVerificationPromises.clear();
       setToken(null);
       setUser(null);
     }
@@ -326,7 +338,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = {
     user,
     token,
-    isAuthenticated: Boolean(user && token),
+    isAuthenticated: Boolean(user),
     isLoading,
     error,
     requestMagicLink,

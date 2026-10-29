@@ -99,7 +99,7 @@ export class HttpApiRepository implements ICapsuleRepository {
         (typeof process !== "undefined"
           ? process.env.NEXT_PUBLIC_API_URL
           : "") ||
-        "/api";
+        "http://localhost:3000/api/v1";
       this.customGetToken = options?.getToken;
       this.customGetLocale = options?.getLocale;
     }

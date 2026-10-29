@@ -81,7 +81,7 @@ export function useLetterComposer(
   const { createCapsule, locale, t } = useTimeEcho();
   const { user } = useAuth();
 
-  const [form, setForm] = useState<LetterComposerState>(() => ({
+  const [rawForm, setForm] = useState<LetterComposerState>(() => ({
     ...DEFAULT_STATE,
     email: initialValues?.email || user?.email || "",
     language: locale,
@@ -91,6 +91,14 @@ export function useLetterComposer(
         : "UTC",
     ...initialValues,
   }));
+
+  const form = useMemo<LetterComposerState>(
+    () => ({
+      ...rawForm,
+      email: rawForm.email || user?.email || "",
+    }),
+    [rawForm, user?.email],
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSealing, setIsSealing] = useState(false);

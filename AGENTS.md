@@ -7,6 +7,7 @@
 - **Git Safety**: Never execute `git commit` or `git push`. Committing and pushing are reserved strictly for the user.
 - **Strict Scope Boundaries**: Execute only what is explicitly requested. Do not perform unsolicited refactoring, restyling, or file reorganizations.
 - **Natural Language & Words**: Always use natural, human, grounded words in mock content, UI copy, and user communication—avoiding robotic, overly technical, or artificial meta-jargon.
+- **Use Mockups for UI Changes**: Whenever any UI, layout, or visual component changes are made, always consult and follow the Storybook mockup catalog in the [`time-echo/mockups`](https://github.com/time-echo/mockups) repository (see `.agents/rules/mockups.md`) as the visual and structural source of truth.
 - **Ask Before Guessing**: If design requirements, flows, or mockups are missing or ambiguous, prompt the user for clarification before modifying code.
 
 ---
@@ -65,7 +66,8 @@ Rejects generic SaaS cards and saturated neon accents in favor of physical archi
 
 ## 4. UI/UX Design Lock & Immutability
 
-- **Canonical External Reference**: Canonical mockups reside in external Figma files. See `docs/design.md#design-registry-external-references` for frame mappings (`Landing-V2`, `Composer-Full`, `Letter-Sealed`, `Letter-Opened`, `Vault-Grid`, `Analytics-Summary`, `Settings-Sections`).
+- **Living Mockup Catalog ([`time-echo/mockups`](https://github.com/time-echo/mockups))**: All UI changes must reference and match the living Storybook mockup catalog in the [`time-echo/mockups`](https://github.com/time-echo/mockups) repository (`pnpm storybook` on port `6006`), which organizes components and full-page frames across 5 tiers (`Tier 1 - Primitives`, `Tier 2 - Stamps`, `Tier 3 - Layout`, `Tier 4 - Capsules`, and `Tier 5 - Pages/Figma Frames`). Keep tokens (`src/app/globals.css`), fonts (`src/lib/fonts.ts`), i18n dictionaries (`src/lib/i18n/{en,es}.json`), and UI components synchronized with the `time-echo/mockups` repository.
+- **Canonical External Reference**: Canonical mockups reside in the [`time-echo/mockups`](https://github.com/time-echo/mockups) repository and external Figma files. See `docs/design.md#design-registry-external-references` for frame mappings (`Landing-V2`, `Composer-Full`, `Letter-Sealed`, `Letter-Opened`, `Vault-Grid`, `Analytics-Summary`, `Settings-Sections`).
 - **Zero-Image Policy**: Do not commit mockup images, screenshots (`.png`, `.jpg`, `.webp`), or vector design files (`.fig`, `.sketch`, `.psd`) into git. Visual verification is performed against the running browser instance (`pnpm dev`) and external Figma.
 - **Locked Structure**: Approved route layouts (`src/app/**`), navigation shells (`ArchivalHeader` for public routes, `AppShell` for internal routes), component hierarchies, and grid ratios are locked. Do not unilaterally restructure them.
 - **Copy Immutability**: Strings in `src/lib/i18n/en.json` and `src/lib/i18n/es.json` are an immutable user-facing contract. Never rewrite, reword, or delete existing keys without explicit instructions. When adding new copy, add symmetric keys to both `en.json` and `es.json`.
@@ -96,16 +98,18 @@ Run these checks before finalizing any task:
 
 ## 6. Key References
 
-| Area                  | Location                                       |
-| --------------------- | ---------------------------------------------- |
-| System Architecture   | `docs/architecture.md`                         |
-| Design Specification  | `docs/design.md`                               |
-| Design Tokens         | `src/app/globals.css`                          |
-| Domain Interfaces     | `src/types/timeecho.ts`                        |
-| Context & Actions     | `src/lib/context/TimeEchoContext.tsx`          |
-| Repository Interfaces | `src/lib/repositories/ICapsuleRepository.ts`   |
-| Local Mock Store      | `src/lib/mockApiStore.ts`                      |
-| Translations          | `src/lib/i18n/en.json`, `src/lib/i18n/es.json` |
-| Font Configuration    | `src/lib/fonts.ts`                             |
-| UI Primitives         | `src/components/ui/`                           |
-| Feature Domains       | `src/features/`                                |
+| Area                  | Location                                                    |
+| --------------------- | ----------------------------------------------------------- |
+| Storybook Mockups     | [`time-echo/mockups`](https://github.com/time-echo/mockups) |
+| UI Mockups Rule       | `.agents/rules/mockups.md`                                  |
+| System Architecture   | `docs/architecture.md`                                      |
+| Design Specification  | `docs/design.md`                                            |
+| Design Tokens         | `src/app/globals.css`                                       |
+| Domain Interfaces     | `src/types/timeecho.ts`                                     |
+| Context & Actions     | `src/lib/context/TimeEchoContext.tsx`                       |
+| Repository Interfaces | `src/lib/repositories/ICapsuleRepository.ts`                |
+| Local Mock Store      | `src/lib/mockApiStore.ts`                                   |
+| Translations          | `src/lib/i18n/en.json`, `src/lib/i18n/es.json`              |
+| Font Configuration    | `src/lib/fonts.ts`                                          |
+| UI Primitives         | `src/components/ui/`                                        |
+| Feature Domains       | `src/features/`                                             |

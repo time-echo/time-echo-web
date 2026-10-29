@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
@@ -25,7 +25,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { locale, toggleLocale, t } = useTimeEcho();
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated, isLoading: isAuthLoading, logout } = useAuth();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -38,11 +38,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isPublicPage =
     pathname === "/" ||
     pathname === "/login" ||
+    pathname.startsWith("/login/") ||
     pathname === "/check_email" ||
     pathname === "/about" ||
     pathname === "/terms" ||
     pathname === "/privacy" ||
     pathname.startsWith("/letters/success");
+
+  useEffect(() => {
+    if (!isPublicPage && !isAuthLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isPublicPage, isAuthLoading, isAuthenticated, router]);
 
   if (isPublicPage) {
     return (
@@ -63,6 +70,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <ArchivalFooter />
       </div>
     );
+  }
+
+  if (isAuthLoading || !isAuthenticated) {
+    return <div className="min-h-screen bg-parchment" />;
   }
 
   const isWriteActive = pathname === "/letters/new";
@@ -190,7 +201,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between border-t border-crease pt-4 font-ui">
             <div className="min-w-0 flex-1">
               <p className="text-xs text-foreground-muted font-medium truncate pr-2">
-                {user?.email || "usuario@timeecho.me"}
+                {user?.email ?? ""}
               </p>
             </div>
             <button
@@ -298,9 +309,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span>{t("nav.settings")}</span>
           </Link>
           <div className="border-t border-crease pt-2 flex items-center justify-between text-xs text-foreground-muted">
-            <span className="truncate pr-2">
-              {user?.email || "usuario@timeecho.me"}
-            </span>
+            <span className="truncate pr-2">{user?.email ?? ""}</span>
             <button
               type="button"
               onClick={() => {
