@@ -59,7 +59,7 @@ export default function SettingsPage() {
     setIsSubmitting(true);
     try {
       if (token) {
-        const res = await fetch(`${baseUrl}/settings`, {
+        const res = await fetch(`${baseUrl}/account`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -108,7 +108,7 @@ export default function SettingsPage() {
     setIsDeleting(true);
     try {
       if (token) {
-        await fetch(`${baseUrl}/settings`, {
+        await fetch(`${baseUrl}/account`, {
           method: "DELETE",
           headers: {
             Accept: "application/json",
