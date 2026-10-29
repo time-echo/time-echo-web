@@ -365,19 +365,11 @@ export function TimeEchoProvider({
   );
 
   /**
-   * Resets the vault back to initial demo seeds.
+   * Clears local vault state after account deletion.
    */
   const resetVault = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      if (typeof window !== "undefined") {
-        await fetch("/api/letters/reset", { method: "POST" }).catch(() => {});
-      }
-      await refreshCapsules();
-    } finally {
-      setIsLoading(false);
-    }
-  }, [refreshCapsules]);
+    setCapsules([]);
+  }, []);
 
   const value = useMemo<TimeEchoContextValue>(
     () => ({

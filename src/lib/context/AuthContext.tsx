@@ -33,7 +33,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const TOKEN_KEY = "timeecho_session_token";
-const USER_EMAIL_KEY = "timeecho_user_email";
+const LEGACY_USER_EMAIL_KEY = "timeecho_user_email";
 
 function getBaseUrl(): string {
   if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
@@ -53,22 +53,11 @@ function getStoredToken(): string | null {
   return null;
 }
 
-function getStoredEmail(): string | null {
-  if (typeof window !== "undefined") {
-    try {
-      return window.localStorage.getItem(USER_EMAIL_KEY);
-    } catch {
-      return null;
-    }
-  }
-  return null;
-}
-
-function persistSession(token: string, email: string) {
+function persistSession(token: string) {
   if (typeof window !== "undefined") {
     try {
       window.localStorage.setItem(TOKEN_KEY, token);
-      window.localStorage.setItem(USER_EMAIL_KEY, email);
+      window.localStorage.removeItem(LEGACY_USER_EMAIL_KEY);
       document.cookie = `${TOKEN_KEY}=${token}; path=/; max-age=2592000; SameSite=Lax`;
     } catch {
       // ignore
@@ -80,7 +69,7 @@ function clearSession() {
   if (typeof window !== "undefined") {
     try {
       window.localStorage.removeItem(TOKEN_KEY);
-      window.localStorage.removeItem(USER_EMAIL_KEY);
+      window.localStorage.removeItem(LEGACY_USER_EMAIL_KEY);
       document.cookie = `${TOKEN_KEY}=; path=/; max-age=0; SameSite=Lax`;
     } catch {
       // ignore
@@ -89,37 +78,30 @@ function clearSession() {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(getStoredToken);
-  const [user, setUser] = useState<User | null>(() => {
-    const email = getStoredEmail();
-    return email ? { email } : null;
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(() =>
-    Boolean(getStoredToken()),
-  );
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const baseUrl = getBaseUrl();
 
   /**
-   * Validates active session on mount by checking GET /sessions/me
+   * Validates active session by querying GET /api/v1/sessions/me
    */
   const fetchCurrentUser = useCallback(async () => {
     const currentToken = token || getStoredToken();
-    if (!currentToken) {
-      setUser(null);
-      setIsLoading(false);
-      return;
+    const headers: Record<string, string> = {
+      Accept: "application/json",
+    };
+    if (currentToken) {
+      headers.Authorization = `Bearer ${currentToken}`;
+      headers["X-Session-Token"] = currentToken;
     }
 
     try {
       const res = await fetch(`${baseUrl}/sessions/me`, {
         method: "GET",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${currentToken}`,
-          "X-Session-Token": currentToken,
-        },
+        headers,
         credentials: "include",
       });
 
@@ -135,10 +117,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const json = await res.json();
       const userData = json?.data || json;
       if (userData?.email) {
+        setToken(currentToken);
         setUser({ email: userData.email });
-        if (typeof window !== "undefined") {
-          window.localStorage.setItem(USER_EMAIL_KEY, userData.email);
-        }
       }
     } catch (err) {
       console.warn("[AuthContext] fetchCurrentUser error:", err);
@@ -149,19 +129,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const currentToken = token || getStoredToken();
-    if (!currentToken) {
-      return;
+    const headers: Record<string, string> = {
+      Accept: "application/json",
+    };
+    if (currentToken) {
+      headers.Authorization = `Bearer ${currentToken}`;
+      headers["X-Session-Token"] = currentToken;
     }
 
     let isMounted = true;
 
     fetch(`${baseUrl}/sessions/me`, {
       method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${currentToken}`,
-        "X-Session-Token": currentToken,
-      },
+      headers,
       credentials: "include",
     })
       .then(async (res) => {
@@ -180,10 +160,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isMounted) return;
         const userData = json?.data || json;
         if (userData?.email) {
+          setToken(currentToken);
           setUser({ email: userData.email });
-          if (typeof window !== "undefined") {
-            window.localStorage.setItem(USER_EMAIL_KEY, userData.email);
-          }
         }
         setIsLoading(false);
       })
@@ -286,7 +264,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const activeToken = sessionData.token || tokenParam;
         const userEmail = sessionData.email;
 
-        persistSession(activeToken, userEmail);
+        persistSession(activeToken);
         setToken(activeToken);
         setUser({ email: userEmail });
 
@@ -326,7 +304,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = {
     user,
     token,
-    isAuthenticated: Boolean(user && token),
+    isAuthenticated: Boolean(user),
     isLoading,
     error,
     requestMagicLink,
