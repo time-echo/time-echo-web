@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
 import { Letter, Prediction } from "@/types/timeecho";
 import {
   Lock,
@@ -47,6 +48,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
   const { id } = use(params);
 
   const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const {
     getCapsuleById,
     repository,
@@ -57,6 +59,12 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     locale,
     t,
   } = useTimeEcho();
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
 
   const contextLetter = getCapsuleById(id);
   const [localLetter, setLocalLetter] = useState<Letter | null>(null);

@@ -9,9 +9,9 @@ import { Globe, Mail, LogIn } from "lucide-react";
 
 export function ArchivalHeader() {
   const pathname = usePathname();
-  const { locale, toggleLocale, capsules, t } = useTimeEcho();
+  const { locale, toggleLocale, t } = useTimeEcho();
   const { isAuthenticated } = useAuth();
-  const hasLetters = isAuthenticated || capsules.length > 0;
+  const hasLetters = isAuthenticated;
 
   const handleHowItWorksClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === "/") {

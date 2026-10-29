@@ -90,12 +90,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const baseUrl = getBaseUrl();
 
-  /**
-   * Validates active session by querying GET /api/v1/sessions/me
-   */
   const fetchCurrentUser = useCallback(async () => {
     const currentToken = token || getStoredToken();
     if (!currentToken) {
+      clearSession();
       setToken(null);
       setUser(null);
       setIsLoading(false);
@@ -114,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (!res.ok) {
-        if (res.status === 401 && getStoredToken() === currentToken) {
+        if (res.status === 401) {
           clearSession();
           setToken(null);
           setUser(null);
@@ -125,6 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const json = await res.json();
       const userData = json?.data || json;
       if (userData?.email) {
+        persistSession(currentToken, userData.email);
         setToken(currentToken);
         setUser({ email: userData.email });
       }
@@ -140,6 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const currentToken = token || getStoredToken();
 
     if (!currentToken) {
+      clearSession();
       Promise.resolve().then(() => {
         if (isMounted && !getStoredToken()) {
           setIsLoading(false);
@@ -162,7 +162,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .then(async (res) => {
         if (!isMounted) return;
         if (!res.ok) {
-          if (res.status === 401 && getStoredToken() === currentToken) {
+          if (res.status === 401) {
             clearSession();
             setToken(null);
             setUser(null);
@@ -175,6 +175,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isMounted) return;
         const userData = json?.data || json;
         if (userData?.email) {
+          persistSession(currentToken, userData.email);
           setToken(currentToken);
           setUser({ email: userData.email });
         }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
 import { formatLocaleDate } from "@/lib/utils";
 import { Letter } from "@/types/timeecho";
 import { RealityLedger } from "@/features/reality-ledger/components/RealityLedger";
@@ -29,6 +30,13 @@ interface RealityPageProps {
 export default function LetterRealityPage({ params }: RealityPageProps) {
   const { id } = use(params);
   const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
 
   const {
     getCapsuleById,
@@ -122,9 +130,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded border border-crease bg-parchment font-letter text-xs uppercase tracking-wider text-ink font-bold hover:border-ink transition-colors"
           >
             <ArrowLeft size={14} />
-            <span>
-              {t("reality.returnCentralLedger")}
-            </span>
+            <span>{t("reality.returnCentralLedger")}</span>
           </Link>
         </div>
       </div>
@@ -159,9 +165,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
               className="inline-flex items-center gap-2 px-6 py-3 rounded bg-wax hover:bg-wax-hover text-on-wax font-letter text-xs uppercase tracking-wider font-bold shadow transition-all"
             >
               <ArrowLeft size={14} />
-              <span>
-                {t("reality.breakSealButton")}
-              </span>
+              <span>{t("reality.breakSealButton")}</span>
             </button>
           </div>
         </div>

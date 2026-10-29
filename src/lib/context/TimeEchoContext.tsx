@@ -24,6 +24,7 @@ import {
 } from "@/lib/repositories/HttpApiRepository";
 import { getTranslation } from "@/lib/i18n";
 import { INITIAL_UNLOCKED_STAMP_IDS } from "@/components/stamps";
+import { useAuth } from "@/lib/context/AuthContext";
 
 const localeListeners = new Set<() => void>();
 
@@ -99,6 +100,7 @@ export function TimeEchoProvider({
   defaultLocale = "es",
 }: TimeEchoProviderProps) {
   const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   const locale = useSyncExternalStore(
     subscribeLocale,
@@ -215,8 +217,19 @@ export function TimeEchoProvider({
     }
   }, [repository]);
 
-  // Initial asynchronous load
   useEffect(() => {
+    if (isAuthLoading) {
+      return;
+    }
+
+    if (!isAuthenticated) {
+      Promise.resolve().then(() => {
+        setCapsules([]);
+        setIsLoading(false);
+      });
+      return;
+    }
+
     let isMounted = true;
 
     repository
@@ -246,7 +259,7 @@ export function TimeEchoProvider({
     return () => {
       isMounted = false;
     };
-  }, [repository]);
+  }, [repository, isAuthenticated, isAuthLoading]);
 
   const getCapsuleById = useCallback(
     (id: string): Letter | undefined => {
