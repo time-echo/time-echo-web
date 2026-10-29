@@ -6,13 +6,11 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useFlash } from "@/components/ui/FlashBanner";
-import { SupportedLanguage } from "@/types/timeecho";
 import {
   Mail,
   AlertTriangle,
   ArrowLeft,
   CheckCircle,
-  Globe,
   Loader2,
 } from "lucide-react";
 
@@ -32,7 +30,7 @@ export default function SettingsPage() {
     isAuthenticated,
     isLoading: isAuthLoading,
   } = useAuth();
-  const { resetVault, locale, setLocale, t } = useTimeEcho();
+  const { resetVault, locale, t } = useTimeEcho();
   const { notice, alert } = useFlash();
 
   const [editedEmail, setEditedEmail] = useState<string | null>(null);
@@ -93,12 +91,6 @@ export default function SettingsPage() {
     }
   };
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedLocale = e.target.value as SupportedLanguage;
-    setLocale(selectedLocale);
-    notice(t("settings.savedNotice"));
-  };
-
   const handleDeleteVault = async () => {
     const confirmed = window.confirm(t("settings.deleteConfirmPrompt"));
     if (!confirmed) {
@@ -153,38 +145,6 @@ export default function SettingsPage() {
           <span>{t("settings.savedNotice")}</span>
         </div>
       )}
-
-      <div className="paper-sheet rounded-xs border border-crease p-6 sm:p-8 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-crease pb-3.5">
-          <h2 className="font-serif-editorial text-xl font-semibold text-foreground flex items-center gap-2">
-            <Globe size={18} className="text-ink" />
-            <span>{t("settings.vaultLanguage")}</span>
-          </h2>
-        </div>
-
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="settings-language"
-              className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
-            >
-              {t("settings.correspondenceLanguage")}
-            </label>
-            <select
-              id="settings-language"
-              value={locale}
-              onChange={handleLanguageChange}
-              className="w-full paper-sheet rounded-xs border border-crease px-4 py-2.5 font-letter text-xs text-foreground bg-parchment focus:border-wax focus:outline-none transition-colors min-h-[44px]"
-            >
-              <option value="es">Español (ES)</option>
-              <option value="en">English (EN)</option>
-            </select>
-            <p className="text-[11px] font-letter text-foreground-muted leading-relaxed">
-              {t("settings.languageDesc")}
-            </p>
-          </div>
-        </div>
-      </div>
 
       <div className="paper-sheet rounded-xs border border-crease p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-crease pb-3.5">

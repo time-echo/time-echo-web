@@ -33,7 +33,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const TOKEN_KEY = "timeecho_session_token";
-const LEGACY_USER_EMAIL_KEY = "timeecho_user_email";
+const USER_EMAIL_KEY = "timeecho_user_email";
 
 const tokenVerificationPromises = new Map<
   string,
@@ -58,11 +58,11 @@ function getStoredToken(): string | null {
   return null;
 }
 
-function persistSession(token: string) {
+function persistSession(token: string, email: string) {
   if (typeof window !== "undefined") {
     try {
       window.localStorage.setItem(TOKEN_KEY, token);
-      window.localStorage.removeItem(LEGACY_USER_EMAIL_KEY);
+      window.localStorage.setItem(USER_EMAIL_KEY, email);
       document.cookie = `${TOKEN_KEY}=${token}; path=/; max-age=2592000; SameSite=Lax`;
     } catch {
       // ignore
@@ -74,7 +74,7 @@ function clearSession() {
   if (typeof window !== "undefined") {
     try {
       window.localStorage.removeItem(TOKEN_KEY);
-      window.localStorage.removeItem(LEGACY_USER_EMAIL_KEY);
+      window.localStorage.removeItem(USER_EMAIL_KEY);
       document.cookie = `${TOKEN_KEY}=; path=/; max-age=0; SameSite=Lax`;
     } catch {
       // ignore
@@ -281,7 +281,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const activeToken = sessionData.token || tokenParam;
           const userEmail = sessionData.email;
 
-          persistSession(activeToken);
+          persistSession(activeToken, userEmail);
           return { email: userEmail, token: activeToken };
         })();
 
