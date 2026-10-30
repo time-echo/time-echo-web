@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
+import { ApiError } from "@/lib/repositories/HttpApiRepository";
 import {
   CreateLetterInput,
   Letter,
@@ -74,13 +76,18 @@ const DEFAULT_STATE: LetterComposerState = {
   ],
 };
 
+const TECHNICAL_ENGLISH_ERROR_PATTERN =
+  /unknown attribute|internal server error|failed to fetch|networkerror|load failed|http \d{3}|request failed with status|invalid or malformed request/i;
+
 export function useLetterComposer(
   initialValues?: Partial<LetterComposerState>,
 ) {
   const { createCapsule, locale, t } = useTimeEcho();
+  const { user } = useAuth();
 
-  const [form, setForm] = useState<LetterComposerState>(() => ({
+  const [rawForm, setForm] = useState<LetterComposerState>(() => ({
     ...DEFAULT_STATE,
+    email: initialValues?.email || user?.email || "",
     language: locale,
     timezone:
       typeof Intl !== "undefined"
@@ -88,6 +95,15 @@ export function useLetterComposer(
         : "UTC",
     ...initialValues,
   }));
+
+  const form = useMemo<LetterComposerState>(
+    () => ({
+      ...rawForm,
+      email: rawForm.email || user?.email || "",
+      language: locale,
+    }),
+    [rawForm, user?.email, locale],
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSealing, setIsSealing] = useState(false);
@@ -151,6 +167,8 @@ export function useLetterComposer(
       errs.content = t("composer.errors.contentRequired");
     } else if (form.content.trim().length < 10) {
       errs.content = t("composer.errors.contentLength");
+    } else if (form.content.trim().length < 80) {
+      errs.content = t("landing.minCharsError");
     }
 
     if (!form.email.trim()) {
@@ -168,6 +186,51 @@ export function useLetterComposer(
   }, [form.title, form.content, form.email, form.scheduledAt, t]);
 
   const isValid = Object.keys(validationErrors).length === 0;
+
+  const resolveFriendlyErrorMessage = useCallback(
+    (err: unknown): string => {
+      const fallback = t("composer.errors.sealError");
+
+      if (err instanceof ApiError) {
+        if (
+          err.status >= 500 ||
+          err.code === "internal_error" ||
+          err.code === "service_unavailable" ||
+          err.code === "bad_request" ||
+          err.code === "request_failed"
+        ) {
+          return fallback;
+        }
+
+        if (
+          !err.message ||
+          TECHNICAL_ENGLISH_ERROR_PATTERN.test(err.message) ||
+          (locale === "es" &&
+            /can't be blank|is too short|is too long|must be in the future|cannot contain words|must contain at least/i.test(
+              err.message,
+            ))
+        ) {
+          return fallback;
+        }
+
+        return err.message;
+      }
+
+      if (err instanceof TypeError) {
+        return fallback;
+      }
+
+      if (err instanceof Error) {
+        if (TECHNICAL_ENGLISH_ERROR_PATTERN.test(err.message)) {
+          return fallback;
+        }
+        return err.message || fallback;
+      }
+
+      return fallback;
+    },
+    [locale, t],
+  );
 
   const submitLetter = useCallback(async (): Promise<Letter> => {
     if (!isValid) {
@@ -208,15 +271,21 @@ export function useLetterComposer(
       setCreatedLetter(result);
       return result;
     } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : t("composer.errors.sealError");
+      const msg = resolveFriendlyErrorMessage(err);
       setError(msg);
       throw err;
     } finally {
       setIsSubmitting(false);
       setIsSealing(false);
     }
-  }, [isValid, validationErrors, form, createCapsule, t]);
+  }, [
+    isValid,
+    validationErrors,
+    form,
+    createCapsule,
+    t,
+    resolveFriendlyErrorMessage,
+  ]);
 
   const resetComposer = useCallback(() => {
     setForm(DEFAULT_STATE);

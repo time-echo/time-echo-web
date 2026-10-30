@@ -18,9 +18,13 @@ import {
   SupportedLanguage,
 } from "@/types/timeecho";
 import { ICapsuleRepository } from "@/lib/repositories/ICapsuleRepository";
-import { HttpApiRepository } from "@/lib/repositories/HttpApiRepository";
+import {
+  HttpApiRepository,
+  ApiError,
+} from "@/lib/repositories/HttpApiRepository";
 import { getTranslation } from "@/lib/i18n";
 import { INITIAL_UNLOCKED_STAMP_IDS } from "@/components/stamps";
+import { useAuth } from "@/lib/context/AuthContext";
 
 const localeListeners = new Set<() => void>();
 
@@ -96,19 +100,22 @@ export function TimeEchoProvider({
   defaultLocale = "es",
 }: TimeEchoProviderProps) {
   const router = useRouter();
-  const repository = useMemo<ICapsuleRepository>(
-    () => customRepo || new HttpApiRepository(),
-    [customRepo],
-  );
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
-  const [capsules, setCapsules] = useState<Letter[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const locale = useSyncExternalStore(
     subscribeLocale,
     getLocaleSnapshot,
     () => defaultLocale,
   );
+
+  const repository = useMemo<ICapsuleRepository>(
+    () => customRepo || new HttpApiRepository({ getLocale: () => locale }),
+    [customRepo, locale],
+  );
+
+  const [capsules, setCapsules] = useState<Letter[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -195,19 +202,32 @@ export function TimeEchoProvider({
       const items = await repository.getAll();
       setCapsules(items);
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setCapsules([]);
+        return;
+      }
       const msg =
-        err instanceof Error
-          ? err.message
-          : "Error al cargar las cápsulas del tiempo";
+        err instanceof Error ? err.message : t("common.errors.loadCapsules");
       setError(msg);
       console.error("[TimeEchoContext] refreshCapsules error:", err);
     } finally {
       setIsLoading(false);
     }
-  }, [repository]);
+  }, [repository, t]);
 
-  // Initial asynchronous load
   useEffect(() => {
+    if (isAuthLoading) {
+      return;
+    }
+
+    if (!isAuthenticated) {
+      Promise.resolve().then(() => {
+        setCapsules([]);
+        setIsLoading(false);
+      });
+      return;
+    }
+
     let isMounted = true;
 
     repository
@@ -220,10 +240,15 @@ export function TimeEchoProvider({
       })
       .catch((err) => {
         if (isMounted) {
+          if (err instanceof ApiError && err.status === 401) {
+            setCapsules([]);
+            setIsLoading(false);
+            return;
+          }
           const msg =
             err instanceof Error
               ? err.message
-              : "Error al cargar las cápsulas del tiempo";
+              : t("common.errors.loadCapsules");
           setError(msg);
           setIsLoading(false);
         }
@@ -232,7 +257,7 @@ export function TimeEchoProvider({
     return () => {
       isMounted = false;
     };
-  }, [repository]);
+  }, [repository, isAuthenticated, isAuthLoading, t]);
 
   const getCapsuleById = useCallback(
     (id: string): Letter | undefined => {
@@ -252,13 +277,26 @@ export function TimeEchoProvider({
         setCapsules((prev) => [created, ...prev]);
         return created;
       } catch (err) {
-        const msg =
-          err instanceof Error ? err.message : "Error al crear la cápsula";
+        const isTechnical =
+          (err instanceof ApiError &&
+            (err.status >= 500 ||
+              err.code === "internal_error" ||
+              err.code === "service_unavailable")) ||
+          err instanceof TypeError ||
+          (err instanceof Error &&
+            /unknown attribute|internal server error|failed to fetch/i.test(
+              err.message,
+            ));
+        const msg = isTechnical
+          ? t("composer.errors.sealError")
+          : err instanceof Error
+            ? err.message
+            : t("composer.errors.sealError");
         setError(msg);
         throw err;
       }
     },
-    [repository, unlockStamp],
+    [repository, unlockStamp, t],
   );
 
   const updateReality = useCallback(
@@ -272,14 +310,12 @@ export function TimeEchoProvider({
         return updated;
       } catch (err) {
         const msg =
-          err instanceof Error
-            ? err.message
-            : "Error al actualizar el expediente de realidad";
+          err instanceof Error ? err.message : t("common.errors.updateReality");
         setError(msg);
         throw err;
       }
     },
-    [repository],
+    [repository, t],
   );
 
   const archiveCapsule = useCallback(
@@ -293,12 +329,14 @@ export function TimeEchoProvider({
         return updated;
       } catch (err) {
         const msg =
-          err instanceof Error ? err.message : "Error al archivar la cápsula";
+          err instanceof Error
+            ? err.message
+            : t("common.errors.archiveCapsule");
         setError(msg);
         throw err;
       }
     },
-    [repository],
+    [repository, t],
   );
 
   const restoreCapsule = useCallback(
@@ -312,12 +350,14 @@ export function TimeEchoProvider({
         return updated;
       } catch (err) {
         const msg =
-          err instanceof Error ? err.message : "Error al restaurar la cápsula";
+          err instanceof Error
+            ? err.message
+            : t("common.errors.restoreCapsule");
         setError(msg);
         throw err;
       }
     },
-    [repository],
+    [repository, t],
   );
 
   const deleteCapsule = useCallback(
@@ -328,12 +368,12 @@ export function TimeEchoProvider({
         setCapsules((prev) => prev.filter((item) => item.id !== id));
       } catch (err) {
         const msg =
-          err instanceof Error ? err.message : "Error al eliminar la cápsula";
+          err instanceof Error ? err.message : t("common.errors.deleteCapsule");
         setError(msg);
         throw err;
       }
     },
-    [repository],
+    [repository, t],
   );
 
   /**
@@ -351,19 +391,11 @@ export function TimeEchoProvider({
   );
 
   /**
-   * Resets the vault back to initial demo seeds.
+   * Clears local vault state after account deletion.
    */
   const resetVault = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      if (typeof window !== "undefined") {
-        await fetch("/api/letters/reset", { method: "POST" }).catch(() => {});
-      }
-      await refreshCapsules();
-    } finally {
-      setIsLoading(false);
-    }
-  }, [refreshCapsules]);
+    setCapsules([]);
+  }, []);
 
   const value = useMemo<TimeEchoContextValue>(
     () => ({

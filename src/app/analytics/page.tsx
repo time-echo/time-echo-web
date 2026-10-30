@@ -1,13 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { calculateAnalyticsMetrics } from "@/features/analytics";
 import { ArrowLeft, Brain, Sparkles } from "lucide-react";
 
 export default function AnalyticsPage() {
-  const { capsules, t } = useTimeEcho();
+  const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { capsules, isLoading, t } = useTimeEcho();
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
+
+  if (isLoading && capsules.length === 0) {
+    return <ArchivalLoader variant="page" />;
+  }
 
   const metrics = calculateAnalyticsMetrics(capsules);
 
@@ -115,11 +130,15 @@ export default function AnalyticsPage() {
               >
                 <div
                   className="bg-[#8E2818]/25 absolute top-0 left-0 h-full rounded-xs"
-                  style={{ width: `${Math.min(avgInitialHappiness * 10, 100)}%` }}
+                  style={{
+                    width: `${Math.min(avgInitialHappiness * 10, 100)}%`,
+                  }}
                 />
                 <div
                   className="bg-[#8E2818] absolute top-0 left-0 h-full rounded-xs opacity-85"
-                  style={{ width: `${Math.min(avgRevealHappiness * 10, 100)}%` }}
+                  style={{
+                    width: `${Math.min(avgRevealHappiness * 10, 100)}%`,
+                  }}
                 />
               </div>
               <div className="flex justify-between text-[9px] font-semibold text-foreground/60 uppercase tracking-wider">
@@ -181,11 +200,15 @@ export default function AnalyticsPage() {
               >
                 <div
                   className="bg-amber-600/25 absolute top-0 left-0 h-full rounded-xs"
-                  style={{ width: `${Math.min(avgInitialMotivation * 10, 100)}%` }}
+                  style={{
+                    width: `${Math.min(avgInitialMotivation * 10, 100)}%`,
+                  }}
                 />
                 <div
                   className="bg-amber-700 dark:bg-amber-400 absolute top-0 left-0 h-full rounded-xs opacity-85"
-                  style={{ width: `${Math.min(avgRevealMotivation * 10, 100)}%` }}
+                  style={{
+                    width: `${Math.min(avgRevealMotivation * 10, 100)}%`,
+                  }}
                 />
               </div>
               <div className="flex justify-between text-[9px] font-semibold text-foreground/60 uppercase tracking-wider">
@@ -199,7 +222,10 @@ export default function AnalyticsPage() {
         {/* Right Card: Predictions vs Reality */}
         <div className="paper-sheet border border-[#D8D2C2] dark:border-[#2D3340] p-6 sm:p-8 rounded-xs shadow-xs space-y-6">
           <div className="flex items-center gap-2.5 border-b border-[#D8D2C2] dark:border-[#2D3340] pb-3.5">
-            <Sparkles size={20} className="text-[#2C485E] dark:text-[#77A3C4]" />
+            <Sparkles
+              size={20}
+              className="text-[#2C485E] dark:text-[#77A3C4]"
+            />
             <h2 className="font-serif-editorial text-xl font-semibold text-foreground">
               {t("analytics.predictions_reality_title")}
             </h2>

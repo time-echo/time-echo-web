@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { formatLocaleDate } from "@/lib/utils";
 import { ArrowLeft, PenTool } from "lucide-react";
 
@@ -37,7 +38,7 @@ function SuccessContent() {
       })
     : t("success.futureScheduledDate");
 
-  const recipientEmail = capsule?.email || "tu@correo.com";
+  const recipientEmail = capsule?.email || t("landing.emailPlaceholder");
 
   return (
     <div className="max-w-md mx-auto py-12 px-4 font-ui animate-fade-in text-center text-foreground">
@@ -131,16 +132,8 @@ function SuccessContent() {
 }
 
 export default function LetterSuccessPage() {
-  const { t } = useTimeEcho();
-
   return (
-    <Suspense
-      fallback={
-        <div className="max-w-md mx-auto py-16 text-center font-letter text-xs text-foreground-muted animate-pulse">
-          <p>{t("common.loading")}</p>
-        </div>
-      }
-    >
+    <Suspense fallback={<ArchivalLoader variant="page" />}>
       <SuccessContent />
     </Suspense>
   );

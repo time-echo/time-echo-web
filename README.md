@@ -9,47 +9,55 @@ TimeEcho is a digital time-capsule application that lets you write letters to yo
 ## ✨ Features
 
 ### 📨 Time-Capsule Letters
+
 Write private, encrypted letters to your future self. Choose delivery from 6 months to 5 years, or pick a custom date. Letters arrive in your inbox on the exact morning you scheduled.
 
 ### 🎭 Emotional Baseline
+
 Record your happiness, anxiety, and motivation levels (1–10) when writing. Upon opening, rate yourself again to visualize your emotional evolution.
 
 ### 🔮 Milestone Predictions
+
 Make up to 5 predictions across categories: where you'll live, what work you'll do, income, relationships, and greatest achievement. When the letter unlocks, compare each prediction with reality — tagged as **Fulfilled**, **Exceeded**, **Partially**, or **Diverged**.
 
 ### 📊 Retrospective Analytics
+
 Track your prediction accuracy rate, emotional deltas (baseline vs. reveal), and growth trends across all capsules. Radial progress indicators and emotional evolution charts make reflection tangible.
 
 ### 🌐 Bilingual Support
+
 Full English/Spanish localization with locale-aware date formatting and UI.
 
 ### 🎨 Archival Design System
+
 - **Typography**: Fraunces (editorial serif), Courier Prime (monospace letter), IBM Plex Sans (UI)
 - **Colors**: Wax carmine (#8E2818), indigo ink (#2C485E), manila folder (#EFECE3), parchment (#FAF9F5)
 - **Components**: Wax seals, postmark stamps, paper sheets, archival folders, lined-paper canvas
 - **Motion**: Subtle seal-crack animations, fade-in transitions, reduced-motion respect
+- **Mockups & Design Catalog**: Living Storybook mockups reside in the [`time-echo/mockups`](https://github.com/time-echo/mockups) repository (`Tier 1` Primitives through `Tier 5` Full-Page Figma Frames). All UI changes must reference and stay aligned with the `time-echo/mockups` repository.
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Next.js 15 (App Router) |
-| Runtime | React 19 |
-| Styling | Tailwind CSS v4 (CSS-first, `@theme inline`) |
-| Language | TypeScript (strict) |
-| State | React Context + custom hooks |
-| Animation | Framer Motion, CSS animations |
-| Icons | Lucide React |
-| Utils | clsx, tailwind-merge |
-| Package Manager | pnpm |
+| Layer           | Technology                                   |
+| --------------- | -------------------------------------------- |
+| Framework       | Next.js 15 (App Router)                      |
+| Runtime         | React 19                                     |
+| Styling         | Tailwind CSS v4 (CSS-first, `@theme inline`) |
+| Language        | TypeScript (strict)                          |
+| State           | React Context + custom hooks                 |
+| Animation       | Framer Motion, CSS animations                |
+| Icons           | Lucide React                                 |
+| Utils           | clsx, tailwind-merge                         |
+| Package Manager | pnpm                                         |
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 20+
 - pnpm 10+
 
@@ -159,22 +167,23 @@ Defined in `src/app/globals.css` via `@theme inline`:
 
 ## 🔌 API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/letters` | Create new capsule |
-| `GET` | `/api/letters` | List all capsules |
-| `GET` | `/api/letters/[id]` | Get single capsule |
-| `PATCH` | `/api/letters/[id]` | Update capsule (reality check) |
-| `POST` | `/api/letters/[id]/archive` | Archive capsule |
-| `POST` | `/api/letters/[id]/restore` | Restore archived capsule |
-| `POST` | `/api/letters/[id]/predictions` | Update prediction realities |
-| `POST` | `/api/letters/reset` | Reset all data (dev only) |
+| Method  | Endpoint                        | Description                    |
+| ------- | ------------------------------- | ------------------------------ |
+| `POST`  | `/api/letters`                  | Create new capsule             |
+| `GET`   | `/api/letters`                  | List all capsules              |
+| `GET`   | `/api/letters/[id]`             | Get single capsule             |
+| `PATCH` | `/api/letters/[id]`             | Update capsule (reality check) |
+| `POST`  | `/api/letters/[id]/archive`     | Archive capsule                |
+| `POST`  | `/api/letters/[id]/restore`     | Restore archived capsule       |
+| `POST`  | `/api/letters/[id]/predictions` | Update prediction realities    |
+| `POST`  | `/api/letters/reset`            | Reset all data (dev only)      |
 
 ---
 
 ## 🌍 Internationalization
 
 Translations live in `src/lib/i18n/`:
+
 - `en.json` — English
 - `es.json` — Spanish
 
@@ -184,16 +193,24 @@ Add new keys to both files. The `useTimeEcho` context provides `locale` and `t` 
 
 ## 🧪 Development Notes
 
+### UI Mockups & Storybook Catalog ([`time-echo/mockups`](https://github.com/time-echo/mockups))
+
+TimeEcho maintains a standalone Storybook mockup catalog in the [`time-echo/mockups`](https://github.com/time-echo/mockups) repository (`pnpm storybook` on port `6006`) covering UI Primitives (Tier 1), Stamps (Tier 2), Layouts (Tier 3), Capsules (Tier 4), and Full-Page Figma Frames (Tier 5). Whenever UI or visual component changes are made in `time-echo-web`, consult the `time-echo/mockups` repository first and keep design tokens (`src/app/globals.css`), fonts (`src/lib/fonts.ts`), translations (`src/lib/i18n/`), and components synchronized. Also see [`AGENTS.md`](./AGENTS.md) and [`.agents/rules/mockups.md`](./.agents/rules/mockups.md).
+
 ### Mock API
+
 The app uses an in-memory mock store (`mockApiStore.ts`) for development. Replace `HttpApiRepository` with a real backend implementation when ready.
 
 ### Fonts
+
 Fonts are loaded via `next/font` in `src/lib/fonts.ts` and registered as CSS variables in `globals.css`.
 
 ### Theming
+
 Light/dark mode uses CSS custom properties on `:root` and `.dark`. Toggle via `UserPreferences.appearanceMode`.
 
 ### Accessibility
+
 - Semantic HTML throughout
 - Focus-visible outlines (wax color)
 - ARIA labels on interactive elements
@@ -217,9 +234,10 @@ vercel
 Or connect your Git repository to [Vercel](https://vercel.com) for automatic deployments.
 
 ### Environment Variables
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NEXT_PUBLIC_API_URL` | No | Backend API base URL (defaults to mock) |
+
+| Variable              | Required | Description                             |
+| --------------------- | -------- | --------------------------------------- |
+| `NEXT_PUBLIC_API_URL` | No       | Backend API base URL (defaults to mock) |
 
 ---
 

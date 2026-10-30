@@ -1,32 +1,125 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useFlash } from "@/components/ui/FlashBanner";
-import { Mail, AlertTriangle, ArrowLeft, CheckCircle } from "lucide-react";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import {
+  Mail,
+  AlertTriangle,
+  ArrowLeft,
+  CheckCircle,
+  Loader2,
+} from "lucide-react";
+
+function getBaseUrl(): string {
+  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  return "http://localhost:3000/api/v1";
+}
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { resetVault, t } = useTimeEcho();
-  const { notice } = useFlash();
+  const {
+    user,
+    token,
+    logout,
+    isAuthenticated,
+    isLoading: isAuthLoading,
+  } = useAuth();
+  const { resetVault, locale, t } = useTimeEcho();
+  const { notice, alert } = useFlash();
 
-  const [email, setEmail] = useState("user@timeecho.me");
+  const [editedEmail, setEditedEmail] = useState<string | null>(null);
   const [savedNotice, setSavedNotice] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleUpdateEmail = (e: React.FormEvent) => {
+  const baseUrl = getBaseUrl();
+  const currentEmail = editedEmail ?? (user?.email || "");
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
+
+  if (isAuthLoading) {
+    return <ArchivalLoader variant="page" />;
+  }
+
+  const handleUpdateEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSavedNotice(true);
-    notice(t("settings.savedNotice"));
-    setTimeout(() => setSavedNotice(false), 3000);
+    if (!currentEmail || !currentEmail.includes("@")) {
+      alert(t("composer.errors.emailInvalid"));
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      if (token) {
+        const res = await fetch(`${baseUrl}/account`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "X-Session-Token": token,
+            "X-Locale": locale,
+          },
+          credentials: "include",
+          body: JSON.stringify({ email: currentEmail }),
+        });
+
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const errorMsg =
+            json?.error?.message || json?.message || t("settings.savedNotice");
+          alert(errorMsg);
+          return;
+        }
+      }
+
+      setSavedNotice(true);
+      notice(t("settings.savedNotice"));
+      setTimeout(() => setSavedNotice(false), 4000);
+    } catch (err) {
+      const errorMsg =
+        err instanceof Error ? err.message : t("settings.savedNotice");
+      alert(errorMsg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDeleteVault = async () => {
     const confirmed = window.confirm(t("settings.deleteConfirmPrompt"));
-    if (confirmed) {
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      if (token) {
+        await fetch(`${baseUrl}/account`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "X-Session-Token": token,
+          },
+          credentials: "include",
+        }).catch(() => {});
+      }
       await resetVault();
+      await logout();
       router.push("/");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -77,10 +170,10 @@ export default function SettingsPage() {
             <input
               id="settings-email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={currentEmail}
+              onChange={(e) => setEditedEmail(e.target.value)}
               className="w-full paper-sheet rounded-xs border border-crease px-4 py-2.5 font-letter text-xs text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none transition-colors min-h-[44px]"
-              placeholder="tu@email.com"
+              placeholder={t("landing.emailPlaceholder")}
               required
             />
             <p className="text-[11px] font-letter text-foreground-muted leading-relaxed">
@@ -90,9 +183,17 @@ export default function SettingsPage() {
 
           <button
             type="submit"
-            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-8 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors"
+            disabled={isSubmitting}
+            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-8 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            {t("settings.updateEmail")}
+            {isSubmitting ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>{t("settings.updateEmail")}</span>
+              </>
+            ) : (
+              <span>{t("settings.updateEmail")}</span>
+            )}
           </button>
         </form>
       </div>
@@ -118,9 +219,17 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={handleDeleteVault}
-            className="border border-wax/40 text-wax hover:bg-wax/10 rounded-xs cursor-pointer shrink-0 font-letter text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] px-5 whitespace-nowrap bg-transparent"
+            disabled={isDeleting}
+            className="border border-wax/40 text-wax hover:bg-wax/10 rounded-xs cursor-pointer shrink-0 font-letter text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] px-5 whitespace-nowrap bg-transparent flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            {t("settings.deleteVaultButton")}
+            {isDeleting ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>{t("settings.deleteVaultButton")}</span>
+              </>
+            ) : (
+              <span>{t("settings.deleteVaultButton")}</span>
+            )}
           </button>
         </div>
       </div>

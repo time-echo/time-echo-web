@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import {
   Calendar,
   Plus,
@@ -18,22 +20,42 @@ import {
 import { cn, formatLocaleDate } from "@/lib/utils";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const isTimeline = searchParams.get("timeline") === "true";
 
-  const { capsules, archiveCapsule, restoreCapsule, deleteCapsule, locale, t } =
-    useTimeEcho();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const {
+    capsules,
+    isLoading,
+    archiveCapsule,
+    restoreCapsule,
+    deleteCapsule,
+    locale,
+    t,
+  } = useTimeEcho();
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
 
   const [currentTime] = useState(() => Date.now());
+
+  if (isLoading && capsules.length === 0) {
+    return <ArchivalLoader variant="page" />;
+  }
 
   const activeCapsules = capsules.filter((c) => c.status !== "archived");
   const archivedCapsules = capsules.filter((c) => c.status === "archived");
 
   const deliveredCapsules = activeCapsules.filter(
-    (c) => c.status === "delivered" || c.status === "opened",
+    (c) =>
+      c.status === "delivered" || c.status === "opened" || Boolean(c.openedAt),
   );
   const scheduledCapsules = activeCapsules.filter(
-    (c) => c.status === "pending",
+    (c) => c.status === "pending" || c.status === "queued",
   );
 
   const getDaysLeft = (targetIso: string) => {

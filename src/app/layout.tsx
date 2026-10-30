@@ -5,10 +5,12 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { fraunces, courierPrime, plexSans } from "@/lib/fonts";
 import { TimeEchoProvider } from "@/lib/context/TimeEchoContext";
+import { AuthProvider } from "@/lib/context/AuthContext";
 import { AppShell } from "@/components/layout/AppShell";
 import { SupportedLanguage } from "@/types/timeecho";
 import { getTranslation } from "@/lib/i18n";
 import { FlashProvider } from "@/components/ui/FlashBanner";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -68,15 +70,15 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <TimeEchoProvider defaultLocale={locale}>
-            <FlashProvider>
-              <Suspense
-                fallback={<div className="min-h-screen bg-parchment" />}
-              >
-                <AppShell>{children}</AppShell>
-              </Suspense>
-            </FlashProvider>
-          </TimeEchoProvider>
+          <AuthProvider>
+            <TimeEchoProvider defaultLocale={locale}>
+              <FlashProvider>
+                <Suspense fallback={<ArchivalLoader variant="full" />}>
+                  <AppShell>{children}</AppShell>
+                </Suspense>
+              </FlashProvider>
+            </TimeEchoProvider>
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

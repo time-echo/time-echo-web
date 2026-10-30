@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
 import { Letter, Prediction } from "@/types/timeecho";
 import {
   Lock,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, DEFAULT_STAMP_ID } from "@/components/stamps";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 
 interface LetterPageProps {
   params: Promise<{ id: string }>;
@@ -47,6 +49,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
   const { id } = use(params);
 
   const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const {
     getCapsuleById,
     repository,
@@ -57,6 +60,12 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     locale,
     t,
   } = useTimeEcho();
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
 
   const contextLetter = getCapsuleById(id);
   const [localLetter, setLocalLetter] = useState<Letter | null>(null);
@@ -112,11 +121,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
   const letter = localLetter || contextLetter;
 
   if (isLoading || !letter) {
-    return (
-      <div className="max-w-xl mx-auto py-16 text-center font-letter text-xs text-foreground-muted animate-pulse">
-        {t("reveal.loadingDocket")}
-      </div>
-    );
+    return <ArchivalLoader variant="page" title={t("reveal.loadingDocket")} />;
   }
 
   const isLocked = letter.status === "pending";

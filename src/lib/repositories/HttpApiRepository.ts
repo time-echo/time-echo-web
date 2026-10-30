@@ -7,6 +7,32 @@ import {
   EmotionalSnapshot,
 } from "@/types/timeecho";
 
+/**
+ * Standard structured API Error thrown on HTTP 4xx / 5xx responses.
+ */
+export class ApiError extends Error {
+  public status: number;
+  public code: string;
+  public details?: Record<string, string[]>;
+  public requestId?: string;
+
+  constructor(
+    status: number,
+    code: string,
+    message: string,
+    details?: Record<string, string[]>,
+    requestId?: string,
+  ) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.code = code;
+    this.details = details;
+    this.requestId = requestId;
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface RawLetterResponse {
   id: string | number;
@@ -43,22 +69,78 @@ interface RawLetterResponse {
   predictions?: any[];
 }
 
+export interface HttpApiRepositoryOptions {
+  baseUrl?: string;
+  getToken?: () => string | null;
+  getLocale?: () => string;
+}
+
 /**
  * 🌐 HttpApiRepository
  *
- * REST API Adapter for TimeEcho.
- * Conforms to `ICapsuleRepository`, consuming either:
- * - Local Next.js Mock REST Route Handlers (`/api/letters/*`)
- * - Ruby on Rails backend (`${NEXT_PUBLIC_API_URL}/letters/*`)
+ * REST API Adapter for TimeEcho conforming to `ICapsuleRepository`.
+ * Communicates with the Rails API (`/api/v1/*`) or local mock handlers:
+ * - Automatically unwraps `{ data: T, meta: M }` response envelopes.
+ * - Translates standardized API errors (`{ error: { code, message, details } }`).
+ * - Attaches `Authorization: Bearer <token>`, `X-Session-Token`, and `X-Locale` headers.
+ * - Sets `credentials: "include"` for cross-origin session cookie handling.
  */
 export class HttpApiRepository implements ICapsuleRepository {
   private baseUrl: string;
+  private customGetToken?: () => string | null;
+  private customGetLocale?: () => string;
 
-  constructor(baseUrl?: string) {
-    this.baseUrl =
-      baseUrl ||
-      (typeof process !== "undefined" ? process.env.NEXT_PUBLIC_API_URL : "") ||
-      "/api";
+  constructor(options?: HttpApiRepositoryOptions | string) {
+    if (typeof options === "string") {
+      this.baseUrl = options;
+    } else {
+      this.baseUrl =
+        options?.baseUrl ||
+        (typeof process !== "undefined"
+          ? process.env.NEXT_PUBLIC_API_URL
+          : "") ||
+        "http://localhost:3000/api/v1";
+      this.customGetToken = options?.getToken;
+      this.customGetLocale = options?.getLocale;
+    }
+  }
+
+  /**
+   * Retrieves active session token from configured callback or localStorage.
+   */
+  private resolveToken(): string | null {
+    if (this.customGetToken) {
+      return this.customGetToken();
+    }
+    if (typeof window !== "undefined") {
+      try {
+        return window.localStorage.getItem("timeecho_session_token");
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Retrieves current language code for X-Locale header.
+   */
+  private resolveLocale(): string {
+    if (this.customGetLocale) {
+      return this.customGetLocale();
+    }
+    if (typeof window !== "undefined") {
+      try {
+        const saved = window.localStorage.getItem("timeecho_locale");
+        if (saved) return saved;
+      } catch {
+        // ignore
+      }
+      if (document.documentElement.lang) {
+        return document.documentElement.lang;
+      }
+    }
+    return "es";
   }
 
   private mapResponseToDomain(data: RawLetterResponse): Letter {
@@ -132,22 +214,63 @@ export class HttpApiRepository implements ICapsuleRepository {
     };
   }
 
+  /**
+   * Executes HTTP request with envelope unwrapping and standardized error extraction.
+   */
   private async request<T>(
     endpoint: string,
     options: RequestInit = {},
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
-    const headers = {
+    const token = this.resolveToken();
+    const locale = this.resolveLocale();
+
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
       Accept: "application/json",
-      ...(options.headers || {}),
+      "X-Locale": locale,
+      ...((options.headers as Record<string, string>) || {}),
     };
 
-    const res = await fetch(url, { ...options, headers });
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      headers["X-Session-Token"] = token;
+    }
+
+    const res = await fetch(url, {
+      ...options,
+      headers,
+      credentials: "include",
+    });
+
     if (!res.ok) {
-      const errorText = await res.text().catch(() => "");
-      throw new Error(
-        `[HttpApiRepository] HTTP ${res.status} on ${endpoint}: ${errorText}`,
+      let errorData: any = null;
+      try {
+        errorData = await res.json();
+      } catch {
+        const errorText = await res.text().catch(() => "");
+        errorData = { message: errorText || res.statusText };
+      }
+
+      if (errorData?.error && typeof errorData.error === "object") {
+        throw new ApiError(
+          res.status,
+          errorData.error.code || "api_error",
+          errorData.error.message || `Request failed with status ${res.status}`,
+          errorData.error.details,
+          errorData.error.requestId,
+        );
+      }
+
+      const fallbackMsg =
+        typeof errorData?.error === "string"
+          ? errorData.error
+          : errorData?.message || `HTTP ${res.status} on ${endpoint}`;
+
+      throw new ApiError(
+        res.status,
+        res.status === 401 ? "unauthorized" : "request_failed",
+        fallbackMsg,
       );
     }
 
@@ -155,12 +278,39 @@ export class HttpApiRepository implements ICapsuleRepository {
       return undefined as unknown as T;
     }
 
-    return res.json() as Promise<T>;
+    const json = await res.json();
+
+    // Standard envelope unwrapping: if payload contains { data: T }, return data
+    if (json && typeof json === "object" && "data" in json) {
+      return json.data as T;
+    }
+
+    return json as T;
   }
 
-  async getAll(): Promise<Letter[]> {
-    const data = await this.request<RawLetterResponse[]>("/letters");
-    return data.map((item) => this.mapResponseToDomain(item));
+  async getAll(params?: {
+    status?: string;
+    page?: number;
+    perPage?: number;
+  }): Promise<Letter[]> {
+    const queryParts: string[] = [];
+    if (params?.status) {
+      queryParts.push(`status=${encodeURIComponent(params.status)}`);
+    }
+    if (params?.page) {
+      queryParts.push(`page=${encodeURIComponent(params.page)}`);
+    }
+    if (params?.perPage) {
+      queryParts.push(`perPage=${encodeURIComponent(params.perPage)}`);
+    }
+
+    const queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+    const data = await this.request<RawLetterResponse[]>(
+      `/letters${queryString}`,
+    );
+    return Array.isArray(data)
+      ? data.map((item) => this.mapResponseToDomain(item))
+      : [];
   }
 
   async getById(id: string): Promise<Letter | null> {
@@ -168,8 +318,11 @@ export class HttpApiRepository implements ICapsuleRepository {
       const data = await this.request<RawLetterResponse>(
         `/letters/${encodeURIComponent(id)}`,
       );
-      return this.mapResponseToDomain(data);
+      return data ? this.mapResponseToDomain(data) : null;
     } catch (err) {
+      if (err instanceof ApiError && err.status === 404) {
+        return null;
+      }
       console.warn(
         `[HttpApiRepository] Capsule ${id} not found or request failed:`,
         err,
@@ -185,7 +338,8 @@ export class HttpApiRepository implements ICapsuleRepository {
         content: input.content,
         email: input.email,
         scheduled_at: input.scheduledAt,
-        language: input.language || "es",
+        deliver_at: input.scheduledAt,
+        language: input.language || this.resolveLocale() || "es",
         timezone: input.timezone || "UTC",
         emotional_snapshot_attributes: {
           happiness_level: input.emotionalSnapshot.happinessLevel,
@@ -212,8 +366,8 @@ export class HttpApiRepository implements ICapsuleRepository {
       reveal_happiness: input.revealHappiness,
       reveal_anxiety: input.revealAnxiety,
       reveal_motivation: input.revealMotivation,
-      opened_at: input.openedAt,
-      is_wax_broken: input.isWaxBroken,
+      opened_at: input.openedAt || new Date().toISOString(),
+      is_wax_broken: input.isWaxBroken ?? true,
       predictions: input.predictions?.map((p) => ({
         id: p.id,
         reality: p.reality,
@@ -255,11 +409,8 @@ export class HttpApiRepository implements ICapsuleRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await this.request<void>(
-      `/letters/${encodeURIComponent(id)}`,
-      {
-        method: "DELETE",
-      },
-    );
+    await this.request<void>(`/letters/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+    });
   }
 }
