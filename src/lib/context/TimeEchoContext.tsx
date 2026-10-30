@@ -279,13 +279,26 @@ export function TimeEchoProvider({
         setCapsules((prev) => [created, ...prev]);
         return created;
       } catch (err) {
-        const msg =
-          err instanceof Error ? err.message : "Error al crear la cápsula";
+        const isTechnical =
+          (err instanceof ApiError &&
+            (err.status >= 500 ||
+              err.code === "internal_error" ||
+              err.code === "service_unavailable")) ||
+          err instanceof TypeError ||
+          (err instanceof Error &&
+            /unknown attribute|internal server error|failed to fetch/i.test(
+              err.message,
+            ));
+        const msg = isTechnical
+          ? t("composer.errors.sealError")
+          : err instanceof Error
+            ? err.message
+            : t("composer.errors.sealError");
         setError(msg);
         throw err;
       }
     },
-    [repository, unlockStamp],
+    [repository, unlockStamp, t],
   );
 
   const updateReality = useCallback(
