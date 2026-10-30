@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { useLetterComposer, HorizonPreset } from "@/features/capsules";
 import { ArchivalAccordion } from "@/components/ui/ArchivalAccordion";
-import { WaxSeal } from "@/components/ui/WaxSeal";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle } from "lucide-react";
@@ -612,44 +611,14 @@ export function LetterComposerForm({
         </div>
       </form>
 
-      {/* Wax Sealing Modal Micro-Animation */}
-      <AnimatePresence>
-        {isSealing && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="sealing-dialog-title"
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center select-none"
-          >
-            <motion.div
-              initial={{ scale: 0.8, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="p-8 rounded-lg border border-crease bg-parchment max-w-sm w-full space-y-6 shadow-2xl flex flex-col items-center"
-            >
-              <WaxSeal size="lg" isLocked={false} />
-
-              <div className="space-y-2">
-                <h3
-                  id="sealing-dialog-title"
-                  className="font-serif-editorial text-2xl font-bold text-ink"
-                >
-                  {t("composer.sealingVaultModalTitle")}
-                </h3>
-                <p className="font-letter text-xs text-foreground-muted leading-relaxed">
-                  {t("composer.sealingVaultModalDesc")}
-                </p>
-              </div>
-
-              <div className="w-16 h-1 bg-crease rounded-full overflow-hidden">
-                <div className="h-full bg-wax animate-pulse" />
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isSealing && (
+        <ArchivalLoader
+          variant="full"
+          className="fixed inset-0 z-50"
+          title={t("composer.sealingVaultModalTitle")}
+          subtitle={t("composer.sealingVaultModalDesc")}
+        />
+      )}
 
       <StampPickerModal
         isOpen={isStampPickerOpen}

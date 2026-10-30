@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useFlash } from "@/components/ui/FlashBanner";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import {
   Mail,
   AlertTriangle,
@@ -46,6 +47,10 @@ export default function SettingsPage() {
       router.push("/login");
     }
   }, [isAuthLoading, isAuthenticated, router]);
+
+  if (isAuthLoading) {
+    return <ArchivalLoader variant="page" />;
+  }
 
   const handleUpdateEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,7 +173,7 @@ export default function SettingsPage() {
               value={currentEmail}
               onChange={(e) => setEditedEmail(e.target.value)}
               className="w-full paper-sheet rounded-xs border border-crease px-4 py-2.5 font-letter text-xs text-foreground placeholder:text-foreground-muted focus:border-wax focus:outline-none transition-colors min-h-[44px]"
-              placeholder="tu@email.com"
+              placeholder={t("landing.emailPlaceholder")}
               required
             />
             <p className="text-[11px] font-letter text-foreground-muted leading-relaxed">

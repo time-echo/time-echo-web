@@ -7,6 +7,7 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
 import { ArchivalHeader } from "./ArchivalHeader";
 import { ArchivalFooter } from "./ArchivalFooter";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import {
   Globe,
   PenTool,
@@ -73,7 +74,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   if (isAuthLoading || !isAuthenticated) {
-    return <div className="min-h-screen bg-parchment" />;
+    return <ArchivalLoader variant="full" />;
   }
 
   const isWriteActive = pathname === "/letters/new";

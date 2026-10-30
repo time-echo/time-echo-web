@@ -10,6 +10,7 @@ import { formatLocaleDate } from "@/lib/utils";
 import { Letter } from "@/types/timeecho";
 import { RealityLedger } from "@/features/reality-ledger/components/RealityLedger";
 import { ArchivalFolder } from "@/components/ui/ArchivalFolder";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { PostmarkStamp } from "@/components/ui/PostmarkStamp";
 import {
   Scale,
@@ -71,7 +72,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
       .catch((err) => {
         if (!isCancelled) {
           setFetchError(
-            err instanceof Error ? err.message : "Error al cargar la carta",
+            err instanceof Error ? err.message : t("reality.loadError"),
           );
           setIsFetchingLocal(false);
         }
@@ -80,7 +81,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     return () => {
       isCancelled = true;
     };
-  }, [id, contextLetter, repository]);
+  }, [id, contextLetter, repository, t]);
 
   const letter = localLetter || contextLetter;
 
@@ -98,12 +99,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
 
   // 1. Loading State
   if ((isGlobalLoading && !letter) || (isFetchingLocal && !letter)) {
-    return (
-      <div className="max-w-4xl mx-auto py-16 px-4 space-y-6 animate-pulse">
-        <div className="h-6 w-48 bg-crease/60 rounded" />
-        <div className="h-96 w-full bg-manila/50 rounded-md border border-crease/60" />
-      </div>
-    );
+    return <ArchivalLoader variant="page" title={t("reveal.loadingDocket")} />;
   }
 
   // 2. Not Found State
@@ -116,7 +112,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
           </div>
           <div className="space-y-2">
             <span className="font-mono text-xs uppercase tracking-widest text-wax font-bold">
-              FOLIO № {id} {"//"} NO ENCONTRADO
+              {t("reality.folioNotFound", { id })}
             </span>
             <h1 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-ink">
               {t("reality.docketNotFound")}
@@ -149,7 +145,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
 
           <div className="space-y-2">
             <span className="font-mono text-xs uppercase tracking-widest text-wax font-bold">
-              ACCESO DENEGADO // BÓVEDA CERRADA
+              {t("reality.accessDeniedBadge")}
             </span>
             <h1 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-ink">
               {t("reality.notUnsealedYet")}
@@ -179,7 +175,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     <div className="max-w-4xl mx-auto space-y-8 pb-16">
       {/* Navigation Breadcrumb Bar */}
       <nav
-        aria-label="Navegación de expediente"
+        aria-label={t("reality.breadcrumbAria")}
         className="flex items-center justify-between font-letter text-xs text-foreground-muted"
       >
         <Link
@@ -206,13 +202,13 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
 
       {/* Manila Dossier Shell */}
       <ArchivalFolder
-        tabLabel={`EXPEDIENTE DE REALIDAD // № ${letter.docketNumber}`}
+        tabLabel={t("reality.folderTabLabel", { docket: letter.docketNumber })}
         tabPosition="left"
-        classification="ASIENTO RETROSPECTIVO // ARCHIVO CENTRAL"
+        classification={t("reality.folderClassification")}
         badgeSlot={
           <div className="inline-flex items-center gap-1.5 font-mono text-[10px] text-wax font-bold tracking-widest uppercase bg-wax/10 px-2.5 py-0.5 rounded border border-wax/20">
             <Scale size={11} />
-            <span>CONTRASTE DE HECHOS</span>
+            <span>{t("reality.badge")}</span>
           </div>
         }
       >
@@ -221,7 +217,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
           <div className="relative border-b border-crease pb-6">
             <div className="absolute right-0 top-0 pointer-events-none opacity-80 hidden sm:block">
               <PostmarkStamp
-                city="BOGOTÁ // CENTRAL"
+                city={t("reality.postmarkCity")}
                 docketId={letter.docketNumber}
                 date={createdFormatted}
                 subtext={t("reality.realityRecord")}
@@ -232,7 +228,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
 
             <div className="space-y-2 max-w-xl">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-wax font-bold">
-                AUDITORÍA DE EXPECTATIVAS // TIME-ECHO
+                {t("reality.auditHeaderBadge")}
               </span>
               <h1 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-ink">
                 {letter.title}

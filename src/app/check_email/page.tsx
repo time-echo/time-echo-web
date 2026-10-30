@@ -5,27 +5,30 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { Mail, ArrowLeft, RefreshCw, CheckCircle2 } from "lucide-react";
 
 function CheckEmailContent() {
   const searchParams = useSearchParams();
   const { t } = useTimeEcho();
   const { requestMagicLink } = useAuth();
-  const email = searchParams.get("email") || "tu@email.com";
+  const defaultPlaceholder = t("landing.emailPlaceholder");
+  const email = searchParams.get("email") || defaultPlaceholder;
 
   const [isResending, setIsResending] = useState(false);
   const [resendNotice, setResendNotice] = useState<string | null>(null);
 
   const handleResend = async () => {
-    if (!email || email === "tu@email.com") return;
+    if (!email || email === defaultPlaceholder) return;
     setIsResending(true);
     setResendNotice(null);
     try {
       await requestMagicLink(email);
-      setResendNotice(t("login.dispatchedTitle") || "¡Enlace reenviado!");
+      setResendNotice(t("checkEmail.resentNotice"));
       setTimeout(() => setResendNotice(null), 4000);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Error al reenviar.";
+      const msg =
+        err instanceof Error ? err.message : t("checkEmail.resendError");
       setResendNotice(msg);
     } finally {
       setIsResending(false);
@@ -79,12 +82,12 @@ function CheckEmailContent() {
             {isResending ? (
               <>
                 <RefreshCw size={14} className="animate-spin" />
-                <span>Enviando...</span>
+                <span>{t("checkEmail.sending")}</span>
               </>
             ) : (
               <>
                 <RefreshCw size={14} />
-                <span>Reenviar enlace</span>
+                <span>{t("checkEmail.resendLink")}</span>
               </>
             )}
           </button>
@@ -107,13 +110,7 @@ function CheckEmailContent() {
 
 export default function CheckEmailPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="max-w-md mx-auto py-16 text-center font-letter text-xs text-foreground-muted animate-pulse">
-          ...
-        </div>
-      }
-    >
+    <Suspense fallback={<ArchivalLoader variant="page" />}>
       <CheckEmailContent />
     </Suspense>
   );

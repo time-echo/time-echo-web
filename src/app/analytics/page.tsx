@@ -5,19 +5,24 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { calculateAnalyticsMetrics } from "@/features/analytics";
 import { ArrowLeft, Brain, Sparkles } from "lucide-react";
 
 export default function AnalyticsPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
-  const { capsules, t } = useTimeEcho();
+  const { capsules, isLoading, t } = useTimeEcho();
 
   useEffect(() => {
     if (!isAuthLoading && !isAuthenticated) {
       router.replace("/login");
     }
   }, [isAuthLoading, isAuthenticated, router]);
+
+  if (isLoading && capsules.length === 0) {
+    return <ArchivalLoader variant="page" />;
+  }
 
   const metrics = calculateAnalyticsMetrics(capsules);
 

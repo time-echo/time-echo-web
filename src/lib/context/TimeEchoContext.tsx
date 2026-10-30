@@ -207,15 +207,13 @@ export function TimeEchoProvider({
         return;
       }
       const msg =
-        err instanceof Error
-          ? err.message
-          : "Error al cargar las cápsulas del tiempo";
+        err instanceof Error ? err.message : t("common.errors.loadCapsules");
       setError(msg);
       console.error("[TimeEchoContext] refreshCapsules error:", err);
     } finally {
       setIsLoading(false);
     }
-  }, [repository]);
+  }, [repository, t]);
 
   useEffect(() => {
     if (isAuthLoading) {
@@ -250,7 +248,7 @@ export function TimeEchoProvider({
           const msg =
             err instanceof Error
               ? err.message
-              : "Error al cargar las cápsulas del tiempo";
+              : t("common.errors.loadCapsules");
           setError(msg);
           setIsLoading(false);
         }
@@ -259,7 +257,7 @@ export function TimeEchoProvider({
     return () => {
       isMounted = false;
     };
-  }, [repository, isAuthenticated, isAuthLoading]);
+  }, [repository, isAuthenticated, isAuthLoading, t]);
 
   const getCapsuleById = useCallback(
     (id: string): Letter | undefined => {
@@ -312,14 +310,12 @@ export function TimeEchoProvider({
         return updated;
       } catch (err) {
         const msg =
-          err instanceof Error
-            ? err.message
-            : "Error al actualizar el expediente de realidad";
+          err instanceof Error ? err.message : t("common.errors.updateReality");
         setError(msg);
         throw err;
       }
     },
-    [repository],
+    [repository, t],
   );
 
   const archiveCapsule = useCallback(
@@ -333,12 +329,14 @@ export function TimeEchoProvider({
         return updated;
       } catch (err) {
         const msg =
-          err instanceof Error ? err.message : "Error al archivar la cápsula";
+          err instanceof Error
+            ? err.message
+            : t("common.errors.archiveCapsule");
         setError(msg);
         throw err;
       }
     },
-    [repository],
+    [repository, t],
   );
 
   const restoreCapsule = useCallback(
@@ -352,12 +350,14 @@ export function TimeEchoProvider({
         return updated;
       } catch (err) {
         const msg =
-          err instanceof Error ? err.message : "Error al restaurar la cápsula";
+          err instanceof Error
+            ? err.message
+            : t("common.errors.restoreCapsule");
         setError(msg);
         throw err;
       }
     },
-    [repository],
+    [repository, t],
   );
 
   const deleteCapsule = useCallback(
@@ -368,12 +368,12 @@ export function TimeEchoProvider({
         setCapsules((prev) => prev.filter((item) => item.id !== id));
       } catch (err) {
         const msg =
-          err instanceof Error ? err.message : "Error al eliminar la cápsula";
+          err instanceof Error ? err.message : t("common.errors.deleteCapsule");
         setError(msg);
         throw err;
       }
     },
-    [repository],
+    [repository, t],
   );
 
   /**

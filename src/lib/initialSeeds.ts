@@ -17,25 +17,25 @@ export const INITIAL_SEEDS: Letter[] = [
   {
     id: "capsule-unlocked-2024",
     docketNumber: "TE-00421",
-    title: "Reflexiones sobre una nueva etapa: El cruce del umbral",
-    content: `Querido yo del porvenir:
+    title: "Reflections on a New Chapter: Crossing the Threshold",
+    content: `Dear future self,
 
-Hoy tomo la pluma en una tarde de otoño silenciosa. Hay un eco extraño en la casa vacía, esa sensación suspendida entre lo que dejamos atrás y lo que todavía no tiene nombre. 
+Today I take up the pen on a quiet autumn afternoon. There is a strange echo in the empty house, that suspended feeling between what we leave behind and what does not yet have a name.
 
-Te escribo porque temo que con el tiempo olvides la razón por la que te atreviste a dar este salto: no fue por la certeza del triunfo, sino por la necesidad urgente de no quedarte dormido en la orilla de lo cómodo.
+I write to you because I fear that over time you might forget the reason you dared to take this leap: it was not out of certainty of triumph, but out of an urgent need not to fall asleep on the shore of comfort.
 
-Si estás leyendo estas líneas con el sello carmesí recién quebrado, dime: ¿pudiste mantener encendida la curiosidad? ¿Fuiste compasivo contigo en los días grises? Espero que al mirar hacia atrás sonrías con la serenidad de quien honró sus promesas silenciosas.
+If you are reading these lines with the crimson seal freshly broken, tell me: did you keep your curiosity alive? Were you compassionate with yourself on gray days? I hope that looking back you smile with the serenity of someone who honored their quiet promises.
 
-Con afecto incondicional desde el pasado,
-Tu antiguo yo.`,
-    email: "yo.del.futuro@timeecho.internal",
+With unconditional affection from the past,
+Your former self.`,
+    email: "future.self@timeecho.internal",
     scheduledAt: "2024-03-27T10:00:00.000Z",
     deliveredAt: "2024-03-27T10:00:00.000Z",
     openedAt: null,
     queuedAt: "2024-03-27T09:59:00.000Z",
     status: "delivered",
-    language: "es",
-    timezone: "America/Bogota",
+    language: "en",
+    timezone: "America/New_York",
     revealHappiness: null,
     revealAnxiety: null,
     revealMotivation: null,
@@ -58,7 +58,7 @@ Tu antiguo yo.`,
         letterId: "capsule-unlocked-2024",
         category: "city",
         prediction:
-          "Estaré viviendo en Kioto o trabajando en remoto para un equipo global.",
+          "Living in Kyoto or working remotely with a global creative team.",
         reality: null,
         matched: null,
         outcome: "pending",
@@ -70,7 +70,7 @@ Tu antiguo yo.`,
         letterId: "capsule-unlocked-2024",
         category: "career",
         prediction:
-          "Liderar mi propio equipo creativo o trabajar en proyectos independientes con propósito.",
+          "Leading my own creative studio or building independent purpose-driven projects.",
         reality: null,
         matched: null,
         outcome: "pending",
@@ -82,7 +82,7 @@ Tu antiguo yo.`,
         letterId: "capsule-unlocked-2024",
         category: "achievement",
         prediction:
-          "Completar mi primera media maratón y mantener la práctica matinal de escritura.",
+          "Completing my first half marathon and keeping up my morning writing ritual.",
         reality: null,
         matched: null,
         outcome: "pending",
@@ -98,22 +98,22 @@ Tu antiguo yo.`,
   {
     id: "capsule-transit-2027",
     docketNumber: "TE-00912",
-    title: "Promesas silenciosas bajo la lluvia de primavera",
-    content: `A quien habitará este cuerpo y mente dentro de un año:
+    title: "Quiet Promises Under the Spring Rain",
+    content: `To the one who will inhabit this body and mind a year from now:
 
-Te escribo en una tarde de lluvia tranquila, mientras el café aún humea sobre la mesa de madera.
+I am writing to you on a quiet rainy afternoon while coffee still steams on the wooden desk.
 
-Hay proyectos que aún son bocetos en tinta tenue y decisiones que requieren coraje. Te envío estas palabras para que no olvides que la paciencia es el arte de confiar en el propio paso. 
+There are projects that are still faint ink sketches and decisions that require courage. I send you these words so you never forget that patience is the art of trusting your own pace.
 
-No abras esta carta hasta que llegue el día convenido. Cuida la salud, respira hondo y abraza a los que tienes cerca.`,
-    email: "yo.del.futuro@timeecho.internal",
+Do not break this seal until the appointed day arrives. Take care of your health, breathe deeply, and hold close those you love.`,
+    email: "future.self@timeecho.internal",
     scheduledAt: "2027-03-29T12:00:00.000Z",
     deliveredAt: null,
     openedAt: null,
     queuedAt: null,
     status: "pending",
-    language: "es",
-    timezone: "America/Bogota",
+    language: "en",
+    timezone: "America/New_York",
     revealHappiness: null,
     revealAnxiety: null,
     revealMotivation: null,
@@ -136,7 +136,7 @@ No abras esta carta hasta que llegue el día convenido. Cuida la salud, respira 
         letterId: "capsule-transit-2027",
         category: "salary",
         prediction:
-          "Alcanzar plena estabilidad financiera ahorrando metódicamente cada mes.",
+          "Achieve full financial stability by saving methodically every month.",
         reality: null,
         matched: null,
         outcome: "pending",
@@ -148,7 +148,7 @@ No abras esta carta hasta que llegue el día convenido. Cuida la salud, respira 
         letterId: "capsule-transit-2027",
         category: "relationship",
         prediction:
-          "Preservar los almuerzos de domingo y viajar juntos a la costa.",
+          "Preserve our Sunday family lunches and travel together to the coast.",
         reality: null,
         matched: null,
         outcome: "pending",
@@ -164,20 +164,20 @@ No abras esta carta hasta que llegue el día convenido. Cuida la salud, respira 
   {
     id: "capsule-archived-2022",
     docketNumber: "TE-00108",
-    title: "Dos años después del salto: Recordar por qué empecé",
-    content: `Si estás leyendo esto, han pasado dos años desde aquella tarde en la que decidiste cambiar de rumbo. Tenías miedo de dejar la estabilidad, preguntándote si tendrías la valentía de construir algo propio.
+    title: "Notes from the First Studio: Building with Intention",
+    content: `If you are reading this, two years have passed since that afternoon when you decided to change course. You were afraid of leaving stability behind, wondering if you would have the courage to build something of your own.
 
-Espero que hayas aprendido a preocuparte menos por los plazos y más por estar presente. No olvides que te prometiste cuidar los pequeños rituales: el café sin prisas por las mañanas, adoptar a ese perro cuando tuvieras terraza y dedicarle tiempo a quienes quieres.
+I hope you have learned to worry less about deadlines and more about being present. Do not forget that you promised yourself to protect the small rituals: unhurried morning coffee, adopting that dog once you had a terrace, and making time for the people you love.
 
-Siéntete orgulloso de dónde estás. Trabajamos muy duro para traerte hasta aquí.`,
-    email: "yo.del.futuro@timeecho.internal",
+Be proud of where you stand today. We worked hard to bring you here.`,
+    email: "future.self@timeecho.internal",
     scheduledAt: "2022-09-15T09:00:00.000Z",
     deliveredAt: "2022-09-15T09:00:00.000Z",
     openedAt: "2022-09-16T18:30:00.000Z",
     queuedAt: "2022-09-15T08:59:00.000Z",
     status: "archived",
-    language: "es",
-    timezone: "America/Bogota",
+    language: "en",
+    timezone: "America/New_York",
     revealHappiness: 9,
     revealAnxiety: 3,
     revealMotivation: 8,
@@ -200,8 +200,8 @@ Siéntete orgulloso de dónde estás. Trabajamos muy duro para traerte hasta aqu
         letterId: "capsule-archived-2022",
         category: "career",
         prediction:
-          "Trabajar como Lead Designer en un estudio o fundar mi propio equipo.",
-        reality: "VP de Diseño en un colectivo indie con clientes globales.",
+          "Work as Lead Designer at a studio or found my own independent team.",
+        reality: "VP of Design at an indie collective with global clients.",
         matched: true,
         outcome: "fulfilled",
         createdAt: "2022-09-15T08:00:00.000Z",
@@ -211,8 +211,8 @@ Siéntete orgulloso de dónde estás. Trabajamos muy duro para traerte hasta aqu
         id: "pred-302",
         letterId: "capsule-archived-2022",
         category: "city",
-        prediction: "Mudarme a un estudio con balcón soleado para escribir.",
-        reality: "Encontré un ático con terraza iluminada y vistas al parque.",
+        prediction: "Move into a studio with a sunny balcony to write.",
+        reality: "Found a penthouse with a sunlit terrace and park views.",
         matched: true,
         outcome: "fulfilled",
         createdAt: "2022-09-15T08:00:00.000Z",
@@ -222,8 +222,8 @@ Siéntete orgulloso de dónde estás. Trabajamos muy duro para traerte hasta aqu
         id: "pred-303",
         letterId: "capsule-archived-2022",
         category: "achievement",
-        prediction: "Correr el maratón completo de 42K de Chicago.",
-        reality: "Completé mi primer medio maratón 21K en Bogotá.",
+        prediction: "Run the full 42K Chicago Marathon.",
+        reality: "Completed my first 21K half marathon.",
         matched: false,
         outcome: "diverged",
         createdAt: "2022-09-15T08:00:00.000Z",
@@ -297,7 +297,7 @@ Be proud of where you are. We worked hard to bring you here.`,
         letterId: "capsule-revealed-2023",
         category: "achievement",
         prediction: "Run the full 42K Chicago marathon.",
-        reality: "Completed my first 21K half marathon in Bogotá.",
+        reality: "Completed my first 21K half marathon.",
         matched: false,
         outcome: "diverged",
         createdAt: "2023-11-10T08:00:00.000Z",

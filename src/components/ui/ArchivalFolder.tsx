@@ -1,11 +1,14 @@
+"use client";
+
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Folder } from "lucide-react";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface ArchivalFolderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Title or docket number displayed on the top physical tab.
-   * e.g., "EXPEDIENTE № TE-00421"
+   * e.g., "DOCKET № TE-00421"
    */
   tabLabel?: string;
   /**
@@ -15,7 +18,7 @@ export interface ArchivalFolderProps extends React.HTMLAttributes<HTMLDivElement
   tabPosition?: "left" | "center" | "right";
   /**
    * Confidentiality or classification stamp.
-   * e.g., "CONFIDENCIAL // CIFRADO EN REPOSO"
+   * e.g., "CONFIDENTIAL // ENCRYPTED AT REST"
    */
   classification?: string;
   /**
@@ -43,15 +46,20 @@ export const ArchivalFolder = React.forwardRef<
   (
     {
       children,
-      tabLabel = "EXPEDIENTE POSTAL",
+      tabLabel,
       tabPosition = "left",
-      classification = "ARCHIVAL VAULT // PRIVADO",
+      classification,
       badgeSlot,
       className,
       ...props
     },
     ref,
   ) => {
+    const { t } = useTimeEcho();
+    const resolvedTabLabel = tabLabel ?? t("common.folder.defaultTab");
+    const resolvedClassification =
+      classification ?? t("common.folder.defaultClassification");
+
     return (
       <div ref={ref} className={cn("relative w-full", className)} {...props}>
         {/* Physical Manila Folder Top Tab Bar */}
@@ -70,7 +78,7 @@ export const ArchivalFolder = React.forwardRef<
           >
             <Folder size={13} className="text-ink/70" />
             <span className="font-semibold text-ink truncate max-w-[240px] sm:max-w-[340px]">
-              {tabLabel}
+              {resolvedTabLabel}
             </span>
           </div>
         </div>
@@ -95,7 +103,7 @@ export const ArchivalFolder = React.forwardRef<
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-wax" />
               <span className="text-[11px] tracking-widest text-foreground-muted uppercase">
-                {classification}
+                {resolvedClassification}
               </span>
             </div>
 
@@ -107,8 +115,8 @@ export const ArchivalFolder = React.forwardRef<
 
           {/* Bottom Crease Subtle Stitch Rule */}
           <div className="px-6 py-2 border-t border-crease/50 bg-manila/80 font-letter text-[11px] text-foreground-muted tracking-widest uppercase flex items-center justify-between select-none">
-            <span>REGISTRO DE BÓVEDA // TIME-ECHO</span>
-            <span>TIMBRADO Y ARCHIVADO</span>
+            <span>{t("common.folder.footerLeft")}</span>
+            <span>{t("common.folder.footerRight")}</span>
           </div>
         </div>
       </div>

@@ -7,3 +7,4 @@ export * from "./Slider";
 export * from "./FlashBanner";
 export * from "./DualEmotionalBar";
 export * from "./ArchivalAccordion";
+export * from "./ArchivalLoader";
