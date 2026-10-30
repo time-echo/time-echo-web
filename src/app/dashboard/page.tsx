@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import {
   Calendar,
   Plus,
@@ -24,8 +25,15 @@ export default function DashboardPage() {
   const isTimeline = searchParams.get("timeline") === "true";
 
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
-  const { capsules, archiveCapsule, restoreCapsule, deleteCapsule, locale, t } =
-    useTimeEcho();
+  const {
+    capsules,
+    isLoading,
+    archiveCapsule,
+    restoreCapsule,
+    deleteCapsule,
+    locale,
+    t,
+  } = useTimeEcho();
 
   useEffect(() => {
     if (!isAuthLoading && !isAuthenticated) {
@@ -34,6 +42,10 @@ export default function DashboardPage() {
   }, [isAuthLoading, isAuthenticated, router]);
 
   const [currentTime] = useState(() => Date.now());
+
+  if (isLoading && capsules.length === 0) {
+    return <ArchivalLoader variant="page" />;
+  }
 
   const activeCapsules = capsules.filter((c) => c.status !== "archived");
   const archivedCapsules = capsules.filter((c) => c.status === "archived");

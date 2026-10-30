@@ -61,7 +61,7 @@ export default function AboutPage() {
         {/* Why Write to Your Future Self */}
         <PaperSheet
           elevation="raised"
-          docketFolio="FOLIO № 01 // ORIGEN"
+          docketFolio={t("about.folios.origin")}
           dateStamp={t("about.stamps.purpose")}
           className="p-6 sm:p-8"
         >
@@ -165,7 +165,7 @@ export default function AboutPage() {
         {/* Built for Honest Self-Conversation */}
         <PaperSheet
           elevation="raised"
-          docketFolio="FOLIO № 02 // INTIMIDAD"
+          docketFolio={t("about.folios.intimacy")}
           dateStamp={t("about.stamps.reflection")}
           className="p-6 sm:p-8"
         >
@@ -182,7 +182,7 @@ export default function AboutPage() {
         {/* Our Privacy Philosophy */}
         <PaperSheet
           elevation="raised"
-          docketFolio="FOLIO № 03 // CIFRADO"
+          docketFolio={t("about.folios.encryption")}
           dateStamp={t("about.stamps.security")}
           className="p-6 sm:p-8"
         >
@@ -202,7 +202,7 @@ export default function AboutPage() {
         {/* Contact & Creators */}
         <PaperSheet
           elevation="raised"
-          docketFolio="FOLIO № 04 // CONTACTO"
+          docketFolio={t("about.folios.contact")}
           dateStamp={t("about.stamps.correspondence")}
           className="p-6 sm:p-8"
         >
@@ -222,7 +222,9 @@ export default function AboutPage() {
                 <Mail size={16} />
                 <span>nmena.garzon@gmail.com</span>
               </a>
-              <span className="hidden sm:inline text-foreground-muted/40">•</span>
+              <span className="hidden sm:inline text-foreground-muted/40">
+                •
+              </span>
               <a
                 href="mailto:juanmamena2005@gmail.com"
                 className="inline-flex items-center gap-2 text-wax hover:underline transition-colors"

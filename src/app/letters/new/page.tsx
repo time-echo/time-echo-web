@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { LetterComposerForm } from "@/features/capsules";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 
 export default function NewLetterPage() {
   const router = useRouter();
@@ -14,6 +15,10 @@ export default function NewLetterPage() {
       router.replace("/login");
     }
   }, [isAuthLoading, isAuthenticated, router]);
+
+  if (isAuthLoading) {
+    return <ArchivalLoader variant="page" />;
+  }
 
   return (
     <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">

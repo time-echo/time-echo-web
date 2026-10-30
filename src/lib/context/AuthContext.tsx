@@ -9,6 +9,22 @@ import React, {
   ReactNode,
 } from "react";
 import { ApiError } from "@/lib/repositories/HttpApiRepository";
+import { getTranslation } from "@/lib/i18n";
+import { SupportedLanguage } from "@/types/timeecho";
+
+function getActiveLocale(): SupportedLanguage {
+  if (typeof window !== "undefined") {
+    try {
+      const saved = window.localStorage.getItem("timeecho_locale");
+      if (saved === "en" || saved === "es") return saved;
+    } catch {
+      // ignore
+    }
+    const htmlLang = document.documentElement.lang;
+    if (htmlLang === "en" || htmlLang === "es") return htmlLang;
+  }
+  return "en";
+}
 
 export interface User {
   email: string;
@@ -211,12 +227,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const json = await res.json().catch(() => ({}));
 
       if (!res.ok) {
+        const activeLocale = getActiveLocale();
         const errorMsg =
           json?.error?.message ||
           json?.message ||
           (res.status === 429
-            ? "Límite de solicitudes excedido. Por favor intenta más tarde."
-            : "No fue posible enviar el enlace mágico.");
+            ? getTranslation(activeLocale, "login.rateLimitError")
+            : getTranslation(activeLocale, "login.requestError"));
         const apiErr = new ApiError(
           res.status,
           json?.error?.code || "request_failed",
@@ -268,7 +285,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const errorMsg =
               json?.error?.message ||
               json?.message ||
-              "El enlace mágico es inválido o ha expirado.";
+              getTranslation(getActiveLocale(), "login.invalidToken");
             throw new ApiError(
               res.status,
               json?.error?.code || "invalid_token",
@@ -299,7 +316,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const errorMsg =
           err instanceof Error
             ? err.message
-            : "El enlace mágico es inválido o ha expirado.";
+            : getTranslation(getActiveLocale(), "login.invalidToken");
         setError(errorMsg);
         throw err;
       } finally {

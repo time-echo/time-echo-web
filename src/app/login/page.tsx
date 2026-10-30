@@ -37,10 +37,7 @@ export default function LoginPage() {
       await requestMagicLink(trimmed);
       router.push(`/check_email?email=${encodeURIComponent(trimmed)}`);
     } catch (err) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : "Error al solicitar el enlace de inicio de sesión.";
+      const msg = err instanceof Error ? err.message : t("login.requestError");
       setError(msg);
       setIsSubmitting(false);
     }

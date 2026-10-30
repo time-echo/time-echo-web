@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, DEFAULT_STAMP_ID } from "@/components/stamps";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 
 interface LetterPageProps {
   params: Promise<{ id: string }>;
@@ -120,11 +121,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
   const letter = localLetter || contextLetter;
 
   if (isLoading || !letter) {
-    return (
-      <div className="max-w-xl mx-auto py-16 text-center font-letter text-xs text-foreground-muted animate-pulse">
-        {t("reveal.loadingDocket")}
-      </div>
-    );
+    return <ArchivalLoader variant="page" title={t("reveal.loadingDocket")} />;
   }
 
   const isLocked = letter.status === "pending";

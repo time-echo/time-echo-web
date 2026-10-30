@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, StampPickerModal } from "@/components/stamps";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 
 export default function HomePage() {
   const router = useRouter();
@@ -609,7 +610,7 @@ export default function HomePage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@email.com"
+                  placeholder={t("landing.emailPlaceholder")}
                   required
                   className="w-full paper-sheet rounded-xs px-3.5 py-2.5 text-xs font-letter text-foreground border border-crease placeholder:text-foreground-muted focus:border-wax focus:outline-none min-h-[44px]"
                 />
@@ -773,6 +774,15 @@ export default function HomePage() {
           {t("footer.sentWithHope")}
         </p>
       </footer>
+
+      {isSubmitting && (
+        <ArchivalLoader
+          variant="full"
+          className="fixed inset-0 z-50"
+          title={t("composer.sealingVaultModalTitle")}
+          subtitle={t("composer.sealingVaultModalDesc")}
+        />
+      )}
 
       <StampPickerModal
         isOpen={isStampPickerOpen}
