@@ -558,7 +558,7 @@
   "success": {
     "badge": "COMPROBANTE",
     "title": "Tu carta está sellada",
-    "description": "Tu carta está guardada y bloqueada.<br>Se abrirá el",
+    "description": "Tu carta está guardada y bloqueada.<br/>Se abrirá el",
     "seal": "Sello",
     "opening": "Apertura programada",
     "nextTitle": "Qué sigue",

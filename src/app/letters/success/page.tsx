@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect, Suspense } from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { formatLocaleDate } from "@/lib/utils";
@@ -15,10 +14,6 @@ function SuccessContent() {
 
   const { getCapsuleById, locale, t } = useTimeEcho();
   const capsule = letterId ? getCapsuleById(letterId) : undefined;
-
-  useEffect(() => {
-    celebrate("letter-sealed");
-  }, []);
 
   const sealDateFormatted = formatLocaleDate(
     capsule?.createdAt || new Date().toISOString(),
