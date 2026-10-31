@@ -127,8 +127,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
   const isLocked = letter.status === "pending";
   const isDeliveredNotRevealed =
     (letter.status === "delivered" || letter.status === "opened") &&
-    letter.revealHappiness == null &&
-    !letter.isWaxBroken;
+    (letter.revealHappiness == null || !letter.isWaxBroken);
 
   const daysLeft = Math.max(
     0,
@@ -366,93 +365,111 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               </div>
 
               <div className="space-y-4">
-                {(letter.predictions || []).map(
-                  (pred: Prediction, idx: number) => {
-                    const key = pred.id || String(idx);
-                    const currentAnswer = realityAnswers[key] || {
-                      reality: "",
-                      matched: true,
-                    };
+                {(letter.predictions || []).length > 0 ? (
+                  (letter.predictions || []).map(
+                    (pred: Prediction, idx: number) => {
+                      const key = pred.id || String(idx);
+                      const currentAnswer = realityAnswers[key] || {
+                        reality: "",
+                        matched: true,
+                      };
 
-                    return (
-                      <div
-                        key={key}
-                        className="paper-sheet rounded-xs p-4 space-y-3 border border-crease"
-                      >
-                        <label className="text-xs font-semibold text-foreground flex items-center gap-2 font-letter">
-                          <span>{getPredictionQuestion(pred.category, t)}</span>
-                        </label>
+                      return (
+                        <div
+                          key={key}
+                          className="paper-sheet rounded-xs p-4 space-y-3 border border-crease"
+                        >
+                          <label className="text-xs font-semibold text-foreground flex items-center gap-2 font-letter">
+                            <span>
+                              {getPredictionQuestion(pred.category, t)}
+                            </span>
+                          </label>
 
-                        <div className="text-xs text-foreground-muted italic font-letter bg-manila/40 px-3 py-1.5 rounded-xs border border-crease/50">
-                          {t("reveal.pastPredictionLabel")} &ldquo;
-                          {pred.prediction}&rdquo;
-                        </div>
+                          <div className="text-xs text-foreground-muted italic font-letter bg-manila/40 px-3 py-1.5 rounded-xs border border-crease/50">
+                            {t("reveal.pastPredictionLabel")} &ldquo;
+                            {pred.prediction}&rdquo;
+                          </div>
 
-                        <div className="space-y-2.5 font-letter text-xs">
-                          <input
-                            type="text"
-                            value={currentAnswer.reality}
-                            onChange={(e) =>
-                              setRealityAnswers({
-                                ...realityAnswers,
-                                [key]: {
-                                  ...currentAnswer,
-                                  reality: e.target.value,
-                                },
-                              })
-                            }
-                            placeholder={t("reveal.describeRealityPlaceholder")}
-                            required
-                            className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease text-foreground font-letter placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
-                          />
+                          <div className="space-y-2.5 font-letter text-xs">
+                            <input
+                              type="text"
+                              value={currentAnswer.reality}
+                              onChange={(e) =>
+                                setRealityAnswers({
+                                  ...realityAnswers,
+                                  [key]: {
+                                    ...currentAnswer,
+                                    reality: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder={t(
+                                "reveal.describeRealityPlaceholder",
+                              )}
+                              required
+                              className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease text-foreground font-letter placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none"
+                            />
 
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
-                              {t("reveal.didPredictionComeTrue")}
-                            </label>
-                            <div className="grid grid-cols-2 gap-2">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setRealityAnswers({
-                                    ...realityAnswers,
-                                    [key]: { ...currentAnswer, matched: true },
-                                  })
-                                }
-                                className={cn(
-                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all",
-                                  currentAnswer.matched
-                                    ? "bg-ink text-on-wax border-ink shadow-2xs"
-                                    : "border-crease bg-manila/30 text-foreground-muted hover:bg-manila/50",
-                                )}
-                              >
-                                <Check size={13} />
-                                <span>{t("reveal.yesDidIt")}</span>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setRealityAnswers({
-                                    ...realityAnswers,
-                                    [key]: { ...currentAnswer, matched: false },
-                                  })
-                                }
-                                className={cn(
-                                  "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all",
-                                  !currentAnswer.matched
-                                    ? "bg-wax text-on-wax border-wax shadow-2xs"
-                                    : "border-crease bg-manila/30 text-foreground-muted hover:bg-manila/50",
-                                )}
-                              >
-                                <X size={13} />
-                                <span>{t("reveal.notExactly")}</span>
-                              </button>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider block">
+                                {t("reveal.didPredictionComeTrue")}
+                              </label>
+                              <div className="grid grid-cols-2 gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setRealityAnswers({
+                                      ...realityAnswers,
+                                      [key]: {
+                                        ...currentAnswer,
+                                        matched: true,
+                                      },
+                                    })
+                                  }
+                                  className={cn(
+                                    "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all",
+                                    currentAnswer.matched
+                                      ? "bg-ink text-on-wax border-ink shadow-2xs"
+                                      : "border-crease bg-manila/30 text-foreground-muted hover:bg-manila/50",
+                                  )}
+                                >
+                                  <Check size={13} />
+                                  <span>{t("reveal.yesDidIt")}</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setRealityAnswers({
+                                      ...realityAnswers,
+                                      [key]: {
+                                        ...currentAnswer,
+                                        matched: false,
+                                      },
+                                    })
+                                  }
+                                  className={cn(
+                                    "w-full text-center py-2 px-3 rounded-xs border text-xs font-semibold font-letter inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all",
+                                    !currentAnswer.matched
+                                      ? "bg-wax text-on-wax border-wax shadow-2xs"
+                                      : "border-crease bg-manila/30 text-foreground-muted hover:bg-manila/50",
+                                  )}
+                                >
+                                  <X size={13} />
+                                  <span>{t("reveal.notExactly")}</span>
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  },
+                      );
+                    },
+                  )
+                ) : (
+                  <div className="paper-sheet rounded-xs p-5 text-center space-y-2 border border-crease">
+                    <p className="text-xs font-letter text-foreground-muted">
+                      {t("reality.noPredictions")}
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
