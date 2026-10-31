@@ -558,7 +558,7 @@
   "success": {
     "badge": "RECEIPT",
     "title": "Your letter is sealed",
-    "description": "Your letter is saved and locked.<br>It will open on",
+    "description": "Your letter is saved and locked.<br/>It will open on",
     "seal": "Seal",
     "opening": "Scheduled opening",
     "nextTitle": "What happens next",
