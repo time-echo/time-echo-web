@@ -1,6 +1,5 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { DashboardSkeleton } from "./DashboardSkeleton";
 
 export interface AppShellSkeletonProps {
   children?: React.ReactNode;
@@ -62,7 +61,7 @@ export function AppShellSkeleton({ children }: AppShellSkeletonProps) {
         id="main-content"
         className="flex-1 min-w-0 px-4 md:px-8 py-8 w-full max-w-6xl mx-auto font-ui"
       >
-        {children ?? <DashboardSkeleton />}
+        {children}
       </main>
     </div>
   );
