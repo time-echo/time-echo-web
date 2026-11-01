@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useFlash } from "@/components/ui/FlashBanner";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { SettingsSkeleton } from "@/components/skeletons";
 import {
   Mail,
   AlertTriangle,
@@ -49,7 +49,7 @@ export default function SettingsPage() {
   }, [isAuthLoading, isAuthenticated, router]);
 
   if (isAuthLoading) {
-    return <ArchivalLoader variant="page" />;
+    return <SettingsSkeleton />;
   }
 
   const handleUpdateEmail = async (e: React.FormEvent) => {

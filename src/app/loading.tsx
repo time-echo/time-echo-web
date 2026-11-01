@@ -1,5 +1,5 @@
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { AppShellSkeleton } from "@/components/skeletons";
 
 export default function Loading() {
-  return <ArchivalLoader variant="full" />;
+  return <AppShellSkeleton />;
 }

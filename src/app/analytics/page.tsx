@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { AnalyticsSkeleton } from "@/components/skeletons";
 import { calculateAnalyticsMetrics } from "@/features/analytics";
 import { ArrowLeft, Brain, Sparkles } from "lucide-react";
 
@@ -21,7 +21,7 @@ export default function AnalyticsPage() {
   }, [isAuthLoading, isAuthenticated, router]);
 
   if (isLoading && capsules.length === 0) {
-    return <ArchivalLoader variant="page" />;
+    return <AnalyticsSkeleton />;
   }
 
   const metrics = calculateAnalyticsMetrics(capsules);

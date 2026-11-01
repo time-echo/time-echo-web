@@ -7,7 +7,14 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
 import { ArchivalHeader } from "./ArchivalHeader";
 import { ArchivalFooter } from "./ArchivalFooter";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import {
+  AppShellSkeleton,
+  DashboardSkeleton,
+  ComposerSkeleton,
+  AnalyticsSkeleton,
+  SettingsSkeleton,
+  LetterDetailSkeleton,
+} from "@/components/skeletons";
 import {
   Globe,
   PenTool,
@@ -74,7 +81,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   if (isAuthLoading || !isAuthenticated) {
-    return <ArchivalLoader variant="full" />;
+    let PageSkeleton = DashboardSkeleton;
+    if (pathname === "/letters/new") {
+      PageSkeleton = ComposerSkeleton;
+    } else if (pathname === "/analytics") {
+      PageSkeleton = AnalyticsSkeleton;
+    } else if (pathname === "/settings") {
+      PageSkeleton = SettingsSkeleton;
+    } else if (pathname.startsWith("/letters/")) {
+      PageSkeleton = LetterDetailSkeleton;
+    }
+
+    return (
+      <AppShellSkeleton>
+        <PageSkeleton />
+      </AppShellSkeleton>
+    );
   }
 
   const isWriteActive = pathname === "/letters/new";

@@ -10,7 +10,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { SupportedLanguage } from "@/types/timeecho";
 import { getTranslation } from "@/lib/i18n";
 import { FlashProvider } from "@/components/ui/FlashBanner";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { AppShellSkeleton } from "@/components/skeletons";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -73,7 +73,7 @@ export default async function RootLayout({
           <AuthProvider>
             <TimeEchoProvider defaultLocale={locale}>
               <FlashProvider>
-                <Suspense fallback={<ArchivalLoader variant="full" />}>
+                <Suspense fallback={<AppShellSkeleton />}>
                   <AppShell>{children}</AppShell>
                 </Suspense>
               </FlashProvider>
