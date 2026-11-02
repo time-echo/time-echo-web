@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { Mail, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
 
 interface TokenLoginPageProps {
@@ -67,11 +67,13 @@ export default function TokenLoginPage({ params }: TokenLoginPageProps) {
     <div className="max-w-md mx-auto py-16 px-4 font-ui animate-fade-in text-foreground">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs text-center">
         {status === "verifying" && (
-          <ArchivalLoader
-            variant="inline"
-            title={t("login.verifyingTitle")}
-            subtitle={t("login.verifyingSubtitle")}
-          />
+          <div className="space-y-4 py-4 flex flex-col items-center">
+            <Skeleton className="w-16 h-16 rounded-full" />
+            <div className="space-y-2 flex flex-col items-center">
+              <Skeleton className="w-48 h-6 rounded-xs" />
+              <Skeleton className="w-64 h-3.5 rounded-xs" />
+            </div>
+          </div>
         )}
 
         {status === "success" && (

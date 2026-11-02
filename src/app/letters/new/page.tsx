@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { LetterComposerForm } from "@/features/capsules";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { ComposerSkeleton } from "@/components/skeletons";
 
 export default function NewLetterPage() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function NewLetterPage() {
   }, [isAuthLoading, isAuthenticated, router]);
 
   if (isAuthLoading) {
-    return <ArchivalLoader variant="page" />;
+    return <ComposerSkeleton />;
   }
 
   return (

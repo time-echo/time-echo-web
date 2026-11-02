@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { DashboardSkeleton, TimelineSkeleton } from "@/components/skeletons";
 import {
   Calendar,
   Plus,
@@ -44,7 +44,7 @@ export default function DashboardPage() {
   const [currentTime] = useState(() => Date.now());
 
   if (isLoading && capsules.length === 0) {
-    return <ArchivalLoader variant="page" />;
+    return isTimeline ? <TimelineSkeleton /> : <DashboardSkeleton />;
   }
 
   const activeCapsules = capsules.filter((c) => c.status !== "archived");
