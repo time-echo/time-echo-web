@@ -2,11 +2,12 @@
 
 import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export interface PostmarkStampProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * City or postal post of origin.
-   * @default 'POSTAL VAULT'
+   * @default 'CENTRAL // ARCHIVE'
    */
   city?: string;
   /**
@@ -21,7 +22,7 @@ export interface PostmarkStampProps extends React.HTMLAttributes<HTMLDivElement>
   date?: string;
   /**
    * Postal cancellation subtext or status.
-   * e.g., "VERIFICADO", "EN TRÁNSITO", "EXPEDIDO"
+   * e.g., "VERIFIED", "IN TRANSIT", "DISPATCHED"
    */
   subtext?: string;
   /**
@@ -102,10 +103,10 @@ export const PostmarkStamp = React.forwardRef<
 >(
   (
     {
-      city = "BOGOTÁ // CENTRAL",
+      city,
       docketId = "TE-00421",
       date = "27 MAR 2026",
-      subtext = "EXPEDICIÓN OFICIAL",
+      subtext,
       variant = "circular",
       inkColor = "ink",
       tiltAngle,
@@ -116,11 +117,15 @@ export const PostmarkStamp = React.forwardRef<
     },
     ref,
   ) => {
+    const { t } = useTimeEcho();
+    const resolvedCity = city ?? t("common.postmark.defaultCity");
+    const resolvedSubtext = subtext ?? t("common.postmark.defaultSubtext");
+
     // Deterministic angle preventing hydration flickers
     const angle = useMemo(() => {
       if (tiltAngle !== undefined) return tiltAngle;
-      return getDeterministicTilt(docketId + city);
-    }, [tiltAngle, docketId, city]);
+      return getDeterministicTilt(docketId + resolvedCity);
+    }, [tiltAngle, docketId, resolvedCity]);
 
     const sizeConfig = SIZE_CONFIGS[size];
     const colorClasses = INK_COLOR_CLASSES[inkColor];
@@ -151,7 +156,7 @@ export const PostmarkStamp = React.forwardRef<
 
             {/* City at top */}
             <span className="font-bold tracking-widest text-[9px] sm:text-[10px] truncate max-w-[90%] leading-tight">
-              {city}
+              {resolvedCity}
             </span>
 
             {/* Center Docket & Date */}
@@ -173,7 +178,7 @@ export const PostmarkStamp = React.forwardRef<
                 "tracking-tighter opacity-80 leading-none",
               )}
             >
-              ★ {subtext} ★
+              ★ {resolvedSubtext} ★
             </span>
           </div>
         )}
@@ -187,14 +192,14 @@ export const PostmarkStamp = React.forwardRef<
             )}
           >
             <div className="flex items-center gap-1.5 font-bold tracking-widest leading-none">
-              <span>{city}</span>
+              <span>{resolvedCity}</span>
               <span>•</span>
               <span>{docketId}</span>
             </div>
             <div className="mt-1 flex items-center gap-2 text-[10px] tracking-widest opacity-85">
               <span>{date}</span>
               <span>{"//"}</span>
-              <span>{subtext}</span>
+              <span>{resolvedSubtext}</span>
             </div>
           </div>
         )}
@@ -210,7 +215,7 @@ export const PostmarkStamp = React.forwardRef<
             >
               <div className="absolute inset-1 rounded-full border border-current opacity-60" />
               <span className="text-[9px] font-bold leading-tight truncate max-w-[85%]">
-                {city}
+                {resolvedCity}
               </span>
               <span className="text-[10px] font-bold leading-tight my-0.5 border-t border-b border-current/50 w-3/4">
                 {date}

@@ -15,7 +15,7 @@ export interface PredictionEvaluationState {
 }
 
 export function useRealityLedger(capsule: Letter) {
-  const { updateReality } = useTimeEcho();
+  const { updateReality, t } = useTimeEcho();
 
   const [revealHappiness, setRevealHappiness] = useState<number>(
     capsule.revealHappiness ?? 7,
@@ -160,9 +160,7 @@ export function useRealityLedger(capsule: Letter) {
       return result;
     } catch (err) {
       const msg =
-        err instanceof Error
-          ? err.message
-          : "Error al guardar el expediente de realidad";
+        err instanceof Error ? err.message : t("common.errors.saveReality");
       setError(msg);
       throw err;
     } finally {
@@ -176,6 +174,7 @@ export function useRealityLedger(capsule: Letter) {
     revealMotivation,
     predictionsMap,
     updateReality,
+    t,
   ]);
 
   return {

@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { Clock, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 const emptySubscribe = () => () => {};
 
@@ -41,7 +42,6 @@ export interface CountdownBadgeProps extends React.HTMLAttributes<HTMLDivElement
   onComplete?: () => void;
   /**
    * Custom label when target date is already in the past.
-   * @default 'LISTA PARA ABRIR'
    */
   completedLabel?: string;
 }
@@ -101,12 +101,15 @@ export const CountdownBadge = React.forwardRef<
       variant = "pill",
       size = "md",
       onComplete,
-      completedLabel = "LISTA PARA ABRIR",
+      completedLabel,
       className,
       ...props
     },
     ref,
   ) => {
+    const { t } = useTimeEcho();
+    const resolvedCompletedLabel =
+      completedLabel ?? t("common.countdown.readyToOpen");
     const target = useMemo(() => new Date(targetDate), [targetDate]);
     const [timeLeft, setTimeLeft] = useState<TimeRemaining>(() =>
       calculateTimeRemaining(target),
@@ -155,7 +158,7 @@ export const CountdownBadge = React.forwardRef<
           {...props}
         >
           <CheckCircle2 size={size === "sm" ? 12 : size === "lg" ? 18 : 14} />
-          <span>{completedLabel}</span>
+          <span>{resolvedCompletedLabel}</span>
         </div>
       );
     }
@@ -171,13 +174,29 @@ export const CountdownBadge = React.forwardRef<
           )}
           {...props}
         >
-          <Segment value={days} label="DÍAS" size={size} />
+          <Segment
+            value={days}
+            label={t("common.countdown.daysShort")}
+            size={size}
+          />
           <span className="text-foreground-muted font-bold -mt-2">:</span>
-          <Segment value={hours} label="HRS" size={size} />
+          <Segment
+            value={hours}
+            label={t("common.countdown.hoursShort")}
+            size={size}
+          />
           <span className="text-foreground-muted font-bold -mt-2">:</span>
-          <Segment value={minutes} label="MIN" size={size} />
+          <Segment
+            value={minutes}
+            label={t("common.countdown.minutesShort")}
+            size={size}
+          />
           <span className="text-foreground-muted font-bold -mt-2">:</span>
-          <Segment value={seconds} label="SEG" size={size} />
+          <Segment
+            value={seconds}
+            label={t("common.countdown.secondsShort")}
+            size={size}
+          />
         </div>
       );
     }
@@ -196,9 +215,11 @@ export const CountdownBadge = React.forwardRef<
           <div className="flex items-center justify-between gap-3 text-[10px] text-foreground-muted uppercase tracking-widest border-b border-crease pb-1">
             <span className="flex items-center gap-1">
               <Clock size={11} className="text-ink" />
-              <span>TIEMPO EN TRÁNSITO</span>
+              <span>{t("common.countdown.timeInTransit")}</span>
             </span>
-            <span className="font-bold text-ink">BÓVEDA ACTIVA</span>
+            <span className="font-bold text-ink">
+              {t("common.countdown.vaultActive")}
+            </span>
           </div>
 
           <div className="mt-1.5 flex items-center justify-center gap-2 font-mono font-bold text-sm tracking-widest text-ink">

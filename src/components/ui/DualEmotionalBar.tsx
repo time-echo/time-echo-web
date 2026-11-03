@@ -2,12 +2,13 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
 export type EmotionType = "happiness" | "anxiety" | "motivation" | "custom";
 
 export interface DualEmotionalBarProps {
   /**
-   * Name of the emotion (e.g., "Felicidad", "Ansiedad", "Motivación").
+   * Name of the emotion (e.g., "Happiness", "Anxiety", "Motivation").
    */
   label: string;
   /**
@@ -54,6 +55,7 @@ export function DualEmotionalBar({
   statusLabels,
   className,
 }: DualEmotionalBarProps) {
+  const { t } = useTimeEcho();
   const isAnxiety = type === "anxiety" || invertColor === true;
   const hasRevealed = currentValue !== null && currentValue !== undefined;
 
@@ -69,38 +71,44 @@ export function DualEmotionalBar({
   if (shift !== null) {
     if (shift === 0) {
       isSteady = true;
-      shiftTagText = statusLabels?.steady || "Constante";
+      shiftTagText = statusLabels?.steady || t("common.emotionalBar.steady");
     } else if (isAnxiety) {
       if (shift < 0) {
         isFavorable = true;
-        shiftTagText = `${shift} ${statusLabels?.calm || "Mayor calma"}`;
+        shiftTagText = `${shift} ${statusLabels?.calm || t("common.emotionalBar.calm")}`;
       } else {
         isFavorable = false;
-        shiftTagText = `+${shift} ${statusLabels?.stress || "Mayor estrés"}`;
+        shiftTagText = `+${shift} ${statusLabels?.stress || t("common.emotionalBar.stress")}`;
       }
     } else {
       if (shift > 0) {
         isFavorable = true;
         const text =
           type === "motivation"
-            ? statusLabels?.inspired || "Inspiración"
-            : statusLabels?.growth || "Crecimiento";
+            ? statusLabels?.inspired || t("common.emotionalBar.inspired")
+            : statusLabels?.growth || t("common.emotionalBar.growth");
         shiftTagText = `+${shift} ${text}`;
       } else {
         isFavorable = false;
-        shiftTagText = `${shift} ${statusLabels?.decline || "Descenso"}`;
+        shiftTagText = `${shift} ${statusLabels?.decline || t("common.emotionalBar.decline")}`;
       }
     }
   }
 
   const pastPercent = (past / 10) * 100;
   const currentPercent = current !== null ? (current / 10) * 100 : 0;
+  const resolvedPastLabel =
+    statusLabels?.pastLabel || t("common.emotionalBar.past");
+  const resolvedTodayLabel =
+    statusLabels?.todayLabel || t("common.emotionalBar.today");
+  const resolvedPendingLabel =
+    statusLabels?.pendingLabel || t("common.emotionalBar.inCustody");
 
   return (
     <div
       className={cn(
         "paper-sheet p-3.5 rounded-xs border border-crease space-y-2 select-none font-letter text-xs text-foreground bg-parchment shadow-2xs",
-        className
+        className,
       )}
     >
       {/* Top Header: Emotion Label & Delta Tag */}
@@ -113,16 +121,21 @@ export function DualEmotionalBar({
           <span
             className={cn(
               "text-[10px] font-semibold uppercase tracking-wider py-0.5 px-2 rounded-xs inline-flex items-center gap-1",
-              isSteady && "text-foreground-muted bg-manila/60 border border-crease/60",
-              !isSteady && isFavorable && "text-ink bg-ink/10 border border-ink/20",
-              !isSteady && !isFavorable && "text-wax bg-wax/10 border border-wax/20"
+              isSteady &&
+                "text-foreground-muted bg-manila/60 border border-crease/60",
+              !isSteady &&
+                isFavorable &&
+                "text-ink bg-ink/10 border border-ink/20",
+              !isSteady &&
+                !isFavorable &&
+                "text-wax bg-wax/10 border border-wax/20",
             )}
           >
             {shiftTagText}
           </span>
         ) : (
           <span className="text-[10px] text-foreground-muted uppercase tracking-wider italic">
-            {statusLabels?.pendingLabel || "En custodia"}
+            {resolvedPendingLabel}
           </span>
         )}
       </div>
@@ -134,7 +147,7 @@ export function DualEmotionalBar({
           <div
             className="absolute top-0 bottom-0 left-0 bg-foreground/20 border-r border-foreground/40 transition-all duration-300"
             style={{ width: `${pastPercent}%` }}
-            title={`Pasado: ${past}/10`}
+            title={`${resolvedPastLabel}: ${past}/10`}
           />
 
           {/* Reveal Bar (Current) if revealed */}
@@ -144,10 +157,10 @@ export function DualEmotionalBar({
                 "absolute top-0 bottom-0 left-0 opacity-60 transition-all duration-500",
                 isSteady && "bg-foreground-muted/40",
                 isFavorable && "bg-ink",
-                !isFavorable && "bg-wax"
+                !isFavorable && "bg-wax",
               )}
               style={{ width: `${currentPercent}%` }}
-              title={`Hoy: ${current}/10`}
+              title={`${resolvedTodayLabel}: ${current}/10`}
             />
           )}
 
@@ -163,20 +176,20 @@ export function DualEmotionalBar({
       {/* Footer Details: Past -> Today values */}
       <div className="flex justify-between items-center text-[11px] text-foreground-muted pt-0.5">
         <span>
-          {statusLabels?.pastLabel || "Pasado"}:{" "}
+          {resolvedPastLabel}:{" "}
           <strong className="text-foreground">{past}</strong>/10
         </span>
 
         <span className="text-foreground-muted/50">&rarr;</span>
 
         <span>
-          {statusLabels?.todayLabel || "Hoy"}:{" "}
+          {resolvedTodayLabel}:{" "}
           {hasRevealed && current !== null ? (
             <strong
               className={cn(
                 "text-foreground",
                 isFavorable && "text-ink",
-                !isFavorable && !isSteady && "text-wax"
+                !isFavorable && !isSteady && "text-wax",
               )}
             >
               {current}

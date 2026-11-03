@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const PUBLIC_PATHS = [
+  "/",
+  "/login",
+  "/check_email",
+  "/about",
+  "/terms",
+  "/privacy",
+  "/letters/success",
+];
+
+function isPublicPath(pathname: string): boolean {
+  return PUBLIC_PATHS.some(
+    (publicPath) =>
+      pathname === publicPath ||
+      (publicPath !== "/" && pathname.startsWith(`${publicPath}/`)),
+  );
+}
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -10,6 +28,13 @@ export function proxy(request: NextRequest) {
     pathname.includes(".")
   ) {
     return NextResponse.next();
+  }
+
+  const sessionToken = request.cookies.get("timeecho_session_token")?.value;
+
+  if (!isPublicPath(pathname) && !sessionToken) {
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
   const cookieLocale =

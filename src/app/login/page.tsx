@@ -4,17 +4,19 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
-import { Mail, ArrowLeft, AlertTriangle } from "lucide-react";
+import { useAuth } from "@/lib/context/AuthContext";
+import { Mail, ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const { t } = useTimeEcho();
+  const { requestMagicLink } = useAuth();
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -31,8 +33,14 @@ export default function LoginPage() {
     }
 
     setIsSubmitting(true);
-    // Redirect to /check_email (matching the monolith Rails redirect to check_email_path)
-    router.push(`/check_email?email=${encodeURIComponent(trimmed)}`);
+    try {
+      await requestMagicLink(trimmed);
+      router.push(`/check_email?email=${encodeURIComponent(trimmed)}`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t("login.requestError");
+      setError(msg);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -90,9 +98,16 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors disabled:opacity-60"
+            className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors disabled:opacity-60 inline-flex items-center justify-center gap-2"
           >
-            {t("login.sendButton")}
+            {isSubmitting ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>{t("login.sendButton")}...</span>
+              </>
+            ) : (
+              <span>{t("login.sendButton")}</span>
+            )}
           </button>
         </form>
 

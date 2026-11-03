@@ -4,14 +4,19 @@ import { createTranslator } from "next-intl";
 import { SupportedLanguage } from "@/types/timeecho";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 
-export { useTranslations, useLocale, useMessages, useFormatter } from "next-intl";
+export {
+  useTranslations,
+  useLocale,
+  useMessages,
+  useFormatter,
+} from "next-intl";
 
 export const translations = {
   es,
   en,
 } as const;
 
-export type TranslationDictionary = typeof es;
+export type TranslationDictionary = typeof en;
 
 export type NestedKeyOf<ObjectType extends object> = {
   [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
@@ -31,11 +36,11 @@ export function getTranslation(
   keyPath: string,
   params?: Record<string, string | number>,
 ): string {
-  const translator = (translators[locale] || translators.es) as (
+  const translator = (translators[locale] || translators.en) as (
     k: string,
     p?: Record<string, string | number>,
   ) => string;
-  const esTranslator = translators.es as (
+  const fallbackTranslator = translators.en as (
     k: string,
     p?: Record<string, string | number>,
   ) => string;
@@ -47,14 +52,14 @@ export function getTranslation(
     }
   } catch {
     try {
-      return esTranslator(keyPath, params);
+      return fallbackTranslator(keyPath, params);
     } catch {
       return keyPath;
     }
   }
 
   try {
-    return esTranslator(keyPath, params);
+    return fallbackTranslator(keyPath, params);
   } catch {
     return keyPath;
   }

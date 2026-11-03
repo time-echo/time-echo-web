@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, StampPickerModal } from "@/components/stamps";
+import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 
 export default function HomePage() {
   const router = useRouter();
@@ -93,7 +94,14 @@ export default function HomePage() {
     e.preventDefault();
     setHasAttemptedSubmit(true);
 
-    if (content.trim().length < 80) {
+    const words = content.trim()
+      ? content.trim().split(/\s+/).filter(Boolean)
+      : [];
+    if (
+      words.some((w) => w.length > 45) ||
+      words.length < 10 ||
+      content.trim().length < 80
+    ) {
       contentTextareaRef.current?.focus();
       return;
     }
@@ -148,9 +156,26 @@ export default function HomePage() {
   };
 
   const charCount = content.length;
-  const isContentTooShort = content.trim().length < 80;
+  const contentWords = content.trim()
+    ? content.trim().split(/\s+/).filter(Boolean)
+    : [];
+  const contentError = (() => {
+    if (!content.trim()) {
+      return t("composer.errors.contentRequired");
+    }
+    if (contentWords.some((w) => w.length > 45)) {
+      return t("composer.errors.wordTooLong");
+    }
+    if (contentWords.length < 10) {
+      return t("composer.errors.contentMinWords");
+    }
+    if (content.trim().length < 80) {
+      return t("landing.minCharsError");
+    }
+    return null;
+  })();
   const showContentError =
-    isContentTooShort &&
+    Boolean(contentError) &&
     (hasAttemptedSubmit || (isContentTouched && content.length > 0));
 
   return (
@@ -323,7 +348,7 @@ export default function HomePage() {
                   className="text-[11px] font-letter text-wax pt-0.5 animate-fade-in"
                   aria-live="polite"
                 >
-                  {t("landing.minCharsError")}
+                  {contentError}
                 </p>
               )}
             </div>
@@ -609,7 +634,7 @@ export default function HomePage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@email.com"
+                  placeholder={t("landing.emailPlaceholder")}
                   required
                   className="w-full paper-sheet rounded-xs px-3.5 py-2.5 text-xs font-letter text-foreground border border-crease placeholder:text-foreground-muted focus:border-wax focus:outline-none min-h-[44px]"
                 />
@@ -773,6 +798,15 @@ export default function HomePage() {
           {t("footer.sentWithHope")}
         </p>
       </footer>
+
+      {isSubmitting && (
+        <ArchivalLoader
+          variant="full"
+          className="fixed inset-0 z-50"
+          title={t("composer.sealingVaultModalTitle")}
+          subtitle={t("composer.sealingVaultModalDesc")}
+        />
+      )}
 
       <StampPickerModal
         isOpen={isStampPickerOpen}

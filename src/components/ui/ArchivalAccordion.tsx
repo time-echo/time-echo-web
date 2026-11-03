@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export interface ArchivalAccordionProps {
   /**
-   * Top docket identifier, e.g., "ANEXO 01 // FACTUAL" or "ANEXO 02 // ESTADO EMOCIONAL".
+   * Top docket identifier, e.g., "ANNEX 01 // FACTUAL" or "ANNEX 02 // EMOTIONAL BASELINE".
    */
   folio?: string;
   /**
@@ -19,7 +19,7 @@ export interface ArchivalAccordionProps {
    */
   subtitle?: string;
   /**
-   * Optional status badge (e.g., "3 de 5 completadas").
+   * Optional status badge (e.g., "3 of 5 completed").
    */
   badge?: React.ReactNode;
   /**
@@ -77,7 +77,7 @@ export function ArchivalAccordion({
       className={cn(
         "archival-folder rounded-xs border border-manila-border overflow-hidden select-none transition-shadow",
         isOpen ? "shadow-xs" : "hover:border-crease",
-        className
+        className,
       )}
     >
       {/* Accordion Trigger Header */}
@@ -110,7 +110,7 @@ export function ArchivalAccordion({
           <div
             className={cn(
               "w-7 h-7 rounded-xs border border-crease flex items-center justify-center text-foreground-muted bg-parchment/60 transition-transform duration-200",
-              isOpen && "rotate-180 text-foreground"
+              isOpen && "rotate-180 text-foreground",
             )}
           >
             <ChevronDown size={15} />

@@ -4,12 +4,14 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
 import { Globe, Mail, LogIn } from "lucide-react";
 
 export function ArchivalHeader() {
   const pathname = usePathname();
-  const { locale, toggleLocale, capsules, t } = useTimeEcho();
-  const hasLetters = capsules.length > 0;
+  const { locale, toggleLocale, t } = useTimeEcho();
+  const { isAuthenticated } = useAuth();
+  const hasLetters = isAuthenticated;
 
   const handleHowItWorksClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === "/") {
