@@ -10,7 +10,7 @@ import { formatLocaleDate } from "@/lib/utils";
 import { Letter } from "@/types/timeecho";
 import { RealityLedger } from "@/features/reality-ledger/components/RealityLedger";
 import { ArchivalFolder } from "@/components/ui/ArchivalFolder";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { LetterDetailSkeleton } from "@/components/skeletons";
 import { PostmarkStamp } from "@/components/ui/PostmarkStamp";
 import {
   Scale,
@@ -99,7 +99,7 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
 
   // 1. Loading State
   if ((isGlobalLoading && !letter) || (isFetchingLocal && !letter)) {
-    return <ArchivalLoader variant="page" title={t("reveal.loadingDocket")} />;
+    return <LetterDetailSkeleton />;
   }
 
   // 2. Not Found State

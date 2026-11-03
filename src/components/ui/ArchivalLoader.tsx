@@ -48,20 +48,26 @@ export function ArchivalLoader({
       aria-live="polite"
       className="flex flex-col items-center text-center gap-4 select-none"
     >
-      <span
-        aria-hidden="true"
-        className="block w-10 h-10 rounded-full border-2 border-crease border-t-wax animate-spin"
-      />
-      <div className="space-y-1 max-w-xs">
-        <p className="font-serif-editorial text-lg text-foreground">
-          {resolvedTitle}
-        </p>
-        {resolvedSubtitle && (
-          <p className="font-letter text-xs text-foreground-muted leading-relaxed">
-            {resolvedSubtitle}
-          </p>
-        )}
+      <div className="w-12 h-12 rounded-full bg-crease/50 dark:bg-crease/30 animate-pulse border border-crease/60 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full bg-crease/70 dark:bg-crease/40 animate-pulse" />
       </div>
+      {title ? (
+        <div className="space-y-1 max-w-xs">
+          <p className="font-serif-editorial text-lg text-foreground">
+            {resolvedTitle}
+          </p>
+          {resolvedSubtitle && (
+            <p className="font-letter text-xs text-foreground-muted leading-relaxed">
+              {resolvedSubtitle}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-2 max-w-xs flex flex-col items-center">
+          <div className="w-32 h-4 rounded-xs bg-crease/50 dark:bg-crease/30 animate-pulse" />
+          <div className="w-48 h-3 rounded-xs bg-crease/40 dark:bg-crease/20 animate-pulse" />
+        </div>
+      )}
     </div>
   );
 

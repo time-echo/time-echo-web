@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, Suspense } from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { celebrate } from "@/lib/confetti";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { formatLocaleDate } from "@/lib/utils";
 import { ArrowLeft, PenTool } from "lucide-react";
 
@@ -15,10 +14,6 @@ function SuccessContent() {
 
   const { getCapsuleById, locale, t } = useTimeEcho();
   const capsule = letterId ? getCapsuleById(letterId) : undefined;
-
-  useEffect(() => {
-    celebrate("letter-sealed");
-  }, []);
 
   const sealDateFormatted = formatLocaleDate(
     capsule?.createdAt || new Date().toISOString(),
@@ -133,7 +128,23 @@ function SuccessContent() {
 
 export default function LetterSuccessPage() {
   return (
-    <Suspense fallback={<ArchivalLoader variant="page" />}>
+    <Suspense
+      fallback={
+        <div className="max-w-xl mx-auto py-12 px-4">
+          <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs text-center">
+            <Skeleton className="w-20 h-20 rounded-full mx-auto" />
+            <div className="space-y-2 flex flex-col items-center">
+              <Skeleton className="w-56 h-8 rounded-xs" />
+              <Skeleton className="w-72 h-4 rounded-xs" />
+            </div>
+            <div className="pt-4 flex justify-center gap-3">
+              <Skeleton className="w-32 h-10 rounded-xs" />
+              <Skeleton className="w-32 h-10 rounded-xs" />
+            </div>
+          </div>
+        </div>
+      }
+    >
       <SuccessContent />
     </Suspense>
   );

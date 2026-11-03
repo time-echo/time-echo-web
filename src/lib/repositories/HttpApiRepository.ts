@@ -185,9 +185,17 @@ export class HttpApiRepository implements ICapsuleRepository {
       };
     });
 
-    const isWaxBroken = Boolean(
-      data.isWaxBroken ?? data.is_wax_broken ?? data.openedAt ?? data.opened_at,
-    );
+    const revealHappiness =
+      data.revealHappiness ?? data.reveal_happiness ?? null;
+
+    const isWaxBroken =
+      data.isWaxBroken !== undefined
+        ? Boolean(data.isWaxBroken)
+        : data.is_wax_broken !== undefined
+          ? Boolean(data.is_wax_broken)
+          : Boolean(
+              (data.openedAt || data.opened_at) && revealHappiness != null,
+            );
 
     return {
       id: String(data.id),
@@ -203,7 +211,7 @@ export class HttpApiRepository implements ICapsuleRepository {
       status: (data.status as Letter["status"]) || "pending",
       language: (data.language as Letter["language"]) || "es",
       timezone: data.timezone || "UTC",
-      revealHappiness: data.revealHappiness ?? data.reveal_happiness ?? null,
+      revealHappiness,
       revealAnxiety: data.revealAnxiety ?? data.reveal_anxiety ?? null,
       revealMotivation: data.revealMotivation ?? data.reveal_motivation ?? null,
       isWaxBroken,

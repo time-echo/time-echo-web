@@ -94,7 +94,14 @@ export default function HomePage() {
     e.preventDefault();
     setHasAttemptedSubmit(true);
 
-    if (content.trim().length < 80) {
+    const words = content.trim()
+      ? content.trim().split(/\s+/).filter(Boolean)
+      : [];
+    if (
+      words.some((w) => w.length > 45) ||
+      words.length < 10 ||
+      content.trim().length < 80
+    ) {
       contentTextareaRef.current?.focus();
       return;
     }
@@ -149,9 +156,26 @@ export default function HomePage() {
   };
 
   const charCount = content.length;
-  const isContentTooShort = content.trim().length < 80;
+  const contentWords = content.trim()
+    ? content.trim().split(/\s+/).filter(Boolean)
+    : [];
+  const contentError = (() => {
+    if (!content.trim()) {
+      return t("composer.errors.contentRequired");
+    }
+    if (contentWords.some((w) => w.length > 45)) {
+      return t("composer.errors.wordTooLong");
+    }
+    if (contentWords.length < 10) {
+      return t("composer.errors.contentMinWords");
+    }
+    if (content.trim().length < 80) {
+      return t("landing.minCharsError");
+    }
+    return null;
+  })();
   const showContentError =
-    isContentTooShort &&
+    Boolean(contentError) &&
     (hasAttemptedSubmit || (isContentTouched && content.length > 0));
 
   return (
@@ -324,7 +348,7 @@ export default function HomePage() {
                   className="text-[11px] font-letter text-wax pt-0.5 animate-fade-in"
                   aria-live="polite"
                 >
-                  {t("landing.minCharsError")}
+                  {contentError}
                 </p>
               )}
             </div>

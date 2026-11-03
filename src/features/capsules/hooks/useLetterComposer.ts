@@ -163,10 +163,16 @@ export function useLetterComposer(
       errs.title = t("composer.errors.titleLength");
     }
 
+    const contentWords = form.content.trim()
+      ? form.content.trim().split(/\s+/).filter(Boolean)
+      : [];
+
     if (!form.content.trim()) {
       errs.content = t("composer.errors.contentRequired");
-    } else if (form.content.trim().length < 10) {
-      errs.content = t("composer.errors.contentLength");
+    } else if (contentWords.some((w) => w.length > 45)) {
+      errs.content = t("composer.errors.wordTooLong");
+    } else if (contentWords.length < 10) {
+      errs.content = t("composer.errors.contentMinWords");
     } else if (form.content.trim().length < 80) {
       errs.content = t("landing.minCharsError");
     }

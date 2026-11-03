@@ -7,7 +7,7 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
 import { ArchivalHeader } from "./ArchivalHeader";
 import { ArchivalFooter } from "./ArchivalFooter";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { Skeleton } from "@/components/ui/Skeleton";
 import {
   Globe,
   PenTool,
@@ -73,8 +73,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (isAuthLoading || !isAuthenticated) {
-    return <ArchivalLoader variant="full" />;
+  if (!isAuthLoading && !isAuthenticated) {
+    return <div className="min-h-screen bg-parchment" />;
   }
 
   const isWriteActive = pathname === "/letters/new";
@@ -201,9 +201,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div>
           <div className="flex items-center justify-between border-t border-crease pt-4 font-ui">
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-foreground-muted font-medium truncate pr-2">
-                {user?.email ?? ""}
-              </p>
+              {isAuthLoading ? (
+                <Skeleton className="w-28 h-3.5 rounded-xs" />
+              ) : (
+                <p className="text-xs text-foreground-muted font-medium truncate pr-2">
+                  {user?.email ?? ""}
+                </p>
+              )}
             </div>
             <button
               type="button"

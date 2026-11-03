@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
-import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { Mail, ArrowLeft, RefreshCw, CheckCircle2 } from "lucide-react";
 
 function CheckEmailContent() {
@@ -110,7 +110,20 @@ function CheckEmailContent() {
 
 export default function CheckEmailPage() {
   return (
-    <Suspense fallback={<ArchivalLoader variant="page" />}>
+    <Suspense
+      fallback={
+        <div className="max-w-md mx-auto py-12 px-4">
+          <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs text-center">
+            <Skeleton className="w-16 h-16 rounded-full mx-auto" />
+            <div className="space-y-2 flex flex-col items-center">
+              <Skeleton className="w-48 h-7 rounded-xs" />
+              <Skeleton className="w-64 h-3.5 rounded-xs" />
+            </div>
+            <Skeleton className="w-full h-11 rounded-xs" />
+          </div>
+        </div>
+      }
+    >
       <CheckEmailContent />
     </Suspense>
   );
