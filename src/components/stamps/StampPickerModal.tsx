@@ -14,7 +14,7 @@ import { X, Search, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Stamp } from "./Stamp";
-import { STAMPS_CATALOG } from "./stamps.data";
+import { useStampCatalog } from "./useStampCatalog";
 
 export interface StampPickerModalProps {
   isOpen: boolean;
@@ -39,7 +39,9 @@ function StampPickerContent({
   allowRemove = true,
 }: StampPickerContentProps) {
   const { t } = useTimeEcho();
+  const { stamps, categories, isLoading } = useStampCatalog();
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const selectedStampRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = useCallback(
@@ -57,21 +59,28 @@ function StampPickerContent({
   }, [handleKeyDown]);
 
   const filteredStamps = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return STAMPS_CATALOG;
+    let list = stamps;
+    if (selectedCategory !== "all") {
+      list = list.filter(
+        (s) => (s.category_slug || s.categorySlug) === selectedCategory,
+      );
+    }
 
-    return STAMPS_CATALOG.filter((stamp) => {
-      const localizedName = t(`stamps.items.${stamp.id}.name`);
-      const localizedDenom = t(`stamps.items.${stamp.id}.denomination`);
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return list;
+
+    return list.filter((stamp) => {
+      const localizedName = t(`stamps.items.${stamp.slug}.name`);
+      const localizedDenom = t(`stamps.items.${stamp.slug}.denomination`);
 
       return (
         stamp.name.toLowerCase().includes(query) ||
         localizedName.toLowerCase().includes(query) ||
-        stamp.denomination.toLowerCase().includes(query) ||
+        (stamp.slug && stamp.slug.toLowerCase().includes(query)) ||
         localizedDenom.toLowerCase().includes(query)
       );
     });
-  }, [searchQuery, t]);
+  }, [stamps, selectedCategory, searchQuery, t]);
 
   useEffect(() => {
     if (selectedStampRef.current) {
@@ -82,11 +91,11 @@ function StampPickerContent({
     }
   }, [selectedStampId]);
 
-  const handleSelect = (stampId: string) => {
-    if (selectedStampId === stampId && allowRemove) {
+  const handleSelect = (stampSlug: string) => {
+    if (selectedStampId === stampSlug && allowRemove) {
       onSelectStamp(undefined);
     } else {
-      onSelectStamp(stampId);
+      onSelectStamp(stampSlug);
     }
     onClose();
   };
@@ -113,7 +122,7 @@ function StampPickerContent({
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
         className="relative z-10 w-full max-w-sm sm:max-w-md md:max-w-lg h-full flex flex-col bg-parchment border-l border-crease shadow-2xl overflow-hidden font-ui"
       >
-        <div className="p-3.5 sm:p-4 border-b border-crease bg-manila/40 shrink-0">
+        <div className="p-3.5 sm:p-4 border-b border-crease bg-manila/40 shrink-0 space-y-2.5">
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search
@@ -160,27 +169,90 @@ function StampPickerContent({
               <X size={16} />
             </button>
           </div>
+
+          {/* Category Tabs */}
+          {categories.length > 0 && (
+            <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
+              <button
+                type="button"
+                onClick={() => setSelectedCategory("all")}
+                className={cn(
+                  "px-2.5 py-1 text-[11px] font-letter rounded-xs transition-colors whitespace-nowrap cursor-pointer",
+                  selectedCategory === "all"
+                    ? "bg-wax text-on-wax font-semibold"
+                    : "bg-parchment text-foreground-muted hover:text-foreground border border-crease",
+                )}
+              >
+                {t("stamps.categories.all")}
+              </button>
+              {categories.map((cat) => {
+                const localizedCat = t(`stamps.categories.${cat.slug}`);
+                const label =
+                  localizedCat && !localizedCat.startsWith("stamps.categories.")
+                    ? localizedCat
+                    : cat.name;
+
+                return (
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => setSelectedCategory(cat.slug)}
+                    className={cn(
+                      "px-2.5 py-1 text-[11px] font-letter rounded-xs transition-colors whitespace-nowrap cursor-pointer",
+                      selectedCategory === cat.slug
+                        ? "bg-wax text-on-wax font-semibold"
+                        : "bg-parchment text-foreground-muted hover:text-foreground border border-crease",
+                    )}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 bg-parchment/60 scrollbar-thin">
-          {filteredStamps.length === 0 ? (
+          {isLoading && stamps.length === 0 ? (
+            <div className="py-12 text-center">
+              <p className="font-letter text-xs text-foreground-muted">
+                {t("common.loading")}
+              </p>
+            </div>
+          ) : filteredStamps.length === 0 ? (
             <div className="py-12 text-center space-y-2">
               <p className="font-serif-editorial text-base text-foreground-muted">
                 {t("stamps.noStampsFound")}
               </p>
-              <p className="font-letter text-xs text-foreground-muted">
-                &quot;{searchQuery}&quot;
-              </p>
+              {searchQuery && (
+                <p className="font-letter text-xs text-foreground-muted">
+                  &quot;{searchQuery}&quot;
+                </p>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 justify-items-center">
               {filteredStamps.map((stamp) => {
-                const isSelected = selectedStampId === stamp.id;
+                const isSelected = selectedStampId === stamp.slug;
+                const localizedName = t(`stamps.items.${stamp.slug}.name`);
+                const stampTitle =
+                  localizedName && !localizedName.startsWith("stamps.items.")
+                    ? localizedName
+                    : stamp.name;
+
+                const localizedDenom = t(
+                  `stamps.items.${stamp.slug}.denomination`,
+                );
+                const denominationText =
+                  localizedDenom && !localizedDenom.startsWith("stamps.items.")
+                    ? localizedDenom
+                    : "TIME ECHO";
+
                 return (
                   <div
-                    key={stamp.id}
+                    key={stamp.slug}
                     ref={isSelected ? selectedStampRef : undefined}
-                    onClick={() => handleSelect(stamp.id)}
+                    onClick={() => handleSelect(stamp.slug)}
                     className={cn(
                       "group relative flex flex-col items-center p-3 rounded-xs border transition-all cursor-pointer w-full max-w-[145px]",
                       isSelected
@@ -192,13 +264,16 @@ function StampPickerContent({
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        handleSelect(stamp.id);
+                        handleSelect(stamp.slug);
                       }
                     }}
                   >
                     <div className="relative my-1">
                       <Stamp
-                        id={stamp.id}
+                        slug={stamp.slug}
+                        svgContent={stamp.svg_content || stamp.svgContent}
+                        name={stamp.name}
+                        categorySlug={stamp.category_slug || stamp.categorySlug}
                         size="md"
                         interactive={false}
                         selected={false}
@@ -214,12 +289,12 @@ function StampPickerContent({
                     <div className="mt-2 text-center w-full space-y-0.5">
                       <span
                         className="block font-serif-editorial text-xs font-semibold text-foreground truncate"
-                        title={t(`stamps.items.${stamp.id}.name`)}
+                        title={stampTitle}
                       >
-                        {t(`stamps.items.${stamp.id}.name`)}
+                        {stampTitle}
                       </span>
                       <span className="block font-letter text-[9px] text-foreground-muted truncate">
-                        {t(`stamps.items.${stamp.id}.denomination`)}
+                        {denominationText}
                       </span>
                     </div>
                   </div>

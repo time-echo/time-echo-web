@@ -9,7 +9,7 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
-import { Stamp, StampPickerModal } from "@/components/stamps";
+import { Stamp, StampPickerModal, useStampCatalog } from "@/components/stamps";
 
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
@@ -52,15 +52,22 @@ export function LetterComposerForm({
   );
 
   const searchParams = useSearchParams();
+  const { findStamp } = useStampCatalog();
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState(false);
 
+  const selectedStampSlug = form.stamp_slug || form.stampId;
+  const selectedStamp = selectedStampSlug
+    ? findStamp(selectedStampSlug)
+    : undefined;
+
   useEffect(() => {
     const stampParam = searchParams.get("stamp");
-    if (stampParam && !form.stampId) {
+    if (stampParam && !form.stamp_slug && !form.stampId) {
       setField("stampId", stampParam);
+      setField("stamp_slug", stampParam);
     }
-  }, [searchParams, form.stampId, setField]);
+  }, [searchParams, form.stamp_slug, form.stampId, setField]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,11 +168,19 @@ export function LetterComposerForm({
               </div>
 
               <div className="shrink-0 flex flex-col items-end">
-                {form.stampId ? (
+                {selectedStampSlug ? (
                   <div className="group relative flex flex-col items-center">
                     <Stamp
-                      key={form.stampId}
-                      id={form.stampId}
+                      key={selectedStampSlug}
+                      slug={selectedStampSlug}
+                      svgContent={
+                        selectedStamp?.svg_content || selectedStamp?.svgContent
+                      }
+                      name={selectedStamp?.name}
+                      categorySlug={
+                        selectedStamp?.category_slug ||
+                        selectedStamp?.categorySlug
+                      }
                       size="md"
                       interactive
                       animateAffix
@@ -623,8 +638,11 @@ export function LetterComposerForm({
       <StampPickerModal
         isOpen={isStampPickerOpen}
         onClose={() => setIsStampPickerOpen(false)}
-        selectedStampId={form.stampId || undefined}
-        onSelectStamp={(id) => setField("stampId", id)}
+        selectedStampId={selectedStampSlug || undefined}
+        onSelectStamp={(slug) => {
+          setField("stampId", slug || null);
+          setField("stamp_slug", slug || null);
+        }}
       />
     </div>
   );

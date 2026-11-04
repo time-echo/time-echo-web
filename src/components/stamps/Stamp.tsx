@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { StampPerforationFrame, type StampSize } from "./StampPerforationFrame";
 import { PostmarkOverlay } from "./PostmarkOverlay";
+import { StampRenderer } from "./StampRenderer";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import {
   getStampById,
@@ -13,7 +14,11 @@ import {
 } from "./stamps.data";
 
 export interface StampProps extends React.HTMLAttributes<HTMLDivElement> {
-  id: string;
+  id?: string;
+  slug?: string;
+  svgContent?: string;
+  name?: string;
+  categorySlug?: string;
   size?: StampSize;
   rotation?: number;
   hasPostmark?: boolean;
@@ -27,6 +32,13 @@ export interface StampProps extends React.HTMLAttributes<HTMLDivElement> {
   postmarkVariant?: "waves" | "circular" | "combo";
   postmarkDate?: string;
 }
+
+const CATEGORY_COLORS: Record<string, { primary: string; accent: string }> = {
+  "small-things": { primary: "#8C4A2F", accent: "#6B3722" },
+  "places-i-inhabit": { primary: "#2D5A4C", accent: "#1F3E34" },
+  "stored-thoughts": { primary: "#4A3E6D", accent: "#352C4E" },
+  "passage-of-time": { primary: "#7C5329", accent: "#5B3D1E" },
+};
 
 const TEXT_SIZE_MAP: Record<
   Exclude<StampSize, "custom">,
@@ -62,6 +74,10 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
   (
     {
       id,
+      slug,
+      svgContent,
+      name,
+      categorySlug,
       size = "md",
       rotation = 0,
       hasPostmark = false,
@@ -81,19 +97,36 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
   ) => {
     const { t } = useTimeEcho();
     const shouldReduceMotion = useReducedMotion();
-    const stamp: StampDefinition =
-      getStampById(id) || getStampById(DEFAULT_STAMP_ID)!;
 
-    const IconComponent = stamp.component;
+    const stampKey = slug || id || DEFAULT_STAMP_ID;
+    const staticStamp: StampDefinition | undefined = getStampById(stampKey);
+
+    const categoryKey = categorySlug || staticStamp?.category || "small-things";
+    const categoryColors = CATEGORY_COLORS[categoryKey] || {
+      primary: "#8C4A2F",
+      accent: "#5C2C16",
+    };
+
+    const primaryColor = staticStamp?.primaryColor || categoryColors.primary;
+    const accentColor = staticStamp?.accentColor || categoryColors.accent;
+
+    const IconComponent = staticStamp?.component;
     const textConfig =
       size !== "custom" ? TEXT_SIZE_MAP[size] : TEXT_SIZE_MAP.md;
 
-    const localizedDenomination = t(`stamps.items.${stamp.id}.denomination`);
+    const localizedDenomination = t(`stamps.items.${stampKey}.denomination`);
     const denominationText =
       localizedDenomination &&
       !localizedDenomination.startsWith("stamps.items.")
         ? localizedDenomination
-        : stamp.denomination;
+        : staticStamp?.denomination || name || "TIME ECHO";
+
+    const localizedName = t(`stamps.items.${stampKey}.name`);
+    const stampName =
+      name ||
+      (localizedName && !localizedName.startsWith("stamps.items.")
+        ? localizedName
+        : staticStamp?.name || stampKey);
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
       onClick?.(e);
@@ -154,7 +187,7 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
           size={size}
           paperColor={paperColor}
           borderColor={borderColor || "var(--crease)"}
-          innerBorderColor={stamp.primaryColor}
+          innerBorderColor={primaryColor}
           hasPaperTexture={hasPaperTexture}
           interactive={false}
         >
@@ -164,7 +197,7 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
             </span>
             <span
               className={cn("leading-none font-bold", textConfig.denomination)}
-              style={{ color: stamp.primaryColor }}
+              style={{ color: primaryColor }}
             >
               POST
             </span>
@@ -175,9 +208,17 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
               "flex items-center justify-center p-0.5 my-auto",
               textConfig.iconSize,
             )}
-            style={{ color: stamp.primaryColor }}
+            style={{ color: primaryColor }}
           >
-            <IconComponent className="w-full h-full drop-shadow-xs" />
+            {svgContent ? (
+              <StampRenderer
+                svgContent={svgContent}
+                ariaLabel={stampName}
+                className="w-full h-full drop-shadow-xs"
+              />
+            ) : IconComponent ? (
+              <IconComponent className="w-full h-full drop-shadow-xs" />
+            ) : null}
           </div>
 
           <div className="w-full text-center px-0.5 border-t border-current/20 pt-0.5 select-none">
@@ -186,7 +227,7 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
                 "block font-letter font-bold uppercase truncate leading-none",
                 textConfig.denomination,
               )}
-              style={{ color: stamp.accentColor }}
+              style={{ color: accentColor }}
             >
               {denominationText}
             </span>

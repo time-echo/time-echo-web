@@ -28,6 +28,16 @@ export async function POST(request: Request) {
           scheduledAt: body.letter.scheduled_at || body.letter.scheduledAt,
           language: body.letter.language,
           timezone: body.letter.timezone,
+          stamp_slug:
+            body.letter.stamp_slug ||
+            body.letter.stampId ||
+            body.letter.stamp_id ||
+            null,
+          stampId:
+            body.letter.stamp_slug ||
+            body.letter.stampId ||
+            body.letter.stamp_id ||
+            null,
           emotionalSnapshot: {
             happinessLevel:
               body.letter.emotional_snapshot_attributes?.happiness_level ??
