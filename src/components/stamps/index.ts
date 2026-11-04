@@ -13,6 +13,13 @@ export {
 export { Stamp, type StampProps } from "./Stamp";
 
 export {
+  StampRenderer,
+  type StampRendererProps,
+  sanitizeSvg,
+  SVG_PURIFY_CONFIG,
+} from "./StampRenderer";
+
+export {
   StampPickerModal,
   type StampPickerModalProps,
 } from "./StampPickerModal";
