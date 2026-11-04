@@ -246,3 +246,11 @@ export interface StampDetailResponse {
   position: number;
   active: boolean;
 }
+
+export interface StampFilters {
+  category?: string;
+  name?: string;
+  active?: boolean | string;
+  page?: number;
+  perPage?: number;
+}

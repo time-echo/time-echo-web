@@ -402,14 +402,30 @@ export class HttpApiRepository implements ICapsuleRepository {
   }
 
   /**
-   * Retrieves active stamps catalog sorted by position.
+   * Retrieves active stamps catalog sorted by position with optional filters and pagination.
    */
-  async getStamps(locale?: string): Promise<StampItemResponse[]> {
+  async getStamps(
+    locale?: string,
+    filters?: import("@/types/timeecho").StampFilters,
+  ): Promise<StampItemResponse[]> {
     const loc = locale || this.resolveLocale();
-    const data = await this.request<StampItemResponse[]>("/stamps", {
+    const query = new URLSearchParams();
+    if (filters?.category) query.set("category", filters.category);
+    if (filters?.name) query.set("name", filters.name);
+    if (filters?.active !== undefined)
+      query.set("active", String(filters.active));
+    if (filters?.page) query.set("page", String(filters.page));
+    if (filters?.perPage) query.set("per_page", String(filters.perPage));
+
+    const qs = query.toString();
+    const endpoint = `/stamps${qs ? `?${qs}` : ""}`;
+    const data = await this.request<any>(endpoint, {
       headers: { "X-Locale": loc },
     });
-    return Array.isArray(data) ? data : [];
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data.stamps)) return data.stamps;
+    if (data && Array.isArray(data.data)) return data.data;
+    return [];
   }
 
   /**

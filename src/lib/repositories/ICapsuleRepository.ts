@@ -48,9 +48,12 @@ export interface ICapsuleRepository {
   delete(id: string): Promise<void>;
 
   /**
-   * Retrieves active stamps catalog.
+   * Retrieves active stamps catalog with optional filters and pagination.
    */
-  getStamps?(locale?: string): Promise<StampItemResponse[]>;
+  getStamps?(
+    locale?: string,
+    filters?: import("@/types/timeecho").StampFilters,
+  ): Promise<StampItemResponse[]>;
 
   /**
    * Retrieves active stamp categories that have active stamps.
