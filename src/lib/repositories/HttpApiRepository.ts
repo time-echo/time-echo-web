@@ -381,7 +381,6 @@ export class HttpApiRepository implements ICapsuleRepository {
         language: input.language || this.resolveLocale() || "es",
         timezone: input.timezone || "UTC",
         stamp_slug: stampSlug,
-        stampId: stampSlug,
         emotional_snapshot_attributes: {
           happiness_level: input.emotionalSnapshot.happinessLevel,
           anxiety_level: input.emotionalSnapshot.anxietyLevel,
