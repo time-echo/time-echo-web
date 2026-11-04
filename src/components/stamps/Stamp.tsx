@@ -121,8 +121,12 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
         ? localizedDenomination
         : staticStamp?.denomination || name || "TIME ECHO";
 
+    const localizedName = t(`stamps.items.${stampKey}.name`);
     const stampName =
-      name || staticStamp?.name || t(`stamps.items.${stampKey}.name`);
+      name ||
+      (localizedName && !localizedName.startsWith("stamps.items.")
+        ? localizedName
+        : staticStamp?.name || stampKey);
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
       onClick?.(e);

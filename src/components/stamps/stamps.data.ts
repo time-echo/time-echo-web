@@ -62,6 +62,10 @@ export const INITIAL_UNLOCKED_STAMP_IDS: string[] = [
   "little-companion",
 ];
 
+/**
+ * @deprecated Prefer `useStampCatalog()` hook or dynamic API endpoints (`GET /api/v1/stamps`).
+ * Retained as static fallback for offline and standalone mock environments.
+ */
 export const STAMPS_CATALOG: StampDefinition[] = [
   {
     id: "morning-coffee",
