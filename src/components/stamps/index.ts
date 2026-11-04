@@ -11,6 +11,7 @@ export {
 } from "./PostmarkOverlay";
 
 export { Stamp, type StampProps } from "./Stamp";
+export { LetterStamp, type LetterStampProps } from "./LetterStamp";
 
 export {
   StampRenderer,

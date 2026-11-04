@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
-import { Stamp, DEFAULT_STAMP_ID } from "@/components/stamps";
+import { LetterStamp } from "@/components/stamps";
 import { LetterDetailSkeleton } from "@/components/skeletons";
 
 interface LetterPageProps {
@@ -245,16 +245,19 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               <div className="wax-seal w-24 h-24 rounded-full flex items-center justify-center text-on-wax shadow-md">
                 <Lock size={36} />
               </div>
-              <div className="relative">
-                <Stamp
-                  id={letter.stampId || DEFAULT_STAMP_ID}
-                  size="lg"
-                  hasPostmark
-                  postmarkVariant="combo"
-                  postmarkDate={formattedScheduled}
-                  rotation={3.5}
-                />
-              </div>
+              {(letter.stamp || letter.stampId) && (
+                <div className="relative">
+                  <LetterStamp
+                    stamp={letter.stamp}
+                    stampId={letter.stampId}
+                    size="lg"
+                    hasPostmark
+                    postmarkVariant="combo"
+                    postmarkDate={formattedScheduled}
+                    rotation={3.5}
+                  />
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -328,16 +331,19 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 <div className="wax-seal w-20 h-20 rounded-full flex items-center justify-center text-on-wax animate-seal-left">
                   <Unlock size={28} />
                 </div>
-                <div className="relative">
-                  <Stamp
-                    id={letter.stampId || DEFAULT_STAMP_ID}
-                    size="md"
-                    hasPostmark
-                    postmarkVariant="combo"
-                    postmarkDate={formattedScheduled}
-                    rotation={3}
-                  />
-                </div>
+                {(letter.stamp || letter.stampId) && (
+                  <div className="relative">
+                    <LetterStamp
+                      stamp={letter.stamp}
+                      stampId={letter.stampId}
+                      size="md"
+                      hasPostmark
+                      postmarkVariant="combo"
+                      postmarkDate={formattedScheduled}
+                      rotation={3}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="archival-folder rounded-xs p-4 text-xs font-letter text-foreground/80 space-y-1 text-left border border-manila-border">
@@ -664,16 +670,19 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 </span>
               </div>
 
-              <div className="shrink-0">
-                <Stamp
-                  id={letter.stampId || DEFAULT_STAMP_ID}
-                  size="md"
-                  hasPostmark
-                  postmarkVariant="combo"
-                  postmarkDate={formattedScheduled}
-                  rotation={-2}
-                />
-              </div>
+              {(letter.stamp || letter.stampId) && (
+                <div className="shrink-0">
+                  <LetterStamp
+                    stamp={letter.stamp}
+                    stampId={letter.stampId}
+                    size="md"
+                    hasPostmark
+                    postmarkVariant="combo"
+                    postmarkDate={formattedScheduled}
+                    rotation={-2}
+                  />
+                </div>
+              )}
             </div>
 
             <article className="p-5 sm:p-6 border border-crease rounded-xs bg-transparent text-foreground/90 min-h-[300px] whitespace-pre-wrap break-words select-text font-letter text-sm leading-loose shadow-inner">
