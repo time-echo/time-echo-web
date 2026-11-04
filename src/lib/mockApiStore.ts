@@ -113,7 +113,15 @@ class MockApiStore {
         updatedAt: now.toISOString(),
       },
       predictions: newPredictions,
-      stampId: input.stampId || null,
+      stampId: input.stamp_slug || input.stampId || null,
+      stamp:
+        input.stamp_slug || input.stampId
+          ? {
+              slug: input.stamp_slug || input.stampId!,
+              name: input.stamp_slug || input.stampId!,
+              category_slug: "default",
+            }
+          : null,
     };
 
     this.letters.unshift(newLetter);

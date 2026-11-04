@@ -2,6 +2,9 @@ import {
   Letter,
   CreateLetterInput,
   UpdateRealityInput,
+  StampCategoryResponse,
+  StampItemResponse,
+  StampDetailResponse,
 } from "@/types/timeecho";
 
 /**
@@ -43,4 +46,22 @@ export interface ICapsuleRepository {
    */
   restore(id: string): Promise<Letter>;
   delete(id: string): Promise<void>;
+
+  /**
+   * Retrieves active stamps catalog.
+   */
+  getStamps?(locale?: string): Promise<StampItemResponse[]>;
+
+  /**
+   * Retrieves active stamp categories that have active stamps.
+   */
+  getStampCategories?(locale?: string): Promise<StampCategoryResponse[]>;
+
+  /**
+   * Retrieves stamp details by slug (including inactive stamps for historical letters).
+   */
+  getStampBySlug?(
+    slug: string,
+    locale?: string,
+  ): Promise<StampDetailResponse | null>;
 }
