@@ -24,6 +24,8 @@ export {
   type StampPickerModalProps,
 } from "./StampPickerModal";
 
+export { useStampCatalog, type UseStampCatalogResult } from "./useStampCatalog";
+
 export {
   STAMPS_CATALOG,
   STAMP_CATEGORIES,
