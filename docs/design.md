@@ -243,6 +243,40 @@ Custom-styled range input for emotional baselines.
 />
 ```
 
+#### Digital Postage Stamp (`src/components/stamps/Stamp.tsx`)
+
+Authentic physical postage stamp with perforation edges, denomination, and category themes.
+
+```tsx
+<Stamp
+  slug="morning-coffee"
+  size="md" // sm | md | lg | xl
+  interactive={true}
+  onClick={handleClick}
+/>
+```
+
+#### LetterStamp (`src/components/stamps/LetterStamp.tsx`)
+
+Affixed postage stamp displayed on envelope corners or letter headers with slight rotation and realistic drop shadow.
+
+```tsx
+<LetterStamp slug={letter.stampSlug} size="sm" />
+```
+
+#### StampPickerModal (`src/components/stamps/StampPickerModal.tsx`)
+
+Interactive stamp catalog browser modal with category tabs, search input, and responsive grid selection.
+
+```tsx
+<StampPickerModal
+  isOpen={isPickerOpen}
+  onClose={() => setIsPickerOpen(false)}
+  selectedSlug={selectedStampSlug}
+  onSelect={(slug) => setSelectedStampSlug(slug)}
+/>
+```
+
 ---
 
 ## Page Layouts

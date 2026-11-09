@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeEcho is a Next.js 15 (App Router) application for writing time-capsule letters to one's future self. The architecture follows a feature-based modular structure with clear separation between UI components, business logic, data access, and domain types.
+TimeEcho is a Next.js 16 (App Router) application for writing time-capsule letters to one's future self. The architecture follows a feature-based modular structure with clear separation between UI components, business logic, data access, and domain types.
 
 ---
 
@@ -13,7 +13,7 @@ TimeEcho is a Next.js 15 (App Router) application for writing time-capsule lette
 │                        Next.js App Router                       │
 ├─────────────────────────────────────────────────────────────────┤
 │  Pages (app/)          │  API Routes (app/api/)                 │
-│  - Dashboard           │  - /letters (CRUD)                     │
+│  - Dashboard           │  - /letters (CRUD & fallback proxy)    │
 │  - Letter Detail       │  - /letters/[id] (get/update)          │
 │  - New Letter          │  - /letters/[id]/predictions           │
 │  - Analytics           │  - /letters/[id]/archive|restore       │
@@ -32,15 +32,15 @@ TimeEcho is a Next.js 15 (App Router) application for writing time-capsule lette
 ┌─────────────────────────────────────────────────────────────────┐
 │                      Repository Layer                           │
 │  ICapsuleRepository (interface)                                 │
-│  HttpApiRepository (implementation)                             │
-│  MockApiStore (development fallback)                            │
+│  HttpApiRepository (calls Rails API backend: /api/v1/*)         │
+│  MockApiStore (offline & development fallback)                  │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                      Domain Types (src/types/timeecho.ts)       │
 │  Letter, Prediction, EmotionalSnapshot, UserPreferences,       │
-│  AnalyticsMetrics, CreateLetterInput, UpdateRealityInput       │
+│  Stamp, StampCategory, AnalyticsMetrics, CreateLetterInput      │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -69,8 +69,9 @@ capsules/
 ```
 
 **Data Flow**:
+
 ```
-User Input → useLetterComposer → createCapsule (Context) → HttpApiRepository → API Route → MockApiStore
+User Input → useLetterComposer → createCapsule (Context) → HttpApiRepository → Rails API / MockApiStore
 ```
 
 ### 2. Reality Ledger (`src/features/reality-ledger/`)
@@ -88,6 +89,7 @@ reality-ledger/
 ```
 
 **Prediction Outcomes**:
+
 - `fulfilled` — Prediction matches reality
 - `exceeded` — Reality surpasses prediction
 - `partially` — Partial match
@@ -109,9 +111,24 @@ analytics/
 ```
 
 **Computed Metrics**:
+
 - Total letters, in-transit, delivered, opened, archived counts
 - Prediction accuracy rate (%)
 - Emotional averages: baseline, reveal, delta (happiness/anxiety/motivation)
+
+### 4. Postage Stamps (`src/components/stamps/`)
+
+**Purpose**: Stamp selection, categorization, and vector rendering.
+
+```
+stamps/
+├── Stamp.tsx                   # Individual stamp with size/theme variants
+├── LetterStamp.tsx             # Affixed postage stamp representation
+├── StampPickerModal.tsx        # Modal for catalog browsing and search
+├── StampRenderer.tsx           # DOMPurify-sanitized SVG renderer
+├── useStampCatalog.ts          # Catalog hook with API integration and offline fallback
+└── stamps.data.ts              # Category definitions and static fallbacks
+```
 
 ---
 
@@ -147,6 +164,7 @@ interface TimeEchoContextValue {
 ```
 
 **Provider Hierarchy** (in `app/layout.tsx`):
+
 ```
 <TimeEchoProvider>
   <AppShell>
@@ -176,7 +194,12 @@ interface ICapsuleRepository {
 
 // HTTP Implementation (src/lib/repositories/HttpApiRepository.ts)
 class HttpApiRepository implements ICapsuleRepository {
-  async create(input) { return fetch('/api/letters', { method: 'POST', body: JSON.stringify(input) }); }
+  async create(input) {
+    return fetch("/api/letters", {
+      method: "POST",
+      body: JSON.stringify(input),
+    });
+  }
   // ... other methods call corresponding API routes
 }
 
@@ -190,16 +213,16 @@ class HttpApiRepository implements ICapsuleRepository {
 
 ## API Routes (App Router)
 
-| Route | Method | Handler | Description |
-|-------|--------|---------|-------------|
-| `/api/letters` | GET | `list` | All capsules |
-| `/api/letters` | POST | `create` | New capsule |
-| `/api/letters/[id]` | GET | `get` | Single capsule |
-| `/api/letters/[id]` | PATCH | `updateReality` | Update predictions + emotions |
-| `/api/letters/[id]/archive` | POST | `archive` | Move to archived |
-| `/api/letters/[id]/restore` | POST | `restore` | Un-archive |
-| `/api/letters/[id]/predictions` | POST | `updatePredictions` | Batch prediction updates |
-| `/api/letters/reset` | POST | `reset` | Clear all (dev) |
+| Route                           | Method | Handler             | Description                   |
+| ------------------------------- | ------ | ------------------- | ----------------------------- |
+| `/api/letters`                  | GET    | `list`              | All capsules                  |
+| `/api/letters`                  | POST   | `create`            | New capsule                   |
+| `/api/letters/[id]`             | GET    | `get`               | Single capsule                |
+| `/api/letters/[id]`             | PATCH  | `updateReality`     | Update predictions + emotions |
+| `/api/letters/[id]/archive`     | POST   | `archive`           | Move to archived              |
+| `/api/letters/[id]/restore`     | POST   | `restore`           | Un-archive                    |
+| `/api/letters/[id]/predictions` | POST   | `updatePredictions` | Batch prediction updates      |
+| `/api/letters/reset`            | POST   | `reset`             | Clear all (dev)               |
 
 Each route delegates to the repository instance.
 
@@ -307,6 +330,7 @@ UpdateRealityInput {
 ```
 
 **CSS Custom Properties** (light/dark):
+
 ```css
 :root {
   --wax: #8e2818;
@@ -330,6 +354,7 @@ UpdateRealityInput {
 ```
 
 **Utility Classes**:
+
 - `.paper-sheet` — Parchment card
 - `.archival-folder` — Manila folder
 - `.postmark-stamp` — Dashed border stamp
@@ -342,14 +367,16 @@ UpdateRealityInput {
 ## Internationalization
 
 **Structure**: `src/lib/i18n/`
+
 - `en.json` — English translations
 - `es.json` — Spanish translations
 - `index.ts` — `getTranslations(locale)` helper
 
 **Usage**:
+
 ```typescript
 const { t, locale } = useTimeEcho();
-t('letter.write_your_letter'); // "Write your letter to your future"
+t("letter.write_your_letter"); // "Write your letter to your future"
 ```
 
 **Locale Detection**: Browser `Accept-Language` header → fallback to `en`. Persisted in `UserPreferences.locale`.
@@ -361,12 +388,19 @@ t('letter.write_your_letter'); // "Write your letter to your future"
 Loaded via `next/font` with CSS variable registration:
 
 ```typescript
-const fraunces = Fraunces({ variable: '--font-fraunces', subsets: ['latin'] });
-const courierPrime = Courier_Prime({ variable: '--font-courier-prime', subsets: ['latin'] });
-const plexSans = IBM_Plex_Sans({ variable: '--font-plex-sans', subsets: ['latin'] });
+const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"] });
+const courierPrime = Courier_Prime({
+  variable: "--font-courier-prime",
+  subsets: ["latin"],
+});
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
+  subsets: ["latin"],
+});
 ```
 
 Applied in `globals.css`:
+
 ```css
 @theme inline {
   --font-serif-editorial: var(--font-fraunces), Georgia, serif;
@@ -380,15 +414,18 @@ Applied in `globals.css`:
 ## Development Workflow
 
 ### Mock API
+
 - `src/lib/mockApiStore.ts` — In-memory store with `localStorage` persistence
 - Seeded with `src/lib/initialSeeds.ts` on first load
 - Reset via `POST /api/letters/reset`
 
 ### Environment
+
 - No `.env` required for development (mock API)
 - Production: Set `NEXT_PUBLIC_API_URL` for real backend
 
 ### Commands
+
 ```bash
 pnpm dev      # Turbopack dev server
 pnpm build    # Production build
@@ -400,11 +437,13 @@ pnpm lint     # ESLint (flat config)
 ## Deployment
 
 **Vercel** (recommended):
+
 - Zero-config deployment
 - Automatic preview deployments
 - Edge functions for API routes
 
 **Docker** (alternative):
+
 ```dockerfile
 FROM node:20-alpine
 WORKDIR /app
@@ -419,22 +458,20 @@ CMD ["pnpm", "start"]
 
 ## Security Considerations
 
-- **Client-side encryption**: Letters encrypted before API submission (planned)
-- **Email-only auth**: No passwords, magic links planned
-- **CSP headers**: Configured in `next.config.ts`
-- **No sensitive data in logs**: Structured logging with redaction
-- **Rate limiting**: API routes protected (planned)
+- **Server-side encryption**: Letters are encrypted at rest via Rails Active Record Encryption (`encrypts :title`, `encrypts :content`).
+- **SVG Sanitization**: Dynamic stamp SVGs are sanitized with DOMPurify before rendering to prevent XSS.
+- **Passwordless Authentication**: Single-use cryptographic magic links with automatic expiration.
+- **CSP headers**: Configured in `next.config.ts`.
+- **No sensitive data in logs**: Redacted fields and structured logging.
 
 ---
 
 ## Future Extensibility
 
-| Area | Planned Enhancement |
-|------|---------------------|
-| Backend | Replace mock with PostgreSQL + Prisma |
-| Auth | Magic links, passkeys, OAuth |
-| Encryption | Client-side AES-GCM before upload |
-| Notifications | Email/scheduled delivery via Resend/Cron |
-| Sharing | Public/private capsule sharing |
-| Mobile | React Native companion app |
-| AI | Reflection prompts, prediction suggestions |
+| Area              | Planned Enhancement                                  |
+| ----------------- | ---------------------------------------------------- |
+| Client Encryption | Client-side AES-GCM before upload                    |
+| Authentication    | Passkeys / WebAuthn support                          |
+| Sharing           | Public/private capsule sharing                       |
+| Mobile            | React Native companion app                           |
+| AI                | Reflection prompts, milestone prediction suggestions |
