@@ -12,13 +12,14 @@ TimeEcho is a Next.js 16 (App Router) application for writing time-capsule lette
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Next.js App Router                       │
 ├─────────────────────────────────────────────────────────────────┤
-│  Pages (app/)          │  API Routes (app/api/)                 │
-│  - Dashboard           │  - /letters (CRUD & fallback proxy)    │
-│  - Letter Detail       │  - /letters/[id] (get/update)          │
-│  - New Letter          │  - /letters/[id]/predictions           │
-│  - Analytics           │  - /letters/[id]/archive|restore       │
-│  - Settings            │  - /letters/reset (dev)                │
-└────────────────────────┴────────────────────────────────────────┘
+│  Pages (app/)                                                   │
+│  - Dashboard (/dashboard)                                       │
+│  - Letter Detail & Reality Ledger (/letters/[id])               │
+│  - New Letter Composer (/letters/new, /)                        │
+│  - Analytics (/analytics)                                       │
+│  - Settings & Preferences (/settings)                           │
+│  - Magic Link Auth (/login, /login/[token])                     │
+└─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -26,14 +27,15 @@ TimeEcho is a Next.js 16 (App Router) application for writing time-capsule lette
 │  TimeEchoContext (src/lib/context/TimeEchoContext.tsx)         │
 │  - Global state: capsules, preferences, locale                 │
 │  - Actions: createCapsule, updateReality, archive, etc.        │
+│  AuthContext (src/lib/context/AuthContext.tsx)                 │
+│  - Authentication session, magic link login, logout            │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                      Repository Layer                           │
-│  ICapsuleRepository (interface)                                 │
-│  HttpApiRepository (calls Rails API backend: /api/v1/*)         │
-│  MockApiStore (offline & development fallback)                  │
+│  ICapsuleRepository (src/lib/repositories/ICapsuleRepository)   │
+│  HttpApiRepository (calls Rails 8 API backend: /api/v1/*)       │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -71,7 +73,7 @@ capsules/
 **Data Flow**:
 
 ```
-User Input → useLetterComposer → createCapsule (Context) → HttpApiRepository → Rails API / MockApiStore
+User Input → useLetterComposer → createCapsule (Context) → HttpApiRepository → Rails 8 API (/api/v1/letters)
 ```
 
 ### 2. Reality Ledger (`src/features/reality-ledger/`)
@@ -183,48 +185,65 @@ interface TimeEchoContextValue {
 // Interface (src/lib/repositories/ICapsuleRepository.ts)
 interface ICapsuleRepository {
   create(input: CreateLetterInput): Promise<Letter>;
-  getAll(): Promise<Letter[]>;
+  getAll(params?: { status?: string; page?: number }): Promise<Letter[]>;
   getById(id: string): Promise<Letter | null>;
-  updateReality(id: string, input: UpdateRealityInput): Promise<Letter>;
-  archive(id: string): Promise<void>;
-  restore(id: string): Promise<void>;
+  updateReality(input: UpdateRealityInput): Promise<Letter>;
+  archive(id: string): Promise<Letter>;
+  restore(id: string): Promise<Letter>;
   delete(id: string): Promise<void>;
-  reset(): Promise<void>;
+  getStamps?(
+    locale?: string,
+    filters?: StampFilters,
+  ): Promise<StampItemResponse[]>;
+  getStampCategories?(locale?: string): Promise<StampCategoryResponse[]>;
+  getStampBySlug?(
+    slug: string,
+    locale?: string,
+  ): Promise<StampDetailResponse | null>;
 }
 
 // HTTP Implementation (src/lib/repositories/HttpApiRepository.ts)
+// Directly communicates with Rails 8 API backend (/api/v1/*)
 class HttpApiRepository implements ICapsuleRepository {
-  async create(input) {
-    return fetch("/api/letters", {
-      method: "POST",
-      body: JSON.stringify(input),
-    });
-  }
-  // ... other methods call corresponding API routes
+  // Dispatches requests with Bearer token, Accept-Language, and X-Locale headers
 }
-
-// Mock Store (src/lib/mockApiStore.ts) — Development only
-// In-memory array with localStorage persistence
 ```
-
-**Dependency Injection**: Context instantiates `HttpApiRepository` (or mock in dev) and exposes methods.
 
 ---
 
-## API Routes (App Router)
+## Backend REST API Integration (`/api/v1`)
 
-| Route                           | Method | Handler             | Description                   |
-| ------------------------------- | ------ | ------------------- | ----------------------------- |
-| `/api/letters`                  | GET    | `list`              | All capsules                  |
-| `/api/letters`                  | POST   | `create`            | New capsule                   |
-| `/api/letters/[id]`             | GET    | `get`               | Single capsule                |
-| `/api/letters/[id]`             | PATCH  | `updateReality`     | Update predictions + emotions |
-| `/api/letters/[id]/archive`     | POST   | `archive`           | Move to archived              |
-| `/api/letters/[id]/restore`     | POST   | `restore`           | Un-archive                    |
-| `/api/letters/[id]/predictions` | POST   | `updatePredictions` | Batch prediction updates      |
-| `/api/letters/reset`            | POST   | `reset`             | Clear all (dev)               |
+The frontend interacts directly with the Rails 8 API backend on port `3000`:
 
-Each route delegates to the repository instance.
+| Endpoint                          | Method   | Frontend Repository Method     | Description                               |
+| :-------------------------------- | :------- | :----------------------------- | :---------------------------------------- |
+| `/api/v1/letters`                 | `GET`    | `getAll(params)`               | Paginated letters timeline                |
+| `/api/v1/letters`                 | `POST`   | `create(input)`                | Create future capsule letter              |
+| `/api/v1/letters/:id`             | `GET`    | `getById(id)`                  | Single capsule details                    |
+| `/api/v1/letters/:id`             | `DELETE` | `delete(id)`                   | Delete unqueued letter                    |
+| `/api/v1/letters/:id/archive`     | `POST`   | `archive(id)`                  | Archive delivered letter                  |
+| `/api/v1/letters/:id/restore`     | `POST`   | `restore(id)`                  | Restore letter from archive               |
+| `/api/v1/letters/:id/predictions` | `POST`   | `updateReality(input)`         | Submit reality outcomes                   |
+| `/api/v1/stamps`                  | `GET`    | `getStamps(locale, filters)`   | Stamp catalog with filters and pagination |
+| `/api/v1/stamps/:slug`            | `GET`    | `getStampBySlug(slug, locale)` | Single stamp with vector SVG              |
+| `/api/v1/stamp_categories`        | `GET`    | `getStampCategories(locale)`   | Active stamp categories                   |
+| `/api/v1/sessions`                | `POST`   | `requestMagicLink(email)`      | Request magic login email                 |
+| `/api/v1/sessions/:token`         | `GET`    | `verifySessionToken(token)`    | Exchange login token for session          |
+
+### Stamps Catalog Filtering (cURL)
+
+The postage stamps catalog endpoint supports query parameter filtering:
+
+```bash
+curl --location 'http://localhost:3000/api/v1/stamps?category=small-things&q=coffee&page=1&per_page=20' \
+    --header 'Accept: application/json' \
+    --header 'Accept-Language: en' \
+    --header 'Authorization: Bearer b9187a1102f00429ed165330d90997cc716c4c2bda1f240e'
+```
+
+- Filter parameters: `category` (slug or ID), `q` (search name in English/Spanish), `page` (pagination), `per_page` (page size).
+- Headers: `Accept: application/json`, `Accept-Language: en` / `X-Locale`, and `Authorization: Bearer <token>`.
+- Implemented in `HttpApiRepository.ts` via `getStamps(locale, filters)` and `StampFilters`. See [`curl.md`](curl.md) for full cURL specifications.
 
 ---
 
@@ -413,16 +432,15 @@ Applied in `globals.css`:
 
 ## Development Workflow
 
-### Mock API
+### Backend Connection
 
-- `src/lib/mockApiStore.ts` — In-memory store with `localStorage` persistence
-- Seeded with `src/lib/initialSeeds.ts` on first load
-- Reset via `POST /api/letters/reset`
+- Connects to Rails 8 API server (`http://localhost:3000/api/v1`) via `HttpApiRepository`.
+- Seed data and demo capsules are initialized in the backend with `bin/rails db:seed`.
 
 ### Environment
 
-- No `.env` required for development (mock API)
-- Production: Set `NEXT_PUBLIC_API_URL` for real backend
+- Development: `NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1` (configured in `.env.local`)
+- Production: Set `NEXT_PUBLIC_API_URL` to production API domain
 
 ### Commands
 

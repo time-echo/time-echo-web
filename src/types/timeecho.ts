@@ -249,8 +249,14 @@ export interface StampDetailResponse {
 
 export interface StampFilters {
   category?: string;
+  category_id?: string | number;
+  category_slug?: string;
   name?: string;
+  q?: string;
+  query?: string;
   active?: boolean | string;
+  status?: string;
   page?: number;
   perPage?: number;
+  per_page?: number;
 }

@@ -267,6 +267,7 @@ export class HttpApiRepository implements ICapsuleRepository {
       "Content-Type": "application/json",
       Accept: "application/json",
       "X-Locale": locale,
+      "Accept-Language": locale,
       ...((options.headers as Record<string, string>) || {}),
     };
 
@@ -410,17 +411,36 @@ export class HttpApiRepository implements ICapsuleRepository {
   ): Promise<StampItemResponse[]> {
     const loc = locale || this.resolveLocale();
     const query = new URLSearchParams();
-    if (filters?.category) query.set("category", filters.category);
-    if (filters?.name) query.set("name", filters.name);
-    if (filters?.active !== undefined)
+
+    const categoryParam =
+      filters?.category || filters?.category_slug || filters?.category_id;
+    if (categoryParam) query.set("category", String(categoryParam));
+
+    if (filters?.q) {
+      query.set("q", filters.q);
+    } else if (filters?.name) {
+      query.set("name", filters.name);
+    } else if (filters?.query) {
+      query.set("q", filters.query);
+    }
+
+    if (filters?.active !== undefined) {
       query.set("active", String(filters.active));
+    } else if (filters?.status) {
+      query.set("status", filters.status);
+    }
+
     if (filters?.page) query.set("page", String(filters.page));
-    if (filters?.perPage) query.set("per_page", String(filters.perPage));
+    const perPage = filters?.perPage ?? filters?.per_page;
+    if (perPage) query.set("per_page", String(perPage));
 
     const qs = query.toString();
     const endpoint = `/stamps${qs ? `?${qs}` : ""}`;
     const data = await this.request<any>(endpoint, {
-      headers: { "X-Locale": loc },
+      headers: {
+        "X-Locale": loc,
+        "Accept-Language": loc,
+      },
     });
     if (Array.isArray(data)) return data;
     if (data && Array.isArray(data.stamps)) return data.stamps;

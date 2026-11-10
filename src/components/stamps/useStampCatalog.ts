@@ -161,6 +161,9 @@ export interface UseStampCatalogResult {
   refresh: () => Promise<void>;
   getStampBySlug: (slug: string) => Promise<StampDetailResponse | null>;
   findStamp: (slugOrId: string) => StampItemResponse | undefined;
+  fetchFilteredStamps: (
+    filters: import("@/types/timeecho").StampFilters,
+  ) => Promise<StampItemResponse[]>;
 }
 
 /**
@@ -251,6 +254,18 @@ export function useStampCatalog(): UseStampCatalogResult {
     [locale, store.stamps, repository],
   );
 
+  const fetchFilteredStamps = useCallback(
+    async (
+      filters: import("@/types/timeecho").StampFilters,
+    ): Promise<StampItemResponse[]> => {
+      if (repository && typeof repository.getStamps === "function") {
+        return repository.getStamps(locale, filters);
+      }
+      return [];
+    },
+    [repository, locale],
+  );
+
   return {
     stamps: store.stamps.length > 0 ? store.stamps : getFallbackStamps(),
     categories:
@@ -260,5 +275,6 @@ export function useStampCatalog(): UseStampCatalogResult {
     refresh,
     getStampBySlug,
     findStamp,
+    fetchFilteredStamps,
   };
 }

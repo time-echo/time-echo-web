@@ -142,8 +142,6 @@ src/
 │   ├── repositories/       # ICapsuleRepository, HttpApiRepository
 │   ├── fonts.ts            # Font configuration (Fraunces, Courier Prime, IBM Plex Sans)
 │   ├── i18n/               # English/Spanish dictionary files (en.json, es.json)
-│   ├── mockApiStore.ts     # In-memory mock API fallback for development
-│   ├── initialSeeds.ts     # Local seed data
 │   └── utils.ts            # cn() utility, formatting helpers
 └── types/
     └── timeecho.ts         # Domain types (Letter, Prediction, Stamp, EmotionalSnapshot)
@@ -185,11 +183,30 @@ Defined in `src/app/globals.css` via `@theme inline`:
 
 ## 🔗 Backend Integration
 
-The frontend connects to the Rails 8 API backend (`time_echo`):
+The frontend connects directly to the Rails 8 API backend (`time_echo`):
 
-- **API Base URL**: Configured via `NEXT_PUBLIC_API_URL` (e.g. `http://localhost:3000/api/v1`).
-- **Repository Pattern**: `HttpApiRepository` implements `ICapsuleRepository`, dispatching requests for letters, predictions, archive/restore, and stamp catalogs.
-- **Offline & Standalone Fallback**: When `NEXT_PUBLIC_API_URL` is omitted or the backend is offline during local UI development, the repository seamlessly falls back to `mockApiStore` with `localStorage` persistence.
+- **API Base URL**: Configured via `NEXT_PUBLIC_API_URL` (default: `http://localhost:3000/api/v1`).
+- **Repository Pattern**: `HttpApiRepository` implements `ICapsuleRepository`, dispatching requests for letters, predictions, archive/restore, authentication, and stamp catalogs.
+- **Authentication**: Bearer tokens and session cookies via `Authorization: Bearer <token>` and `credentials: "include"`.
+- **Localization**: Propagates `Accept-Language` and `X-Locale` headers to match user interface preferences.
+
+### Stamps Catalog API & Filtering (cURL)
+
+The postage stamps catalog endpoint supports category filtering, text query search (`q`), activation status filtering, and pagination:
+
+```bash
+curl --location 'http://localhost:3000/api/v1/stamps?category=small-things&q=coffee&page=1&per_page=20' \
+    --header 'Accept: application/json' \
+    --header 'Accept-Language: en' \
+    --header 'Authorization: Bearer b9187a1102f00429ed165330d90997cc716c4c2bda1f240e'
+```
+
+- **Filter parameters**:
+  - `category`: Category slug (e.g. `small-things`, `places-i-inhabit`, `stored-thoughts`, `passage-of-time`).
+  - `q`: Search term matching localized names (English/Spanish) or slug.
+  - `page`: Result page number (1-indexed).
+  - `per_page`: Number of stamps returned per page (default: 20, max: 100).
+- Handled programmatically via `HttpApiRepository#getStamps(locale, filters)` and `useStampCatalog#fetchFilteredStamps(filters)`. For full documentation, see [`curl.md`](curl.md).
 
 ---
 
