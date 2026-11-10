@@ -110,7 +110,6 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
     const primaryColor = staticStamp?.primaryColor || categoryColors.primary;
     const accentColor = staticStamp?.accentColor || categoryColors.accent;
 
-    const IconComponent = staticStamp?.component;
     const textConfig =
       size !== "custom" ? TEXT_SIZE_MAP[size] : TEXT_SIZE_MAP.md;
 
@@ -216,8 +215,6 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
                 ariaLabel={stampName}
                 className="w-full h-full drop-shadow-xs"
               />
-            ) : IconComponent ? (
-              <IconComponent className="w-full h-full drop-shadow-xs" />
             ) : null}
           </div>
 

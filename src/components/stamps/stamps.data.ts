@@ -1,25 +1,3 @@
-import React from "react";
-import {
-  MorningCoffeeStamp,
-  TodaySongStamp,
-  HomeCookedMealStamp,
-  TodaysStepsStamp,
-  FiveMoreMinutesStamp,
-  TodaysListStamp,
-  LittleHomeStamp,
-  NeighborhoodCornerStamp,
-  WayHomeStamp,
-  FavoriteSpotStamp,
-  RainyAfternoonStamp,
-  PersonalJournalStamp,
-  OrdinaryDayStamp,
-  WorkInProgressStamp,
-  SomethingGrowingStamp,
-  FirstKeyStamp,
-  OneMoreYearStamp,
-  LittleCompanionStamp,
-} from "./icons";
-
 export type StampCategory =
   "small-things" | "places-i-inhabit" | "stored-thoughts" | "passage-of-time";
 
@@ -31,7 +9,6 @@ export interface StampDefinition {
   primaryColor: string;
   accentColor: string;
   description?: string;
-  component: React.ComponentType<{ className?: string }>;
 }
 
 export const STAMP_CATEGORIES: { id: StampCategory; label: string }[] = [
@@ -74,7 +51,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "TIME ECHO • 10¢",
     primaryColor: "#A0522D",
     accentColor: "#5C2C16",
-    component: MorningCoffeeStamp,
   },
   {
     id: "today-song",
@@ -83,7 +59,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "STEREO • 12¢",
     primaryColor: "#2C485E",
     accentColor: "#1A2E3D",
-    component: TodaySongStamp,
   },
   {
     id: "home-cooked-meal",
@@ -92,7 +67,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "FLAVOR • 15¢",
     primaryColor: "#B45309",
     accentColor: "#78350F",
-    component: HomeCookedMealStamp,
   },
   {
     id: "todays-steps",
@@ -101,7 +75,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "STEPS • 08¢",
     primaryColor: "#706D53",
     accentColor: "#464433",
-    component: TodaysStepsStamp,
   },
   {
     id: "five-more-minutes",
@@ -110,7 +83,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "DAWN • 05¢",
     primaryColor: "#3B5266",
     accentColor: "#233340",
-    component: FiveMoreMinutesStamp,
   },
   {
     id: "todays-list",
@@ -119,7 +91,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "NOTES • 06¢",
     primaryColor: "#4B5563",
     accentColor: "#1F2937",
-    component: TodaysListStamp,
   },
   {
     id: "little-home",
@@ -128,7 +99,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "HOME • 20¢",
     primaryColor: "#9E4736",
     accentColor: "#612A1F",
-    component: LittleHomeStamp,
   },
   {
     id: "neighborhood-corner",
@@ -137,7 +107,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "DISTRICT • 18¢",
     primaryColor: "#556B2F",
     accentColor: "#33411B",
-    component: NeighborhoodCornerStamp,
   },
   {
     id: "way-home",
@@ -146,7 +115,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "ROUTE • 22¢",
     primaryColor: "#2F4858",
     accentColor: "#172730",
-    component: WayHomeStamp,
   },
   {
     id: "favorite-spot",
@@ -155,7 +123,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "CAFE • 25¢",
     primaryColor: "#8D5B4C",
     accentColor: "#57342A",
-    component: FavoriteSpotStamp,
   },
   {
     id: "rainy-afternoon",
@@ -164,7 +131,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "RAIN • 14¢",
     primaryColor: "#46637F",
     accentColor: "#273A4D",
-    component: RainyAfternoonStamp,
   },
   {
     id: "personal-journal",
@@ -173,7 +139,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "MEMORY • 25¢",
     primaryColor: "#4D5638",
     accentColor: "#2D3320",
-    component: PersonalJournalStamp,
   },
   {
     id: "ordinary-day",
@@ -182,7 +147,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "PHOTO • 19¢",
     primaryColor: "#646762",
     accentColor: "#3B3D3A",
-    component: OrdinaryDayStamp,
   },
   {
     id: "work-in-progress",
@@ -191,7 +155,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "STUDIO • 30¢",
     primaryColor: "#34495E",
     accentColor: "#1B2836",
-    component: WorkInProgressStamp,
   },
   {
     id: "something-growing",
@@ -200,7 +163,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "SPROUT • 15¢",
     primaryColor: "#3F6338",
     accentColor: "#253D20",
-    component: SomethingGrowingStamp,
   },
   {
     id: "first-key",
@@ -209,7 +171,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "KEY • 28¢",
     primaryColor: "#B47228",
     accentColor: "#693E10",
-    component: FirstKeyStamp,
   },
   {
     id: "one-more-year",
@@ -218,7 +179,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "YEARS • 35¢",
     primaryColor: "#8E2818",
     accentColor: "#5E180D",
-    component: OneMoreYearStamp,
   },
   {
     id: "little-companion",
@@ -227,7 +187,6 @@ export const STAMPS_CATALOG: StampDefinition[] = [
     denomination: "CALM • 16¢",
     primaryColor: "#446B55",
     accentColor: "#254032",
-    component: LittleCompanionStamp,
   },
 ];
 

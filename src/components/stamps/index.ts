@@ -38,5 +38,3 @@ export {
   type StampCategory,
   type StampDefinition,
 } from "./stamps.data";
-
-export * from "./icons";
