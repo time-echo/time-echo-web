@@ -28,13 +28,8 @@ export {
 export { useStampCatalog, type UseStampCatalogResult } from "./useStampCatalog";
 
 export {
-  STAMPS_CATALOG,
   STAMP_CATEGORIES,
   INITIAL_UNLOCKED_STAMP_IDS,
   DEFAULT_STAMP_ID,
-  getStampById,
-  getStampsByCategory,
-  getLocalizedStamp,
   type StampCategory,
-  type StampDefinition,
 } from "./stamps.data";

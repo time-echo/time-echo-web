@@ -7,11 +7,7 @@ import { StampPerforationFrame, type StampSize } from "./StampPerforationFrame";
 import { PostmarkOverlay } from "./PostmarkOverlay";
 import { StampRenderer } from "./StampRenderer";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
-import {
-  getStampById,
-  DEFAULT_STAMP_ID,
-  type StampDefinition,
-} from "./stamps.data";
+import { DEFAULT_STAMP_ID } from "./stamps.data";
 
 export interface StampProps extends React.HTMLAttributes<HTMLDivElement> {
   id?: string;
@@ -99,16 +95,14 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
     const shouldReduceMotion = useReducedMotion();
 
     const stampKey = slug || id || DEFAULT_STAMP_ID;
-    const staticStamp: StampDefinition | undefined = getStampById(stampKey);
-
-    const categoryKey = categorySlug || staticStamp?.category || "small-things";
+    const categoryKey = categorySlug || "small-things";
     const categoryColors = CATEGORY_COLORS[categoryKey] || {
       primary: "#8C4A2F",
       accent: "#5C2C16",
     };
 
-    const primaryColor = staticStamp?.primaryColor || categoryColors.primary;
-    const accentColor = staticStamp?.accentColor || categoryColors.accent;
+    const primaryColor = categoryColors.primary;
+    const accentColor = categoryColors.accent;
 
     const textConfig =
       size !== "custom" ? TEXT_SIZE_MAP[size] : TEXT_SIZE_MAP.md;
@@ -118,14 +112,14 @@ export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
       localizedDenomination &&
       !localizedDenomination.startsWith("stamps.items.")
         ? localizedDenomination
-        : staticStamp?.denomination || name || "TIME ECHO";
+        : name || "TIME ECHO";
 
     const localizedName = t(`stamps.items.${stampKey}.name`);
     const stampName =
       name ||
       (localizedName && !localizedName.startsWith("stamps.items.")
         ? localizedName
-        : staticStamp?.name || stampKey);
+        : stampKey);
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
       onClick?.(e);

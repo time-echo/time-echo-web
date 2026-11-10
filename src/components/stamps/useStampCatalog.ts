@@ -8,7 +8,7 @@ import {
   StampCategoryResponse,
   StampDetailResponse,
 } from "@/types/timeecho";
-import { STAMP_CATEGORIES, STAMPS_CATALOG } from "./stamps.data";
+import { STAMP_CATEGORIES } from "./stamps.data";
 
 interface CatalogStore {
   locale: string;
@@ -61,19 +61,6 @@ function getFallbackCategories(): StampCategoryResponse[] {
   }));
 }
 
-function getFallbackStamps(): StampItemResponse[] {
-  return STAMPS_CATALOG.map((s, index) => ({
-    slug: s.id,
-    name: s.name,
-    category_slug: s.category,
-    categorySlug: s.category,
-    svg_content: "",
-    svgContent: "",
-    position: index + 1,
-    active: true,
-  }));
-}
-
 let activeFetchPromise: Promise<void> | null = null;
 
 async function fetchCatalog(
@@ -119,9 +106,6 @@ async function fetchCatalog(
       if (fetchedCategories.length === 0) {
         fetchedCategories = getFallbackCategories();
       }
-      if (fetchedStamps.length === 0) {
-        fetchedStamps = getFallbackStamps();
-      }
 
       currentStore = {
         locale,
@@ -138,7 +122,7 @@ async function fetchCatalog(
 
       currentStore = {
         locale,
-        stamps: getFallbackStamps(),
+        stamps: [],
         categories: getFallbackCategories(),
         isLoading: false,
         error: errorObj,
@@ -228,25 +212,8 @@ export function useStampCatalog(): UseStampCatalogResult {
             return detail;
           }
         } catch {
-          // Ignore and check static fallback
+          // Ignore and return null
         }
-      }
-
-      // Fallback to static catalog if present
-      const staticMatch = STAMPS_CATALOG.find((s) => s.id === slug);
-      if (staticMatch) {
-        const detail: StampDetailResponse = {
-          slug: staticMatch.id,
-          name: staticMatch.name,
-          category_slug: staticMatch.category,
-          categorySlug: staticMatch.category,
-          svg_content: "",
-          svgContent: "",
-          position: 1,
-          active: true,
-        };
-        globalDetailCache.set(cacheKey, detail);
-        return detail;
       }
 
       return null;
@@ -267,7 +234,7 @@ export function useStampCatalog(): UseStampCatalogResult {
   );
 
   return {
-    stamps: store.stamps.length > 0 ? store.stamps : getFallbackStamps(),
+    stamps: store.stamps,
     categories:
       store.categories.length > 0 ? store.categories : getFallbackCategories(),
     isLoading: store.isLoading && store.stamps.length === 0,
