@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { Mail, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
+import { Mail, CheckCircle2, AlertTriangle } from "lucide-react";
 
 interface TokenLoginPageProps {
   params: Promise<{ token: string }>;
@@ -88,15 +88,6 @@ export default function TokenLoginPage({ params }: TokenLoginPageProps) {
               <p className="text-xs font-letter text-foreground-muted leading-relaxed">
                 {t("login.successSubtitle")}
               </p>
-            </div>
-            <div className="pt-2">
-              <Link
-                href="/dashboard"
-                className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors inline-flex items-center justify-center gap-2"
-              >
-                <span>{t("login.goToVault")}</span>
-                <ArrowRight size={14} />
-              </Link>
             </div>
           </div>
         )}
