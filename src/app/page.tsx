@@ -17,7 +17,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
-import { Stamp, StampPickerModal } from "@/components/stamps";
+import { Stamp, StampPickerModal, useStampCatalog } from "@/components/stamps";
 import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 
 export default function HomePage() {
@@ -55,6 +55,8 @@ export default function HomePage() {
   const [showCustomDate, setShowCustomDate] = useState<boolean>(false);
   const [selectedStampId, setSelectedStampId] = useState<string | null>(null);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState<boolean>(false);
+  const { findStamp } = useStampCatalog();
+  const currentStamp = selectedStampId ? findStamp(selectedStampId) : undefined;
 
   const [predictionCity, setPredictionCity] = useState("");
   const [predictionCareer, setPredictionCareer] = useState("");
@@ -140,6 +142,7 @@ export default function HomePage() {
         email,
         scheduledAt: deliverDate.toISOString(),
         stampId: selectedStampId || undefined,
+        stamp_slug: selectedStampId || undefined,
         emotionalSnapshot: {
           happinessLevel: happiness,
           anxietyLevel: anxiety,
@@ -261,7 +264,14 @@ export default function HomePage() {
               {selectedStampId ? (
                 <div className="flex flex-col items-center">
                   <Stamp
-                    id={selectedStampId}
+                    slug={selectedStampId}
+                    svgContent={
+                      currentStamp?.svg_content || currentStamp?.svgContent
+                    }
+                    name={currentStamp?.name}
+                    categorySlug={
+                      currentStamp?.category_slug || currentStamp?.categorySlug
+                    }
                     size="md"
                     interactive
                     rotation={2.5}

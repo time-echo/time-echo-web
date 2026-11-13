@@ -5,6 +5,10 @@ import {
   UpdateRealityInput,
   Prediction,
   EmotionalSnapshot,
+  StampCategoryResponse,
+  StampItemResponse,
+  StampDetailResponse,
+  LetterStampInfo,
 } from "@/types/timeecho";
 
 /**
@@ -67,6 +71,11 @@ interface RawLetterResponse {
   emotional_snapshot?: any;
   emotionalSnapshot?: any;
   predictions?: any[];
+  stamp_id?: string | number | null;
+  stampId?: string | number | null;
+  stamp_slug?: string | null;
+  stampSlug?: string | null;
+  stamp?: LetterStampInfo | null;
 }
 
 export interface HttpApiRepositoryOptions {
@@ -197,6 +206,25 @@ export class HttpApiRepository implements ICapsuleRepository {
               (data.openedAt || data.opened_at) && revealHappiness != null,
             );
 
+    const rawStamp = data.stamp;
+    let stamp: LetterStampInfo | null = null;
+    if (rawStamp && typeof rawStamp === "object" && rawStamp.slug) {
+      stamp = {
+        slug: rawStamp.slug,
+        name: rawStamp.name,
+        category_slug: rawStamp.category_slug || rawStamp.categorySlug || "",
+        categorySlug: rawStamp.categorySlug || rawStamp.category_slug || "",
+      };
+    }
+
+    const stampId =
+      stamp?.slug ||
+      data.stamp_slug ||
+      data.stampSlug ||
+      (data.stamp_id != null ? String(data.stamp_id) : null) ||
+      (data.stampId != null ? String(data.stampId) : null) ||
+      null;
+
     return {
       id: String(data.id),
       docketNumber,
@@ -219,6 +247,8 @@ export class HttpApiRepository implements ICapsuleRepository {
       updatedAt: data.updatedAt || data.updated_at || new Date().toISOString(),
       emotionalSnapshot,
       predictions,
+      stampId,
+      stamp,
     };
   }
 
@@ -237,6 +267,7 @@ export class HttpApiRepository implements ICapsuleRepository {
       "Content-Type": "application/json",
       Accept: "application/json",
       "X-Locale": locale,
+      "Accept-Language": locale,
       ...((options.headers as Record<string, string>) || {}),
     };
 
@@ -340,6 +371,7 @@ export class HttpApiRepository implements ICapsuleRepository {
   }
 
   async create(input: CreateLetterInput): Promise<Letter> {
+    const stampSlug = input.stamp_slug || input.stampId || undefined;
     const payload = {
       letter: {
         title: input.title,
@@ -349,6 +381,7 @@ export class HttpApiRepository implements ICapsuleRepository {
         deliver_at: input.scheduledAt,
         language: input.language || this.resolveLocale() || "es",
         timezone: input.timezone || "UTC",
+        stamp_slug: stampSlug,
         emotional_snapshot_attributes: {
           happiness_level: input.emotionalSnapshot.happinessLevel,
           anxiety_level: input.emotionalSnapshot.anxietyLevel,
@@ -367,6 +400,95 @@ export class HttpApiRepository implements ICapsuleRepository {
     });
 
     return this.mapResponseToDomain(data);
+  }
+
+  /**
+   * Retrieves active stamps catalog sorted by position with optional filters and pagination.
+   */
+  async getStamps(
+    locale?: string,
+    filters?: import("@/types/timeecho").StampFilters,
+  ): Promise<StampItemResponse[]> {
+    const loc = locale || this.resolveLocale();
+    const query = new URLSearchParams();
+
+    const categoryParam =
+      filters?.category || filters?.category_slug || filters?.category_id;
+    if (categoryParam) query.set("category", String(categoryParam));
+
+    if (filters?.q) {
+      query.set("q", filters.q);
+    } else if (filters?.name) {
+      query.set("name", filters.name);
+    } else if (filters?.query) {
+      query.set("q", filters.query);
+    }
+
+    if (filters?.active !== undefined) {
+      query.set("active", String(filters.active));
+    } else if (filters?.status) {
+      query.set("status", filters.status);
+    }
+
+    if (filters?.page) query.set("page", String(filters.page));
+    const perPage = filters?.perPage ?? filters?.per_page;
+    if (perPage) query.set("per_page", String(perPage));
+
+    const qs = query.toString();
+    const endpoint = `/stamps${qs ? `?${qs}` : ""}`;
+    const data = await this.request<any>(endpoint, {
+      headers: {
+        "X-Locale": loc,
+        "Accept-Language": loc,
+      },
+    });
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data.stamps)) return data.stamps;
+    if (data && Array.isArray(data.data)) return data.data;
+    return [];
+  }
+
+  /**
+   * Retrieves active stamp categories that have active stamps.
+   */
+  async getStampCategories(locale?: string): Promise<StampCategoryResponse[]> {
+    const loc = locale || this.resolveLocale();
+    const data = await this.request<StampCategoryResponse[]>(
+      "/stamp_categories",
+      {
+        headers: { "X-Locale": loc },
+      },
+    );
+    return Array.isArray(data) ? data : [];
+  }
+
+  /**
+   * Retrieves stamp details by slug (including inactive stamps for historical letters).
+   * Returns null if not found.
+   */
+  async getStampBySlug(
+    slug: string,
+    locale?: string,
+  ): Promise<StampDetailResponse | null> {
+    const loc = locale || this.resolveLocale();
+    try {
+      const data = await this.request<StampDetailResponse>(
+        `/stamps/${encodeURIComponent(slug)}`,
+        {
+          headers: { "X-Locale": loc },
+        },
+      );
+      return data || null;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) {
+        return null;
+      }
+      console.warn(
+        `[HttpApiRepository] Stamp "${slug}" not found or request failed:`,
+        err,
+      );
+      return null;
+    }
   }
 
   async updateReality(input: UpdateRealityInput): Promise<Letter> {

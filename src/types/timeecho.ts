@@ -74,6 +74,13 @@ export interface Prediction {
  * Incorporates physical postal attributes (docket folio, wax seal state)
  * along with lifecycle timestamps and retrospective reality fields.
  */
+export interface LetterStampInfo {
+  slug: string;
+  name: string;
+  category_slug?: string;
+  categorySlug?: string;
+}
+
 export interface Letter {
   id: string;
   /** Postal folio docket number (e.g., "TE-00421", "FOLIO № TE-00912") */
@@ -101,6 +108,7 @@ export interface Letter {
   /** Associated milestone predictions */
   predictions: Prediction[];
   stampId?: string | null;
+  stamp?: LetterStampInfo | null;
 }
 
 /**
@@ -134,6 +142,7 @@ export interface CreateLetterInput {
   timezone?: string;
   language?: SupportedLanguage;
   stampId?: string | null;
+  stamp_slug?: string | null;
   emotionalSnapshot: {
     happinessLevel: number;
     anxietyLevel: number;
@@ -204,4 +213,50 @@ export interface CollectibleStamp {
   storyPrompt?: string;
   isUnlocked?: boolean;
   unlockedAt?: string;
+}
+
+// ============================================================================
+// Dynamic Stamps API Contracts (v2.0)
+// ============================================================================
+
+export interface StampCategoryResponse {
+  slug: string;
+  name: string;
+  position: number;
+}
+
+export interface StampItemResponse {
+  slug: string;
+  name: string;
+  category_slug: string;
+  categorySlug?: string;
+  svg_content: string;
+  svgContent?: string;
+  position: number;
+  active?: boolean;
+}
+
+export interface StampDetailResponse {
+  slug: string;
+  name: string;
+  category_slug: string;
+  categorySlug?: string;
+  svg_content: string;
+  svgContent?: string;
+  position: number;
+  active: boolean;
+}
+
+export interface StampFilters {
+  category?: string;
+  category_id?: string | number;
+  category_slug?: string;
+  name?: string;
+  q?: string;
+  query?: string;
+  active?: boolean | string;
+  status?: string;
+  page?: number;
+  perPage?: number;
+  per_page?: number;
 }

@@ -31,6 +31,7 @@ export interface LetterComposerState {
     prediction: string;
   }>;
   stampId?: string | null;
+  stamp_slug?: string | null;
 }
 
 function getPresetDate(preset: HorizonPreset): string {
@@ -268,7 +269,8 @@ export function useLetterComposer(
         scheduledAt: new Date(form.scheduledAt).toISOString(),
         language: form.language,
         timezone: form.timezone,
-        stampId: form.stampId,
+        stampId: form.stamp_slug || form.stampId || undefined,
+        stamp_slug: form.stamp_slug || form.stampId || undefined,
         emotionalSnapshot: form.emotionalSnapshot,
         predictions: validPredictions,
       };
