@@ -96,7 +96,21 @@ Run these checks before finalizing any task:
 
 ---
 
-## 6. Key References
+## 6. Agent Skills
+
+The project maintains a dedicated set of modular skills in `.agents/skills/`, tracked via `skills-lock.json` and consumed across agent CLIs:
+
+- **Next.js (`.agents/skills/nextjs/`)**: Comprehensive Next.js best practices from Vercel Labs covering App Router conventions, RSC boundaries, Next.js 15+ async APIs, runtime selection, route handlers, font/image optimization, and bundling.
+- **React (`.agents/skills/react/`)**: React 18/19 patterns including hooks discipline, server/client boundaries, Suspense + error boundaries, form actions, and state management.
+- **TypeScript (`.agents/skills/typescript/`)**: Strict compiler configuration, type design, narrowing, discriminated unions, generics, async error handling, and module boundaries.
+- **Styling (`.agents/skills/styling/`)**: Tailwind CSS v4 design systems, design tokens, component variants, and responsive layout patterns.
+- **Testing (`.agents/skills/testing/`)**: Comprehensive testing strategies using Vitest, Jest, React Testing Library, and Playwright for unit, integration, and E2E testing with TDD workflows.
+- **Copywriting (`.agents/skills/copywriting/`)**: Human, grounded epistolary marketing copy and value proposition framing.
+- **Global Skills**: Interactive skill discovery (`find-skills`), aesthetic review (`frontend-design`), and UI polish (`impeccable`) reside at user-level (`~/.agents/skills/`).
+
+---
+
+## 7. Key References
 
 | Area                  | Location                                                    |
 | --------------------- | ----------------------------------------------------------- |
@@ -104,6 +118,7 @@ Run these checks before finalizing any task:
 | UI Mockups Rule       | `.agents/rules/mockups.md`                                  |
 | System Architecture   | `docs/architecture.md`                                      |
 | Design Specification  | `docs/design.md`                                            |
+| Agent Skills          | `.agents/skills/`, `skills-lock.json`                       |
 | Design Tokens         | `src/app/globals.css`                                       |
 | Domain Interfaces     | `src/types/timeecho.ts`                                     |
 | Context & Actions     | `src/lib/context/TimeEchoContext.tsx`                       |

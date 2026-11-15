@@ -452,6 +452,28 @@ pnpm lint     # ESLint (flat config)
 
 ---
 
+## Agent Skills Architecture
+
+TimeEcho implements a modular Agent Skills system under `.agents/skills/` (version-controlled and tracked via `skills-lock.json`), providing specialized domain guidance for AI engineering agents operating on the codebase:
+
+```
+.agents/skills/
+├── nextjs/          # Vercel Labs Next.js App Router, RSC boundaries, and async APIs
+├── react/           # React 18/19 component architecture, hooks discipline, boundaries
+├── typescript/      # Strict compiler patterns, discriminated unions, and generics
+├── styling/         # Tailwind CSS v4 design systems, tokens, and responsive layouts
+├── testing/         # Vitest, Jest, RTL, and Playwright with TDD workflows
+└── copywriting/     # Epistolary product voice, value framing, and landing copy
+```
+
+### Skill Manifest & Governance
+
+- **`skills-lock.json`**: Canonical lockfile recording upstream source repositories, skill paths, and computed hashes for deterministic reproducibility.
+- **Cross-Agent Compatibility**: Fully indexed and discovered across supported agent runtimes (Antigravity, Claude Code, Cursor, Codex, Gemini CLI).
+- **Scope Discipline**: Broad design review (`frontend-design`, `impeccable`) and discovery tools (`find-skills`) reside in global user scope (`~/.agents/skills/`), keeping the repository focused strictly on code quality and domain logic.
+
+---
+
 ## Deployment
 
 **Vercel** (recommended):

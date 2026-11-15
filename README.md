@@ -221,6 +221,19 @@ Both files are kept strictly in sync, adhering to `.agents/rules/natural-copy.md
 
 ---
 
+## 🤖 Agent Skills & Developer Tooling
+
+TimeEcho leverages modular agent skills located in `.agents/skills/` (locked and synchronized via `skills-lock.json`) to standardize engineering practices and design constraints across AI coding agents:
+
+- **Next.js** (`.agents/skills/nextjs/`): Vercel Labs best practices covering App Router conventions, RSC boundaries, Next.js 15+ async APIs, route handlers, image/font optimization, and bundling.
+- **React** (`.agents/skills/react/`): Idiomatic React 18/19 component architecture, hooks discipline, server/client boundaries, Suspense + error boundaries, and state management.
+- **TypeScript** (`.agents/skills/typescript/`): Strict compiler configuration, type design, narrowing, discriminated unions, and generics.
+- **Styling** (`.agents/skills/styling/`): Tailwind CSS v4 design systems, design tokens, component variants, and responsive layout patterns.
+- **Testing** (`.agents/skills/testing/`): Comprehensive testing strategies using Vitest, Jest, React Testing Library, and Playwright with TDD workflows.
+- **Copywriting** (`.agents/skills/copywriting/`): Grounded, human product copy and epistolary value proposition framing.
+
+---
+
 ## 🧪 UI Mockups & Storybook Catalog ([`time-echo/mockups`](https://github.com/time-echo/mockups))
 
 TimeEcho maintains a standalone Storybook catalog in the `mockups/` folder (`pnpm storybook` on port `6006`). Whenever UI or visual component changes are made, keep tokens, fonts, and primitives aligned between `frontend/` and `mockups/`.
