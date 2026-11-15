@@ -5,32 +5,12 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { cn } from "@/lib/utils";
 
 export interface ArchivalLoaderProps {
-  /**
-   * Layout presentation variant:
-   * - `full`: Full-viewport centered loader (for root/auth/route loading)
-   * - `page`: Centered loader within a page view (default)
-   * - `inline`: Compact loader for embedding inside existing cards
-   * @default "page"
-   */
   variant?: "full" | "page" | "inline";
-  /**
-   * Optional custom title text.
-   */
   title?: string;
-  /**
-   * Optional custom subtitle text.
-   */
   subtitle?: string;
-  /**
-   * Optional additional class names.
-   */
   className?: string;
 }
 
-/**
- * Simple loading indicator: a spinning wax-colored ring with a short message.
- * Used across all TimeEcho views.
- */
 export function ArchivalLoader({
   variant = "page",
   title,

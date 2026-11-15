@@ -146,9 +146,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
 
     try {
       celebrate("reality-submitted");
-    } catch {
-      // Confetti fallback
-    }
+    } catch {}
 
     const verifiedPredictions = (letter.predictions || []).map((p, idx) => {
       const ans = realityAnswers[p.id || String(idx)] || {
@@ -235,7 +233,6 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     );
   }
 
-  // Case 1: Locked Capsule in Transit
   if (isLocked) {
     return (
       <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">
@@ -307,13 +304,11 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     );
   }
 
-  // Case 2: Delivered but Pending Reality Comparison
   if (isDeliveredNotRevealed) {
     return (
       <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">
         <form onSubmit={handleRealitySubmit} className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left Column: Unlocked Notification Card */}
             <div className="lg:col-span-4 paper-sheet rounded-xs p-6 sm:p-8 text-center space-y-6 border border-crease">
               <div className="space-y-2">
                 <span className="postmark-stamp text-[10px] py-0.5 px-2.5">
@@ -356,7 +351,6 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               </div>
             </div>
 
-            {/* Middle Column: Fact Matching / Predictions Reality Questions */}
             <div className="lg:col-span-5 archival-folder rounded-xs p-6 sm:p-8 space-y-6 border border-manila-border">
               <div className="border-b border-manila-border pb-3">
                 <span className="text-[10px] font-letter uppercase tracking-widest text-foreground-muted block">
@@ -480,7 +474,6 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               </div>
             </div>
 
-            {/* Right Column: Present Emotional Baseline & Submit */}
             <div className="lg:col-span-3 space-y-6">
               <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
                 <div className="border-b border-manila-border pb-3">
@@ -570,7 +563,6 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
     );
   }
 
-  // Case 3: Fully Revealed Manuscript with Twin-Column Ledger
   const predictions: Prediction[] = letter.predictions || [];
   const matchedCount = predictions.filter((p: Prediction) => p.matched).length;
   const totalCount = predictions.length;
@@ -766,9 +758,7 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
           )}
         </div>
 
-        {/* Right Column: Score Dial & Emotional Evolution */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Prediction Score Card */}
           <div className="paper-sheet rounded-xs p-6 space-y-4 text-center border border-crease">
             <div className="border-b border-crease pb-2.5">
               <h3 className="font-serif-editorial text-lg font-semibold text-foreground">
@@ -819,7 +809,6 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
             )}
           </div>
 
-          {/* Emotional Evolution Breakdown */}
           <div className="archival-folder rounded-xs p-6 space-y-5 border border-manila-border">
             <div className="border-b border-manila-border pb-2.5">
               <h3 className="font-serif-editorial text-lg font-semibold text-foreground">

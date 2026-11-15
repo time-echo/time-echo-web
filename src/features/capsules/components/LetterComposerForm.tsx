@@ -117,7 +117,6 @@ export function LetterComposerForm({
 
   return (
     <div className={cn("space-y-6 max-w-7xl mx-auto font-ui", className)}>
-      {/* Top Header matching monolith */}
       {showDocketHeader && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-crease pb-6">
           <div className="space-y-1">
@@ -152,7 +151,6 @@ export function LetterComposerForm({
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column (7 cols): Canvas, presets, and guest email */}
           <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-10 space-y-6 border border-crease shadow-xs">
             <div className="flex items-start justify-between border-b border-crease pb-4 gap-4">
               <div className="space-y-1">
@@ -213,7 +211,6 @@ export function LetterComposerForm({
               </div>
             </div>
 
-            {/* Title field */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label
@@ -252,7 +249,6 @@ export function LetterComposerForm({
               )}
             </div>
 
-            {/* Content field */}
             <div className="space-y-2 relative">
               <label
                 htmlFor="letter_content_area"
@@ -292,7 +288,6 @@ export function LetterComposerForm({
               )}
             </div>
 
-            {/* Date horizon presets */}
             <div className="space-y-2.5 border-t border-crease pt-5 font-letter">
               <label className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block">
                 {t("letters.when_do_you_want_it")}
@@ -342,7 +337,6 @@ export function LetterComposerForm({
               )}
             </div>
 
-            {/* Guest email section */}
             <div className="space-y-2 border-t border-crease pt-5 font-letter">
               <label
                 htmlFor="letter-email-input"
@@ -375,9 +369,7 @@ export function LetterComposerForm({
             </div>
           </div>
 
-          {/* Right Column (5 cols): Annex 1, Annex 2, Summary Docket, Seal CTA */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Annex 1: Predictions */}
             <ArchivalAccordion
               folio={t("letters.annex_1")}
               title={t("letters.predictions_heading")}
@@ -491,7 +483,6 @@ export function LetterComposerForm({
               </div>
             </ArchivalAccordion>
 
-            {/* Annex 2: Emotional Baseline */}
             <ArchivalAccordion
               folio={t("letters.annex_2")}
               title={t("letters.emotional_snapshot_heading")}
@@ -567,7 +558,6 @@ export function LetterComposerForm({
               </div>
             </ArchivalAccordion>
 
-            {/* Summary Docket Card */}
             <div className="paper-sheet rounded-xs p-5 space-y-3 text-xs font-letter border border-crease shadow-2xs">
               <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-widest block">
                 {t("letters.summary_heading")}
@@ -603,7 +593,6 @@ export function LetterComposerForm({
               </div>
             </div>
 
-            {/* Primary Seal CTA Button */}
             <div className="pt-2">
               <button
                 type="submit"

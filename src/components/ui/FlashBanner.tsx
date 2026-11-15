@@ -40,9 +40,6 @@ export function useFlash(): FlashContextValue {
   return context;
 }
 
-/**
- * Toast item with auto-dismiss and hover pause.
- */
 function SingleFlashToast({
   item,
   onDismiss,
@@ -138,7 +135,6 @@ function SingleFlashToast({
         <X size={15} />
       </button>
 
-      {/* Subtle indicator of timer */}
       {!isPaused && item.duration !== 0 && (
         <span
           className={cn(
@@ -154,9 +150,6 @@ function SingleFlashToast({
   );
 }
 
-/**
- * Provider that manages global flash toasts.
- */
 export function FlashProvider({ children }: { children: React.ReactNode }) {
   const [flashes, setFlashes] = useState<FlashItem[]>([]);
 
@@ -212,9 +205,6 @@ export function FlashProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-/**
- * Global floating container for flash banners.
- */
 export function FlashBannerContainer({
   flashes,
   onDismiss,
@@ -236,9 +226,6 @@ export function FlashBannerContainer({
   );
 }
 
-/**
- * Standalone static or controlled FlashBanner for inline page use.
- */
 export function FlashBanner({
   type = "notice",
   message,

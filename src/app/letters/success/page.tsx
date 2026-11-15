@@ -38,7 +38,6 @@ function SuccessContent() {
   return (
     <div className="max-w-md mx-auto py-12 px-4 font-ui animate-fade-in text-center text-foreground">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-8 relative overflow-hidden shadow-xs">
-        {/* Header & Vintage Postal Stamp Docket */}
         <div className="space-y-4 relative">
           <h1 className="font-serif-editorial text-3xl font-semibold text-foreground leading-tight">
             {t("success.title")}
@@ -54,7 +53,6 @@ function SuccessContent() {
             </strong>
           </p>
 
-          {/* Postal Certificate Card with Dashed Border and Cancellation Waves */}
           <div className="relative max-w-[280px] mx-auto border-2 border-dashed border-ink/30 p-4 rounded-xs font-letter text-[11px] tracking-widest text-ink uppercase select-none space-y-1.5 shadow-3xs bg-ink/5 overflow-hidden text-left">
             <div className="flex justify-between items-center px-1">
               <span>
@@ -68,7 +66,6 @@ function SuccessContent() {
               </span>
             </div>
 
-            {/* Wavy Cancellation Stamp Lines */}
             <div className="absolute -right-3 -top-2 opacity-15 pointer-events-none text-ink transform rotate-6">
               <svg
                 className="w-20 h-10"
@@ -86,7 +83,6 @@ function SuccessContent() {
           </div>
         </div>
 
-        {/* What Happens Next Card */}
         <div className="archival-folder rounded-xs p-4 space-y-1.5 border border-manila-border text-left font-letter">
           <p className="text-[10px] font-semibold text-ink uppercase tracking-wider">
             {t("success.nextTitle")}
@@ -96,7 +92,6 @@ function SuccessContent() {
           </p>
         </div>
 
-        {/* Action Buttons */}
         <div className="pt-6 border-t border-crease space-y-3 font-letter relative">
           <Link
             href="/dashboard"

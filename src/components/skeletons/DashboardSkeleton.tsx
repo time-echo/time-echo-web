@@ -8,10 +8,6 @@ export interface DashboardSkeletonProps {
   cardCount?: number;
 }
 
-/**
- * Skeleton placeholder for the Dashboard view.
- * Matches the layout of header, 3 stat overview cards, and active letter list.
- */
 export function DashboardSkeleton({
   className,
   cardCount = 3,
@@ -24,7 +20,6 @@ export function DashboardSkeleton({
         className,
       )}
     >
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-crease pb-6">
         <div className="space-y-2">
           <Skeleton className="w-48 h-8 rounded-xs" />
@@ -36,7 +31,6 @@ export function DashboardSkeleton({
         </div>
       </div>
 
-      {/* 3 Stats Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[0, 1, 2].map((idx) => (
           <div
@@ -50,7 +44,6 @@ export function DashboardSkeleton({
         ))}
       </div>
 
-      {/* Letters List / Cards */}
       <div className="space-y-5">
         {Array.from({ length: cardCount }).map((_, idx) => (
           <CapsuleCardSkeleton key={idx} />

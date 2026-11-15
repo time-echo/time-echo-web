@@ -170,7 +170,6 @@ function StampPickerContent({
             </button>
           </div>
 
-          {/* Category Tabs */}
           {categories.length > 0 && (
             <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
               <button

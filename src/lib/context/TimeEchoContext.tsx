@@ -194,7 +194,6 @@ export function TimeEchoProvider({
     [locale],
   );
 
-  // Load capsules from active repository on demand
   const refreshCapsules = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -209,7 +208,6 @@ export function TimeEchoProvider({
       const msg =
         err instanceof Error ? err.message : t("common.errors.loadCapsules");
       setError(msg);
-      console.error("[TimeEchoContext] refreshCapsules error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -376,9 +374,6 @@ export function TimeEchoProvider({
     [repository, t],
   );
 
-  /**
-   * Convenience action to break the wax seal and unseal the letter.
-   */
   const breakWaxSeal = useCallback(
     async (id: string): Promise<Letter> => {
       return updateReality({
@@ -390,9 +385,6 @@ export function TimeEchoProvider({
     [updateReality],
   );
 
-  /**
-   * Clears local vault state after account deletion.
-   */
   const resetVault = useCallback(async () => {
     setCapsules([]);
   }, []);
@@ -451,9 +443,6 @@ export function TimeEchoProvider({
   );
 }
 
-/**
- * Hook to consume TimeEcho vault state, locale, and repository operations.
- */
 export function useTimeEcho(): TimeEchoContextValue {
   const context = useContext(TimeEchoContext);
   if (!context) {

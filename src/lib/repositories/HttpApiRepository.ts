@@ -4,16 +4,16 @@ import {
   CreateLetterInput,
   UpdateRealityInput,
   Prediction,
+  PredictionCategory,
+  PredictionOutcome,
   EmotionalSnapshot,
   StampCategoryResponse,
   StampItemResponse,
   StampDetailResponse,
   LetterStampInfo,
+  StampFilters,
 } from "@/types/timeecho";
 
-/**
- * Standard structured API Error thrown on HTTP 4xx / 5xx responses.
- */
 export class ApiError extends Error {
   public status: number;
   public code: string;
@@ -37,7 +37,33 @@ export class ApiError extends Error {
   }
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+interface RawEmotionalSnapshot {
+  id?: string | number;
+  happiness_level?: number;
+  happinessLevel?: number;
+  anxiety_level?: number;
+  anxietyLevel?: number;
+  motivation_level?: number;
+  motivationLevel?: number;
+  created_at?: string;
+  createdAt?: string;
+  updated_at?: string;
+  updatedAt?: string;
+}
+
+interface RawPredictionResponse {
+  id: string | number;
+  category: PredictionCategory;
+  prediction: string;
+  reality?: string | null;
+  matched?: boolean | null;
+  outcome?: PredictionOutcome;
+  created_at?: string;
+  createdAt?: string;
+  updated_at?: string;
+  updatedAt?: string;
+}
+
 interface RawLetterResponse {
   id: string | number;
   docket_number?: string;
@@ -68,14 +94,26 @@ interface RawLetterResponse {
   createdAt?: string;
   updated_at?: string;
   updatedAt?: string;
-  emotional_snapshot?: any;
-  emotionalSnapshot?: any;
-  predictions?: any[];
+  emotional_snapshot?: RawEmotionalSnapshot | null;
+  emotionalSnapshot?: RawEmotionalSnapshot | null;
+  predictions?: RawPredictionResponse[];
   stamp_id?: string | number | null;
   stampId?: string | number | null;
   stamp_slug?: string | null;
   stampSlug?: string | null;
   stamp?: LetterStampInfo | null;
+}
+
+interface ApiErrorPayload {
+  error?:
+    | {
+        code?: string;
+        message?: string;
+        details?: Record<string, string[]>;
+        requestId?: string;
+      }
+    | string;
+  message?: string;
 }
 
 export interface HttpApiRepositoryOptions {
@@ -84,16 +122,6 @@ export interface HttpApiRepositoryOptions {
   getLocale?: () => string;
 }
 
-/**
- * 🌐 HttpApiRepository
- *
- * REST API Adapter for TimeEcho conforming to `ICapsuleRepository`.
- * Communicates with the Rails API (`/api/v1/*`) or local mock handlers:
- * - Automatically unwraps `{ data: T, meta: M }` response envelopes.
- * - Translates standardized API errors (`{ error: { code, message, details } }`).
- * - Attaches `Authorization: Bearer <token>`, `X-Session-Token`, and `X-Locale` headers.
- * - Sets `credentials: "include"` for cross-origin session cookie handling.
- */
 export class HttpApiRepository implements ICapsuleRepository {
   private baseUrl: string;
   private customGetToken?: () => string | null;
@@ -114,9 +142,6 @@ export class HttpApiRepository implements ICapsuleRepository {
     }
   }
 
-  /**
-   * Retrieves active session token from configured callback or localStorage.
-   */
   private resolveToken(): string | null {
     if (this.customGetToken) {
       return this.customGetToken();
@@ -131,9 +156,6 @@ export class HttpApiRepository implements ICapsuleRepository {
     return null;
   }
 
-  /**
-   * Retrieves current language code for X-Locale header.
-   */
   private resolveLocale(): string {
     if (this.customGetLocale) {
       return this.customGetLocale();
@@ -143,7 +165,7 @@ export class HttpApiRepository implements ICapsuleRepository {
         const saved = window.localStorage.getItem("timeecho_locale");
         if (saved) return saved;
       } catch {
-        // ignore
+        return "es";
       }
       if (document.documentElement.lang) {
         return document.documentElement.lang;
@@ -252,9 +274,6 @@ export class HttpApiRepository implements ICapsuleRepository {
     };
   }
 
-  /**
-   * Executes HTTP request with envelope unwrapping and standardized error extraction.
-   */
   private async request<T>(
     endpoint: string,
     options: RequestInit = {},
@@ -283,9 +302,9 @@ export class HttpApiRepository implements ICapsuleRepository {
     });
 
     if (!res.ok) {
-      let errorData: any = null;
+      let errorData: ApiErrorPayload | null = null;
       try {
-        errorData = await res.json();
+        errorData = (await res.json()) as ApiErrorPayload;
       } catch {
         const errorText = await res.text().catch(() => "");
         errorData = { message: errorText || res.statusText };
@@ -317,9 +336,8 @@ export class HttpApiRepository implements ICapsuleRepository {
       return undefined as unknown as T;
     }
 
-    const json = await res.json();
+    const json = (await res.json()) as { data?: T } | T;
 
-    // Standard envelope unwrapping: if payload contains { data: T }, return data
     if (json && typeof json === "object" && "data" in json) {
       return json.data as T;
     }
@@ -362,10 +380,6 @@ export class HttpApiRepository implements ICapsuleRepository {
       if (err instanceof ApiError && err.status === 404) {
         return null;
       }
-      console.warn(
-        `[HttpApiRepository] Capsule ${id} not found or request failed:`,
-        err,
-      );
       return null;
     }
   }
@@ -402,12 +416,9 @@ export class HttpApiRepository implements ICapsuleRepository {
     return this.mapResponseToDomain(data);
   }
 
-  /**
-   * Retrieves active stamps catalog sorted by position with optional filters and pagination.
-   */
   async getStamps(
     locale?: string,
-    filters?: import("@/types/timeecho").StampFilters,
+    filters?: StampFilters,
   ): Promise<StampItemResponse[]> {
     const loc = locale || this.resolveLocale();
     const query = new URLSearchParams();
@@ -436,21 +447,23 @@ export class HttpApiRepository implements ICapsuleRepository {
 
     const qs = query.toString();
     const endpoint = `/stamps${qs ? `?${qs}` : ""}`;
-    const data = await this.request<any>(endpoint, {
+    const data = await this.request<
+      | StampItemResponse[]
+      | { stamps?: StampItemResponse[]; data?: StampItemResponse[] }
+    >(endpoint, {
       headers: {
         "X-Locale": loc,
         "Accept-Language": loc,
       },
     });
     if (Array.isArray(data)) return data;
-    if (data && Array.isArray(data.stamps)) return data.stamps;
-    if (data && Array.isArray(data.data)) return data.data;
+    if (data && typeof data === "object") {
+      if (Array.isArray(data.stamps)) return data.stamps;
+      if (Array.isArray(data.data)) return data.data;
+    }
     return [];
   }
 
-  /**
-   * Retrieves active stamp categories that have active stamps.
-   */
   async getStampCategories(locale?: string): Promise<StampCategoryResponse[]> {
     const loc = locale || this.resolveLocale();
     const data = await this.request<StampCategoryResponse[]>(
@@ -462,10 +475,6 @@ export class HttpApiRepository implements ICapsuleRepository {
     return Array.isArray(data) ? data : [];
   }
 
-  /**
-   * Retrieves stamp details by slug (including inactive stamps for historical letters).
-   * Returns null if not found.
-   */
   async getStampBySlug(
     slug: string,
     locale?: string,
@@ -483,10 +492,6 @@ export class HttpApiRepository implements ICapsuleRepository {
       if (err instanceof ApiError && err.status === 404) {
         return null;
       }
-      console.warn(
-        `[HttpApiRepository] Stamp "${slug}" not found or request failed:`,
-        err,
-      );
       return null;
     }
   }

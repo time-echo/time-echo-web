@@ -152,8 +152,7 @@ export default function HomePage() {
       });
 
       router.push(`/letters/success?id=${encodeURIComponent(capsule.id)}`);
-    } catch (err) {
-      console.error(err);
+    } catch {
       setIsSubmitting(false);
     }
   };
@@ -183,11 +182,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-24 max-w-6xl mx-auto -mt-4 font-ui animate-fade-in text-foreground">
-      {/* ===================================================================
-          HERO SECTION: 2-COLUMN GRID (Features + Live Letter Card)
-          =================================================================== */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pt-2">
-        {/* Left Column: Headlines & 3 Archival Feature Cards */}
         <div className="lg:col-span-5 space-y-7 lg:sticky lg:top-24">
           <div className="space-y-4">
             <h1 className="font-serif-editorial text-4xl sm:text-6xl font-normal text-foreground leading-tight tracking-tight">

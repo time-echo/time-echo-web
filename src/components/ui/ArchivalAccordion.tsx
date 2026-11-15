@@ -6,42 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export interface ArchivalAccordionProps {
-  /**
-   * Top docket identifier, e.g., "ANNEX 01 // FACTUAL" or "ANNEX 02 // EMOTIONAL BASELINE".
-   */
   folio?: string;
-  /**
-   * Primary title in editorial serif.
-   */
   title: string;
-  /**
-   * Subtitle explaining the annex purpose.
-   */
   subtitle?: string;
-  /**
-   * Optional status badge (e.g., "3 of 5 completed").
-   */
   badge?: React.ReactNode;
-  /**
-   * Whether the accordion starts expanded in uncontrolled mode.
-   * @default true
-   */
   defaultOpen?: boolean;
-  /**
-   * Controlled open state.
-   */
   isOpen?: boolean;
-  /**
-   * Callback fired on open/close toggle.
-   */
   onToggle?: (open: boolean) => void;
-  /**
-   * Content inside the accordion body.
-   */
   children: React.ReactNode;
-  /**
-   * Optional container class name.
-   */
   className?: string;
 }
 
@@ -80,7 +52,6 @@ export function ArchivalAccordion({
         className,
       )}
     >
-      {/* Accordion Trigger Header */}
       <button
         id={headerId}
         type="button"
@@ -118,7 +89,6 @@ export function ArchivalAccordion({
         </div>
       </button>
 
-      {/* Accordion Expandable Panel */}
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div

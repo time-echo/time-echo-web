@@ -25,6 +25,7 @@ export default function TokenLoginPage({ params }: TokenLoginPageProps) {
 
   useEffect(() => {
     let isMounted = true;
+    let timerId: ReturnType<typeof setTimeout> | null = null;
 
     async function verify() {
       if (!token) {
@@ -38,11 +39,9 @@ export default function TokenLoginPage({ params }: TokenLoginPageProps) {
         if (!isMounted) return;
 
         setStatus("success");
-        // Refresh vault capsules for authenticated user
         await refreshCapsules().catch(() => {});
 
-        // Redirect after short celebration delay
-        setTimeout(() => {
+        timerId = setTimeout(() => {
           if (isMounted) {
             router.push("/dashboard");
           }
@@ -60,6 +59,9 @@ export default function TokenLoginPage({ params }: TokenLoginPageProps) {
 
     return () => {
       isMounted = false;
+      if (timerId) {
+        clearTimeout(timerId);
+      }
     };
   }, [token, authenticateWithToken, refreshCapsules, router, t]);
 
@@ -77,50 +79,42 @@ export default function TokenLoginPage({ params }: TokenLoginPageProps) {
         )}
 
         {status === "success" && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="wax-seal w-16 h-16 rounded-full mx-auto flex items-center justify-center text-on-wax select-none shadow-xs">
+          <div className="space-y-4 py-4">
+            <div className="w-16 h-16 rounded-full border border-ink/40 bg-ink/10 flex items-center justify-center text-ink mx-auto shadow-xs">
               <CheckCircle2 size={32} />
             </div>
             <div className="space-y-2">
-              <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
-                {t("login.successTitle")}
+              <h1 className="font-serif-editorial text-2xl font-bold text-foreground">
+                {t("login.authenticatedTitle")}
               </h1>
-              <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {t("login.successSubtitle")}
+              <p className="text-xs font-letter text-foreground-muted">
+                {t("login.redirectingVault")}
               </p>
             </div>
           </div>
         )}
 
         {status === "error" && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center bg-wax/10 border border-wax/20 text-wax select-none shadow-xs">
-              <AlertTriangle size={30} />
+          <div className="space-y-5 py-4">
+            <div className="w-16 h-16 rounded-full border border-wax/40 bg-wax/10 flex items-center justify-center text-wax mx-auto shadow-xs">
+              <AlertTriangle size={32} />
             </div>
             <div className="space-y-2">
-              <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
-                {t("login.invalidTokenTitle")}
+              <h1 className="font-serif-editorial text-2xl font-bold text-foreground">
+                {t("login.tokenErrorTitle")}
               </h1>
-              <p className="text-xs font-letter text-foreground-muted leading-relaxed">
-                {errorMessage || t("login.invalidToken")}
+              <p className="text-xs font-letter text-wax leading-relaxed">
+                {errorMessage}
               </p>
             </div>
-            <div className="pt-2 space-y-3">
+            <div className="pt-2">
               <Link
                 href="/login"
-                className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3 px-5 text-xs font-semibold tracking-widest uppercase shadow-xs border-none cursor-pointer font-letter min-h-[44px] transition-colors inline-flex items-center justify-center gap-2"
+                className="inline-flex items-center gap-2 bg-wax hover:bg-wax-hover text-on-wax rounded-xs px-5 py-2.5 text-xs font-medium uppercase tracking-wider font-letter shadow-xs transition-colors"
               >
                 <Mail size={14} />
                 <span>{t("login.requestNewLink")}</span>
               </Link>
-              <div>
-                <Link
-                  href="/"
-                  className="text-xs font-letter font-semibold text-foreground-muted hover:text-foreground transition-colors uppercase tracking-wider inline-flex items-center gap-1.5"
-                >
-                  <span>{t("login.backHome")}</span>
-                </Link>
-              </div>
             </div>
           </div>
         )}

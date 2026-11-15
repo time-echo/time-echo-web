@@ -6,10 +6,6 @@ export interface SettingsSkeletonProps {
   className?: string;
 }
 
-/**
- * Skeleton placeholder for the Settings view.
- * Mirrors account management cards, input fields, and action buttons.
- */
 export function SettingsSkeleton({ className }: SettingsSkeletonProps) {
   return (
     <div
@@ -19,7 +15,6 @@ export function SettingsSkeleton({ className }: SettingsSkeletonProps) {
         className,
       )}
     >
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-crease pb-6">
         <div className="space-y-2">
           <Skeleton className="w-40 h-8 rounded-xs" />
@@ -28,7 +23,6 @@ export function SettingsSkeleton({ className }: SettingsSkeletonProps) {
         <Skeleton className="w-32 h-9 rounded-xs" />
       </div>
 
-      {/* Account Info Card */}
       <div className="paper-sheet rounded-xs border border-crease p-6 sm:p-8 space-y-6">
         <div className="space-y-2 border-b border-crease pb-4">
           <Skeleton className="w-36 h-6 rounded-xs" />
@@ -44,7 +38,6 @@ export function SettingsSkeleton({ className }: SettingsSkeletonProps) {
         </div>
       </div>
 
-      {/* Danger Zone Card */}
       <div className="paper-sheet rounded-xs border border-crease/80 p-6 sm:p-8 space-y-6">
         <div className="space-y-2 border-b border-crease pb-4">
           <Skeleton className="w-32 h-6 rounded-xs" />

@@ -18,7 +18,7 @@ function getActiveLocale(): SupportedLanguage {
       const saved = window.localStorage.getItem("timeecho_locale");
       if (saved === "en" || saved === "es") return saved;
     } catch {
-      // ignore
+      return "en";
     }
     const htmlLang = document.documentElement.lang;
     if (htmlLang === "en" || htmlLang === "es") return htmlLang;
@@ -80,9 +80,7 @@ function persistSession(token: string, email: string) {
       window.localStorage.setItem(TOKEN_KEY, token);
       window.localStorage.setItem(USER_EMAIL_KEY, email);
       document.cookie = `${TOKEN_KEY}=${token}; path=/; max-age=2592000; SameSite=Lax`;
-    } catch {
-      // ignore
-    }
+    } catch {}
   }
 }
 
@@ -92,9 +90,7 @@ function clearSession() {
       window.localStorage.removeItem(TOKEN_KEY);
       window.localStorage.removeItem(USER_EMAIL_KEY);
       document.cookie = `${TOKEN_KEY}=; path=/; max-age=0; SameSite=Lax`;
-    } catch {
-      // ignore
-    }
+    } catch {}
   }
 }
 
@@ -143,8 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(currentToken);
         setUser({ email: userData.email });
       }
-    } catch (err) {
-      console.warn("[AuthContext] fetchCurrentUser error:", err);
+    } catch {
     } finally {
       setIsLoading(false);
     }
@@ -197,8 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         setIsLoading(false);
       })
-      .catch((err) => {
-        console.warn("[AuthContext] session check error:", err);
+      .catch(() => {
         if (isMounted) setIsLoading(false);
       });
 
@@ -207,10 +201,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [baseUrl, token]);
 
-  /**
-   * Dispatches a fresh magic link to the provided email.
-   * POST /api/v1/sessions
-   */
   const requestMagicLink = useCallback(
     async (email: string) => {
       setError(null);
@@ -254,11 +244,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [baseUrl],
   );
 
-  /**
-   * Verifies a single-use magic login token and establishes a persistent session.
-   * Deduplicates concurrent/Strict-Mode calls for the same single-use token.
-   * GET /api/v1/sessions/:token
-   */
   const authenticateWithToken = useCallback(
     async (tokenParam: string) => {
       setError(null);
@@ -326,10 +311,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [baseUrl],
   );
 
-  /**
-   * Revokes the active session token and clears client state.
-   * DELETE /api/v1/sessions
-   */
   const logout = useCallback(async () => {
     const currentToken = token || getStoredToken();
     try {
@@ -349,13 +330,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       tokenVerificationPromises.clear();
       setToken(null);
       setUser(null);
+      setError(null);
     }
   }, [baseUrl, token]);
 
   const value = {
     user,
     token,
-    isAuthenticated: Boolean(user),
+    isAuthenticated: Boolean(user?.email && token),
     isLoading,
     error,
     requestMagicLink,
@@ -367,10 +349,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export function useAuth(): AuthContextValue {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an <AuthProvider>");
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

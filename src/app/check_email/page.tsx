@@ -1,31 +1,30 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { Mail, ArrowLeft, RefreshCw, CheckCircle2 } from "lucide-react";
+import { Mail, RefreshCw, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 function CheckEmailContent() {
   const searchParams = useSearchParams();
-  const { t } = useTimeEcho();
+  const email = searchParams.get("email") || "your email";
   const { requestMagicLink } = useAuth();
-  const defaultPlaceholder = t("landing.emailPlaceholder");
-  const email = searchParams.get("email") || defaultPlaceholder;
+  const { t } = useTimeEcho();
 
   const [isResending, setIsResending] = useState(false);
   const [resendNotice, setResendNotice] = useState<string | null>(null);
 
   const handleResend = async () => {
-    if (!email || email === defaultPlaceholder) return;
+    if (email === "your email" || isResending) return;
     setIsResending(true);
     setResendNotice(null);
+
     try {
       await requestMagicLink(email);
-      setResendNotice(t("checkEmail.resentNotice"));
-      setTimeout(() => setResendNotice(null), 4000);
+      setResendNotice(t("checkEmail.resendSuccess"));
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : t("checkEmail.resendError");
@@ -38,12 +37,10 @@ function CheckEmailContent() {
   return (
     <div className="max-w-md mx-auto py-12 px-4 font-ui text-center text-foreground animate-fade-in">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs">
-        {/* Seal Icon */}
         <div className="wax-seal w-16 h-16 rounded-full mx-auto flex items-center justify-center text-on-wax select-none shadow-xs">
           <Mail size={28} />
         </div>
 
-        {/* Title & Subtitle */}
         <div className="space-y-2">
           <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
             {t("checkEmail.title")}
@@ -57,7 +54,6 @@ function CheckEmailContent() {
           </p>
         </div>
 
-        {/* Resend Notice banner if resent */}
         {resendNotice && (
           <div className="p-3 bg-wax/10 border border-wax/20 text-wax text-xs rounded-xs flex items-center justify-center gap-2 font-letter animate-fade-in">
             <CheckCircle2 size={14} className="shrink-0" />
@@ -65,14 +61,11 @@ function CheckEmailContent() {
           </div>
         )}
 
-        {/* Spam Notice Card */}
         <div className="archival-folder rounded-xs p-3.5 text-xs font-letter text-foreground-muted leading-relaxed border border-manila-border text-center">
           {t("checkEmail.spamNotice")}
         </div>
 
-        {/* Navigation & Actions */}
         <div className="space-y-3 pt-3 border-t border-crease">
-          {/* Resend Link button */}
           <button
             type="button"
             onClick={handleResend}
@@ -92,7 +85,6 @@ function CheckEmailContent() {
             )}
           </button>
 
-          {/* Try Another Email Link */}
           <div>
             <Link
               href="/login"

@@ -37,7 +37,7 @@ Track your prediction accuracy rate, emotional deltas (baseline vs. reveal), and
 
 ### 🌐 Bilingual Support
 
-Full English/Spanish localization with locale-aware date formatting and UI copy following natural language guidelines (`.agents/rules/natural-copy.md`).
+Full English/Spanish localization with locale-aware date formatting and natural, grounded UI copy.
 
 ### 🎨 Archival Design System
 
@@ -217,20 +217,7 @@ Translations live in `src/lib/i18n/`:
 - `en.json` — English (Plain, direct copy)
 - `es.json` — Spanish (Native Latin American Spanish, informal "tú")
 
-Both files are kept strictly in sync, adhering to `.agents/rules/natural-copy.md`.
-
----
-
-## 🤖 Agent Skills & Developer Tooling
-
-TimeEcho leverages modular agent skills located in `.agents/skills/` (locked and synchronized via `skills-lock.json`) to standardize engineering practices and design constraints across AI coding agents:
-
-- **Next.js** (`.agents/skills/nextjs/`): Vercel Labs best practices covering App Router conventions, RSC boundaries, Next.js 15+ async APIs, route handlers, image/font optimization, and bundling.
-- **React** (`.agents/skills/react/`): Idiomatic React 18/19 component architecture, hooks discipline, server/client boundaries, Suspense + error boundaries, and state management.
-- **TypeScript** (`.agents/skills/typescript/`): Strict compiler configuration, type design, narrowing, discriminated unions, and generics.
-- **Styling** (`.agents/skills/styling/`): Tailwind CSS v4 design systems, design tokens, component variants, and responsive layout patterns.
-- **Testing** (`.agents/skills/testing/`): Comprehensive testing strategies using Vitest, Jest, React Testing Library, and Playwright with TDD workflows.
-- **Copywriting** (`.agents/skills/copywriting/`): Grounded, human product copy and epistolary value proposition framing.
+Both files are kept strictly in sync with symmetric keys.
 
 ---
 

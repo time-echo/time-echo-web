@@ -27,6 +27,7 @@ export interface StampProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   postmarkVariant?: "waves" | "circular" | "combo";
   postmarkDate?: string;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 const CATEGORY_COLORS: Record<string, { primary: string; accent: string }> = {
@@ -66,175 +67,167 @@ const TEXT_SIZE_MAP: Record<
   },
 };
 
-export const Stamp = React.forwardRef<HTMLDivElement, StampProps>(
-  (
-    {
-      id,
-      slug,
-      svgContent,
-      name,
-      categorySlug,
-      size = "md",
-      rotation = 0,
-      hasPostmark = false,
-      interactive = false,
-      animateAffix = false,
-      hasPaperTexture = true,
-      paperColor,
-      borderColor,
-      postmarkVariant = "combo",
-      postmarkDate,
-      className,
-      style,
-      onClick,
-      ...props
-    },
-    ref,
-  ) => {
-    const { t } = useTimeEcho();
-    const shouldReduceMotion = useReducedMotion();
+export function Stamp({
+  id,
+  slug,
+  svgContent,
+  name,
+  categorySlug,
+  size = "md",
+  rotation = 0,
+  hasPostmark = false,
+  interactive = false,
+  animateAffix = false,
+  hasPaperTexture = true,
+  paperColor,
+  borderColor,
+  postmarkVariant = "combo",
+  postmarkDate,
+  className,
+  style,
+  onClick,
+  ref,
+  ...props
+}: StampProps) {
+  const { t } = useTimeEcho();
+  const shouldReduceMotion = useReducedMotion();
 
-    const stampKey = slug || id || DEFAULT_STAMP_ID;
-    const categoryKey = categorySlug || "small-things";
-    const categoryColors = CATEGORY_COLORS[categoryKey] || {
-      primary: "#8C4A2F",
-      accent: "#5C2C16",
-    };
+  const stampKey = slug || id || DEFAULT_STAMP_ID;
+  const categoryKey = categorySlug || "small-things";
+  const categoryColors = CATEGORY_COLORS[categoryKey] || {
+    primary: "#8C4A2F",
+    accent: "#5C2C16",
+  };
 
-    const primaryColor = categoryColors.primary;
-    const accentColor = categoryColors.accent;
+  const primaryColor = categoryColors.primary;
+  const accentColor = categoryColors.accent;
 
-    const textConfig =
-      size !== "custom" ? TEXT_SIZE_MAP[size] : TEXT_SIZE_MAP.md;
+  const textConfig = size !== "custom" ? TEXT_SIZE_MAP[size] : TEXT_SIZE_MAP.md;
 
-    const localizedDenomination = t(`stamps.items.${stampKey}.denomination`);
-    const denominationText =
-      localizedDenomination &&
-      !localizedDenomination.startsWith("stamps.items.")
-        ? localizedDenomination
-        : name || "TIME ECHO";
+  const localizedDenomination = t(`stamps.items.${stampKey}.denomination`);
+  const denominationText =
+    localizedDenomination && !localizedDenomination.startsWith("stamps.items.")
+      ? localizedDenomination
+      : name || "TIME ECHO";
 
-    const localizedName = t(`stamps.items.${stampKey}.name`);
-    const stampName =
-      name ||
-      (localizedName && !localizedName.startsWith("stamps.items.")
-        ? localizedName
-        : stampKey);
+  const localizedName = t(`stamps.items.${stampKey}.name`);
+  const stampName =
+    name ||
+    (localizedName && !localizedName.startsWith("stamps.items.")
+      ? localizedName
+      : stampKey);
 
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-      onClick?.(e);
-    };
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    onClick?.(e);
+  };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (onClick && (e.key === "Enter" || e.key === " ")) {
-        e.preventDefault();
-        onClick(e as unknown as React.MouseEvent<HTMLDivElement>);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (onClick && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      onClick(e as unknown as React.MouseEvent<HTMLDivElement>);
+    }
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onClick={handleClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={handleKeyDown}
+      initial={
+        animateAffix && !shouldReduceMotion
+          ? { scale: 1.18, opacity: 0.6, y: -4 }
+          : false
       }
-    };
-
-    return (
-      <motion.div
-        ref={ref}
-        onClick={handleClick}
-        role={onClick ? "button" : undefined}
-        tabIndex={onClick ? 0 : undefined}
-        onKeyDown={handleKeyDown}
-        initial={
-          animateAffix && !shouldReduceMotion
-            ? { scale: 1.18, opacity: 0.6, y: -4 }
-            : false
-        }
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        whileHover={
-          interactive && !shouldReduceMotion
-            ? {
-                y: -3,
-                scale: 1.04,
-                rotate: rotation + (rotation >= 0 ? 0.8 : -0.8),
-                transition: { type: "spring", stiffness: 400, damping: 25 },
-              }
-            : undefined
-        }
-        whileTap={
-          interactive && !shouldReduceMotion
-            ? {
-                scale: 0.96,
-                y: 1,
-                transition: { duration: 0.1 },
-              }
-            : undefined
-        }
-        className={cn(
-          "relative inline-block transition-shadow duration-200 outline-hidden select-none",
-          interactive &&
-            "cursor-pointer focus-visible:ring-2 focus-visible:ring-wax focus-visible:ring-offset-2",
-          className,
-        )}
-        style={{
-          transform: rotation ? `rotate(${rotation}deg)` : undefined,
-          ...style,
-        }}
-        {...(props as React.ComponentProps<typeof motion.div>)}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      whileHover={
+        interactive && !shouldReduceMotion
+          ? {
+              y: -3,
+              scale: 1.04,
+              rotate: rotation + (rotation >= 0 ? 0.8 : -0.8),
+              transition: { type: "spring", stiffness: 400, damping: 25 },
+            }
+          : undefined
+      }
+      whileTap={
+        interactive && !shouldReduceMotion
+          ? {
+              scale: 0.96,
+              y: 1,
+              transition: { duration: 0.1 },
+            }
+          : undefined
+      }
+      className={cn(
+        "relative inline-block transition-shadow duration-200 outline-hidden select-none",
+        interactive &&
+          "cursor-pointer focus-visible:ring-2 focus-visible:ring-wax focus-visible:ring-offset-2",
+        className,
+      )}
+      style={{
+        transform: rotation ? `rotate(${rotation}deg)` : undefined,
+        ...style,
+      }}
+      {...(props as React.ComponentProps<typeof motion.div>)}
+    >
+      <StampPerforationFrame
+        size={size}
+        paperColor={paperColor}
+        borderColor={borderColor || "var(--crease)"}
+        innerBorderColor={primaryColor}
+        hasPaperTexture={hasPaperTexture}
+        interactive={false}
       >
-        <StampPerforationFrame
-          size={size}
-          paperColor={paperColor}
-          borderColor={borderColor || "var(--crease)"}
-          innerBorderColor={primaryColor}
-          hasPaperTexture={hasPaperTexture}
-          interactive={false}
-        >
-          <div className="w-full flex justify-between items-center px-1 font-letter uppercase font-semibold text-foreground-muted select-none">
-            <span className={cn("leading-none", textConfig.header)}>
-              TIME ECHO
-            </span>
-            <span
-              className={cn("leading-none font-bold", textConfig.denomination)}
-              style={{ color: primaryColor }}
-            >
-              POST
-            </span>
-          </div>
-
-          <div
-            className={cn(
-              "flex items-center justify-center p-0.5 my-auto",
-              textConfig.iconSize,
-            )}
+        <div className="w-full flex justify-between items-center px-1 font-letter uppercase font-semibold text-foreground-muted select-none">
+          <span className={cn("leading-none", textConfig.header)}>
+            TIME ECHO
+          </span>
+          <span
+            className={cn("leading-none font-bold", textConfig.denomination)}
             style={{ color: primaryColor }}
           >
-            {svgContent ? (
-              <StampRenderer
-                svgContent={svgContent}
-                ariaLabel={stampName}
-                className="w-full h-full drop-shadow-xs"
-              />
-            ) : null}
-          </div>
+            POST
+          </span>
+        </div>
 
-          <div className="w-full text-center px-0.5 border-t border-current/20 pt-0.5 select-none">
-            <span
-              className={cn(
-                "block font-letter font-bold uppercase truncate leading-none",
-                textConfig.denomination,
-              )}
-              style={{ color: accentColor }}
-            >
-              {denominationText}
-            </span>
-          </div>
-        </StampPerforationFrame>
+        <div
+          className={cn(
+            "flex items-center justify-center p-0.5 my-auto",
+            textConfig.iconSize,
+          )}
+          style={{ color: primaryColor }}
+        >
+          {svgContent ? (
+            <StampRenderer
+              svgContent={svgContent}
+              ariaLabel={stampName}
+              className="w-full h-full drop-shadow-xs"
+            />
+          ) : null}
+        </div>
 
-        {hasPostmark && (
-          <PostmarkOverlay
-            variant={postmarkVariant}
-            date={postmarkDate}
-            rotation={rotation ? rotation * -0.4 : -2.5}
-          />
-        )}
-      </motion.div>
-    );
-  },
-);
+        <div className="w-full text-center px-0.5 border-t border-current/20 pt-0.5 select-none">
+          <span
+            className={cn(
+              "block font-letter font-bold uppercase truncate leading-none",
+              textConfig.denomination,
+            )}
+            style={{ color: accentColor }}
+          >
+            {denominationText}
+          </span>
+        </div>
+      </StampPerforationFrame>
 
-Stamp.displayName = "Stamp";
+      {hasPostmark && (
+        <PostmarkOverlay
+          variant={postmarkVariant}
+          date={postmarkDate}
+          rotation={rotation ? rotation * -0.4 : -2.5}
+        />
+      )}
+    </motion.div>
+  );
+}

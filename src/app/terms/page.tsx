@@ -32,7 +32,6 @@ export default function TermsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 font-ui animate-fade-in text-foreground space-y-10">
-      {/* Navigation & Header Folio */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-6">
         <Link
           href="/"
@@ -53,7 +52,6 @@ export default function TermsPage() {
         />
       </div>
 
-      {/* Hero Title & Subtitle */}
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-manila border border-manila-border text-foreground-muted text-xs font-letter">
           <FileText size={13} className="text-wax" />
@@ -67,14 +65,12 @@ export default function TermsPage() {
         </p>
       </div>
 
-      {/* Main Archival Terms Document */}
       <PaperSheet
         elevation="raised"
         docketFolio="FOLIO № PROTOCOL-TERMS"
         dateStamp={t("terms.last_updated")}
         className="p-6 sm:p-10 space-y-8"
       >
-        {/* 1. Acceptance */}
         <section className="space-y-3">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.acceptance.title")}
@@ -84,7 +80,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 2. About */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.about.title")}
@@ -94,7 +89,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 3. Accounts */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.accounts.title")}
@@ -104,7 +98,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 4. Creating and Scheduling Capsules */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.creating.title")}
@@ -114,7 +107,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 5. Delivery */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <div className="flex items-center gap-2 text-wax">
             <Clock size={18} />
@@ -130,7 +122,6 @@ export default function TermsPage() {
           </div>
         </section>
 
-        {/* 6. User Conduct & Responsibilities */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.responsibilities.title")}
@@ -140,7 +131,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 7. Content Ownership */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <div className="flex items-center gap-2 text-wax">
             <Shield size={18} />
@@ -156,7 +146,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 8. Prohibited Activities */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <div className="flex items-center gap-2 text-wax">
             <AlertOctagon size={18} />
@@ -180,7 +169,6 @@ export default function TermsPage() {
           </div>
         </section>
 
-        {/* 9. Recipient Consent */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.recipient.title")}
@@ -190,7 +178,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 10. Platform Intellectual Property */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.intellectual.title")}
@@ -200,7 +187,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 11. Service Availability */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.availability.title")}
@@ -210,7 +196,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 12. Account Termination */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.termination.title")}
@@ -220,7 +205,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 13. Limitation of Liability */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.liability.title")}
@@ -230,7 +214,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 14. Changes to Terms */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.changes.title")}
@@ -240,7 +223,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 15. Contact */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("terms.sections.contact.title")}
