@@ -6,29 +6,41 @@ import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { Mail, RefreshCw, ArrowLeft, CheckCircle2 } from "lucide-react";
+import {
+  Mail,
+  RefreshCw,
+  ArrowLeft,
+  CheckCircle2,
+  AlertTriangle,
+} from "lucide-react";
 
 function CheckEmailContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "your email";
   const { requestMagicLink } = useAuth();
-  const { t } = useTimeEcho();
+  const { t, locale } = useTimeEcho();
 
   const [isResending, setIsResending] = useState(false);
   const [resendNotice, setResendNotice] = useState<string | null>(null);
+  const [resendError, setResendError] = useState<string | null>(null);
 
   const handleResend = async () => {
     if (email === "your email" || isResending) return;
     setIsResending(true);
     setResendNotice(null);
+    setResendError(null);
 
     try {
-      await requestMagicLink(email);
-      setResendNotice(t("checkEmail.resendSuccess"));
+      const response = await requestMagicLink(email, locale);
+      const successMessage =
+        response?.message ||
+        t("checkEmail.resentNotice") ||
+        t("checkEmail.resendSuccess");
+      setResendNotice(successMessage);
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : t("checkEmail.resendError");
-      setResendNotice(msg);
+      setResendError(msg);
     } finally {
       setIsResending(false);
     }
@@ -58,6 +70,13 @@ function CheckEmailContent() {
           <div className="p-3 bg-wax/10 border border-wax/20 text-wax text-xs rounded-xs flex items-center justify-center gap-2 font-letter animate-fade-in">
             <CheckCircle2 size={14} className="shrink-0" />
             <span>{resendNotice}</span>
+          </div>
+        )}
+
+        {resendError && (
+          <div className="p-3 bg-wax/10 border border-wax/20 text-wax text-xs rounded-xs flex items-center justify-center gap-2 font-letter animate-fade-in">
+            <AlertTriangle size={14} className="shrink-0" />
+            <span>{resendError}</span>
           </div>
         )}
 

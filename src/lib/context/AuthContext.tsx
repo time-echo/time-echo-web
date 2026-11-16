@@ -18,12 +18,23 @@ function getActiveLocale(): SupportedLanguage {
       const saved = window.localStorage.getItem("timeecho_locale");
       if (saved === "en" || saved === "es") return saved;
     } catch {
-      return "en";
+      // ignore
     }
-    const htmlLang = document.documentElement.lang;
-    if (htmlLang === "en" || htmlLang === "es") return htmlLang;
+    const cookieMatch =
+      typeof document !== "undefined" &&
+      document.cookie.match(
+        /(?:^|;\s*)(?:timeecho_locale|NEXT_LOCALE)=([^;]+)/,
+      );
+    if (cookieMatch && (cookieMatch[1] === "es" || cookieMatch[1] === "en")) {
+      return cookieMatch[1] as SupportedLanguage;
+    }
+    const htmlLang =
+      typeof document !== "undefined" && document.documentElement.lang;
+    if (htmlLang === "en" || htmlLang === "es") {
+      return htmlLang as SupportedLanguage;
+    }
   }
-  return "en";
+  return "es";
 }
 
 export interface User {
@@ -38,6 +49,7 @@ interface AuthContextValue {
   error: string | null;
   requestMagicLink: (
     email: string,
+    localeOverride?: string,
   ) => Promise<{ message: string; email: string }>;
   authenticateWithToken: (
     token: string,
@@ -202,22 +214,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [baseUrl, token]);
 
   const requestMagicLink = useCallback(
-    async (email: string) => {
+    async (email: string, localeOverride?: string) => {
       setError(null);
+      const activeLocale =
+        localeOverride === "en" || localeOverride === "es"
+          ? (localeOverride as SupportedLanguage)
+          : getActiveLocale();
+
       const res = await fetch(`${baseUrl}/sessions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          "X-Locale": activeLocale,
+          "Accept-Language": activeLocale,
         },
         credentials: "include",
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, locale: activeLocale }),
       });
 
       const json = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        const activeLocale = getActiveLocale();
         const errorMsg =
           json?.error?.message ||
           json?.message ||
@@ -253,12 +271,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!verificationPromise) {
         verificationPromise = (async () => {
+          const activeLocale = getActiveLocale();
           const res = await fetch(
             `${baseUrl}/sessions/${encodeURIComponent(tokenParam)}`,
             {
               method: "GET",
               headers: {
                 Accept: "application/json",
+                "X-Locale": activeLocale,
+                "Accept-Language": activeLocale,
               },
               credentials: "include",
             },
