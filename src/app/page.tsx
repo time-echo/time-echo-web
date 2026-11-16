@@ -19,6 +19,7 @@ import {
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, StampPickerModal, useStampCatalog } from "@/components/stamps";
 import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { ArchivalDatePicker } from "@/components/ui/ArchivalDatePicker";
 
 export default function HomePage() {
   const router = useRouter();
@@ -440,13 +441,13 @@ export default function HomePage() {
                     >
                       {t("landing.chooseSpecificDate")}
                     </label>
-                    <input
+                    <ArchivalDatePicker
                       id="landing-custom-date"
-                      type="date"
                       value={customDate}
-                      onChange={(e) => setCustomDate(e.target.value)}
+                      onChange={(date) => setCustomDate(date)}
                       min={minCustomDate}
-                      className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground focus:border-wax focus:outline-none"
+                      locale={locale}
+                      placeholder={t("landing.chooseSpecificDate")}
                     />
                   </div>
                 </div>

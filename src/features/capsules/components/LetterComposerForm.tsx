@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useLetterComposer, HorizonPreset } from "@/features/capsules";
 import { ArchivalAccordion } from "@/components/ui/ArchivalAccordion";
 import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
+import { ArchivalDatePicker } from "@/components/ui/ArchivalDatePicker";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle } from "lucide-react";
@@ -318,12 +319,15 @@ export function LetterComposerForm({
                   >
                     {t("letters.choose_specific_date")}
                   </label>
-                  <input
+                  <ArchivalDatePicker
                     id="custom-date-input"
-                    type="date"
                     value={form.scheduledAt}
-                    onChange={(e) => setField("scheduledAt", e.target.value)}
-                    className="w-full paper-sheet rounded-xs px-3 py-2 text-xs border border-crease font-letter text-foreground focus:border-wax focus:outline-none"
+                    onChange={(date) => setField("scheduledAt", date)}
+                    locale={locale}
+                    hasError={Boolean(
+                      hasAttemptedSubmit && validationErrors.scheduledAt,
+                    )}
+                    placeholder={t("letters.choose_specific_date")}
                   />
                   {hasAttemptedSubmit && validationErrors.scheduledAt && (
                     <p className="text-xs text-wax font-mono pt-1">

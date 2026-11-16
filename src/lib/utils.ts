@@ -15,8 +15,13 @@ export function formatLocaleDate(
     year: "numeric",
   },
 ): string {
-  return new Date(iso).toLocaleDateString(
-    locale === "es" ? "es-ES" : "en-US",
-    options,
-  );
+  if (!iso) return "";
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  const date = match
+    ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+    : new Date(iso);
+
+  return isNaN(date.getTime())
+    ? iso
+    : date.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", options);
 }
