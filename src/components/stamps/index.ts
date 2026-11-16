@@ -27,9 +27,4 @@ export {
 
 export { useStampCatalog, type UseStampCatalogResult } from "./useStampCatalog";
 
-export {
-  STAMP_CATEGORIES,
-  INITIAL_UNLOCKED_STAMP_IDS,
-  DEFAULT_STAMP_ID,
-  type StampCategory,
-} from "./stamps.data";
+export { INITIAL_UNLOCKED_STAMP_IDS, DEFAULT_STAMP_ID } from "./stamps.data";

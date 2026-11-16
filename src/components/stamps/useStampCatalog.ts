@@ -8,7 +8,6 @@ import {
   StampCategoryResponse,
   StampDetailResponse,
 } from "@/types/timeecho";
-import { STAMP_CATEGORIES } from "./stamps.data";
 
 interface CatalogStore {
   locale: string;
@@ -53,14 +52,6 @@ function emitChange() {
 
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-function getFallbackCategories(): StampCategoryResponse[] {
-  return STAMP_CATEGORIES.map((cat, index) => ({
-    slug: cat.id,
-    name: cat.label,
-    position: index + 1,
-  }));
-}
-
 let activeFetchPromise: Promise<void> | null = null;
 
 async function fetchCatalog(
@@ -103,10 +94,6 @@ async function fetchCatalog(
         fetchedStamps = await repository.getStamps(locale);
       }
 
-      if (fetchedCategories.length === 0) {
-        fetchedCategories = getFallbackCategories();
-      }
-
       currentStore = {
         locale,
         stamps: fetchedStamps,
@@ -123,7 +110,7 @@ async function fetchCatalog(
       currentStore = {
         locale,
         stamps: [],
-        categories: getFallbackCategories(),
+        categories: [],
         isLoading: false,
         error: errorObj,
         fetchedAt: Date.now(),
@@ -229,8 +216,7 @@ export function useStampCatalog(): UseStampCatalogResult {
 
   return {
     stamps: store.stamps,
-    categories:
-      store.categories.length > 0 ? store.categories : getFallbackCategories(),
+    categories: store.categories,
     isLoading: store.isLoading && store.stamps.length === 0,
     error: store.error,
     refresh,

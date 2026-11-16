@@ -155,22 +155,6 @@ export interface AnalyticsMetrics {
   };
 }
 
-export type StampCollectionCategory =
-  "small-things" | "places-i-inhabit" | "stored-thoughts" | "passage-of-time";
-
-export interface CollectibleStamp {
-  id: string;
-  name: string;
-  category: StampCollectionCategory;
-  denomination: string;
-  primaryColor: string;
-  accentColor: string;
-  description: string;
-  storyPrompt?: string;
-  isUnlocked?: boolean;
-  unlockedAt?: string;
-}
-
 export interface StampCategoryResponse {
   slug: string;
   name: string;

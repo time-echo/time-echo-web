@@ -461,13 +461,37 @@ export class HttpApiRepository implements ICapsuleRepository {
 
   async getStampCategories(locale?: string): Promise<StampCategoryResponse[]> {
     const loc = locale || this.resolveLocale();
-    const data = await this.request<StampCategoryResponse[]>(
-      "/stamp_categories",
-      {
-        headers: { "X-Locale": loc },
+    const data = await this.request<
+      | StampCategoryResponse[]
+      | {
+          stamp_categories?: StampCategoryResponse[];
+          stampCategories?: StampCategoryResponse[];
+          data?: StampCategoryResponse[];
+        }
+    >("/stamp_categories", {
+      headers: {
+        "X-Locale": loc,
+        "Accept-Language": loc,
       },
-    );
-    return Array.isArray(data) ? data : [];
+    });
+
+    if (Array.isArray(data)) {
+      return data;
+    }
+
+    if (data && typeof data === "object") {
+      if (Array.isArray(data.stamp_categories)) {
+        return data.stamp_categories;
+      }
+      if (Array.isArray(data.stampCategories)) {
+        return data.stampCategories;
+      }
+      if (Array.isArray(data.data)) {
+        return data.data;
+      }
+    }
+
+    return [];
   }
 
   async getStampBySlug(
