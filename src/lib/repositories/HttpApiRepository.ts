@@ -131,12 +131,7 @@ export class HttpApiRepository implements ICapsuleRepository {
     if (typeof options === "string") {
       this.baseUrl = options;
     } else {
-      this.baseUrl =
-        options?.baseUrl ||
-        (typeof process !== "undefined"
-          ? process.env.NEXT_PUBLIC_API_URL
-          : "") ||
-        "http://localhost:3000/api/v1";
+      this.baseUrl = options?.baseUrl || "/api";
       this.customGetToken = options?.getToken;
       this.customGetLocale = options?.getLocale;
     }

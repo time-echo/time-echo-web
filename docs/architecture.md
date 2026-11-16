@@ -432,15 +432,16 @@ Applied in `globals.css`:
 
 ## Development Workflow
 
-### Backend Connection
+### Backend Connection (BFF Architecture)
 
-- Connects to Rails 8 API server (`http://localhost:3000/api/v1`) via `HttpApiRepository`.
+- The browser connects strictly to the Next.js Frontend BFF layer (`/api/*`).
+- The server-side BFF layer connects privately to the Rails 8 API server (`http://localhost:3000/api/v1`) using the centralized server-only HTTP client.
 - Seed data and demo capsules are initialized in the backend with `bin/rails db:seed`.
 
 ### Environment
 
-- Development: `NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1` (configured in `.env.local`)
-- Production: Set `NEXT_PUBLIC_API_URL` to production API domain
+- Development: `BACKEND_API_URL=http://localhost:3000/api/v1` (configured in `.env.local`, server-only)
+- Production: Set `BACKEND_API_URL` to private production backend domain (never exposed to browser)
 
 ### Commands
 

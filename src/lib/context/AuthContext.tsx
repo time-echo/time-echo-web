@@ -68,13 +68,6 @@ const tokenVerificationPromises = new Map<
   Promise<{ email: string; token: string }>
 >();
 
-function getBaseUrl(): string {
-  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
-  }
-  return "http://localhost:3000/api/v1";
-}
-
 function getStoredToken(): string | null {
   if (typeof window !== "undefined") {
     try {
@@ -91,7 +84,6 @@ function persistSession(token: string, email: string) {
     try {
       window.localStorage.setItem(TOKEN_KEY, token);
       window.localStorage.setItem(USER_EMAIL_KEY, email);
-      document.cookie = `${TOKEN_KEY}=${token}; path=/; max-age=2592000; SameSite=Lax`;
     } catch {}
   }
 }
@@ -112,25 +104,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const baseUrl = getBaseUrl();
-
   const fetchCurrentUser = useCallback(async () => {
-    const currentToken = token || getStoredToken();
-    if (!currentToken) {
-      clearSession();
-      setToken(null);
-      setUser(null);
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const res = await fetch(`${baseUrl}/sessions/me`, {
+      const res = await fetch("/api/auth/me", {
         method: "GET",
         headers: {
           Accept: "application/json",
-          Authorization: `Bearer ${currentToken}`,
-          "X-Session-Token": currentToken,
         },
         credentials: "include",
       });
@@ -147,38 +126,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const json = await res.json();
       const userData = json?.data || json;
       if (userData?.email) {
-        persistSession(currentToken, userData.email);
-        setToken(currentToken);
+        const activeToken =
+          userData.token || getStoredToken() || "active_session";
+        persistSession(activeToken, userData.email);
+        setToken(activeToken);
         setUser({ email: userData.email });
       }
     } catch {
     } finally {
       setIsLoading(false);
     }
-  }, [baseUrl, token]);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
-    const currentToken = token || getStoredToken();
 
-    if (!currentToken) {
-      clearSession();
-      Promise.resolve().then(() => {
-        if (isMounted && !getStoredToken()) {
-          setIsLoading(false);
-        }
-      });
-      return () => {
-        isMounted = false;
-      };
-    }
-
-    fetch(`${baseUrl}/sessions/me`, {
+    fetch("/api/auth/me", {
       method: "GET",
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${currentToken}`,
-        "X-Session-Token": currentToken,
       },
       credentials: "include",
     })
@@ -198,8 +164,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isMounted) return;
         const userData = json?.data || json;
         if (userData?.email) {
-          persistSession(currentToken, userData.email);
-          setToken(currentToken);
+          const activeToken =
+            userData.token || getStoredToken() || "active_session";
+          persistSession(activeToken, userData.email);
+          setToken(activeToken);
           setUser({ email: userData.email });
         }
         setIsLoading(false);
@@ -211,7 +179,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       isMounted = false;
     };
-  }, [baseUrl, token]);
+  }, []);
 
   const requestMagicLink = useCallback(
     async (email: string, localeOverride?: string) => {
@@ -221,7 +189,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           ? (localeOverride as SupportedLanguage)
           : getActiveLocale();
 
-      const res = await fetch(`${baseUrl}/sessions`, {
+      const res = await fetch("/api/auth/magic-link", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -259,93 +227,84 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: responseData?.email || email,
       };
     },
-    [baseUrl],
+    [],
   );
 
-  const authenticateWithToken = useCallback(
-    async (tokenParam: string) => {
-      setError(null);
-      setIsLoading(true);
+  const authenticateWithToken = useCallback(async (tokenParam: string) => {
+    setError(null);
+    setIsLoading(true);
 
-      let verificationPromise = tokenVerificationPromises.get(tokenParam);
+    let verificationPromise = tokenVerificationPromises.get(tokenParam);
 
-      if (!verificationPromise) {
-        verificationPromise = (async () => {
-          const activeLocale = getActiveLocale();
-          const res = await fetch(
-            `${baseUrl}/sessions/${encodeURIComponent(tokenParam)}`,
-            {
-              method: "GET",
-              headers: {
-                Accept: "application/json",
-                "X-Locale": activeLocale,
-                "Accept-Language": activeLocale,
-              },
-              credentials: "include",
-            },
-          );
-
-          const json = await res.json().catch(() => ({}));
-
-          if (!res.ok) {
-            const errorMsg =
-              json?.error?.message ||
-              json?.message ||
-              getTranslation(getActiveLocale(), "login.invalidToken");
-            throw new ApiError(
-              res.status,
-              json?.error?.code || "invalid_token",
-              errorMsg,
-              json?.error?.details,
-              json?.error?.requestId,
-            );
-          }
-
-          const sessionData = json?.data || json;
-          const activeToken = sessionData.token || tokenParam;
-          const userEmail = sessionData.email;
-
-          persistSession(activeToken, userEmail);
-          return { email: userEmail, token: activeToken };
-        })();
-
-        tokenVerificationPromises.set(tokenParam, verificationPromise);
-      }
-
-      try {
-        const result = await verificationPromise;
-        setToken(result.token);
-        setUser({ email: result.email });
-        return result;
-      } catch (err) {
-        tokenVerificationPromises.delete(tokenParam);
-        const errorMsg =
-          err instanceof Error
-            ? err.message
-            : getTranslation(getActiveLocale(), "login.invalidToken");
-        setError(errorMsg);
-        throw err;
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [baseUrl],
-  );
-
-  const logout = useCallback(async () => {
-    const currentToken = token || getStoredToken();
-    try {
-      if (currentToken) {
-        await fetch(`${baseUrl}/sessions`, {
-          method: "DELETE",
+    if (!verificationPromise) {
+      verificationPromise = (async () => {
+        const activeLocale = getActiveLocale();
+        const res = await fetch("/api/auth/callback", {
+          method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: `Bearer ${currentToken}`,
-            "X-Session-Token": currentToken,
+            "X-Locale": activeLocale,
+            "Accept-Language": activeLocale,
           },
           credentials: "include",
-        }).catch(() => {});
-      }
+          body: JSON.stringify({ token: tokenParam }),
+        });
+
+        const json = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          const errorMsg =
+            json?.error?.message ||
+            json?.message ||
+            getTranslation(getActiveLocale(), "login.invalidToken");
+          throw new ApiError(
+            res.status,
+            json?.error?.code || "invalid_token",
+            errorMsg,
+            json?.error?.details,
+            json?.error?.requestId,
+          );
+        }
+
+        const sessionData = json?.data || json;
+        const activeToken = sessionData.token || tokenParam;
+        const userEmail = sessionData.email;
+
+        persistSession(activeToken, userEmail);
+        return { email: userEmail, token: activeToken };
+      })();
+
+      tokenVerificationPromises.set(tokenParam, verificationPromise);
+    }
+
+    try {
+      const result = await verificationPromise;
+      setToken(result.token);
+      setUser({ email: result.email });
+      return result;
+    } catch (err) {
+      tokenVerificationPromises.delete(tokenParam);
+      const errorMsg =
+        err instanceof Error
+          ? err.message
+          : getTranslation(getActiveLocale(), "login.invalidToken");
+      setError(errorMsg);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+        credentials: "include",
+      }).catch(() => {});
     } finally {
       clearSession();
       tokenVerificationPromises.clear();
@@ -353,12 +312,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setError(null);
     }
-  }, [baseUrl, token]);
+  }, []);
 
   const value = {
     user,
     token,
-    isAuthenticated: Boolean(user?.email && token),
+    isAuthenticated: Boolean(user?.email),
     isLoading,
     error,
     requestMagicLink,
