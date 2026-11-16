@@ -51,7 +51,7 @@ function emitChange() {
   listeners.forEach((listener) => listener());
 }
 
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL_MS = 5 * 60 * 1000;
 
 function getFallbackCategories(): StampCategoryResponse[] {
   return STAMP_CATEGORIES.map((cat, index) => ({
@@ -150,10 +150,6 @@ export interface UseStampCatalogResult {
   ) => Promise<StampItemResponse[]>;
 }
 
-/**
- * Hook to retrieve and cache the dynamic stamps catalog and categories
- * with HTTP ETag support and offline/mock fallbacks.
- */
 export function useStampCatalog(): UseStampCatalogResult {
   const { repository, locale } = useTimeEcho();
   const store = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
@@ -182,7 +178,6 @@ export function useStampCatalog(): UseStampCatalogResult {
         return globalDetailCache.get(cacheKey)!;
       }
 
-      // Check active catalog first
       const catalogMatch = store.stamps.find((s) => s.slug === slug);
       if (
         catalogMatch &&
@@ -203,7 +198,6 @@ export function useStampCatalog(): UseStampCatalogResult {
         return detail;
       }
 
-      // Fetch from API (handles historical/inactive stamps)
       if (repository && typeof repository.getStampBySlug === "function") {
         try {
           const detail = await repository.getStampBySlug(slug, locale);
@@ -212,7 +206,7 @@ export function useStampCatalog(): UseStampCatalogResult {
             return detail;
           }
         } catch {
-          // Ignore and return null
+          return null;
         }
       }
 

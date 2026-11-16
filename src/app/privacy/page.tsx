@@ -48,7 +48,6 @@ export default function PrivacyPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 font-ui animate-fade-in text-foreground space-y-10">
-      {/* Navigation & Header Folio */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-crease pb-6">
         <Link
           href="/"
@@ -69,7 +68,6 @@ export default function PrivacyPage() {
         />
       </div>
 
-      {/* Hero Title & Subtitle */}
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-manila border border-manila-border text-foreground-muted text-xs font-letter">
           <ShieldCheck size={13} className="text-wax" />
@@ -83,14 +81,12 @@ export default function PrivacyPage() {
         </p>
       </div>
 
-      {/* Main Archival Document */}
       <PaperSheet
         elevation="raised"
         docketFolio="FOLIO № PROTOCOL-PRIVACY"
         dateStamp={t("privacy.last_updated")}
         className="p-6 sm:p-10 space-y-8"
       >
-        {/* Intro */}
         <section className="space-y-3">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("privacy.sections.intro.title")}
@@ -100,7 +96,6 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {/* What We Collect */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("privacy.sections.collect.title")}
@@ -121,7 +116,6 @@ export default function PrivacyPage() {
           </ul>
         </section>
 
-        {/* How We Use Information */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("privacy.sections.how_use.title")}
@@ -142,7 +136,6 @@ export default function PrivacyPage() {
           </ul>
         </section>
 
-        {/* End-to-End Privacy & Encryption */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <div className="flex items-center gap-2 text-wax">
             <Lock size={18} />
@@ -155,7 +148,6 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {/* Data Retention & Instant Deletion */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("privacy.sections.retention.title")}
@@ -165,7 +157,6 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {/* Trusted Partners */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("privacy.sections.third_parties.title")}
@@ -186,7 +177,6 @@ export default function PrivacyPage() {
           </ul>
         </section>
 
-        {/* Data Rights */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("privacy.sections.rights.title")}
@@ -207,7 +197,6 @@ export default function PrivacyPage() {
           </ul>
         </section>
 
-        {/* Changes */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("privacy.sections.changes.title")}
@@ -217,7 +206,6 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {/* Contact */}
         <section className="space-y-3 border-t border-crease/60 pt-6">
           <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
             {t("privacy.sections.contact.title")}

@@ -645,6 +645,7 @@ _Note: Update this registry whenever an external mockup is reviewed and formally
    - Primary accents and seals must strictly use `--wax` (`#8E2818` / `#D14930`).
    - Surfaces must remain paper-textured or manila (`--parchment`, `--manila`).
    - Display headings must use Fraunces; body correspondence must use Courier Prime; interface labels must use IBM Plex Sans.
+   - Tailwind CSS v4 design tokens and responsive utilities are standardized via the `.agents/skills/styling/` skill.
 2. **Layout & Navigation Invariants**:
    - The navigation shell (`ArchivalHeader` in public layouts, `AppShell` in authenticated routes) and page grid ratios cannot be modified without prior authorization.
 3. **Copy Immutability**:

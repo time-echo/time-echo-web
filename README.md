@@ -4,7 +4,7 @@
 
 TimeEcho is a digital time-capsule web application that lets you write letters to your future self, calibrate your emotional baseline, choose digital postage stamps, and forecast life milestones. When the delivery date arrives, you receive your sealed letter and can compare your past predictions with reality — revealing how much you've grown.
 
-This repository (`frontend`) is the Next.js frontend application, built with React 19, Next.js 16 (App Router), and Tailwind CSS v4. It integrates with the Rails 8 API backend (`time_echo/`) and references living components in Storybook (`mockups/`).
+This repository (`time-echo-web`) is the Next.js frontend application, built with React 19, Next.js 16 (App Router), and Tailwind CSS v4. It integrates with the backend API and references living components in Storybook (`mockups/`).
 
 ---
 
@@ -18,7 +18,7 @@ Write private letters to your future self. Choose scheduled delivery periods or 
 
 Select from an authentic postal collection of postage stamps organized into categories (`small-things`, `places-i-inhabit`, `stored-thoughts`, `passage-of-time`):
 
-- Dynamic stamp catalog fetched from the Rails API (`/api/v1/stamps`) with search, category filtering, and pagination.
+- Dynamic stamp catalog fetched from the backend API (`/api/v1/stamps`) with search, category filtering, and pagination.
 - Interactive `StampPickerModal` with tactile perforation frames and postmark overlays.
 - Safe SVG rendering sanitized with DOMPurify (`StampRenderer`).
 - Offline fallback to static catalog when backend is unavailable.
@@ -37,7 +37,7 @@ Track your prediction accuracy rate, emotional deltas (baseline vs. reveal), and
 
 ### 🌐 Bilingual Support
 
-Full English/Spanish localization with locale-aware date formatting and UI copy following natural language guidelines (`.agents/rules/natural-copy.md`).
+Full English/Spanish localization with locale-aware date formatting and natural, grounded UI copy.
 
 ### 🎨 Archival Design System
 
@@ -76,11 +76,17 @@ Full English/Spanish localization with locale-aware date formatting and UI copy 
 ### Installation
 
 ```bash
-# Navigate to the frontend directory
-cd frontend
+# Clone the repository
+git clone https://github.com/time-echo/time-echo-web.git
+
+# Navigate to the project directory
+cd time-echo-web
 
 # Install dependencies
 pnpm install
+
+# (Optional) Set up environment variables
+cp .env.example .env.local
 
 # Start development server (runs on port 3001)
 pnpm dev
@@ -183,7 +189,7 @@ Defined in `src/app/globals.css` via `@theme inline`:
 
 ## 🔗 Backend Integration
 
-The frontend connects directly to the Rails 8 API backend (`time_echo`):
+The frontend connects directly to the backend API:
 
 - **API Base URL**: Configured via `NEXT_PUBLIC_API_URL` (default: `http://localhost:3000/api/v1`).
 - **Repository Pattern**: `HttpApiRepository` implements `ICapsuleRepository`, dispatching requests for letters, predictions, archive/restore, authentication, and stamp catalogs.
@@ -217,13 +223,13 @@ Translations live in `src/lib/i18n/`:
 - `en.json` — English (Plain, direct copy)
 - `es.json` — Spanish (Native Latin American Spanish, informal "tú")
 
-Both files are kept strictly in sync, adhering to `.agents/rules/natural-copy.md`.
+Both files are kept strictly in sync with symmetric keys.
 
 ---
 
 ## 🧪 UI Mockups & Storybook Catalog ([`time-echo/mockups`](https://github.com/time-echo/mockups))
 
-TimeEcho maintains a standalone Storybook catalog in the `mockups/` folder (`pnpm storybook` on port `6006`). Whenever UI or visual component changes are made, keep tokens, fonts, and primitives aligned between `frontend/` and `mockups/`.
+TimeEcho maintains a standalone Storybook catalog in the `mockups/` folder (`pnpm storybook` on port `6006`). Whenever UI or visual component changes are made, keep tokens, fonts, and primitives aligned between `time-echo-web/` and `mockups/`.
 
 ---
 

@@ -7,10 +7,6 @@ export interface TimelineSkeletonProps {
   itemCount?: number;
 }
 
-/**
- * Skeleton placeholder for the Timeline view (/dashboard?timeline=true).
- * Mirrors the vertical timeline track with nodes, timeline cards, and no stat summary boxes.
- */
 export function TimelineSkeleton({
   className,
   itemCount = 3,
@@ -23,7 +19,6 @@ export function TimelineSkeleton({
         className,
       )}
     >
-      {/* Timeline Header */}
       <div className="border-b border-crease pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="space-y-2">
           <Skeleton className="w-48 h-8 rounded-xs" />
@@ -35,16 +30,12 @@ export function TimelineSkeleton({
         </div>
       </div>
 
-      {/* Vertical Timeline Track */}
       <div className="relative border-l-2 border-crease pl-6 sm:pl-8 ml-3 sm:ml-5 space-y-8 select-none">
         {Array.from({ length: itemCount }).map((_, idx) => (
           <div key={idx} className="relative">
-            {/* Timeline Node Circle */}
             <div className="absolute -left-[31px] sm:-left-[39px] top-4 w-4 h-4 rounded-full border-2 border-parchment shadow-xs bg-crease/60 dark:bg-crease/40 animate-pulse" />
 
-            {/* Timeline Card */}
             <div className="paper-sheet rounded-xs p-5 sm:p-7 space-y-4 border border-crease">
-              {/* Card Header: Docket tag, status stamp, date */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-crease pb-3">
                 <div className="flex items-center gap-2.5">
                   <Skeleton className="w-24 h-4 rounded-xs" />
@@ -53,13 +44,11 @@ export function TimelineSkeleton({
                 <Skeleton className="w-36 h-3.5 rounded-xs" />
               </div>
 
-              {/* Title & Delivery Date */}
               <div className="space-y-2">
                 <Skeleton className="w-3/5 h-6 rounded-xs" />
                 <Skeleton className="w-2/5 h-3.5 rounded-xs" />
               </div>
 
-              {/* Card Body: Archival folder preview */}
               <div className="archival-folder rounded-xs p-4 border border-manila-border space-y-2">
                 <div className="space-y-1">
                   <Skeleton className="w-32 h-3.5 rounded-xs" />

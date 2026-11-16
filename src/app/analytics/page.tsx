@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
+import { calculateAnalyticsMetrics } from "@/features/analytics/utils/metricsCalculator";
 import { AnalyticsSkeleton } from "@/components/skeletons";
-import { calculateAnalyticsMetrics } from "@/features/analytics";
-import { ArrowLeft, Brain, Sparkles } from "lucide-react";
+import { Brain, Sparkles, ArrowLeft } from "lucide-react";
 
 export default function AnalyticsPage() {
   const router = useRouter();
@@ -30,10 +30,9 @@ export default function AnalyticsPage() {
   const deliveredLetters = metrics.deliveredCount + metrics.openedCount;
   const scheduledLetters = metrics.inTransitCount;
 
-  const totalPredictions = metrics.totalPredictionsCount;
-  const completedPredictions = metrics.evaluatedPredictionsCount;
   const matchedPredictions = metrics.matchedPredictionsCount;
-  const pendingPredictions = totalPredictions - completedPredictions;
+  const completedPredictions = metrics.evaluatedPredictionsCount;
+  const pendingPredictions = metrics.totalPredictionsCount;
   const predictionMatchRate = metrics.predictionsAccuracyRate;
 
   const avgInitialHappiness = metrics.emotionalAverages.baseline.happiness;
@@ -46,7 +45,6 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto py-4 font-ui animate-fade-in text-foreground">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-[#D8D2C2] dark:border-[#2D3340]">
         <div className="space-y-1">
           <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
@@ -67,7 +65,6 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Top 3 Stat Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 font-letter">
         <div className="paper-sheet border border-[#D8D2C2] dark:border-[#2D3340] p-5 rounded-xs text-center shadow-xs">
           <p className="text-[10px] font-semibold text-foreground/60 uppercase tracking-wider">
@@ -95,9 +92,7 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Main 2-Column Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Card: Emotional Evolution Averages */}
         <div className="paper-sheet border border-[#D8D2C2] dark:border-[#2D3340] p-6 sm:p-8 rounded-xs shadow-xs space-y-6">
           <div className="flex items-center gap-2.5 border-b border-[#D8D2C2] dark:border-[#2D3340] pb-3.5">
             <Brain size={20} className="text-[#2C485E] dark:text-[#77A3C4]" />
@@ -110,7 +105,6 @@ export default function AnalyticsPage() {
           </p>
 
           <div className="space-y-6 pt-2 font-letter">
-            {/* Happiness Index */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs">
                 <span className="font-semibold text-foreground/85 uppercase text-[10px] tracking-wider">
@@ -147,7 +141,6 @@ export default function AnalyticsPage() {
               </div>
             </div>
 
-            {/* Anxiety Index */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs">
                 <span className="font-semibold text-foreground/85 uppercase text-[10px] tracking-wider">
@@ -180,7 +173,6 @@ export default function AnalyticsPage() {
               </div>
             </div>
 
-            {/* Motivation Index */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs">
                 <span className="font-semibold text-foreground/85 uppercase text-[10px] tracking-wider">
@@ -219,7 +211,6 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        {/* Right Card: Predictions vs Reality */}
         <div className="paper-sheet border border-[#D8D2C2] dark:border-[#2D3340] p-6 sm:p-8 rounded-xs shadow-xs space-y-6">
           <div className="flex items-center gap-2.5 border-b border-[#D8D2C2] dark:border-[#2D3340] pb-3.5">
             <Sparkles

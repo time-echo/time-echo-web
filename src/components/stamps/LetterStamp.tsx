@@ -22,13 +22,6 @@ export interface LetterStampProps {
   postmarkDate?: string;
 }
 
-/**
- * Renders the stamp assigned to a letter following System Design v2.0 Figure 6:
- * - Empty Fallback: If letter has no stamp (stamp/stampId is null), renders nothing.
- * - Active Catalog: If stamp is in active catalog, renders immediately with dynamic SVG.
- * - Historical Preservation: If not in active catalog (inactive/historical), fetches
- *   detail via GET /api/v1/stamps/:slug and renders the safe SVG.
- */
 export function LetterStamp({
   stamp,
   stampId,
@@ -65,7 +58,6 @@ export function LetterStamp({
     };
   }, [slug, activeSvg, getStampBySlug]);
 
-  // Figure 6: If no stamp was assigned, render empty fallback (nothing)
   if (!slug) {
     return null;
   }

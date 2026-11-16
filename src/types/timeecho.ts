@@ -1,15 +1,3 @@
-/**
- * ⏳ TimeEcho — Domain Types Definition
- *
- * Centralized TypeScript data models and interfaces for the TimeEcho domain:
- * physical postal materiality, encrypted time-capsules, emotional snapshots,
- * milestone predictions, reality ledgers, and retrospective analytics.
- */
-
-// ============================================================================
-// Core Statuses, Enums & Literal Unions
-// ============================================================================
-
 export type LetterStatus =
   "pending" | "queued" | "delivered" | "opened" | "archived";
 
@@ -36,13 +24,6 @@ export type ReflectionStyle = "reflective" | "motivational" | "nostalgic";
 
 export type MemoryFrequency = "low" | "normal" | "frequent";
 
-// ============================================================================
-// Domain Entities
-// ============================================================================
-
-/**
- * Baseline emotional state recorded when the letter is written (1 - 10 scale).
- */
 export interface EmotionalSnapshot {
   id?: string;
   letterId?: string;
@@ -53,10 +34,6 @@ export interface EmotionalSnapshot {
   updatedAt?: string;
 }
 
-/**
- * A milestone prediction about the author's future self or world,
- * evaluated retrospectively when the letter is unlocked.
- */
 export interface Prediction {
   id: string;
   letterId?: string;
@@ -69,11 +46,6 @@ export interface Prediction {
   updatedAt?: string;
 }
 
-/**
- * Central digital time-capsule letter.
- * Incorporates physical postal attributes (docket folio, wax seal state)
- * along with lifecycle timestamps and retrospective reality fields.
- */
 export interface LetterStampInfo {
   slug: string;
   name: string;
@@ -83,7 +55,6 @@ export interface LetterStampInfo {
 
 export interface Letter {
   id: string;
-  /** Postal folio docket number (e.g., "TE-00421", "FOLIO № TE-00912") */
   docketNumber: string;
   title: string;
   content: string;
@@ -95,25 +66,18 @@ export interface Letter {
   status: LetterStatus;
   language: SupportedLanguage;
   timezone: string;
-  /** Retrospective emotional rating upon unsealing (1 - 10 scale) */
   revealHappiness?: number | null;
   revealAnxiety?: number | null;
   revealMotivation?: number | null;
-  /** Tactile wax seal fracture state in the client */
   isWaxBroken?: boolean;
   createdAt: string;
   updatedAt: string;
-  /** Initial emotional snapshot at composition time */
   emotionalSnapshot?: EmotionalSnapshot | null;
-  /** Associated milestone predictions */
   predictions: Prediction[];
   stampId?: string | null;
   stamp?: LetterStampInfo | null;
 }
 
-/**
- * Archival and privacy preferences configured by the user.
- */
 export interface UserPreferences {
   email: string;
   appearanceMode: AppearanceMode;
@@ -129,10 +93,6 @@ export interface UserPreferences {
   emotionalSummaryEmails: boolean;
   locale: SupportedLanguage;
 }
-
-// ============================================================================
-// Data Transfer & Mutation Inputs
-// ============================================================================
 
 export interface CreateLetterInput {
   title: string;
@@ -171,10 +131,6 @@ export interface UpdateRealityInput {
   isWaxBroken?: boolean;
 }
 
-// ============================================================================
-// Retrospective Growth & Analytics Metrics
-// ============================================================================
-
 export interface EmotionalMetricSet {
   happiness: number;
   anxiety: number;
@@ -187,7 +143,7 @@ export interface AnalyticsMetrics {
   deliveredCount: number;
   openedCount: number;
   archivedCount: number;
-  predictionsAccuracyRate: number; // 0 - 100 percentage
+  predictionsAccuracyRate: number;
   totalPredictionsCount: number;
   evaluatedPredictionsCount: number;
   matchedPredictionsCount: number;
@@ -214,10 +170,6 @@ export interface CollectibleStamp {
   isUnlocked?: boolean;
   unlockedAt?: string;
 }
-
-// ============================================================================
-// Dynamic Stamps API Contracts (v2.0)
-// ============================================================================
 
 export interface StampCategoryResponse {
   slug: string;

@@ -5,10 +5,6 @@ export interface AppShellSkeletonProps {
   children?: React.ReactNode;
 }
 
-/**
- * Skeleton placeholder for the AppShell layout (desktop sidebar + mobile top bar + main content).
- * Displays when authentication status is resolving or during route transitions.
- */
 export function AppShellSkeleton({ children }: AppShellSkeletonProps) {
   return (
     <div
@@ -16,7 +12,6 @@ export function AppShellSkeleton({ children }: AppShellSkeletonProps) {
       aria-busy="true"
       className="flex flex-col md:flex-row min-h-screen w-full bg-parchment text-foreground font-ui"
     >
-      {/* Desktop Sidebar Skeleton */}
       <aside className="hidden md:flex w-72 h-screen sticky top-0 bg-manila/50 border-r border-crease p-8 flex-col justify-between shrink-0 font-ui select-none">
         <div className="space-y-10">
           <div className="flex items-center justify-between">
@@ -45,7 +40,6 @@ export function AppShellSkeleton({ children }: AppShellSkeletonProps) {
         </div>
       </aside>
 
-      {/* Mobile Header Skeleton */}
       <header className="md:hidden sticky top-0 z-50 bg-parchment/90 backdrop-blur-md border-b border-crease px-4 py-3 flex items-center justify-between font-ui select-none">
         <span className="text-xl font-serif-editorial italic text-foreground tracking-tight font-semibold">
           TimeEcho
@@ -56,7 +50,6 @@ export function AppShellSkeleton({ children }: AppShellSkeletonProps) {
         </div>
       </header>
 
-      {/* Main Content Skeleton */}
       <main
         id="main-content"
         className="flex-1 min-w-0 px-4 md:px-8 py-8 w-full max-w-6xl mx-auto font-ui"

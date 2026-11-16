@@ -17,7 +17,5 @@ export function celebrate(key: string): void {
       origin: { y: 0.6 },
       colors: PALETTE,
     });
-  } catch {
-    // Confetti is decorative; failures are silent.
-  }
+  } catch {}
 }

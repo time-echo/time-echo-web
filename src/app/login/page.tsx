@@ -3,18 +3,18 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
-import { Mail, ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
+import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { Mail, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { t } = useTimeEcho();
   const { requestMagicLink } = useAuth();
+  const { t } = useTimeEcho();
 
   const [email, setEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +26,6 @@ export default function LoginPage() {
       return;
     }
 
-    // Basic email check
     if (!trimmed.includes("@") || !trimmed.includes(".")) {
       setError(t("login.invalidEmail"));
       return;
@@ -46,7 +45,6 @@ export default function LoginPage() {
   return (
     <div className="max-w-md mx-auto py-12 px-4 font-ui animate-fade-in text-foreground">
       <div className="paper-sheet rounded-xs border border-crease p-8 sm:p-10 space-y-6 shadow-xs">
-        {/* Header Icon, Title & Subtitle */}
         <div className="text-center space-y-3">
           <div className="wax-seal w-14 h-14 rounded-full mx-auto flex items-center justify-center text-on-wax select-none shadow-xs">
             <Mail size={24} />
@@ -59,9 +57,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Error Alert Box matching monolith */}
           {error && (
             <div className="p-3.5 bg-wax/10 border border-wax/20 text-wax text-xs rounded-xs space-y-1 animate-fade-in font-letter">
               <p className="font-semibold flex items-center gap-1.5">
@@ -111,7 +107,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Return to Home link */}
         <div className="text-center pt-2 border-t border-crease">
           <Link
             href="/"

@@ -47,7 +47,6 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     t,
   } = useTimeEcho();
 
-  // Check context first
   const contextLetter = getCapsuleById(id);
 
   const [localLetter, setLocalLetter] = useState<Letter | null>(null);
@@ -85,24 +84,19 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
 
   const letter = localLetter || contextLetter;
 
-  // Handle settlement success callback
   const handleSettled = (updated: Letter) => {
     setLocalLetter(updated);
     setIsSettled(true);
 
     try {
       celebrate("reality-settled");
-    } catch {
-      // Confetti fallback for environments without canvas
-    }
+    } catch {}
   };
 
-  // 1. Loading State
   if ((isGlobalLoading && !letter) || (isFetchingLocal && !letter)) {
     return <LetterDetailSkeleton />;
   }
 
-  // 2. Not Found State
   if (!letter || fetchError) {
     return (
       <div className="max-w-2xl mx-auto py-16 px-4">
@@ -133,7 +127,6 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
     );
   }
 
-  // 3. Locked State: Cannot evaluate reality if letter is still sealed and in-transit
   const isLocked = letter.status === "pending" && !letter.isWaxBroken;
   if (isLocked) {
     return (
@@ -173,7 +166,6 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-16">
-      {/* Navigation Breadcrumb Bar */}
       <nav
         aria-label={t("reality.breadcrumbAria")}
         className="flex items-center justify-between font-letter text-xs text-foreground-muted"
@@ -200,7 +192,6 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
         </div>
       </nav>
 
-      {/* Manila Dossier Shell */}
       <ArchivalFolder
         tabLabel={t("reality.folderTabLabel", { docket: letter.docketNumber })}
         tabPosition="left"
@@ -213,7 +204,6 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
         }
       >
         <div className="space-y-8">
-          {/* Header Introduction Banner */}
           <div className="relative border-b border-crease pb-6">
             <div className="absolute right-0 top-0 pointer-events-none opacity-80 hidden sm:block">
               <PostmarkStamp
@@ -276,7 +266,6 @@ export default function LetterRealityPage({ params }: RealityPageProps) {
             </div>
           )}
 
-          {/* The RealityLedger Component */}
           <RealityLedger capsule={letter} onSettled={handleSettled} />
         </div>
       </ArchivalFolder>

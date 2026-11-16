@@ -4,10 +4,6 @@ import React, { useMemo } from "react";
 import DOMPurify from "dompurify";
 import { cn } from "@/lib/utils";
 
-/**
- * Strict whitelist configuration for dynamic SVG sanitization
- * based on System Design v2.0 (Figure 3).
- */
 export const SVG_PURIFY_CONFIG = {
   USE_PROFILES: { svg: true, svgFilters: false },
   ALLOWED_TAGS: [
@@ -90,10 +86,6 @@ export const SVG_PURIFY_CONFIG = {
   ALLOW_DATA_ATTR: false,
 };
 
-/**
- * Cleanly sanitize an SVG string using DOMPurify.
- * Safe for SSR environments where window is undefined.
- */
 export function sanitizeSvg(svgContent: string): string {
   if (!svgContent) return "";
   if (
@@ -108,12 +100,16 @@ export function sanitizeSvg(svgContent: string): string {
 export interface StampRendererProps extends React.HTMLAttributes<HTMLSpanElement> {
   svgContent: string;
   ariaLabel?: string;
+  ref?: React.Ref<HTMLSpanElement>;
 }
 
-export const StampRenderer = React.forwardRef<
-  HTMLSpanElement,
-  StampRendererProps
->(({ svgContent, ariaLabel, className, ...props }, ref) => {
+export function StampRenderer({
+  svgContent,
+  ariaLabel,
+  className,
+  ref,
+  ...props
+}: StampRendererProps) {
   const sanitized = useMemo(() => sanitizeSvg(svgContent), [svgContent]);
 
   return (
@@ -131,6 +127,4 @@ export const StampRenderer = React.forwardRef<
       {...props}
     />
   );
-});
-
-StampRenderer.displayName = "StampRenderer";
+}

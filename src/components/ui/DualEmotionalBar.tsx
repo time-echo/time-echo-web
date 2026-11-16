@@ -7,31 +7,11 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 export type EmotionType = "happiness" | "anxiety" | "motivation" | "custom";
 
 export interface DualEmotionalBarProps {
-  /**
-   * Name of the emotion (e.g., "Happiness", "Anxiety", "Motivation").
-   */
   label: string;
-  /**
-   * Baseline value at the time the letter was written (1 to 10).
-   */
   pastValue: number;
-  /**
-   * Revealing value at the time the letter was opened (1 to 10), or null if pending unsealing.
-   */
   currentValue?: number | null;
-  /**
-   * Category of the emotion to determine semantic tags and colors.
-   * @default 'custom'
-   */
   type?: EmotionType;
-  /**
-   * If true, lower values are considered favorable (e.g., Anxiety).
-   * Automatically true when type === 'anxiety'.
-   */
   invertColor?: boolean;
-  /**
-   * Optional localized labels for status badges.
-   */
   statusLabels?: {
     growth?: string;
     decline?: string;
@@ -63,7 +43,6 @@ export function DualEmotionalBar({
   const current = hasRevealed ? Math.min(10, Math.max(1, currentValue!)) : null;
   const shift = current !== null ? current - past : null;
 
-  // Compute shift label & color
   let shiftTagText = "";
   let isFavorable = false;
   let isSteady = false;
@@ -111,7 +90,6 @@ export function DualEmotionalBar({
         className,
       )}
     >
-      {/* Top Header: Emotion Label & Delta Tag */}
       <div className="flex justify-between items-center gap-2">
         <span className="font-semibold text-foreground tracking-wide">
           {label}
@@ -140,17 +118,14 @@ export function DualEmotionalBar({
         )}
       </div>
 
-      {/* Dual Visual Bar Track */}
       <div className="space-y-1">
         <div className="relative h-3 w-full rounded-xs bg-manila/50 border border-crease overflow-hidden">
-          {/* Baseline Bar (Past) */}
           <div
             className="absolute top-0 bottom-0 left-0 bg-foreground/20 border-r border-foreground/40 transition-all duration-300"
             style={{ width: `${pastPercent}%` }}
             title={`${resolvedPastLabel}: ${past}/10`}
           />
 
-          {/* Reveal Bar (Current) if revealed */}
           {hasRevealed && current !== null && (
             <div
               className={cn(
@@ -164,16 +139,14 @@ export function DualEmotionalBar({
             />
           )}
 
-          {/* Tick divisions 1 to 10 */}
           <div className="absolute inset-0 flex justify-between px-[10%] pointer-events-none opacity-20">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((t) => (
-              <span key={t} className="w-[1px] h-full bg-foreground" />
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((tick) => (
+              <span key={tick} className="w-[1px] h-full bg-foreground" />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Footer Details: Past -> Today values */}
       <div className="flex justify-between items-center text-[11px] text-foreground-muted pt-0.5">
         <span>
           {resolvedPastLabel}:{" "}
