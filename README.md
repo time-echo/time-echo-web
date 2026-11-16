@@ -187,13 +187,14 @@ Defined in `src/app/globals.css` via `@theme inline`:
 
 ---
 
-## 🔗 Backend Integration
+## 🔗 Backend-for-Frontend (BFF) Integration
 
-The frontend connects directly to the backend API:
+The frontend uses a Backend-for-Frontend (BFF) architecture:
 
-- **API Base URL**: Configured via `NEXT_PUBLIC_API_URL` (default: `http://localhost:3000/api/v1`).
-- **Repository Pattern**: `HttpApiRepository` implements `ICapsuleRepository`, dispatching requests for letters, predictions, archive/restore, authentication, and stamp catalogs.
-- **Authentication**: Bearer tokens and session cookies via `Authorization: Bearer <token>` and `credentials: "include"`.
+- **Private Backend URL**: Configured server-side via `BACKEND_API_URL` (default: `http://localhost:3000/api/v1`), never exposed to client bundles.
+- **Frontend BFF Layer**: Route Handlers (`/api/*`) and Server Actions proxy requests server-side without exposing internal backend addresses.
+- **Repository Pattern**: `HttpApiRepository` implements `ICapsuleRepository`, dispatching requests to the frontend BFF endpoints (`/api/...`).
+- **Authentication**: Secure HttpOnly cookies managed by the BFF layer; credentials forwarded securely to Rails backend.
 - **Localization**: Propagates `Accept-Language` and `X-Locale` headers to match user interface preferences.
 
 ### Stamps Catalog API & Filtering (cURL)

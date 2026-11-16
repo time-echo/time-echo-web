@@ -15,22 +15,9 @@ import {
   Loader2,
 } from "lucide-react";
 
-function getBaseUrl(): string {
-  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
-  }
-  return "http://localhost:3000/api/v1";
-}
-
 export default function SettingsPage() {
   const router = useRouter();
-  const {
-    user,
-    token,
-    logout,
-    isAuthenticated,
-    isLoading: isAuthLoading,
-  } = useAuth();
+  const { user, logout, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const { resetVault, locale, t } = useTimeEcho();
   const { notice, alert } = useFlash();
 
@@ -39,7 +26,6 @@ export default function SettingsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const baseUrl = getBaseUrl();
   const currentEmail = editedEmail ?? (user?.email || "");
 
   useEffect(() => {
@@ -61,27 +47,23 @@ export default function SettingsPage() {
 
     setIsSubmitting(true);
     try {
-      if (token) {
-        const res = await fetch(`${baseUrl}/account`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            "X-Session-Token": token,
-            "X-Locale": locale,
-          },
-          credentials: "include",
-          body: JSON.stringify({ email: currentEmail }),
-        });
+      const res = await fetch("/api/account", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Locale": locale,
+        },
+        credentials: "include",
+        body: JSON.stringify({ email: currentEmail }),
+      });
 
-        const json = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          const errorMsg =
-            json?.error?.message || json?.message || t("settings.savedNotice");
-          alert(errorMsg);
-          return;
-        }
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errorMsg =
+          json?.error?.message || json?.message || t("settings.savedNotice");
+        alert(errorMsg);
+        return;
       }
 
       setSavedNotice(true);
@@ -104,17 +86,14 @@ export default function SettingsPage() {
 
     setIsDeleting(true);
     try {
-      if (token) {
-        await fetch(`${baseUrl}/account`, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            "X-Session-Token": token,
-          },
-          credentials: "include",
-        }).catch(() => {});
-      }
+      await fetch("/api/account", {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+        },
+        credentials: "include",
+      }).catch(() => {});
+
       await resetVault();
       await logout();
       router.push("/");
