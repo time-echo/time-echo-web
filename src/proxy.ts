@@ -37,12 +37,15 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  const queryLocale = request.nextUrl.searchParams.get("locale");
   const cookieLocale =
     request.cookies.get("timeecho_locale")?.value ||
     request.cookies.get("NEXT_LOCALE")?.value;
 
   let locale = "es";
-  if (cookieLocale === "en" || cookieLocale === "es") {
+  if (queryLocale === "en" || queryLocale === "es") {
+    locale = queryLocale;
+  } else if (cookieLocale === "en" || cookieLocale === "es") {
     locale = cookieLocale;
   } else {
     const acceptLanguage = request.headers.get("accept-language") || "";
@@ -59,7 +62,11 @@ export function proxy(request: NextRequest) {
 
   response.headers.set("x-locale", locale);
 
-  if (!request.cookies.has("timeecho_locale")) {
+  if (
+    queryLocale === "en" ||
+    queryLocale === "es" ||
+    !request.cookies.has("timeecho_locale")
+  ) {
     response.cookies.set("timeecho_locale", locale, {
       path: "/",
       maxAge: 31536000,

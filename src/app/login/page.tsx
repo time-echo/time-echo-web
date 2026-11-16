@@ -10,7 +10,7 @@ import { Mail, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 export default function LoginPage() {
   const router = useRouter();
   const { requestMagicLink } = useAuth();
-  const { t } = useTimeEcho();
+  const { t, locale } = useTimeEcho();
 
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,7 +33,7 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      await requestMagicLink(trimmed);
+      await requestMagicLink(trimmed, locale);
       router.push(`/check_email?email=${encodeURIComponent(trimmed)}`);
     } catch (err) {
       const msg = err instanceof Error ? err.message : t("login.requestError");
