@@ -244,10 +244,7 @@ export default function HomePage() {
         <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-8 space-y-6 border border-crease">
           <div className="flex items-start justify-between border-b border-crease pb-4 gap-4">
             <div>
-              <span className="text-xs font-letter uppercase tracking-widest text-foreground-muted block">
-                {t("landing.step01Label")}
-              </span>
-              <h2 className="font-serif-editorial text-2xl text-foreground font-semibold mt-0.5">
+              <h2 className="font-serif-editorial text-2xl text-foreground font-semibold">
                 {t("landing.writeLetterToFuture")}
               </h2>
               <span className="postmark-stamp text-xs py-0.5 px-2.5 inline-block mt-2">
