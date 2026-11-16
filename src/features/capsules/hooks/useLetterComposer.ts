@@ -84,7 +84,7 @@ export function useLetterComposer(
   initialValues?: Partial<LetterComposerState>,
 ) {
   const { createCapsule, locale, t } = useTimeEcho();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const [rawForm, setForm] = useState<LetterComposerState>(() => ({
     ...DEFAULT_STATE,
@@ -178,19 +178,35 @@ export function useLetterComposer(
       errs.content = t("landing.minCharsError");
     }
 
-    if (!form.email.trim()) {
+    const effectiveEmail = (form.email || user?.email || "").trim();
+    if (!isAuthenticated && !effectiveEmail) {
       errs.email = t("composer.errors.emailRequired");
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    } else if (
+      effectiveEmail &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail)
+    ) {
       errs.email = t("composer.errors.emailInvalid");
     }
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
+    const now = new Date();
+    const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     if (!form.scheduledAt || isNaN(scheduledTime)) {
       errs.scheduledAt = t("composer.errors.dateRequired");
+    } else if (form.scheduledAt <= todayISO) {
+      errs.scheduledAt = t("composer.errors.dateFuture");
     }
 
     return errs;
-  }, [form.title, form.content, form.email, form.scheduledAt, t]);
+  }, [
+    form.title,
+    form.content,
+    form.email,
+    form.scheduledAt,
+    user?.email,
+    isAuthenticated,
+    t,
+  ]);
 
   const isValid = Object.keys(validationErrors).length === 0;
 
@@ -247,7 +263,9 @@ export function useLetterComposer(
     }
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
-    if (scheduledTime <= Date.now()) {
+    const now = new Date();
+    const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    if (form.scheduledAt <= todayISO || scheduledTime <= Date.now()) {
       const dateErr = t("composer.errors.dateFuture");
       setError(dateErr);
       throw new Error(dateErr);
@@ -262,10 +280,12 @@ export function useLetterComposer(
         (p) => p.prediction.trim() !== "",
       );
 
+      const effectiveEmail = (form.email || user?.email || "").trim();
+
       const payload: CreateLetterInput = {
         title: form.title.trim(),
         content: form.content.trim(),
-        email: form.email.trim(),
+        email: effectiveEmail,
         scheduledAt: new Date(form.scheduledAt).toISOString(),
         language: form.language,
         timezone: form.timezone,
@@ -290,6 +310,7 @@ export function useLetterComposer(
     isValid,
     validationErrors,
     form,
+    user,
     createCapsule,
     t,
     resolveFriendlyErrorMessage,

@@ -64,6 +64,19 @@ export function ArchivalDatePicker({
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const effectiveMin = useMemo(() => {
+    if (min) return min;
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return toISODate(
+      tomorrow.getFullYear(),
+      tomorrow.getMonth(),
+      tomorrow.getDate(),
+    );
+  }, [min]);
+
+  const minParsed = useMemo(() => parseISODate(effectiveMin), [effectiveMin]);
+
   const parsedValue = useMemo(() => parseISODate(value), [value]);
 
   // Track external value changes during render without cascading effects
@@ -136,6 +149,19 @@ export function ArchivalDatePicker({
     });
   }, [value, locale, placeholder]);
 
+  const canGoPrevYear = useMemo(() => {
+    if (!minParsed) return true;
+    return viewDate.year - 1 >= minParsed.year;
+  }, [minParsed, viewDate.year]);
+
+  const canGoPrevMonth = useMemo(() => {
+    if (!minParsed) return true;
+    if (viewDate.year < minParsed.year) return false;
+    if (viewDate.year === minParsed.year && viewDate.month <= minParsed.month)
+      return false;
+    return true;
+  }, [minParsed, viewDate.year, viewDate.month]);
+
   // Generate calendar days
   const calendarDays = useMemo(() => {
     const firstDay = new Date(viewDate.year, viewDate.month, 1);
@@ -185,7 +211,7 @@ export function ArchivalDatePicker({
         day: d,
         isCurrentMonth: false,
         iso,
-        isDisabled: Boolean(min && iso < min),
+        isDisabled: Boolean(effectiveMin && iso < effectiveMin),
         isSelected: iso === value,
         isToday: iso === todayISO,
       });
@@ -200,7 +226,7 @@ export function ArchivalDatePicker({
         day: d,
         isCurrentMonth: true,
         iso,
-        isDisabled: Boolean(min && iso < min),
+        isDisabled: Boolean(effectiveMin && iso < effectiveMin),
         isSelected: iso === value,
         isToday: iso === todayISO,
       });
@@ -221,7 +247,7 @@ export function ArchivalDatePicker({
           day: d,
           isCurrentMonth: false,
           iso,
-          isDisabled: Boolean(min && iso < min),
+          isDisabled: Boolean(effectiveMin && iso < effectiveMin),
           isSelected: iso === value,
           isToday: iso === todayISO,
         });
@@ -229,15 +255,16 @@ export function ArchivalDatePicker({
     }
 
     return days;
-  }, [viewDate.year, viewDate.month, min, value]);
+  }, [viewDate.year, viewDate.month, effectiveMin, value]);
 
   const handlePrevMonth = useCallback(() => {
+    if (!canGoPrevMonth) return;
     setViewDate((prev) => {
       const prevMonth = prev.month === 0 ? 11 : prev.month - 1;
       const prevYear = prev.month === 0 ? prev.year - 1 : prev.year;
       return { year: prevYear, month: prevMonth };
     });
-  }, []);
+  }, [canGoPrevMonth]);
 
   const handleNextMonth = useCallback(() => {
     setViewDate((prev) => {
@@ -248,14 +275,16 @@ export function ArchivalDatePicker({
   }, []);
 
   const handlePrevYear = useCallback(() => {
+    if (!canGoPrevYear) return;
     setViewDate((prev) => ({ ...prev, year: prev.year - 1 }));
-  }, []);
+  }, [canGoPrevYear]);
 
   const handleNextYear = useCallback(() => {
     setViewDate((prev) => ({ ...prev, year: prev.year + 1 }));
   }, []);
 
   const handleSelectDay = (iso: string) => {
+    if (effectiveMin && iso < effectiveMin) return;
     onChange(iso);
     setIsOpen(false);
   };
@@ -303,16 +332,28 @@ export function ArchivalDatePicker({
               <button
                 type="button"
                 onClick={handlePrevYear}
+                disabled={!canGoPrevYear}
                 title={locale === "es" ? "Año anterior" : "Previous year"}
-                className="p-1 rounded-xs hover:bg-manila/50 text-foreground-muted hover:text-foreground transition-colors cursor-pointer"
+                className={cn(
+                  "p-1 rounded-xs text-foreground-muted transition-colors",
+                  canGoPrevYear
+                    ? "hover:bg-manila/50 hover:text-foreground cursor-pointer"
+                    : "opacity-20 cursor-not-allowed",
+                )}
               >
                 <ChevronsLeft size={15} />
               </button>
               <button
                 type="button"
                 onClick={handlePrevMonth}
+                disabled={!canGoPrevMonth}
                 title={locale === "es" ? "Mes anterior" : "Previous month"}
-                className="p-1 rounded-xs hover:bg-manila/50 text-foreground-muted hover:text-foreground transition-colors cursor-pointer"
+                className={cn(
+                  "p-1 rounded-xs text-foreground-muted transition-colors",
+                  canGoPrevMonth
+                    ? "hover:bg-manila/50 hover:text-foreground cursor-pointer"
+                    : "opacity-20 cursor-not-allowed",
+                )}
               >
                 <ChevronLeft size={15} />
               </button>

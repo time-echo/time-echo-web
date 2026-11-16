@@ -7,6 +7,7 @@ import { ArchivalAccordion } from "@/components/ui/ArchivalAccordion";
 import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { ArchivalDatePicker } from "@/components/ui/ArchivalDatePicker";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
 import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
@@ -17,6 +18,7 @@ export interface LetterComposerFormProps {
   showDocketHeader?: boolean;
   className?: string;
   defaultHorizon?: HorizonPreset;
+  isAuthenticated?: boolean;
 }
 
 export function LetterComposerForm({
@@ -24,9 +26,12 @@ export function LetterComposerForm({
   showDocketHeader = true,
   className,
   defaultHorizon,
+  isAuthenticated: propIsAuthenticated,
 }: LetterComposerFormProps) {
   const router = useRouter();
   const { t, locale } = useTimeEcho();
+  const { isAuthenticated: authIsAuthenticated } = useAuth();
+  const isAuthenticated = propIsAuthenticated ?? authIsAuthenticated;
 
   const presets: Array<{ id: HorizonPreset; label: string }> = [
     { id: "6m", label: t("letters.six_months") },
@@ -51,6 +56,15 @@ export function LetterComposerForm({
   } = useLetterComposer(
     defaultHorizon ? { horizonPreset: defaultHorizon } : undefined,
   );
+
+  const minDate = React.useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }, []);
 
   const searchParams = useSearchParams();
   const { findStamp } = useStampCatalog();
@@ -323,6 +337,7 @@ export function LetterComposerForm({
                     id="custom-date-input"
                     value={form.scheduledAt}
                     onChange={(date) => setField("scheduledAt", date)}
+                    min={minDate}
                     locale={locale}
                     hasError={Boolean(
                       hasAttemptedSubmit && validationErrors.scheduledAt,
@@ -338,36 +353,39 @@ export function LetterComposerForm({
               )}
             </div>
 
-            <div className="space-y-2 border-t border-crease pt-5 font-letter">
-              <label
-                htmlFor="letter-email-input"
-                className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
-              >
-                {t("letters.label_email")} *
-              </label>
-              <input
-                id="letter-email-input"
-                type="email"
-                value={form.email}
-                onChange={(e) => setField("email", e.target.value)}
-                placeholder={t("letters.email_placeholder_form")}
-                required
-                className={cn(
-                  "w-full border border-crease rounded-xs bg-transparent text-foreground placeholder:text-foreground-muted/40 text-xs px-3 py-2.5 font-letter focus:border-wax focus:outline-none transition-colors",
-                  hasAttemptedSubmit &&
-                    validationErrors.email &&
-                    "border-wax bg-wax/5",
-                )}
-              />
-              <p className="text-[11px] font-letter text-foreground-muted">
-                {t("letters.label_email_help")}
-              </p>
-              {hasAttemptedSubmit && validationErrors.email && (
-                <p className="text-xs text-wax font-mono pt-1">
-                  {validationErrors.email}
+            {/* Guest email section - only required for unauthenticated users */}
+            {!isAuthenticated && (
+              <div className="space-y-2 border-t border-crease pt-5 font-letter">
+                <label
+                  htmlFor="letter-email-input"
+                  className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
+                >
+                  {t("letters.label_email")} *
+                </label>
+                <input
+                  id="letter-email-input"
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setField("email", e.target.value)}
+                  placeholder={t("letters.email_placeholder_form")}
+                  required
+                  className={cn(
+                    "w-full border border-crease rounded-xs bg-transparent text-foreground placeholder:text-foreground-muted/40 text-xs px-3 py-2.5 font-letter focus:border-wax focus:outline-none transition-colors",
+                    hasAttemptedSubmit &&
+                      validationErrors.email &&
+                      "border-wax bg-wax/5",
+                  )}
+                />
+                <p className="text-[11px] font-letter text-foreground-muted">
+                  {t("letters.label_email_help")}
                 </p>
-              )}
-            </div>
+                {hasAttemptedSubmit && validationErrors.email && (
+                  <p className="text-xs text-wax font-mono pt-1">
+                    {validationErrors.email}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="lg:col-span-5 space-y-6">
