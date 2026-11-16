@@ -70,17 +70,12 @@ function StampPickerContent({
     if (!query) return list;
 
     return list.filter((stamp) => {
-      const localizedName = t(`stamps.items.${stamp.slug}.name`);
-      const localizedDenom = t(`stamps.items.${stamp.slug}.denomination`);
-
       return (
         stamp.name.toLowerCase().includes(query) ||
-        localizedName.toLowerCase().includes(query) ||
-        (stamp.slug && stamp.slug.toLowerCase().includes(query)) ||
-        localizedDenom.toLowerCase().includes(query)
+        (stamp.slug && stamp.slug.toLowerCase().includes(query))
       );
     });
-  }, [stamps, selectedCategory, searchQuery, t]);
+  }, [stamps, selectedCategory, searchQuery]);
 
   useEffect(() => {
     if (selectedStampRef.current) {
@@ -184,29 +179,21 @@ function StampPickerContent({
               >
                 {t("stamps.categories.all")}
               </button>
-              {categories.map((cat) => {
-                const localizedCat = t(`stamps.categories.${cat.slug}`);
-                const label =
-                  localizedCat && !localizedCat.startsWith("stamps.categories.")
-                    ? localizedCat
-                    : cat.name;
-
-                return (
-                  <button
-                    key={cat.slug}
-                    type="button"
-                    onClick={() => setSelectedCategory(cat.slug)}
-                    className={cn(
-                      "px-2.5 py-1 text-[11px] font-letter rounded-xs transition-colors whitespace-nowrap cursor-pointer",
-                      selectedCategory === cat.slug
-                        ? "bg-wax text-on-wax font-semibold"
-                        : "bg-parchment text-foreground-muted hover:text-foreground border border-crease",
-                    )}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
+              {categories.map((cat) => (
+                <button
+                  key={cat.slug}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat.slug)}
+                  className={cn(
+                    "px-2.5 py-1 text-[11px] font-letter rounded-xs transition-colors whitespace-nowrap cursor-pointer",
+                    selectedCategory === cat.slug
+                      ? "bg-wax text-on-wax font-semibold"
+                      : "bg-parchment text-foreground-muted hover:text-foreground border border-crease",
+                  )}
+                >
+                  {cat.name}
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -233,19 +220,6 @@ function StampPickerContent({
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 justify-items-center">
               {filteredStamps.map((stamp) => {
                 const isSelected = selectedStampId === stamp.slug;
-                const localizedName = t(`stamps.items.${stamp.slug}.name`);
-                const stampTitle =
-                  localizedName && !localizedName.startsWith("stamps.items.")
-                    ? localizedName
-                    : stamp.name;
-
-                const localizedDenom = t(
-                  `stamps.items.${stamp.slug}.denomination`,
-                );
-                const denominationText =
-                  localizedDenom && !localizedDenom.startsWith("stamps.items.")
-                    ? localizedDenom
-                    : "TIME ECHO";
 
                 return (
                   <div
@@ -285,15 +259,12 @@ function StampPickerContent({
                       )}
                     </div>
 
-                    <div className="mt-2 text-center w-full space-y-0.5">
+                    <div className="mt-2 text-center w-full">
                       <span
                         className="block font-serif-editorial text-xs font-semibold text-foreground truncate"
-                        title={stampTitle}
+                        title={stamp.name}
                       >
-                        {stampTitle}
-                      </span>
-                      <span className="block font-letter text-[9px] text-foreground-muted truncate">
-                        {denominationText}
+                        {stamp.name}
                       </span>
                     </div>
                   </div>

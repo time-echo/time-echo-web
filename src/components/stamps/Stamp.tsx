@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { StampPerforationFrame, type StampSize } from "./StampPerforationFrame";
 import { PostmarkOverlay } from "./PostmarkOverlay";
 import { StampRenderer } from "./StampRenderer";
-import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { DEFAULT_STAMP_ID } from "./stamps.data";
 
 export interface StampProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -41,28 +40,28 @@ const TEXT_SIZE_MAP: Record<
   Exclude<StampSize, "custom">,
   {
     header: string;
-    denomination: string;
+    caption: string;
     iconSize: string;
   }
 > = {
   sm: {
     header: "text-[5px] tracking-wider",
-    denomination: "text-[5px]",
+    caption: "text-[5px]",
     iconSize: "w-7 h-7",
   },
   md: {
     header: "text-[7px] tracking-widest",
-    denomination: "text-[7px]",
+    caption: "text-[7px]",
     iconSize: "w-11 h-11",
   },
   lg: {
     header: "text-[9px] tracking-widest",
-    denomination: "text-[9px]",
+    caption: "text-[9px]",
     iconSize: "w-14 h-14",
   },
   xl: {
     header: "text-[11px] tracking-widest",
-    denomination: "text-[11px]",
+    caption: "text-[11px]",
     iconSize: "w-18 h-18",
   },
 };
@@ -89,7 +88,6 @@ export function Stamp({
   ref,
   ...props
 }: StampProps) {
-  const { t } = useTimeEcho();
   const shouldReduceMotion = useReducedMotion();
 
   const stampKey = slug || id || DEFAULT_STAMP_ID;
@@ -103,19 +101,7 @@ export function Stamp({
   const accentColor = categoryColors.accent;
 
   const textConfig = size !== "custom" ? TEXT_SIZE_MAP[size] : TEXT_SIZE_MAP.md;
-
-  const localizedDenomination = t(`stamps.items.${stampKey}.denomination`);
-  const denominationText =
-    localizedDenomination && !localizedDenomination.startsWith("stamps.items.")
-      ? localizedDenomination
-      : name || "TIME ECHO";
-
-  const localizedName = t(`stamps.items.${stampKey}.name`);
-  const stampName =
-    name ||
-    (localizedName && !localizedName.startsWith("stamps.items.")
-      ? localizedName
-      : stampKey);
+  const stampName = name || stampKey;
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     onClick?.(e);
@@ -185,7 +171,7 @@ export function Stamp({
             TIME ECHO
           </span>
           <span
-            className={cn("leading-none font-bold", textConfig.denomination)}
+            className={cn("leading-none font-bold", textConfig.caption)}
             style={{ color: primaryColor }}
           >
             POST
@@ -212,11 +198,11 @@ export function Stamp({
           <span
             className={cn(
               "block font-letter font-bold uppercase truncate leading-none",
-              textConfig.denomination,
+              textConfig.caption,
             )}
             style={{ color: accentColor }}
           >
-            {denominationText}
+            {stampName}
           </span>
         </div>
       </StampPerforationFrame>
