@@ -318,8 +318,10 @@
   "letters": {
     "annex_1": "ANEXO I",
     "annex_2": "ANEXO II",
-    "form_step_title": "1. Cuando escribes tu carta",
-    "form_step_subtitle": "Estás creando una carta para tu yo del futuro.",
+    "form_title": "Escribe a tu yo del futuro",
+    "form_subtitle": "Escribe lo que sientes hoy, haz tus predicciones y sella la fecha de entrega.",
+    "form_step_title": "Escribe a tu yo del futuro",
+    "form_step_subtitle": "Escribe lo que sientes hoy, haz tus predicciones y sella la fecha de entrega.",
     "deliver_date_prefix": "Se entregará el",
     "when_do_you_want_it": "¿Cuándo quieres recibirla?",
     "six_months": "6 meses",

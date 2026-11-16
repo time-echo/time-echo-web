@@ -121,10 +121,10 @@ export function LetterComposerForm({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-crease pb-6">
           <div className="space-y-1">
             <h1 className="font-serif-editorial text-3xl font-semibold text-foreground tracking-tight">
-              {t("letters.form_step_title")}
+              {t("letters.form_title")}
             </h1>
             <p className="text-xs font-letter text-foreground-muted tracking-wider">
-              {t("letters.form_step_subtitle")}
+              {t("letters.form_subtitle")}
             </p>
           </div>
 
@@ -154,10 +154,7 @@ export function LetterComposerForm({
           <div className="lg:col-span-7 paper-sheet rounded-xs p-6 sm:p-10 space-y-6 border border-crease shadow-xs">
             <div className="flex items-start justify-between border-b border-crease pb-4 gap-4">
               <div className="space-y-1">
-                <span className="text-xs font-letter uppercase tracking-widest text-foreground-muted block">
-                  {t("common.appName")} · {t("letters.form_letter_heading")}
-                </span>
-                <h2 className="font-serif-editorial text-2xl font-semibold text-foreground mt-0.5">
+                <h2 className="font-serif-editorial text-2xl font-semibold text-foreground">
                   {t("letters.form_letter_heading")}
                 </h2>
                 <span className="postmark-stamp text-xs py-0.5 px-2.5 inline-block">
