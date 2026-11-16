@@ -128,8 +128,8 @@ stamps/
 ├── LetterStamp.tsx             # Affixed postage stamp representation
 ├── StampPickerModal.tsx        # Modal for catalog browsing and search
 ├── StampRenderer.tsx           # DOMPurify-sanitized SVG renderer
-├── useStampCatalog.ts          # Catalog hook with API integration and offline fallback
-└── stamps.data.ts              # Category definitions and static fallbacks
+├── useStampCatalog.ts          # Dynamic catalog hook (backend API + caching)
+└── stamps.data.ts              # Initial unlocked stamp IDs and default stamp tokens
 ```
 
 ---
@@ -243,7 +243,7 @@ curl --location 'http://localhost:3000/api/v1/stamps?category=small-things&q=cof
 
 - Filter parameters: `category` (slug or ID), `q` (search name in English/Spanish), `page` (pagination), `per_page` (page size).
 - Headers: `Accept: application/json`, `Accept-Language: en` / `X-Locale`, and `Authorization: Bearer <token>`.
-- Implemented in `HttpApiRepository.ts` via `getStamps(locale, filters)` and `StampFilters`. See [`curl.md`](curl.md) for full cURL specifications.
+- Implemented in `HttpApiRepository.ts` via `getStamps(locale, filters)` and `StampFilters`. Interactive OpenAPI documentation is available in Swagger UI at `/api-docs` and `/api-docs/v1/swagger.yaml`.
 
 ---
 

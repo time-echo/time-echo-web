@@ -128,8 +128,8 @@ src/
 │   │   ├── LetterStamp.tsx        # Affixed stamp on envelope/letter
 │   │   ├── StampPickerModal.tsx   # Interactive catalog browser modal
 │   │   ├── StampRenderer.tsx      # DOMPurify-sanitized SVG renderer
-│   │   ├── useStampCatalog.ts     # Dynamic catalog hook (API + fallback)
-│   │   └── stamps.data.ts         # Static definitions & category tokens
+│   │   ├── useStampCatalog.ts     # Dynamic catalog hook (backend API + caching)
+│   │   └── stamps.data.ts         # Initial unlocked IDs & default tokens
 │   └── ui/                 # Design system primitives
 │       ├── WaxSeal.tsx
 │       ├── PostmarkStamp.tsx

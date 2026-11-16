@@ -245,7 +245,7 @@ Custom-styled range input for emotional baselines.
 
 #### Digital Postage Stamp (`src/components/stamps/Stamp.tsx`)
 
-Authentic physical postage stamp with perforation edges, denomination, and category themes.
+Authentic physical postage stamp with perforation edges, vector SVG illustration, category themes, and clean typography.
 
 ```tsx
 <Stamp
