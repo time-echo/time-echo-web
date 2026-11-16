@@ -238,23 +238,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
       <div className="max-w-7xl mx-auto py-4 font-ui animate-fade-in text-foreground">
         <div className="max-w-xl mx-auto py-8">
           <div className="paper-sheet rounded-xs p-8 sm:p-12 text-center space-y-7 border border-crease">
-            <div className="flex items-center justify-center gap-6 select-none my-2">
+            <div className="flex items-center justify-center select-none my-2">
               <div className="wax-seal w-24 h-24 rounded-full flex items-center justify-center text-on-wax shadow-md">
                 <Lock size={36} />
               </div>
-              {(letter.stamp || letter.stampId) && (
-                <div className="relative">
-                  <LetterStamp
-                    stamp={letter.stamp}
-                    stampId={letter.stampId}
-                    size="lg"
-                    hasPostmark
-                    postmarkVariant="combo"
-                    postmarkDate={formattedScheduled}
-                    rotation={3.5}
-                  />
-                </div>
-              )}
             </div>
 
             <div className="space-y-2">
@@ -322,23 +309,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 </p>
               </div>
 
-              <div className="my-6 relative select-none flex items-center justify-center gap-6 h-32">
+              <div className="my-6 relative select-none flex items-center justify-center h-32">
                 <div className="wax-seal w-20 h-20 rounded-full flex items-center justify-center text-on-wax animate-seal-left">
                   <Unlock size={28} />
                 </div>
-                {(letter.stamp || letter.stampId) && (
-                  <div className="relative">
-                    <LetterStamp
-                      stamp={letter.stamp}
-                      stampId={letter.stampId}
-                      size="md"
-                      hasPostmark
-                      postmarkVariant="combo"
-                      postmarkDate={formattedScheduled}
-                      rotation={3}
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="archival-folder rounded-xs p-4 text-xs font-letter text-foreground/80 space-y-1 text-left border border-manila-border">
