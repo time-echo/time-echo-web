@@ -1192,7 +1192,47 @@
   },
   "metadata": {
     "title": "TimeEcho — Cartas a tu yo del futuro",
-    "description": "Escribe una carta a tu yo del futuro. Cifrada, sellada y entregada en la fecha que elijas."
+    "description": "Escribe una carta a tu yo del futuro. Cifrada, sellada y entregada en la fecha que elijas.",
+    "keywords": "cápsula del tiempo digital, carta a mi yo del futuro, cartas al futuro, cápsula del tiempo cifrada, reflexión personal, predicciones de vida, TimeEcho",
+    "ogImageAlt": "TimeEcho — Vista previa de cápsula del tiempo y carta al futuro",
+    "pages": {
+      "about": {
+        "title": "Acerca de TimeEcho — Cómo funciona nuestra cápsula del tiempo",
+        "description": "Conoce cómo TimeEcho protege y entrega cartas privadas y cifradas a tu yo del futuro con registro emocional y predicciones de vida."
+      },
+      "privacy": {
+        "title": "Política de Privacidad y Compromiso de Cifrado",
+        "description": "Descubre cómo TimeEcho protege tus cartas personales con cifrado en reposo, cero publicidad y propiedad total de tus datos."
+      },
+      "terms": {
+        "title": "Términos de Servicio",
+        "description": "Lee los Términos de Servicio claros y humanos de TimeEcho sobre la entrega programada de cartas, propiedad de contenido y seguridad."
+      },
+      "login": {
+        "title": "Iniciar sesión en tu Bóveda",
+        "description": "Accede a tu bóveda postal de TimeEcho mediante un enlace seguro sin contraseña enviado a tu correo."
+      },
+      "checkEmail": {
+        "title": "Revisa tu bandeja de entrada",
+        "description": "Enviamos un enlace seguro de acceso a tu correo electrónico."
+      },
+      "dashboard": {
+        "title": "Bóveda Postal",
+        "description": "Administra tus cartas selladas y desbloqueadas en tu cápsula del tiempo."
+      },
+      "compose": {
+        "title": "Escribe una carta a tu yo del futuro",
+        "description": "Redacta una nueva carta cifrada para el futuro, elige una estampilla postal y programa su fecha de entrega."
+      },
+      "analytics": {
+        "title": "Analíticas Retrospectivas",
+        "description": "Revisa tu precisión en predicciones y evolución emocional en tus cartas abiertas."
+      },
+      "settings": {
+        "title": "Configuración de Cuenta",
+        "description": "Administra las preferencias de tu cuenta y controles de datos en TimeEcho."
+      }
+    }
   },
   "login": {
     "title": "Iniciar sesión",

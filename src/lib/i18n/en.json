@@ -1192,7 +1192,47 @@
   },
   "metadata": {
     "title": "TimeEcho — Letters to Your Future Self",
-    "description": "Write a letter to your future self. Encrypted, sealed, and delivered on the date you choose."
+    "description": "Write a letter to your future self. Encrypted, sealed, and delivered on the date you choose.",
+    "keywords": "digital time capsule, letter to future self, future letter, encrypted time capsule, personal reflection, life predictions, TimeEcho",
+    "ogImageAlt": "TimeEcho — Digital Time Capsule and Future Letter Preview",
+    "pages": {
+      "about": {
+        "title": "About TimeEcho — How Our Digital Time Capsule Works",
+        "description": "Learn how TimeEcho protects and delivers private, encrypted letters to your future self with emotional snapshots and milestone predictions."
+      },
+      "privacy": {
+        "title": "Privacy Policy & Encryption Promise",
+        "description": "Learn how TimeEcho safeguards your personal letters with encryption at rest, zero advertising, and full data ownership."
+      },
+      "terms": {
+        "title": "Terms of Service",
+        "description": "Read TimeEcho's clear, human-readable Terms of Service covering scheduled letter delivery, content ownership, and account security."
+      },
+      "login": {
+        "title": "Sign In to Your Vault",
+        "description": "Access your TimeEcho postal vault using a passwordless sign-in link sent directly to your email."
+      },
+      "checkEmail": {
+        "title": "Check Your Inbox",
+        "description": "We sent a secure sign-in link to your email address."
+      },
+      "dashboard": {
+        "title": "Postal Vault",
+        "description": "Manage your sealed and unlocked time-capsule letters."
+      },
+      "compose": {
+        "title": "Write a Letter to Your Future Self",
+        "description": "Compose a new encrypted time-capsule letter, choose a digital postage stamp, and schedule future delivery."
+      },
+      "analytics": {
+        "title": "Retrospective Analytics",
+        "description": "Review your prediction accuracy and emotional evolution across unlocked letters."
+      },
+      "settings": {
+        "title": "Account Settings",
+        "description": "Manage your TimeEcho account preferences and data controls."
+      }
+    }
   },
   "login": {
     "title": "Sign in",

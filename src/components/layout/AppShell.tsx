@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+function AuthenticatedShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -35,48 +35,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     router.push("/");
   };
 
-  const isTimeline = searchParams.get("timeline") === "true";
-  const isPublicPage =
-    pathname === "/" ||
-    pathname === "/login" ||
-    pathname.startsWith("/login/") ||
-    pathname === "/check_email" ||
-    pathname === "/about" ||
-    pathname === "/terms" ||
-    pathname === "/privacy" ||
-    pathname.startsWith("/letters/success");
-
   useEffect(() => {
-    if (!isPublicPage && !isAuthLoading && !isAuthenticated) {
+    if (!isAuthLoading && !isAuthenticated) {
       router.replace("/login");
     }
-  }, [isPublicPage, isAuthLoading, isAuthenticated, router]);
-
-  if (isPublicPage) {
-    return (
-      <div className="min-h-screen flex flex-col bg-parchment text-foreground font-ui">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
-        >
-          {t("common.skipToContent")}
-        </a>
-        <ArchivalHeader />
-        <main
-          id="main-content"
-          className="flex-grow max-w-6xl mx-auto px-4 md:px-6 py-10 w-full font-ui"
-        >
-          {children}
-        </main>
-        <ArchivalFooter />
-      </div>
-    );
-  }
+  }, [isAuthLoading, isAuthenticated, router]);
 
   if (!isAuthLoading && !isAuthenticated) {
     return <div className="min-h-screen bg-parchment" />;
   }
 
+  const isTimeline = searchParams.get("timeline") === "true";
   const isWriteActive = pathname === "/letters/new";
   const isVaultActive = pathname === "/dashboard" && !isTimeline;
   const isTimelineActive = pathname === "/dashboard" && isTimeline;
@@ -337,5 +306,47 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
     </div>
+  );
+}
+
+export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const { t } = useTimeEcho();
+
+  const isPublicPage =
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname.startsWith("/login/") ||
+    pathname === "/check_email" ||
+    pathname === "/about" ||
+    pathname === "/terms" ||
+    pathname === "/privacy" ||
+    pathname.startsWith("/letters/success");
+
+  if (isPublicPage) {
+    return (
+      <div className="min-h-screen flex flex-col bg-parchment text-foreground font-ui">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xs focus:bg-wax focus:px-4 focus:py-2.5 focus:font-letter focus:text-xs focus:font-semibold focus:uppercase focus:tracking-wider focus:text-on-wax"
+        >
+          {t("common.skipToContent")}
+        </a>
+        <ArchivalHeader />
+        <main
+          id="main-content"
+          className="flex-grow max-w-6xl mx-auto px-4 md:px-6 py-10 w-full font-ui"
+        >
+          {children}
+        </main>
+        <ArchivalFooter />
+      </div>
+    );
+  }
+
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-parchment" />}>
+      <AuthenticatedShell>{children}</AuthenticatedShell>
+    </Suspense>
   );
 }
