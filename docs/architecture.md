@@ -251,33 +251,74 @@ curl --location 'http://localhost:3000/api/v1/stamps?category=small-things&q=cof
 
 ```
 app/
-├── layout.tsx              # Root: providers, fonts, global styles
+├── layout.tsx              # Root: providers, fonts, global metadata, site JSON-LD
 ├── page.tsx                # Landing / Home (letter composer)
+├── robots.ts               # Programmatic /robots.txt (Allow public, Disallow private)
+├── sitemap.ts              # Programmatic /sitemap.xml with bilingual hreflang alternates
+├── manifest.ts             # Programmatic /manifest.webmanifest
 ├── globals.css             # Design tokens, base styles
 ├── login/
-│   └── page.tsx            # Email-based auth (mock)
+│   ├── layout.tsx          # Localized metadata + noindex
+│   ├── page.tsx            # Email-based magic-link auth
+│   └── [token]/
+│       └── page.tsx        # Magic-link token verification
+├── check_email/
+│   ├── layout.tsx          # Localized metadata + noindex
+│   └── page.tsx            # Magic-link dispatch confirmation
 ├── dashboard/
-│   └── page.tsx            # Capsule list + stats
+│   ├── layout.tsx          # Localized metadata + noindex
+│   └── page.tsx            # Capsule list + timeline view
 ├── letters/
+│   ├── layout.tsx          # Localized metadata + noindex
 │   ├── new/
-│   │   └── page.tsx        # Full composer (alternative to home)
+│   │   └── page.tsx        # Full composer
 │   ├── success/
 │   │   └── page.tsx        # Confirmation + docket number
-│   ├── [id]/
-│   │   ├── page.tsx        # Letter detail (sealed/opened)
-│   │   └── reality/
-│   │       └── page.tsx    # Reality ledger comparison
+│   └── [id]/
+│       ├── page.tsx        # Letter detail (sealed/opened)
+│       └── reality/
+│           └── page.tsx    # Reality ledger comparison
 ├── analytics/
+│   ├── layout.tsx          # Localized metadata + noindex
 │   └── page.tsx            # Metrics dashboard
 ├── settings/
-│   └── page.tsx            # Preferences (theme, locale, privacy)
+│   ├── layout.tsx          # Localized metadata + noindex
+│   └── page.tsx            # Preferences & account controls
 ├── about/
+│   ├── layout.tsx          # Localized indexable metadata + AboutPage/Breadcrumb JSON-LD
 │   └── page.tsx            # About page
 ├── terms/
+│   ├── layout.tsx          # Localized indexable metadata
 │   └── page.tsx            # Terms of service
 └── privacy/
+    ├── layout.tsx          # Localized indexable metadata
     └── page.tsx            # Privacy policy
 ```
+
+---
+
+## SEO & Metadata Architecture (`src/lib/seo.ts`)
+
+TimeEcho implements a centralized, bilingual SEO architecture designed for full Server-Side Rendering (SSR) and stateless crawler indexing across Spanish (`es`) and English (`en`):
+
+1. **Request-Time Locale Resolution (`src/proxy.ts` & `src/lib/seo.ts`)**:
+   - `src/proxy.ts` resolves the request locale from `?locale=es|en` query overrides, `timeecho_locale` / `NEXT_LOCALE` cookies, or `Accept-Language` headers, and forwards `x-locale` and `x-pathname` on the **request headers** (`NextResponse.next({ request: { headers } })`).
+   - `resolveRequestLocale()` in `src/lib/seo.ts` reads `x-locale` first so Server Components (`RootLayout`, `generateMetadata`, `next-intl`) emit consistent `<html lang="...">`, localized `<head>` metadata, and server-rendered copy on the first request without requiring cookies.
+2. **Centralized Metadata Builder (`buildPageMetadata` in `src/lib/seo.ts`)**:
+   - Constructs `metadataBase` (`NEXT_PUBLIC_SITE_URL` or `https://timeecho.me`), localized `title` (using `%s | TimeEcho` template) and `description` from `metadata.pages.<pageKey>` in `src/lib/i18n/{en,es}.json`.
+   - Generates canonical URLs and `hreflang` language alternates (`?locale=es`, `?locale=en`, `x-default`) for indexable pages.
+   - Configures Open Graph (`og:title`, `og:description`, `og:locale`, `og:image` pointing to localized `/images/letter-preview-${locale}.png`) and Twitter Cards (`summary_large_image`).
+   - Enforces `robots: { index: false, follow: false }` on private vault, authentication, and transactional routes.
+3. **Structured Data (Schema.org JSON-LD)**:
+   - `buildSiteJsonLd(locale)` renders `@graph` with `Organization`, `WebSite`, and `WebApplication` in `src/app/layout.tsx`.
+   - `buildAboutJsonLd(locale)` renders `AboutPage` and `BreadcrumbList` in `src/app/about/layout.tsx`.
+4. **SSR Boundary Discipline (`AppShell.tsx`)**:
+   - `useSearchParams()` is strictly isolated inside `AuthenticatedShell` (wrapped in `<Suspense>`) so public pages (`/`, `/about`, `/privacy`, `/terms`) never bail out to client-side rendering.
+5. **Adding a New Feature / Route Checklist (`.agents/rules/seo.md`)**:
+   - Classify the route as **Public Indexable** or **Private / Transactional** (`noIndex: true`).
+   - Add symmetric `metadata.pages.<pageKey>.{title,description}` keys in `src/lib/i18n/en.json` and `src/lib/i18n/es.json`, and register `<pageKey>` in `SeoPageKey` (`src/lib/seo.ts`).
+   - Create `src/app/<route>/layout.tsx` exporting `generateMetadata()` via `buildPageMetadata()`.
+   - Update `src/app/robots.ts` (`allow` or `disallow`) and `src/app/sitemap.ts` (if public indexable).
 
 ---
 
@@ -441,7 +482,8 @@ Applied in `globals.css`:
 ### Environment
 
 - Development: `BACKEND_API_URL=http://localhost:3000/api/v1` (configured in `.env.local`, server-only)
-- Production: Set `BACKEND_API_URL` to private production backend domain (never exposed to browser)
+- Public Canonical Base URL: `NEXT_PUBLIC_SITE_URL=https://timeecho.me` (used by `src/lib/seo.ts`, `robots.ts`, and `sitemap.ts`)
+- Production: Set `BACKEND_API_URL` to private production backend domain (never exposed to browser) and `NEXT_PUBLIC_SITE_URL` to the public frontend domain
 
 ### Commands
 

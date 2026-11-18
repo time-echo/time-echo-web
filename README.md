@@ -109,18 +109,22 @@ pnpm lint      # Run ESLint
 
 ```
 src/
-├── app/                    # Next.js App Router pages & API routes
-│   ├── api/letters/        # Internal API proxy / fallback routes
-│   ├── letters/            # Letter pages (new, detail, success, reality)
-│   ├── dashboard/          # User dashboard timeline
-│   ├── analytics/          # Retrospective analytics view
-│   ├── settings/           # User preferences & account controls
-│   ├── login/              # Passwordless authentication
-│   ├── about/              # About page
-│   ├── terms/              # Terms of service
-│   ├── privacy/            # Privacy policy
+├── app/                    # Next.js App Router pages, route layouts & API routes
+│   ├── api/                # Internal BFF API proxy route handlers
+│   ├── letters/            # Letter pages (new, detail, success, reality) + layout
+│   ├── dashboard/          # User dashboard timeline + layout
+│   ├── analytics/          # Retrospective analytics view + layout
+│   ├── settings/           # User preferences & account controls + layout
+│   ├── login/              # Passwordless authentication + layout
+│   ├── check_email/        # Magic link confirmation + layout
+│   ├── about/              # About page + layout (with JSON-LD)
+│   ├── terms/              # Terms of service + layout
+│   ├── privacy/            # Privacy policy + layout
+│   ├── robots.ts           # Programmatic /robots.txt
+│   ├── sitemap.ts          # Programmatic /sitemap.xml with hreflang alternates
+│   ├── manifest.ts         # Web App Manifest (/manifest.webmanifest)
 │   ├── globals.css         # Global styles & design tokens
-│   └── layout.tsx          # Root layout with providers & fonts
+│   └── layout.tsx          # Root layout with providers, fonts, metadata & JSON-LD
 ├── components/
 │   ├── layout/             # AppShell, ArchivalHeader, ArchivalFooter
 │   ├── stamps/             # Digital postage stamps suite
@@ -144,10 +148,11 @@ src/
 │   ├── analytics/          # AccuracyMeter, EmotionalShiftGauge, metricsCalculator
 │   └── reality-ledger/     # RealityLedger, PredictionComparisonRow, useRealityLedger
 ├── lib/
-│   ├── context/            # TimeEchoContext (global application state)
+│   ├── context/            # TimeEchoContext & AuthContext
 │   ├── repositories/       # ICapsuleRepository, HttpApiRepository
 │   ├── fonts.ts            # Font configuration (Fraunces, Courier Prime, IBM Plex Sans)
 │   ├── i18n/               # English/Spanish dictionary files (en.json, es.json)
+│   ├── seo.ts              # Centralized SEO metadata, Open Graph, hreflang & JSON-LD
 │   └── utils.ts            # cn() utility, formatting helpers
 └── types/
     └── timeecho.ts         # Domain types (Letter, Prediction, Stamp, EmotionalSnapshot)
