@@ -11,15 +11,14 @@ import React, {
 import { ApiError } from "@/lib/repositories/HttpApiRepository";
 import { getTranslation } from "@/lib/i18n";
 import { SupportedLanguage } from "@/types/timeecho";
+import { identifyUser, resetIdentity, track } from "@/lib/analytics";
 
 function getActiveLocale(): SupportedLanguage {
   if (typeof window !== "undefined") {
     try {
       const saved = window.localStorage.getItem("timeecho_locale");
       if (saved === "en" || saved === "es") return saved;
-    } catch {
-      // ignore
-    }
+    } catch {}
     const cookieMatch =
       typeof document !== "undefined" &&
       document.cookie.match(
@@ -38,7 +37,15 @@ function getActiveLocale(): SupportedLanguage {
 }
 
 export interface User {
+  id?: string;
   email: string;
+}
+
+interface AuthSessionResult {
+  userId?: string;
+  email: string;
+  token: string;
+  isNewUser?: boolean;
 }
 
 interface AuthContextValue {
@@ -51,9 +58,7 @@ interface AuthContextValue {
     email: string,
     localeOverride?: string,
   ) => Promise<{ message: string; email: string }>;
-  authenticateWithToken: (
-    token: string,
-  ) => Promise<{ email: string; token: string }>;
+  authenticateWithToken: (token: string) => Promise<AuthSessionResult>;
   logout: () => Promise<void>;
   fetchCurrentUser: () => Promise<void>;
 }
@@ -62,11 +67,9 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const TOKEN_KEY = "timeecho_session_token";
 const USER_EMAIL_KEY = "timeecho_user_email";
+const USER_ID_KEY = "timeecho_user_id";
 
-const tokenVerificationPromises = new Map<
-  string,
-  Promise<{ email: string; token: string }>
->();
+const tokenVerificationPromises = new Map<string, Promise<AuthSessionResult>>();
 
 function getStoredToken(): string | null {
   if (typeof window !== "undefined") {
@@ -79,11 +82,25 @@ function getStoredToken(): string | null {
   return null;
 }
 
-function persistSession(token: string, email: string) {
+function getStoredUserId(): string | undefined {
+  if (typeof window !== "undefined") {
+    try {
+      return window.localStorage.getItem(USER_ID_KEY) || undefined;
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+}
+
+function persistSession(token: string, email: string, userId?: string) {
   if (typeof window !== "undefined") {
     try {
       window.localStorage.setItem(TOKEN_KEY, token);
       window.localStorage.setItem(USER_EMAIL_KEY, email);
+      if (userId) {
+        window.localStorage.setItem(USER_ID_KEY, userId);
+      }
     } catch {}
   }
 }
@@ -93,6 +110,7 @@ function clearSession() {
     try {
       window.localStorage.removeItem(TOKEN_KEY);
       window.localStorage.removeItem(USER_EMAIL_KEY);
+      window.localStorage.removeItem(USER_ID_KEY);
       document.cookie = `${TOKEN_KEY}=; path=/; max-age=0; SameSite=Lax`;
     } catch {}
   }
@@ -117,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!res.ok) {
         if (res.status === 401) {
           clearSession();
+          resetIdentity();
           setToken(null);
           setUser(null);
         }
@@ -128,9 +147,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (userData?.email) {
         const activeToken =
           userData.token || getStoredToken() || "active_session";
-        persistSession(activeToken, userData.email);
+        const resolvedUserId =
+          userData.userId || userData.id || getStoredUserId();
+        persistSession(activeToken, userData.email, resolvedUserId);
         setToken(activeToken);
-        setUser({ email: userData.email });
+        setUser({ id: resolvedUserId, email: userData.email });
+        if (resolvedUserId) {
+          identifyUser(resolvedUserId, {
+            locale: userData.locale || getActiveLocale(),
+          });
+        }
       }
     } catch {
     } finally {
@@ -153,6 +179,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!res.ok) {
           if (res.status === 401) {
             clearSession();
+            resetIdentity();
             setToken(null);
             setUser(null);
           }
@@ -166,9 +193,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (userData?.email) {
           const activeToken =
             userData.token || getStoredToken() || "active_session";
-          persistSession(activeToken, userData.email);
+          const resolvedUserId =
+            userData.userId || userData.id || getStoredUserId();
+          persistSession(activeToken, userData.email, resolvedUserId);
           setToken(activeToken);
-          setUser({ email: userData.email });
+          setUser({ id: resolvedUserId, email: userData.email });
+          if (resolvedUserId) {
+            identifyUser(resolvedUserId, {
+              locale: userData.locale || getActiveLocale(),
+            });
+          }
         }
         setIsLoading(false);
       })
@@ -221,6 +255,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw apiErr;
       }
 
+      track("generate_lead", {
+        lead_source: "magic_link_request",
+        language: activeLocale,
+      });
+
       const responseData = json?.data || json;
       return {
         message: responseData?.message || "Magic link dispatched",
@@ -270,9 +309,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const sessionData = json?.data || json;
         const activeToken = sessionData.token || tokenParam;
         const userEmail = sessionData.email;
+        const userId = sessionData.userId || sessionData.id;
+        const isNewUser = Boolean(sessionData.isNewUser);
 
-        persistSession(activeToken, userEmail);
-        return { email: userEmail, token: activeToken };
+        persistSession(activeToken, userEmail, userId);
+
+        if (userId) {
+          identifyUser(userId, { locale: activeLocale });
+        }
+
+        if (isNewUser) {
+          track("sign_up", {
+            method: "magic_link",
+            language: activeLocale,
+          });
+        } else {
+          track("login", {
+            method: "magic_link",
+            language: activeLocale,
+          });
+        }
+
+        return {
+          userId,
+          email: userEmail,
+          token: activeToken,
+          isNewUser,
+        };
       })();
 
       tokenVerificationPromises.set(tokenParam, verificationPromise);
@@ -281,7 +344,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const result = await verificationPromise;
       setToken(result.token);
-      setUser({ email: result.email });
+      setUser({ id: result.userId, email: result.email });
       return result;
     } catch (err) {
       tokenVerificationPromises.delete(tokenParam);
@@ -307,6 +370,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }).catch(() => {});
     } finally {
       clearSession();
+      resetIdentity();
       tokenVerificationPromises.clear();
       setToken(null);
       setUser(null);

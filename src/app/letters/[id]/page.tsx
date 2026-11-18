@@ -651,7 +651,10 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
               )}
             </div>
 
-            <article className="p-5 sm:p-6 border border-crease rounded-xs bg-transparent text-foreground/90 min-h-[300px] whitespace-pre-wrap break-words select-text font-letter text-sm leading-loose shadow-inner">
+            <article
+              data-ph-no-capture="true"
+              className="p-5 sm:p-6 border border-crease rounded-xs bg-transparent text-foreground/90 min-h-[300px] whitespace-pre-wrap break-words select-text font-letter text-sm leading-loose shadow-inner"
+            >
               {letter.content}
             </article>
 

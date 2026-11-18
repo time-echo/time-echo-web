@@ -8,11 +8,15 @@ import {
 
 interface BackendSessionData {
   data?: {
+    userId?: string;
     email: string;
     token: string;
+    isNewUser?: boolean;
   };
+  userId?: string;
   email?: string;
   token?: string;
+  isNewUser?: boolean;
 }
 
 export async function POST(request: NextRequest) {
@@ -32,9 +36,11 @@ export async function POST(request: NextRequest) {
     const payload = backendRes.data?.data || backendRes.data;
     const sessionToken = payload?.token || token;
     const email = payload?.email;
+    const userId = payload?.userId;
+    const isNewUser = payload?.isNewUser;
 
     const response = NextResponse.json(
-      { data: { email, token: sessionToken } },
+      { data: { userId, email, token: sessionToken, isNewUser } },
       { status: backendRes.status },
     );
 
@@ -61,9 +67,11 @@ export async function GET(request: NextRequest) {
     const payload = backendRes.data?.data || backendRes.data;
     const sessionToken = payload?.token || token;
     const email = payload?.email;
+    const userId = payload?.userId;
+    const isNewUser = payload?.isNewUser;
 
     const response = NextResponse.json(
-      { data: { email, token: sessionToken } },
+      { data: { userId, email, token: sessionToken, isNewUser } },
       { status: backendRes.status },
     );
 

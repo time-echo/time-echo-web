@@ -9,9 +9,11 @@ import {
 interface MeResponse {
   data?: {
     authenticated: boolean;
+    userId?: string;
     email: string;
     locale: string;
   };
+  userId?: string;
   email?: string;
 }
 

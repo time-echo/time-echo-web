@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
+import { useAuth } from "@/lib/context/AuthContext";
+import { track } from "@/lib/analytics";
 import { PredictionCategory } from "@/types/timeecho";
 import Image from "next/image";
 import {
@@ -24,6 +26,18 @@ import { ArchivalDatePicker } from "@/components/ui/ArchivalDatePicker";
 export default function HomePage() {
   const router = useRouter();
   const { locale, createCapsule, t } = useTimeEcho();
+  const { isAuthenticated } = useAuth();
+  const hasTrackedCreationStart = useRef(false);
+
+  const trackLandingStartIfNeeded = () => {
+    if (hasTrackedCreationStart.current) return;
+    hasTrackedCreationStart.current = true;
+    track("letter_creation_started", {
+      source: "landing",
+      is_authenticated: Boolean(isAuthenticated),
+      locale,
+    });
+  };
 
   useEffect(() => {
     const scrollToHash = () => {
@@ -156,6 +170,34 @@ export default function HomePage() {
         },
         predictions: predictionsList,
       });
+
+      const resolvedHorizonDays =
+        showCustomDate && customDate
+          ? Math.max(
+              0,
+              Math.ceil(
+                (new Date(customDate).getTime() - Date.now()) /
+                  (1000 * 60 * 60 * 24),
+              ),
+            )
+          : selectedHorizonDays || 365;
+
+      track("letter_creation_completed", {
+        source: "landing",
+        has_stamp: Boolean(selectedStampId),
+        predictions_count: predictionsList.length,
+        has_emotional_snapshot: true,
+        horizon_days: resolvedHorizonDays,
+        is_authenticated: Boolean(isAuthenticated),
+        locale,
+      });
+
+      if (!isAuthenticated) {
+        track("generate_lead", {
+          lead_source: "landing_composer",
+          language: locale,
+        });
+      }
 
       router.push("/letters/success");
     } catch {
@@ -313,12 +355,16 @@ export default function HomePage() {
                 id="landing-content"
                 ref={contentTextareaRef}
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e) => {
+                  trackLandingStartIfNeeded();
+                  setContent(e.target.value);
+                }}
                 onBlur={() => setIsContentTouched(true)}
                 placeholder={t("landing.letterPlaceholder")}
                 rows={7}
                 maxLength={2000}
                 required
+                data-ph-no-capture="true"
                 aria-invalid={showContentError}
                 aria-describedby={
                   showContentError
@@ -824,7 +870,18 @@ export default function HomePage() {
         isOpen={isStampPickerOpen}
         onClose={() => setIsStampPickerOpen(false)}
         selectedStampId={selectedStampId || undefined}
-        onSelectStamp={(id) => setSelectedStampId(id || null)}
+        onSelectStamp={(id) => {
+          setSelectedStampId(id || null);
+          if (id) {
+            const stampInfo = findStamp(id);
+            track("stamp_selected", {
+              stamp_slug: id,
+              category_slug:
+                stampInfo?.category_slug || stampInfo?.categorySlug,
+              source: "landing",
+            });
+          }
+        }}
       />
     </div>
   );
