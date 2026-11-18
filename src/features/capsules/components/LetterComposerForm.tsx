@@ -59,7 +59,7 @@ export function LetterComposerForm({
 
   const minDate = React.useMemo(() => {
     const d = new Date();
-    d.setDate(d.getDate() + 1);
+    d.setDate(d.getDate() + 3);
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
@@ -96,7 +96,7 @@ export function LetterComposerForm({
         onSuccess(created);
       } else {
         setTimeout(() => {
-          router.push(`/letters/success?id=${encodeURIComponent(created.id)}`);
+          router.push("/letters/success");
         }, 1200);
       }
     } catch {}
@@ -116,10 +116,15 @@ export function LetterComposerForm({
 
   const [now] = useState(() => Date.now());
 
-  const targetDate = new Date(form.scheduledAt);
-  const formattedDeliveryDate = isNaN(targetDate.getTime())
-    ? form.scheduledAt
-    : formatLocaleDate(targetDate.toISOString(), locale);
+  const targetDateMatch = /^(\d{4})-(\d{2})-(\d{2})/.exec(form.scheduledAt);
+  const targetDate = targetDateMatch
+    ? new Date(
+        Number(targetDateMatch[1]),
+        Number(targetDateMatch[2]) - 1,
+        Number(targetDateMatch[3]),
+      )
+    : new Date(form.scheduledAt);
+  const formattedDeliveryDate = formatLocaleDate(form.scheduledAt, locale);
 
   const countdownDays = isNaN(targetDate.getTime())
     ? 0

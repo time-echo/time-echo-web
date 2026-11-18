@@ -54,7 +54,7 @@ function getPresetDate(preset: HorizonPreset): string {
       date.setFullYear(date.getFullYear() + 1);
       break;
   }
-  return date.toISOString().split("T")[0];
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
 const DEFAULT_STATE: LetterComposerState = {
@@ -64,7 +64,10 @@ const DEFAULT_STATE: LetterComposerState = {
   scheduledAt: getPresetDate("1y"),
   horizonPreset: "1y",
   language: "es",
-  timezone: "UTC",
+  timezone:
+    typeof Intl !== "undefined"
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
+      : "UTC",
   stampId: null,
   emotionalSnapshot: {
     happinessLevel: 7,
@@ -189,11 +192,12 @@ export function useLetterComposer(
     }
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
-    const now = new Date();
-    const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    const minCustom = new Date();
+    minCustom.setDate(minCustom.getDate() + 3);
+    const minCustomISO = `${minCustom.getFullYear()}-${String(minCustom.getMonth() + 1).padStart(2, "0")}-${String(minCustom.getDate()).padStart(2, "0")}`;
     if (!form.scheduledAt || isNaN(scheduledTime)) {
       errs.scheduledAt = t("composer.errors.dateRequired");
-    } else if (form.scheduledAt <= todayISO) {
+    } else if (form.scheduledAt < minCustomISO) {
       errs.scheduledAt = t("composer.errors.dateFuture");
     }
 
@@ -263,9 +267,10 @@ export function useLetterComposer(
     }
 
     const scheduledTime = new Date(form.scheduledAt).getTime();
-    const now = new Date();
-    const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-    if (form.scheduledAt <= todayISO || scheduledTime <= Date.now()) {
+    const minCustom = new Date();
+    minCustom.setDate(minCustom.getDate() + 3);
+    const minCustomISO = `${minCustom.getFullYear()}-${String(minCustom.getMonth() + 1).padStart(2, "0")}-${String(minCustom.getDate()).padStart(2, "0")}`;
+    if (form.scheduledAt < minCustomISO || scheduledTime <= Date.now()) {
       const dateErr = t("composer.errors.dateFuture");
       setError(dateErr);
       throw new Error(dateErr);
@@ -282,13 +287,19 @@ export function useLetterComposer(
 
       const effectiveEmail = (form.email || user?.email || "").trim();
 
+      const userTimezone =
+        form.timezone ||
+        (typeof Intl !== "undefined"
+          ? Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
+          : "UTC");
+
       const payload: CreateLetterInput = {
         title: form.title.trim(),
         content: form.content.trim(),
         email: effectiveEmail,
-        scheduledAt: new Date(form.scheduledAt).toISOString(),
+        scheduledAt: form.scheduledAt,
         language: form.language,
-        timezone: form.timezone,
+        timezone: userTimezone,
         stampId: form.stamp_slug || form.stampId || undefined,
         stamp_slug: form.stamp_slug || form.stampId || undefined,
         emotionalSnapshot: form.emotionalSnapshot,
