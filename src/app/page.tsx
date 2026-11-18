@@ -70,9 +70,11 @@ export default function HomePage() {
   const [motivation, setMotivation] = useState(7);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [minCustomDate] = useState(
-    () => new Date(Date.now() + 86400000).toISOString().split("T")[0],
-  );
+  const [minCustomDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  });
 
   const currentDateFormatted = formatLocaleDate(
     new Date().toISOString(),
@@ -113,17 +115,19 @@ export default function HomePage() {
 
     setIsSubmitting(true);
 
-    const deliverDate = new Date();
+    let scheduledDateStr = "";
     if (showCustomDate && customDate) {
-      const parsed = new Date(customDate);
-      if (!isNaN(parsed.getTime())) {
-        deliverDate.setTime(parsed.getTime());
-      } else {
-        deliverDate.setDate(deliverDate.getDate() + 365);
-      }
+      scheduledDateStr = customDate;
     } else {
+      const deliverDate = new Date();
       deliverDate.setDate(deliverDate.getDate() + (selectedHorizonDays || 365));
+      scheduledDateStr = `${deliverDate.getFullYear()}-${String(deliverDate.getMonth() + 1).padStart(2, "0")}-${String(deliverDate.getDate()).padStart(2, "0")}`;
     }
+
+    const userTimezone =
+      typeof Intl !== "undefined"
+        ? Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
+        : "UTC";
 
     const predictionsList: Array<{
       category: PredictionCategory;
@@ -137,11 +141,12 @@ export default function HomePage() {
     ].filter((p) => p.prediction.trim().length > 0);
 
     try {
-      const capsule = await createCapsule({
+      await createCapsule({
         title: t("landing.defaultTitle"),
         content,
         email,
-        scheduledAt: deliverDate.toISOString(),
+        scheduledAt: scheduledDateStr,
+        timezone: userTimezone,
         stampId: selectedStampId || undefined,
         stamp_slug: selectedStampId || undefined,
         emotionalSnapshot: {
@@ -152,7 +157,7 @@ export default function HomePage() {
         predictions: predictionsList,
       });
 
-      router.push(`/letters/success?id=${encodeURIComponent(capsule.id)}`);
+      router.push("/letters/success");
     } catch {
       setIsSubmitting(false);
     }

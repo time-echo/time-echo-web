@@ -1,19 +1,52 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { formatLocaleDate } from "@/lib/utils";
+import { Letter } from "@/types/timeecho";
 import { ArrowLeft, PenTool } from "lucide-react";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const letterId = searchParams.get("id");
 
-  const { getCapsuleById, locale, t } = useTimeEcho();
-  const capsule = letterId ? getCapsuleById(letterId) : undefined;
+  const { getCapsuleById, lastCreatedLetter, repository, locale, t } =
+    useTimeEcho();
+
+  const [fetchedCapsule, setFetchedCapsule] = useState<Letter | null>(null);
+
+  useEffect(() => {
+    if (letterId && typeof window !== "undefined") {
+      window.history.replaceState({}, "", "/letters/success");
+    }
+  }, [letterId]);
+
+  const existingCapsule =
+    (letterId ? getCapsuleById(letterId) : undefined) ||
+    (lastCreatedLetter?.id === letterId ? lastCreatedLetter : undefined) ||
+    (!letterId ? lastCreatedLetter : undefined);
+
+  useEffect(() => {
+    if (!existingCapsule && letterId) {
+      let isMounted = true;
+      repository
+        .getById(letterId)
+        .then((item) => {
+          if (isMounted && item) {
+            setFetchedCapsule(item);
+          }
+        })
+        .catch(() => {});
+      return () => {
+        isMounted = false;
+      };
+    }
+  }, [existingCapsule, letterId, repository]);
+
+  const capsule = existingCapsule || fetchedCapsule;
 
   const sealDateFormatted = formatLocaleDate(
     capsule?.createdAt || new Date().toISOString(),

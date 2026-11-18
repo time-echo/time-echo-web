@@ -16,9 +16,16 @@ export function formatLocaleDate(
   },
 ): string {
   if (!iso) return "";
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
-  const date = match
-    ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+  // Match date-only strings (YYYY-MM-DD) or UTC midnight strings (YYYY-MM-DDT00:00:00...Z)
+  // to avoid timezone offsets shifting the calendar date backwards in western timezones.
+  const dateOnlyMatch =
+    /^(\d{4})-(\d{2})-(\d{2})(?:[T\s]00:00:00(?:\.000)?Z?)?$/.exec(iso);
+  const date = dateOnlyMatch
+    ? new Date(
+        Number(dateOnlyMatch[1]),
+        Number(dateOnlyMatch[2]) - 1,
+        Number(dateOnlyMatch[3]),
+      )
     : new Date(iso);
 
   return isNaN(date.getTime())

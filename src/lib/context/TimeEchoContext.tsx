@@ -71,6 +71,8 @@ interface TimeEchoContextValue {
   repository: ICapsuleRepository;
   refreshCapsules: () => Promise<void>;
   getCapsuleById: (id: string) => Letter | undefined;
+  lastCreatedLetter: Letter | null;
+  setLastCreatedLetter: (letter: Letter | null) => void;
   createCapsule: (input: CreateLetterInput) => Promise<Letter>;
   updateReality: (input: UpdateRealityInput) => Promise<Letter>;
   archiveCapsule: (id: string) => Promise<Letter>;
@@ -114,6 +116,17 @@ export function TimeEchoProvider({
   );
 
   const [capsules, setCapsules] = useState<Letter[]>([]);
+  const [lastCreatedLetter, setLastCreatedLetter] = useState<Letter | null>(
+    () => {
+      if (typeof window !== "undefined") {
+        try {
+          const saved = sessionStorage.getItem("timeecho_last_created_letter");
+          if (saved) return JSON.parse(saved);
+        } catch {}
+      }
+      return null;
+    },
+  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -273,6 +286,15 @@ export function TimeEchoProvider({
           unlockStamp(input.stampId);
         }
         setCapsules((prev) => [created, ...prev]);
+        setLastCreatedLetter(created);
+        if (typeof window !== "undefined") {
+          try {
+            sessionStorage.setItem(
+              "timeecho_last_created_letter",
+              JSON.stringify(created),
+            );
+          } catch {}
+        }
         return created;
       } catch (err) {
         const isTechnical =
@@ -400,6 +422,8 @@ export function TimeEchoProvider({
       repository,
       refreshCapsules,
       getCapsuleById,
+      lastCreatedLetter,
+      setLastCreatedLetter,
       createCapsule,
       updateReality,
       archiveCapsule,
@@ -422,6 +446,8 @@ export function TimeEchoProvider({
       repository,
       refreshCapsules,
       getCapsuleById,
+      lastCreatedLetter,
+      setLastCreatedLetter,
       createCapsule,
       updateReality,
       archiveCapsule,

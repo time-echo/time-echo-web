@@ -389,7 +389,11 @@ export class HttpApiRepository implements ICapsuleRepository {
         scheduled_at: input.scheduledAt,
         deliver_at: input.scheduledAt,
         language: input.language || this.resolveLocale() || "es",
-        timezone: input.timezone || "UTC",
+        timezone:
+          input.timezone ||
+          (typeof Intl !== "undefined"
+            ? Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
+            : "UTC"),
         stamp_slug: stampSlug,
         emotional_snapshot_attributes: {
           happiness_level: input.emotionalSnapshot.happinessLevel,

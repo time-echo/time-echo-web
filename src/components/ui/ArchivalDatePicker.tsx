@@ -66,13 +66,9 @@ export function ArchivalDatePicker({
 
   const effectiveMin = useMemo(() => {
     if (min) return min;
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return toISODate(
-      tomorrow.getFullYear(),
-      tomorrow.getMonth(),
-      tomorrow.getDate(),
-    );
+    const minDay = new Date();
+    minDay.setDate(minDay.getDate() + 3);
+    return toISODate(minDay.getFullYear(), minDay.getMonth(), minDay.getDate());
   }, [min]);
 
   const minParsed = useMemo(() => parseISODate(effectiveMin), [effectiveMin]);
