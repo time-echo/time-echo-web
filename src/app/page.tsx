@@ -751,6 +751,7 @@ export default function HomePage() {
               alt={t("landing.demoTitle")}
               width={1897}
               height={1030}
+              sizes="(max-width: 1024px) 100vw, 1024px"
               className="w-full h-auto block select-none"
               priority
             />
@@ -798,14 +799,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="max-w-5xl mx-auto px-4 border-t border-crease pt-8 text-center space-y-3">
+      <section
+        aria-label={t("common.appName")}
+        className="max-w-5xl mx-auto px-4 border-t border-crease pt-8 text-center space-y-3"
+      >
         <div className="flex items-center justify-center gap-1.5 text-xl font-serif-editorial text-foreground select-none font-semibold">
           <span>TimeEcho</span>
         </div>
         <p className="text-xs font-letter text-foreground-muted leading-relaxed">
           {t("footer.sentWithHope")}
         </p>
-      </footer>
+      </section>
 
       {isSubmitting && (
         <ArchivalLoader

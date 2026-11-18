@@ -76,7 +76,22 @@ Rejects generic SaaS cards and saturated neon accents in favor of physical archi
 
 ---
 
-## 5. Verification & Quality Gates
+## 5. SEO Architecture & New Feature Rules (`.agents/rules/seo.md`)
+
+Whenever adding a new feature, page, or route to `time-echo-web`, strictly follow the SEO structure defined in `.agents/rules/seo.md` and `src/lib/seo.ts`:
+
+- **Route Classification**: Classify every new route as either **Public Indexable** (e.g., `/`, `/about`, `/privacy`, `/terms`) or **Private / Transactional** (`noindex`, e.g., `/dashboard`, `/letters/*`, `/analytics`, `/settings`, `/login`, `/check_email`). Update `PUBLIC_PATHS` in `src/proxy.ts` and `isPublicPage` in `src/components/layout/AppShell.tsx` if publicly accessible.
+- **Symmetric Bilingual Metadata**: Add `metadata.pages.<pageKey>.title` and `metadata.pages.<pageKey>.description` in both `src/lib/i18n/en.json` and `src/lib/i18n/es.json`, and register `<pageKey>` in `SeoPageKey` (`src/lib/seo.ts`).
+- **Route Segment `layout.tsx`**: Export `generateMetadata()` in `src/app/<route>/layout.tsx` using `buildPageMetadata({ pageKey, pathname, noIndex, follow })` from `src/lib/seo.ts`. Never leave a route without explicit metadata.
+- **Crawler Discovery (`robots.ts` & `sitemap.ts`)**: Add public indexable routes to `allow` in `src/app/robots.ts` and `publicRoutes` in `src/app/sitemap.ts` (which emits `es` and `en` `hreflang` alternates). Add private/transactional routes to `disallow` in `src/app/robots.ts`.
+- **Stateless SSR & No Public CSR Bailouts**:
+  - Always resolve server-side locale via `resolveRequestLocale()` (`src/lib/seo.ts`), which reads the `x-locale` request header forwarded by `src/proxy.ts` (supporting `?locale=es` and `?locale=en` for crawlers).
+  - Never call `useSearchParams()` in un-isolated wrappers on public routes; isolate `useSearchParams()` inside a `<Suspense>` boundary on the specific client component that requires it so public pages render complete SSR HTML.
+- **Structured Data & Semantics**: Render Schema.org JSON-LD (`<script type="application/ld+json">`) via builders in `src/lib/seo.ts` for public pages, maintain a single `<h1>` per page, avoid duplicate `<main>` or `<footer>` landmarks, and include `sizes` + localized `alt` on `next/image`.
+
+---
+
+## 6. Verification & Quality Gates
 
 Run these checks before finalizing any task:
 
@@ -96,7 +111,7 @@ Run these checks before finalizing any task:
 
 ---
 
-## 6. Agent Skills
+## 7. Agent Skills
 
 The project maintains a dedicated set of modular skills in `.agents/skills/`, tracked via `skills-lock.json` and consumed across agent CLIs:
 
@@ -110,12 +125,14 @@ The project maintains a dedicated set of modular skills in `.agents/skills/`, tr
 
 ---
 
-## 7. Key References
+## 8. Key References
 
 | Area                  | Location                                                    |
 | --------------------- | ----------------------------------------------------------- |
 | Storybook Mockups     | [`time-echo/mockups`](https://github.com/time-echo/mockups) |
 | UI Mockups Rule       | `.agents/rules/mockups.md`                                  |
+| SEO & Feature Rule    | `.agents/rules/seo.md`                                      |
+| SEO Metadata & Schema | `src/lib/seo.ts`, `src/app/robots.ts`, `src/app/sitemap.ts` |
 | System Architecture   | `docs/architecture.md`                                      |
 | Design Specification  | `docs/design.md`                                            |
 | Agent Skills          | `.agents/skills/`, `skills-lock.json`                       |
