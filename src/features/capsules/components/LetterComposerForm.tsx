@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLetterComposer, HorizonPreset } from "@/features/capsules";
 import { ArchivalAccordion } from "@/components/ui/ArchivalAccordion";
@@ -8,6 +8,7 @@ import { ArchivalLoader } from "@/components/ui/ArchivalLoader";
 import { ArchivalDatePicker } from "@/components/ui/ArchivalDatePicker";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
+import { track } from "@/lib/analytics";
 import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
@@ -70,6 +71,18 @@ export function LetterComposerForm({
   const { findStamp } = useStampCatalog();
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState(false);
+  const hasTrackedCreationStart = useRef(false);
+
+  const trackStartIfNeeded = () => {
+    if (hasTrackedCreationStart.current) return;
+    hasTrackedCreationStart.current = true;
+    track("letter_creation_started", {
+      source: "composer",
+      is_authenticated: Boolean(isAuthenticated),
+      locale,
+      horizon_preset: form.horizonPreset,
+    });
+  };
 
   const selectedStampSlug = form.stamp_slug || form.stampId;
   const selectedStamp = selectedStampSlug
@@ -92,6 +105,18 @@ export function LetterComposerForm({
 
     try {
       const created = await submitLetter();
+      const nonEmptyPredictions = form.predictions.filter(
+        (p) => p.prediction.trim() !== "",
+      ).length;
+      track("letter_creation_completed", {
+        source: "composer",
+        has_stamp: Boolean(selectedStampSlug),
+        predictions_count: nonEmptyPredictions,
+        has_emotional_snapshot: true,
+        horizon_days: countdownDays,
+        is_authenticated: Boolean(isAuthenticated),
+        locale,
+      });
       if (onSuccess) {
         onSuccess(created);
       } else {
@@ -247,11 +272,15 @@ export function LetterComposerForm({
                 id="letter-title-input"
                 type="text"
                 value={form.title}
-                onChange={(e) => setField("title", e.target.value)}
+                onChange={(e) => {
+                  trackStartIfNeeded();
+                  setField("title", e.target.value);
+                }}
                 placeholder={t("letters.title_placeholder")}
                 minLength={3}
                 maxLength={100}
                 required
+                data-ph-no-capture="true"
                 className={cn(
                   "w-full border-b-2 border-crease rounded-none bg-transparent px-1 py-2 font-serif-editorial text-xl font-semibold text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none transition-colors",
                   hasAttemptedSubmit &&
@@ -276,11 +305,15 @@ export function LetterComposerForm({
               <textarea
                 id="letter_content_area"
                 value={form.content}
-                onChange={(e) => setField("content", e.target.value)}
+                onChange={(e) => {
+                  trackStartIfNeeded();
+                  setField("content", e.target.value);
+                }}
                 placeholder={t("letters.content_placeholder_form")}
                 rows={15}
                 minLength={80}
                 maxLength={2000}
+                data-ph-no-capture="true"
                 className="w-full p-5 sm:p-6 rounded-xs bg-transparent border border-crease font-letter text-sm leading-loose text-foreground placeholder:text-foreground-muted/40 focus:border-wax focus:outline-none transition-all shadow-inner"
                 required
                 aria-required="true"
@@ -358,7 +391,6 @@ export function LetterComposerForm({
               )}
             </div>
 
-            {/* Guest email section - only required for unauthenticated users */}
             {!isAuthenticated && (
               <div className="space-y-2 border-t border-crease pt-5 font-letter">
                 <label
@@ -655,6 +687,15 @@ export function LetterComposerForm({
         onSelectStamp={(slug) => {
           setField("stampId", slug || null);
           setField("stamp_slug", slug || null);
+          if (slug) {
+            const stampInfo = findStamp(slug);
+            track("stamp_selected", {
+              stamp_slug: slug,
+              category_slug:
+                stampInfo?.category_slug || stampInfo?.categorySlug,
+              source: "composer",
+            });
+          }
         }}
       />
     </div>

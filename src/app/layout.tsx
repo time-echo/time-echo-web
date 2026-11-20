@@ -6,6 +6,7 @@ import { TimeEchoProvider } from "@/lib/context/TimeEchoContext";
 import { AuthProvider } from "@/lib/context/AuthContext";
 import { AppShell } from "@/components/layout/AppShell";
 import { FlashProvider } from "@/components/ui/FlashBanner";
+import { AnalyticsProvider } from "@/components/analytics";
 import {
   buildPageMetadata,
   buildSiteJsonLd,
@@ -50,9 +51,11 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>
             <TimeEchoProvider defaultLocale={locale}>
-              <FlashProvider>
-                <AppShell>{children}</AppShell>
-              </FlashProvider>
+              <AnalyticsProvider>
+                <FlashProvider>
+                  <AppShell>{children}</AppShell>
+                </FlashProvider>
+              </AnalyticsProvider>
             </TimeEchoProvider>
           </AuthProvider>
         </NextIntlClientProvider>
