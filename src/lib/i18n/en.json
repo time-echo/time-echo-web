@@ -202,7 +202,7 @@
     "horizonYears5": "5 years",
     "customDate": "Custom date",
     "chooseSpecificDate": "Choose a specific date",
-    "selectFutureDate": "Select future delivery date (minimum tomorrow)",
+    "selectFutureDate": "Select future delivery date (minimum 3 days)",
     "annexPredictions": "ANNEX I / PREDICTIONS",
     "predictionsOptional": "Your predictions (optional)",
     "annexPredictionsSubtitle": "How do you picture your life?",

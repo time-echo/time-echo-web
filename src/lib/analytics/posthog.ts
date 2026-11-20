@@ -204,6 +204,11 @@ export function resetPostHogIdentity(config = getAnalyticsConfig()): void {
 
   try {
     const client = getClient();
-    client?.reset();
+    if (!client) return;
+
+    client.reset();
+    if (hasAnalyticsConsent(config.requireExplicitConsent)) {
+      client.opt_in_capturing();
+    }
   } catch {}
 }

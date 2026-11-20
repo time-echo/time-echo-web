@@ -523,13 +523,26 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase border-none cursor-pointer min-h-[46px] shadow-xs font-letter inline-flex items-center justify-center gap-2 transition-colors"
-              >
-                <Unlock size={16} />
-                <span>{t("reveal.saveAndViewLetter")}</span>
-              </button>
+              <div className="space-y-3">
+                <button
+                  type="submit"
+                  className="w-full bg-wax hover:bg-wax-hover text-on-wax rounded-xs py-3.5 px-6 text-xs font-semibold tracking-widest uppercase border-none cursor-pointer min-h-[46px] shadow-xs font-letter inline-flex items-center justify-center gap-2 transition-colors"
+                >
+                  <Unlock size={16} />
+                  <span>{t("reveal.saveAndViewLetter")}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await archiveCapsule(letter.id);
+                    router.push("/dashboard");
+                  }}
+                  className="w-full border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 hover:bg-manila/40 rounded-xs py-2.5 px-4 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center justify-center gap-1.5 min-h-[44px] transition-colors cursor-pointer bg-transparent"
+                >
+                  <Archive size={14} />
+                  <span>{t("reveal.archiveLetter")}</span>
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -666,6 +679,19 @@ export default function LetterDetailPage({ params }: LetterPageProps) {
                 <ArrowLeft size={14} />
                 <span>{t("reveal.backToVault")}</span>
               </Link>
+              {!isArchived && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const updated = await archiveCapsule(letter.id);
+                    setLocalLetter(updated);
+                  }}
+                  className="border border-crease text-foreground-muted hover:text-ink hover:border-ink/40 hover:bg-manila/40 rounded-xs px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider font-letter inline-flex items-center gap-1.5 min-h-[40px] transition-colors cursor-pointer bg-transparent"
+                >
+                  <Archive size={14} />
+                  <span>{t("reveal.archiveLetter")}</span>
+                </button>
+              )}
             </div>
           </div>
 

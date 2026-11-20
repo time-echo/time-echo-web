@@ -34,6 +34,12 @@ export interface LetterComposerState {
   stamp_slug?: string | null;
 }
 
+function getMinCustomDate(): string {
+  const date = new Date();
+  date.setDate(date.getDate() + 3);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 function getPresetDate(preset: HorizonPreset): string {
   const date = new Date();
   switch (preset) {
@@ -50,6 +56,7 @@ function getPresetDate(preset: HorizonPreset): string {
       date.setFullYear(date.getFullYear() + 5);
       break;
     case "custom":
+      return getMinCustomDate();
     default:
       date.setFullYear(date.getFullYear() + 1);
       break;
@@ -89,16 +96,21 @@ export function useLetterComposer(
   const { createCapsule, locale, t } = useTimeEcho();
   const { user, isAuthenticated } = useAuth();
 
-  const [rawForm, setForm] = useState<LetterComposerState>(() => ({
-    ...DEFAULT_STATE,
-    email: initialValues?.email || user?.email || "",
-    language: locale,
-    timezone:
-      typeof Intl !== "undefined"
-        ? Intl.DateTimeFormat().resolvedOptions().timeZone
-        : "UTC",
-    ...initialValues,
-  }));
+  const [rawForm, setForm] = useState<LetterComposerState>(() => {
+    const initialPreset =
+      initialValues?.horizonPreset ?? DEFAULT_STATE.horizonPreset;
+    return {
+      ...DEFAULT_STATE,
+      scheduledAt: initialValues?.scheduledAt ?? getPresetDate(initialPreset),
+      email: initialValues?.email || user?.email || "",
+      language: locale,
+      timezone:
+        typeof Intl !== "undefined"
+          ? Intl.DateTimeFormat().resolvedOptions().timeZone
+          : "UTC",
+      ...initialValues,
+    };
+  });
 
   const form = useMemo<LetterComposerState>(
     () => ({
@@ -129,7 +141,12 @@ export function useLetterComposer(
       ...prev,
       horizonPreset: preset,
       scheduledAt:
-        preset !== "custom" ? getPresetDate(preset) : prev.scheduledAt,
+        preset !== "custom"
+          ? getPresetDate(preset)
+          : prev.horizonPreset === "custom" &&
+              prev.scheduledAt >= getMinCustomDate()
+            ? prev.scheduledAt
+            : getMinCustomDate(),
     }));
   }, []);
 
