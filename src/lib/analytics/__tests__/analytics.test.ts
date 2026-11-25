@@ -204,6 +204,52 @@ describe("TimeEcho Analytics Module", () => {
     assert.equal(mocks.posthogCaptures[1].event, "stamp_selected");
   });
 
+  it("sends letter funnel events to both providers with stored UTM parameters", () => {
+    const mocks = createMockProviders();
+    grantAnalyticsConsent(PROD_CONFIG);
+    captureUtmParams(
+      "?utm_source=google&utm_medium=cpc&utm_campaign=launch&utm_term=letters",
+    );
+
+    track(
+      "start_letter",
+      { source: "landing", locale: "es", is_authenticated: false },
+      { config: PROD_CONFIG },
+    );
+    track(
+      "letter_success",
+      {
+        source: "landing",
+        locale: "es",
+        is_authenticated: false,
+        horizon_days: 365,
+        predictions_count: 2,
+        has_stamp: false,
+      },
+      { config: PROD_CONFIG },
+    );
+
+    const gaEvents = mocks.gtagCalls.filter((c) => c.command === "event");
+    assert.deepEqual(
+      gaEvents.map((c) => c.target),
+      ["start_letter", "letter_success"],
+    );
+    assert.deepEqual(
+      mocks.posthogCaptures.map((c) => c.event),
+      ["start_letter", "letter_success"],
+    );
+
+    for (const props of [
+      gaEvents[1].params,
+      mocks.posthogCaptures[1].properties,
+    ]) {
+      assert.equal(props?.utm_source, "google");
+      assert.equal(props?.utm_medium, "cpc");
+      assert.equal(props?.utm_campaign, "launch");
+      assert.equal(props?.predictions_count, 2);
+    }
+  });
+
   it("prevents client-side emission of backend-authoritative events to avoid duplication", () => {
     const mocks = createMockProviders();
     grantAnalyticsConsent(PROD_CONFIG);

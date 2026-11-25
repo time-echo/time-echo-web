@@ -32,7 +32,45 @@ export interface Ga4ShareProperties {
   language?: SupportedLanguage | string;
 }
 
-export interface Ga4EventMap {
+export type LetterFunnelSource = "landing" | "composer";
+
+export type LetterFunnelHorizonPreset = "6m" | "1y" | "3y" | "5y" | "custom";
+
+export interface LetterFunnelBaseProperties extends UtmParameters {
+  source: LetterFunnelSource;
+  locale: SupportedLanguage;
+  is_authenticated: boolean;
+}
+
+export type StartLetterProperties = LetterFunnelBaseProperties;
+
+export interface SelectDateProperties extends LetterFunnelBaseProperties {
+  horizon_preset: LetterFunnelHorizonPreset;
+  horizon_days: number;
+}
+
+export interface FillPredictionsProperties extends LetterFunnelBaseProperties {
+  predictions_count: number;
+}
+
+export interface LetterSubmissionProperties extends LetterFunnelBaseProperties {
+  horizon_days: number;
+  predictions_count: number;
+  has_stamp: boolean;
+}
+
+export type SubmitLetterProperties = LetterSubmissionProperties;
+export type LetterSuccessProperties = LetterSubmissionProperties;
+
+export interface LetterFunnelEventMap {
+  start_letter: StartLetterProperties;
+  select_date: SelectDateProperties;
+  fill_predictions: FillPredictionsProperties;
+  submit_letter: SubmitLetterProperties;
+  letter_success: LetterSuccessProperties;
+}
+
+export interface Ga4EventMap extends LetterFunnelEventMap {
   page_view: Ga4PageViewProperties;
   sign_up: Ga4AuthEventProperties;
   login: Ga4AuthEventProperties;
@@ -102,7 +140,7 @@ export interface PostHogAuthProperties {
   locale?: SupportedLanguage | string;
 }
 
-export interface PostHogEventMap {
+export interface PostHogEventMap extends LetterFunnelEventMap {
   letter_creation_started: PostHogLetterCreationStartedProperties;
   stamp_selected: PostHogStampSelectedProperties;
   letter_creation_completed: PostHogLetterCreationCompletedProperties;
@@ -126,6 +164,11 @@ export const GA4_EVENTS: ReadonlySet<string> = new Set<Ga4EventName>([
   "login",
   "generate_lead",
   "share",
+  "start_letter",
+  "select_date",
+  "fill_predictions",
+  "submit_letter",
+  "letter_success",
 ]);
 
 export const POSTHOG_EVENTS: ReadonlySet<string> = new Set<PostHogEventName>([
@@ -138,6 +181,21 @@ export const POSTHOG_EVENTS: ReadonlySet<string> = new Set<PostHogEventName>([
   "letter_viewed",
   "user_logged_in",
   "user_signed_up",
+  "start_letter",
+  "select_date",
+  "fill_predictions",
+  "submit_letter",
+  "letter_success",
+]);
+
+export const LETTER_FUNNEL_EVENTS: ReadonlySet<string> = new Set<
+  keyof LetterFunnelEventMap
+>([
+  "start_letter",
+  "select_date",
+  "fill_predictions",
+  "submit_letter",
+  "letter_success",
 ]);
 
 export const BACKEND_AUTHORITATIVE_EVENTS: ReadonlySet<string> =
@@ -159,4 +217,10 @@ export function isPostHogEvent(event: string): event is PostHogEventName {
 
 export function isBackendAuthoritativeEvent(event: string): boolean {
   return BACKEND_AUTHORITATIVE_EVENTS.has(event);
+}
+
+export function isLetterFunnelEvent(
+  event: string,
+): event is keyof LetterFunnelEventMap {
+  return LETTER_FUNNEL_EVENTS.has(event);
 }
