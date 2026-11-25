@@ -15,6 +15,7 @@ import {
   type Ga4EventName,
   isBackendAuthoritativeEvent,
   isGa4Event,
+  isLetterFunnelEvent,
   isPostHogEvent,
   type PostHogEventMap,
   type PostHogEventName,
@@ -83,23 +84,30 @@ export function track<E extends AnalyticsEventName>(
     return false;
   }
 
+  const eventProperties = isLetterFunnelEvent(event)
+    ? { ...getStoredUtmParams(), ...properties }
+    : properties;
+
+  let tracked = false;
+
   if (isGa4Event(event)) {
-    return trackGa4Event<Ga4EventName>(
+    tracked = trackGa4Event<Ga4EventName>(
       event,
-      properties as Ga4EventMap[Ga4EventName],
+      eventProperties as Ga4EventMap[Ga4EventName],
       config,
     );
   }
 
   if (isPostHogEvent(event)) {
-    return trackPostHogEvent<PostHogEventName>(
+    const phTracked = trackPostHogEvent<PostHogEventName>(
       event,
-      properties as PostHogEventMap[PostHogEventName],
+      eventProperties as PostHogEventMap[PostHogEventName],
       config,
     );
+    tracked = phTracked || tracked;
   }
 
-  return false;
+  return tracked;
 }
 
 export function trackPageView(
