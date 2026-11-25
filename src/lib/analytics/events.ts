@@ -16,7 +16,7 @@ export interface Ga4PageViewProperties extends UtmParameters {
 }
 
 export interface Ga4AuthEventProperties extends UtmParameters {
-  method: "magic_link";
+  method: "magic_link" | "password" | "google" | "facebook";
   language?: SupportedLanguage | string;
 }
 
@@ -98,7 +98,7 @@ export interface PostHogLetterViewedProperties {
 }
 
 export interface PostHogAuthProperties {
-  auth_method: "magic_link";
+  auth_method: "magic_link" | "password" | "google" | "facebook";
   locale?: SupportedLanguage | string;
 }
 

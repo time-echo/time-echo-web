@@ -317,6 +317,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname === "/" ||
     pathname === "/login" ||
     pathname.startsWith("/login/") ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password" ||
+    pathname.startsWith("/reset-password/") ||
     pathname === "/check_email" ||
     pathname === "/about" ||
     pathname === "/terms" ||

@@ -36,9 +36,17 @@ function getActiveLocale(): SupportedLanguage {
   return "es";
 }
 
+export interface LinkedIdentity {
+  provider: string;
+  email?: string | null;
+  linkedAt?: string;
+}
+
 export interface User {
   id?: string;
   email: string;
+  hasPassword?: boolean;
+  identities?: LinkedIdentity[];
 }
 
 interface AuthSessionResult {
@@ -46,6 +54,15 @@ interface AuthSessionResult {
   email: string;
   token: string;
   isNewUser?: boolean;
+}
+
+interface RegisterResult {
+  userId?: string;
+  email: string;
+  token?: string;
+  isNewUser?: boolean;
+  requiresEmailVerification?: boolean;
+  message?: string;
 }
 
 interface AuthContextValue {
@@ -58,6 +75,16 @@ interface AuthContextValue {
     email: string,
     localeOverride?: string,
   ) => Promise<{ message: string; email: string }>;
+  loginWithPassword: (
+    email: string,
+    password: string,
+  ) => Promise<AuthSessionResult>;
+  registerWithPassword: (
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+    localeOverride?: string,
+  ) => Promise<RegisterResult>;
   authenticateWithToken: (token: string) => Promise<AuthSessionResult>;
   logout: () => Promise<void>;
   fetchCurrentUser: () => Promise<void>;
@@ -151,7 +178,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           userData.userId || userData.id || getStoredUserId();
         persistSession(activeToken, userData.email, resolvedUserId);
         setToken(activeToken);
-        setUser({ id: resolvedUserId, email: userData.email });
+        setUser({
+          id: resolvedUserId,
+          email: userData.email,
+          hasPassword: Boolean(userData.hasPassword),
+          identities: Array.isArray(userData.identities)
+            ? userData.identities
+            : [],
+        });
         if (resolvedUserId) {
           identifyUser(resolvedUserId, {
             locale: userData.locale || getActiveLocale(),
@@ -197,7 +231,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             userData.userId || userData.id || getStoredUserId();
           persistSession(activeToken, userData.email, resolvedUserId);
           setToken(activeToken);
-          setUser({ id: resolvedUserId, email: userData.email });
+          setUser({
+            id: resolvedUserId,
+            email: userData.email,
+            hasPassword: Boolean(userData.hasPassword),
+            identities: Array.isArray(userData.identities)
+              ? userData.identities
+              : [],
+          });
           if (resolvedUserId) {
             identifyUser(resolvedUserId, {
               locale: userData.locale || getActiveLocale(),
@@ -359,6 +400,143 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const loginWithPassword = useCallback(
+    async (email: string, password: string): Promise<AuthSessionResult> => {
+      setError(null);
+      const activeLocale = getActiveLocale();
+
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Locale": activeLocale,
+          "Accept-Language": activeLocale,
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errorMsg =
+          json?.error?.message ||
+          json?.message ||
+          getTranslation(activeLocale, "login.invalidCredentials");
+        const apiErr = new ApiError(
+          res.status,
+          json?.error?.code || "unauthorized",
+          errorMsg,
+          json?.error?.details,
+          json?.error?.requestId,
+        );
+        setError(errorMsg);
+        throw apiErr;
+      }
+
+      const sessionData = json?.data || json;
+      const activeToken = sessionData.token || "active_session";
+      const userEmail = sessionData.email || email;
+      const userId = sessionData.userId || sessionData.id;
+
+      persistSession(activeToken, userEmail, userId);
+      setToken(activeToken);
+      setUser({ id: userId, email: userEmail, hasPassword: true });
+
+      if (userId) {
+        identifyUser(userId, { locale: activeLocale });
+      }
+      track("login", { method: "password", language: activeLocale });
+
+      return {
+        userId,
+        email: userEmail,
+        token: activeToken,
+        isNewUser: false,
+      };
+    },
+    [],
+  );
+
+  const registerWithPassword = useCallback(
+    async (
+      email: string,
+      password: string,
+      passwordConfirmation: string,
+      localeOverride?: string,
+    ): Promise<RegisterResult> => {
+      setError(null);
+      const activeLocale =
+        localeOverride === "en" || localeOverride === "es"
+          ? (localeOverride as SupportedLanguage)
+          : getActiveLocale();
+
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Locale": activeLocale,
+          "Accept-Language": activeLocale,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          password,
+          password_confirmation: passwordConfirmation,
+          locale: activeLocale,
+        }),
+      });
+
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errorMsg =
+          json?.error?.message ||
+          json?.message ||
+          getTranslation(activeLocale, "login.registerError");
+        const apiErr = new ApiError(
+          res.status,
+          json?.error?.code || "validation_failed",
+          errorMsg,
+          json?.error?.details,
+          json?.error?.requestId,
+        );
+        setError(errorMsg);
+        throw apiErr;
+      }
+
+      const payload = json?.data || json;
+      if (payload?.requiresEmailVerification) {
+        return {
+          email: payload.email || email,
+          requiresEmailVerification: true,
+          message: payload.message,
+        };
+      }
+
+      const activeToken = payload.token || "active_session";
+      const userEmail = payload.email || email;
+      const userId = payload.userId || payload.id;
+
+      persistSession(activeToken, userEmail, userId);
+      setToken(activeToken);
+      setUser({ id: userId, email: userEmail, hasPassword: true });
+
+      if (userId) {
+        identifyUser(userId, { locale: activeLocale });
+      }
+      track("sign_up", { method: "password", language: activeLocale });
+
+      return {
+        userId,
+        email: userEmail,
+        token: activeToken,
+        isNewUser: true,
+      };
+    },
+    [],
+  );
+
   const logout = useCallback(async () => {
     try {
       await fetch("/api/auth/logout", {
@@ -385,6 +563,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
     error,
     requestMagicLink,
+    loginWithPassword,
+    registerWithPassword,
     authenticateWithToken,
     logout,
     fetchCurrentUser,
