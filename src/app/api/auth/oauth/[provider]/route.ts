@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch } from "@/lib/server/backend-client";
+import { buildPublicUrl } from "@/lib/server/public-origin";
 
 interface OAuthAuthzResponse {
   data?: {
@@ -31,14 +32,14 @@ export async function GET(
 
     if (!redirectUrl) {
       return NextResponse.redirect(
-        new URL(`${fallbackPath}?error=oauth_failed`, request.url),
+        buildPublicUrl(`${fallbackPath}?error=oauth_failed`, request),
       );
     }
 
     return NextResponse.redirect(redirectUrl);
   } catch {
     return NextResponse.redirect(
-      new URL(`${fallbackPath}?error=oauth_failed`, request.url),
+      buildPublicUrl(`${fallbackPath}?error=oauth_failed`, request),
     );
   }
 }

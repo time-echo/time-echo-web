@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { buildPublicUrl } from "@/lib/server/public-origin";
 
 const PUBLIC_PATHS = [
   "/",
@@ -36,7 +37,7 @@ export function proxy(request: NextRequest) {
   const sessionToken = request.cookies.get("timeecho_session_token")?.value;
 
   if (!isPublicPath(pathname) && !sessionToken) {
-    const loginUrl = new URL("/login", request.url);
+    const loginUrl = buildPublicUrl("/login", request);
     return NextResponse.redirect(loginUrl);
   }
 

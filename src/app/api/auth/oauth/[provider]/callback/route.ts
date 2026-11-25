@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch, BackendClientError } from "@/lib/server/backend-client";
 import { setAuthCookie } from "@/lib/server/api-response";
+import { buildPublicUrl } from "@/lib/server/public-origin";
 
 interface OAuthCallbackResponse {
   data?: {
@@ -30,7 +31,7 @@ export async function GET(
 
   if (providerError || !code || !state) {
     return NextResponse.redirect(
-      new URL("/login?error=oauth_failed", request.url),
+      buildPublicUrl("/login?error=oauth_failed", request),
     );
   }
 
@@ -47,14 +48,16 @@ export async function GET(
 
     if (payload?.purpose === "link") {
       return NextResponse.redirect(
-        new URL(
+        buildPublicUrl(
           `/settings?linked=${encodeURIComponent(provider)}`,
-          request.url,
+          request,
         ),
       );
     }
 
-    const response = NextResponse.redirect(new URL("/dashboard", request.url));
+    const response = NextResponse.redirect(
+      buildPublicUrl("/dashboard", request),
+    );
     if (payload?.token) {
       setAuthCookie(response, payload.token);
     }
@@ -63,7 +66,7 @@ export async function GET(
     const errorCode =
       err instanceof BackendClientError ? err.code : "oauth_failed";
     return NextResponse.redirect(
-      new URL(`/login?error=${encodeURIComponent(errorCode)}`, request.url),
+      buildPublicUrl(`/login?error=${encodeURIComponent(errorCode)}`, request),
     );
   }
 }
