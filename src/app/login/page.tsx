@@ -80,16 +80,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <SocialAuthButtons purpose="login" />
-
-        <div className="relative flex items-center py-1">
-          <div className="flex-grow border-t border-crease" />
-          <span className="shrink mx-3 text-[11px] font-letter uppercase tracking-widest text-foreground-muted">
-            {t("login.orDivider")}
-          </span>
-          <div className="flex-grow border-t border-crease" />
-        </div>
-
         <div
           role="tablist"
           className="grid grid-cols-2 border border-crease rounded-xs p-0.5 bg-manila/40"
@@ -218,25 +208,24 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="text-center text-xs font-letter text-foreground-muted space-y-2 pt-2 border-t border-crease">
-          <p>
-            {t("login.createAccountPrompt")}{" "}
-            <Link
-              href="/register"
-              className="text-wax font-semibold hover:underline"
-            >
-              {t("login.createAccountLink")}
-            </Link>
-          </p>
-          <div>
-            <Link
-              href="/"
-              className="text-xs font-letter font-semibold text-foreground-muted hover:text-foreground transition-colors uppercase tracking-wider inline-flex items-center gap-1.5"
-            >
-              <ArrowLeft size={13} />
-              <span>{t("login.backHome")}</span>
-            </Link>
-          </div>
+        <div className="relative flex items-center py-1">
+          <div className="flex-grow border-t border-crease" />
+          <span className="shrink mx-3 text-[11px] font-letter uppercase tracking-widest text-foreground-muted">
+            {t("login.orDivider")}
+          </span>
+          <div className="flex-grow border-t border-crease" />
+        </div>
+
+        <SocialAuthButtons purpose="login" />
+
+        <div className="text-center pt-2 border-t border-crease">
+          <Link
+            href="/"
+            className="text-xs font-letter font-semibold text-foreground-muted hover:text-foreground transition-colors uppercase tracking-wider inline-flex items-center gap-1.5"
+          >
+            <ArrowLeft size={13} />
+            <span>{t("login.backHome")}</span>
+          </Link>
         </div>
       </div>
     </div>

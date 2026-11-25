@@ -147,7 +147,7 @@
     "setPasswordButton": "Set Password",
     "passwordUpdatedNotice": "Password updated successfully.",
     "connectedAccountsTitle": "Connected Accounts",
-    "connectedAccountsDesc": "Link Google or Facebook to sign in faster. You must keep at least one sign-in method active.",
+    "connectedAccountsDesc": "Link Google to sign in faster. You must keep at least one sign-in method active.",
     "connected": "Connected",
     "notConnected": "Not connected",
     "connect": "Connect",

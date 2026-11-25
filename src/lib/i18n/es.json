@@ -147,7 +147,7 @@
     "setPasswordButton": "Guardar Contraseña",
     "passwordUpdatedNotice": "Contraseña actualizada correctamente.",
     "connectedAccountsTitle": "Cuentas Conectadas",
-    "connectedAccountsDesc": "Vincula Google o Facebook para acceder más rápido. Debes mantener al menos un método de acceso activo.",
+    "connectedAccountsDesc": "Vincula Google para acceder más rápido. Debes mantener al menos un método de acceso activo.",
     "connected": "Conectada",
     "notConnected": "No conectada",
     "connect": "Conectar",

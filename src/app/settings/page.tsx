@@ -7,7 +7,7 @@ import { useAuth, LinkedIdentity } from "@/lib/context/AuthContext";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useFlash } from "@/components/ui/FlashBanner";
 import { SettingsSkeleton } from "@/components/skeletons";
-import { GoogleMark, FacebookMark } from "@/components/ui/SocialAuthButtons";
+import { GoogleMark } from "@/components/ui/SocialAuthButtons";
 import {
   Mail,
   Lock,
@@ -20,7 +20,8 @@ import {
 
 const SUPPORTED_PROVIDERS = [
   { id: "google", label: "Google" },
-  { id: "facebook", label: "Facebook" },
+  // Facebook login temporarily disabled:
+  // { id: "facebook", label: "Facebook" },
 ] as const;
 
 export default function SettingsPage() {
@@ -457,7 +458,7 @@ export default function SettingsPage() {
                 className="py-3.5 first:pt-0 last:pb-0 flex items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-3">
-                  {id === "google" ? <GoogleMark /> : <FacebookMark />}
+                  <GoogleMark />
                   <div>
                     <p className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider">
                       {label}

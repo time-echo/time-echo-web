@@ -68,6 +68,7 @@ export function SocialAuthButtons({
         <GoogleMark />
         <span>{t("login.continueWithGoogle")}</span>
       </a>
+      {/* Facebook login temporarily disabled:
       <a
         href={`/api/auth/oauth/facebook${suffix}`}
         className="w-full paper-sheet hover:bg-manila/50 text-foreground border border-crease rounded-xs py-2.5 px-4 text-xs font-semibold tracking-wider uppercase font-letter min-h-[44px] transition-colors inline-flex items-center justify-center gap-2.5"
@@ -75,6 +76,7 @@ export function SocialAuthButtons({
         <FacebookMark />
         <span>{t("login.continueWithFacebook")}</span>
       </a>
+      */}
     </div>
   );
 }
