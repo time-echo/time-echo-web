@@ -19,6 +19,30 @@ export type { CapsuleCardProps } from "./components/CapsuleCard";
 export { LetterComposerForm } from "./components/LetterComposerForm";
 export type { LetterComposerFormProps } from "./components/LetterComposerForm";
 
+export { InspireMeDrawer } from "./components/InspireMeDrawer";
+export type {
+  InspireMeDrawerProps,
+  InspirePromptSelection,
+} from "./components/InspireMeDrawer";
+
+export {
+  INSPIRATION_CATEGORIES,
+  DEFAULT_INSPIRATION_CATEGORY_ID,
+  getInspirationCategory,
+} from "./data/inspirationPrompts";
+export type {
+  InspirationCategory,
+  InspirationCategoryId,
+  InspirationPrompt,
+} from "./data/inspirationPrompts";
+
+export {
+  insertPromptIntoDraft,
+  hasPromptInDraft,
+  removePromptFromDraft,
+} from "./utils/insertPromptIntoDraft";
+export type { InsertPromptResult } from "./utils/insertPromptIntoDraft";
+
 export { useCapsules } from "./hooks/useCapsules";
 export type { CapsuleFilterStatus } from "./hooks/useCapsules";
 

@@ -12,6 +12,7 @@ import {
   Lock,
   ShieldCheck,
   Mail,
+  Sparkles,
   ChevronLeft,
   ChevronRight,
   RotateCw,
@@ -24,6 +25,15 @@ import { ArchivalDatePicker } from "@/components/ui/ArchivalDatePicker";
 import { Slider } from "@/components/ui/Slider";
 import { SocialProof } from "@/features/landing/components/SocialProof";
 import { useLetterFunnel } from "@/features/capsules/hooks/useLetterFunnel";
+import {
+  InspireMeDrawer,
+  InspirePromptSelection,
+  DEFAULT_INSPIRATION_CATEGORY_ID,
+  InspirationCategoryId,
+  insertPromptIntoDraft,
+  hasPromptInDraft,
+  removePromptFromDraft,
+} from "@/features/capsules";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -87,8 +97,20 @@ export default function HomePage() {
   const [showCustomDate, setShowCustomDate] = useState<boolean>(false);
   const [selectedStampId, setSelectedStampId] = useState<string | null>(null);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState<boolean>(false);
+  const [isInspireOpen, setIsInspireOpen] = useState<boolean>(false);
+  const [activeInspirationCategory, setActiveInspirationCategory] =
+    useState<InspirationCategoryId>(DEFAULT_INSPIRATION_CATEGORY_ID);
+  const [appliedPrompt, setAppliedPrompt] = useState<{
+    id: string;
+    text: string;
+  } | null>(null);
   const { findStamp } = useStampCatalog();
   const currentStamp = selectedStampId ? findStamp(selectedStampId) : undefined;
+
+  const activePromptId =
+    appliedPrompt && hasPromptInDraft(content, appliedPrompt.text)
+      ? appliedPrompt.id
+      : null;
 
   const [predictionCity, setPredictionCity] = useState("");
   const [predictionCareer, setPredictionCareer] = useState("");
@@ -427,12 +449,31 @@ export default function HomePage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label
-                htmlFor="landing-content"
-                className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block"
-              >
-                {t("landing.yourLetter")}
-              </label>
+              <div className="flex items-center justify-between gap-2">
+                <label
+                  htmlFor="landing-content"
+                  className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block"
+                >
+                  {t("landing.yourLetter")}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsInspireOpen(true);
+                    track("inspire_me_opened", {
+                      source: "landing",
+                      locale,
+                    });
+                  }}
+                  aria-haspopup="dialog"
+                  aria-expanded={isInspireOpen}
+                  aria-label={t("inspireMe.buttonAria")}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs border border-crease bg-manila/50 hover:border-wax hover:bg-manila text-foreground font-letter text-[11px] font-semibold tracking-wider transition-colors cursor-pointer"
+                >
+                  <Sparkles size={13} className="text-wax shrink-0" />
+                  <span>{t("inspireMe.buttonLabel")}</span>
+                </button>
+              </div>
               <textarea
                 id="landing-content"
                 ref={contentTextareaRef}
@@ -1002,6 +1043,53 @@ export default function HomePage() {
               source: "landing",
             });
           }
+        }}
+      />
+
+      <InspireMeDrawer
+        isOpen={isInspireOpen}
+        onClose={() => setIsInspireOpen(false)}
+        selectedPromptId={activePromptId}
+        onRemovePrompt={() => {
+          if (!appliedPrompt) return;
+          setContent(removePromptFromDraft(content, appliedPrompt.text));
+          setAppliedPrompt(null);
+        }}
+        activeCategoryId={activeInspirationCategory}
+        onCategoryChange={setActiveInspirationCategory}
+        onSelectPrompt={({
+          categoryId,
+          promptId,
+          promptText,
+        }: InspirePromptSelection) => {
+          if (activePromptId) {
+            return false;
+          }
+          const result = insertPromptIntoDraft(content, promptText, 2000);
+          if (result.exceedsMaxLength) {
+            return false;
+          }
+          trackLandingStartIfNeeded();
+          funnel.trackStart(result.content);
+          setContent(result.content);
+          setAppliedPrompt({ id: promptId, text: promptText.trim() });
+          track("inspire_prompt_selected", {
+            category_id: categoryId,
+            prompt_id: promptId,
+            source: "landing",
+            locale,
+          });
+          requestAnimationFrame(() => {
+            const textarea = contentTextareaRef.current;
+            if (!textarea) return;
+            textarea.focus();
+            textarea.setSelectionRange(
+              result.caretPosition,
+              result.caretPosition,
+            );
+            textarea.scrollTop = textarea.scrollHeight;
+          });
+          return true;
         }}
       />
     </div>

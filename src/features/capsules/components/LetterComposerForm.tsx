@@ -10,9 +10,19 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
 import { track } from "@/lib/analytics";
 import { Letter, PredictionCategory } from "@/types/timeecho";
-import { Calendar, Mail, AlertCircle } from "lucide-react";
+import { Calendar, Mail, AlertCircle, Sparkles } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, StampPickerModal, useStampCatalog } from "@/components/stamps";
+import { InspireMeDrawer, InspirePromptSelection } from "./InspireMeDrawer";
+import {
+  DEFAULT_INSPIRATION_CATEGORY_ID,
+  InspirationCategoryId,
+} from "../data/inspirationPrompts";
+import {
+  insertPromptIntoDraft,
+  hasPromptInDraft,
+  removePromptFromDraft,
+} from "../utils/insertPromptIntoDraft";
 
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
@@ -71,7 +81,20 @@ export function LetterComposerForm({
   const { findStamp } = useStampCatalog();
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState(false);
+  const [isInspireOpen, setIsInspireOpen] = useState(false);
+  const [activeInspirationCategory, setActiveInspirationCategory] =
+    useState<InspirationCategoryId>(DEFAULT_INSPIRATION_CATEGORY_ID);
+  const [appliedPrompt, setAppliedPrompt] = useState<{
+    id: string;
+    text: string;
+  } | null>(null);
+  const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
   const hasTrackedCreationStart = useRef(false);
+
+  const activePromptId =
+    appliedPrompt && hasPromptInDraft(form.content, appliedPrompt.text)
+      ? appliedPrompt.id
+      : null;
 
   const trackStartIfNeeded = () => {
     if (hasTrackedCreationStart.current) return;
@@ -82,6 +105,56 @@ export function LetterComposerForm({
       locale,
       horizon_preset: form.horizonPreset,
     });
+  };
+
+  const handleOpenInspire = () => {
+    setIsInspireOpen(true);
+    track("inspire_me_opened", {
+      source: "composer",
+      locale,
+    });
+  };
+
+  const handleSelectPrompt = ({
+    categoryId,
+    promptId,
+    promptText,
+  }: InspirePromptSelection) => {
+    if (activePromptId) {
+      return false;
+    }
+
+    const result = insertPromptIntoDraft(form.content, promptText, 2000);
+    if (result.exceedsMaxLength) {
+      return false;
+    }
+
+    trackStartIfNeeded();
+    setField("content", result.content);
+    setAppliedPrompt({ id: promptId, text: promptText.trim() });
+    track("inspire_prompt_selected", {
+      category_id: categoryId,
+      prompt_id: promptId,
+      source: "composer",
+      locale,
+    });
+    requestAnimationFrame(() => {
+      const textarea = contentTextareaRef.current;
+      if (!textarea) return;
+      textarea.focus();
+      textarea.setSelectionRange(result.caretPosition, result.caretPosition);
+      textarea.scrollTop = textarea.scrollHeight;
+    });
+    return true;
+  };
+
+  const handleRemovePrompt = () => {
+    if (!appliedPrompt) return;
+    setField(
+      "content",
+      removePromptFromDraft(form.content, appliedPrompt.text),
+    );
+    setAppliedPrompt(null);
   };
 
   const selectedStampSlug = form.stamp_slug || form.stampId;
@@ -296,14 +369,28 @@ export function LetterComposerForm({
             </div>
 
             <div className="space-y-2 relative">
-              <label
-                htmlFor="letter_content_area"
-                className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
-              >
-                {t("letters.content_label")} *
-              </label>
+              <div className="flex items-center justify-between gap-2">
+                <label
+                  htmlFor="letter_content_area"
+                  className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
+                >
+                  {t("letters.content_label")} *
+                </label>
+                <button
+                  type="button"
+                  onClick={handleOpenInspire}
+                  aria-haspopup="dialog"
+                  aria-expanded={isInspireOpen}
+                  aria-label={t("inspireMe.buttonAria")}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs border border-crease bg-manila/50 hover:border-wax hover:bg-manila text-foreground font-letter text-[11px] font-semibold tracking-wider transition-colors cursor-pointer"
+                >
+                  <Sparkles size={13} className="text-wax shrink-0" />
+                  <span>{t("inspireMe.buttonLabel")}</span>
+                </button>
+              </div>
               <textarea
                 id="letter_content_area"
+                ref={contentTextareaRef}
                 value={form.content}
                 onChange={(e) => {
                   trackStartIfNeeded();
@@ -697,6 +784,16 @@ export function LetterComposerForm({
             });
           }
         }}
+      />
+
+      <InspireMeDrawer
+        isOpen={isInspireOpen}
+        onClose={() => setIsInspireOpen(false)}
+        onSelectPrompt={handleSelectPrompt}
+        selectedPromptId={activePromptId}
+        onRemovePrompt={handleRemovePrompt}
+        activeCategoryId={activeInspirationCategory}
+        onCategoryChange={setActiveInspirationCategory}
       />
     </div>
   );

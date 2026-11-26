@@ -93,6 +93,18 @@ export interface PostHogStampSelectedProperties {
   source: "landing" | "composer";
 }
 
+export interface PostHogInspireMeOpenedProperties {
+  source: "landing" | "composer";
+  locale: SupportedLanguage;
+}
+
+export interface PostHogInspirePromptSelectedProperties {
+  category_id: string;
+  prompt_id: string;
+  source: "landing" | "composer";
+  locale: SupportedLanguage;
+}
+
 export interface PostHogLetterCreationCompletedProperties {
   source: "landing" | "composer";
   has_stamp: boolean;
@@ -143,6 +155,8 @@ export interface PostHogAuthProperties {
 export interface PostHogEventMap extends LetterFunnelEventMap {
   letter_creation_started: PostHogLetterCreationStartedProperties;
   stamp_selected: PostHogStampSelectedProperties;
+  inspire_me_opened: PostHogInspireMeOpenedProperties;
+  inspire_prompt_selected: PostHogInspirePromptSelectedProperties;
   letter_creation_completed: PostHogLetterCreationCompletedProperties;
   letter_saved: PostHogLetterSavedProperties;
   letter_scheduled: PostHogLetterScheduledProperties;
@@ -174,6 +188,8 @@ export const GA4_EVENTS: ReadonlySet<string> = new Set<Ga4EventName>([
 export const POSTHOG_EVENTS: ReadonlySet<string> = new Set<PostHogEventName>([
   "letter_creation_started",
   "stamp_selected",
+  "inspire_me_opened",
+  "inspire_prompt_selected",
   "letter_creation_completed",
   "letter_saved",
   "letter_scheduled",
