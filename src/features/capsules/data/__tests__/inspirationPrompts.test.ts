@@ -3,7 +3,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { INSPIRATION_CATEGORIES } from "../inspirationPrompts";
+import {
+  INSPIRATION_CATEGORIES,
+  getInspirationPromptById,
+} from "../inspirationPrompts";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const enDict = JSON.parse(
@@ -44,11 +47,24 @@ describe("INSPIRATION_CATEGORIES catalog & i18n parity", () => {
     }
   });
 
+  it("looks up prompts by ID and returns undefined for unknown or empty IDs", () => {
+    const found = getInspirationPromptById("futureReflections.personToBecome");
+    assert.ok(found);
+    assert.equal(found.categoryId, "futureReflections");
+    assert.equal(
+      found.textKey,
+      "inspireMe.categories.futureReflections.prompts.personToBecome",
+    );
+    assert.equal(getInspirationPromptById("unknown.id"), undefined);
+    assert.equal(getInspirationPromptById(null), undefined);
+    assert.equal(getInspirationPromptById(undefined), undefined);
+  });
+
   it("resolves every category and prompt key to non-empty strings in both en and es", () => {
     const uiKeys = [
       "inspireMe.buttonLabel",
-      "inspireMe.buttonAppliedLabel",
       "inspireMe.buttonAria",
+      "inspireMe.activePromptLabel",
       "inspireMe.drawerTitle",
       "inspireMe.drawerSubtitle",
       "inspireMe.categoriesAria",
@@ -57,7 +73,6 @@ describe("INSPIRATION_CATEGORIES catalog & i18n parity", () => {
       "inspireMe.selected",
       "inspireMe.removePrompt",
       "inspireMe.onePromptLimit",
-      "inspireMe.maxLengthWarning",
       "inspireMe.emptyCategory",
     ];
 

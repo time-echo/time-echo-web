@@ -1376,17 +1376,16 @@
   },
   "inspireMe": {
     "buttonLabel": "Inspire Me",
-    "buttonAppliedLabel": "Inspired",
     "buttonAria": "Open writing inspiration prompts",
+    "activePromptLabel": "Inspiration",
     "drawerTitle": "Need a spark?",
-    "drawerSubtitle": "Pick a question to start or continue your letter. Your current draft stays safe.",
+    "drawerSubtitle": "Pick a question to guide your writing. It stays as a gentle reminder above your letter.",
     "categoriesAria": "Inspiration categories",
     "close": "Close inspiration drawer",
-    "usePrompt": "Add",
-    "selected": "Added",
-    "removePrompt": "Remove prompt",
-    "onePromptLimit": "You can add one inspiration prompt per letter. Remove the current one to choose another.",
-    "maxLengthWarning": "Your letter is close to the 2,000-character limit. Shorten it a little to add this prompt.",
+    "usePrompt": "Use",
+    "selected": "Selected",
+    "removePrompt": "Remove inspiration",
+    "onePromptLimit": "You can select one inspiration per letter. Click it again or remove it to choose another.",
     "emptyCategory": "No prompts available in this category yet.",
     "categories": {
       "futureReflections": {

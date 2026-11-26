@@ -1376,17 +1376,16 @@
   },
   "inspireMe": {
     "buttonLabel": "Inspírame",
-    "buttonAppliedLabel": "Inspirado",
     "buttonAria": "Abrir ideas de inspiración para escribir",
+    "activePromptLabel": "Inspiración",
     "drawerTitle": "¿Necesitas una chispa?",
-    "drawerSubtitle": "Elige una pregunta para empezar o continuar tu carta. Lo que ya escribiste se mantiene intacto.",
+    "drawerSubtitle": "Elige una pregunta para guiar tu escritura. Se mostrará como recordatorio encima de tu carta.",
     "categoriesAria": "Categorías de inspiración",
     "close": "Cerrar panel de inspiración",
-    "usePrompt": "Agregar",
-    "selected": "Agregada",
-    "removePrompt": "Quitar idea",
-    "onePromptLimit": "Solo puedes agregar una idea de inspiración por carta. Quita la actual para elegir otra.",
-    "maxLengthWarning": "Tu carta está cerca del límite de 2.000 caracteres. Acórtala un poco para agregar esta idea.",
+    "usePrompt": "Usar",
+    "selected": "Seleccionada",
+    "removePrompt": "Quitar inspiración",
+    "onePromptLimit": "Solo puedes elegir una inspiración por carta. Haz clic de nuevo o quítala para elegir otra.",
     "emptyCategory": "Todavía no hay ideas disponibles en esta categoría.",
     "categories": {
       "futureReflections": {

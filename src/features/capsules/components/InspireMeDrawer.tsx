@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, X, Plus, Check, AlertCircle } from "lucide-react";
+import { Sparkles, X, Plus, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import {
@@ -27,7 +27,7 @@ export interface InspirePromptSelection {
 export interface InspireMeDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectPrompt: (selection: InspirePromptSelection) => boolean;
+  onSelectPrompt: (selection: InspirePromptSelection) => void;
   selectedPromptId?: string | null;
   onRemovePrompt?: () => void;
   activeCategoryId?: InspirationCategoryId;
@@ -35,9 +35,53 @@ export interface InspireMeDrawerProps {
   className?: string;
 }
 
+export interface InspirationPromptLabelProps {
+  promptText: string;
+  onRemove: () => void;
+  className?: string;
+}
+
+export function InspirationPromptLabel({
+  promptText,
+  onRemove,
+  className,
+}: InspirationPromptLabelProps) {
+  const { t } = useTimeEcho();
+
+  return (
+    <div
+      role="note"
+      aria-label={t("inspireMe.activePromptLabel")}
+      className={cn(
+        "rounded-xs border border-crease border-l-2 border-l-wax bg-manila/40 px-3.5 py-2.5 flex items-start justify-between gap-3 animate-fade-in",
+        className,
+      )}
+    >
+      <div className="space-y-0.5 min-w-0">
+        <span className="inline-flex items-center gap-1.5 text-[10px] font-letter uppercase tracking-wider font-semibold text-foreground-muted">
+          <Sparkles size={11} className="text-wax shrink-0" />
+          <span>{t("inspireMe.activePromptLabel")}</span>
+        </span>
+        <p className="font-serif-editorial italic text-sm text-foreground leading-relaxed">
+          {promptText}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={t("inspireMe.removePrompt")}
+        title={t("inspireMe.removePrompt")}
+        className="p-1 rounded-xs text-foreground-muted hover:text-wax hover:bg-crease/40 transition-colors cursor-pointer shrink-0"
+      >
+        <X size={14} />
+      </button>
+    </div>
+  );
+}
+
 interface InspireMeContentProps {
   onClose: () => void;
-  onSelectPrompt: (selection: InspirePromptSelection) => boolean;
+  onSelectPrompt: (selection: InspirePromptSelection) => void;
   selectedPromptId?: string | null;
   onRemovePrompt?: () => void;
   activeCategoryId: InspirationCategoryId;
@@ -53,7 +97,6 @@ function InspireMeContent({
   onCategoryChange,
 }: InspireMeContentProps) {
   const { t } = useTimeEcho();
-  const [limitReached, setLimitReached] = useState(false);
 
   const activeCategory = getInspirationCategory(activeCategoryId);
   const hasAppliedPrompt = Boolean(selectedPromptId);
@@ -72,13 +115,7 @@ function InspireMeContent({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
-  const handleCategorySelect = (categoryId: InspirationCategoryId) => {
-    setLimitReached(false);
-    onCategoryChange(categoryId);
-  };
-
   const handleRemove = () => {
-    setLimitReached(false);
     onRemovePrompt?.();
   };
 
@@ -90,18 +127,11 @@ function InspireMeContent({
 
     if (hasAppliedPrompt) return;
 
-    const inserted = onSelectPrompt({
+    onSelectPrompt({
       categoryId: activeCategory.id,
       promptId,
       promptText,
     });
-
-    if (!inserted) {
-      setLimitReached(true);
-      return;
-    }
-
-    setLimitReached(false);
     onClose();
   };
 
@@ -164,7 +194,7 @@ function InspireMeContent({
                   aria-selected={isSelected}
                   aria-controls={`inspire-panel-${category.id}`}
                   id={`inspire-tab-${category.id}`}
-                  onClick={() => handleCategorySelect(category.id)}
+                  onClick={() => onCategoryChange(category.id)}
                   className={cn(
                     "px-2.5 py-1.5 text-[11px] font-letter rounded-xs transition-colors whitespace-nowrap cursor-pointer",
                     isSelected
@@ -213,16 +243,6 @@ function InspireMeContent({
               {t(activeCategory.descriptionKey)}
             </p>
           </div>
-
-          {limitReached && (
-            <div
-              role="alert"
-              className="paper-sheet rounded-xs p-3.5 border border-wax/40 bg-wax/5 text-foreground font-letter text-xs flex items-start gap-2.5"
-            >
-              <AlertCircle size={15} className="text-wax shrink-0 mt-0.5" />
-              <span>{t("inspireMe.maxLengthWarning")}</span>
-            </div>
-          )}
 
           {activeCategory.prompts.length === 0 ? (
             <div className="py-10 text-center">

@@ -13,16 +13,16 @@ import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle, Sparkles } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, StampPickerModal, useStampCatalog } from "@/components/stamps";
-import { InspireMeDrawer, InspirePromptSelection } from "./InspireMeDrawer";
+import {
+  InspireMeDrawer,
+  InspirationPromptLabel,
+  InspirePromptSelection,
+} from "./InspireMeDrawer";
 import {
   DEFAULT_INSPIRATION_CATEGORY_ID,
   InspirationCategoryId,
+  getInspirationPromptById,
 } from "../data/inspirationPrompts";
-import {
-  insertPromptIntoDraft,
-  hasPromptInDraft,
-  removePromptFromDraft,
-} from "../utils/insertPromptIntoDraft";
 
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
@@ -84,17 +84,11 @@ export function LetterComposerForm({
   const [isInspireOpen, setIsInspireOpen] = useState(false);
   const [activeInspirationCategory, setActiveInspirationCategory] =
     useState<InspirationCategoryId>(DEFAULT_INSPIRATION_CATEGORY_ID);
-  const [appliedPrompt, setAppliedPrompt] = useState<{
-    id: string;
-    text: string;
-  } | null>(null);
+  const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
   const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
   const hasTrackedCreationStart = useRef(false);
 
-  const activePromptId =
-    appliedPrompt && hasPromptInDraft(form.content, appliedPrompt.text)
-      ? appliedPrompt.id
-      : null;
+  const selectedPrompt = getInspirationPromptById(selectedPromptId);
 
   const trackStartIfNeeded = () => {
     if (hasTrackedCreationStart.current) return;
@@ -118,20 +112,10 @@ export function LetterComposerForm({
   const handleSelectPrompt = ({
     categoryId,
     promptId,
-    promptText,
   }: InspirePromptSelection) => {
-    if (activePromptId) {
-      return false;
-    }
+    if (selectedPromptId) return;
 
-    const result = insertPromptIntoDraft(form.content, promptText, 2000);
-    if (result.exceedsMaxLength) {
-      return false;
-    }
-
-    trackStartIfNeeded();
-    setField("content", result.content);
-    setAppliedPrompt({ id: promptId, text: promptText.trim() });
+    setSelectedPromptId(promptId);
     track("inspire_prompt_selected", {
       category_id: categoryId,
       prompt_id: promptId,
@@ -139,22 +123,12 @@ export function LetterComposerForm({
       locale,
     });
     requestAnimationFrame(() => {
-      const textarea = contentTextareaRef.current;
-      if (!textarea) return;
-      textarea.focus();
-      textarea.setSelectionRange(result.caretPosition, result.caretPosition);
-      textarea.scrollTop = textarea.scrollHeight;
+      contentTextareaRef.current?.focus();
     });
-    return true;
   };
 
   const handleRemovePrompt = () => {
-    if (!appliedPrompt) return;
-    setField(
-      "content",
-      removePromptFromDraft(form.content, appliedPrompt.text),
-    );
-    setAppliedPrompt(null);
+    setSelectedPromptId(null);
   };
 
   const selectedStampSlug = form.stamp_slug || form.stampId;
@@ -388,6 +362,12 @@ export function LetterComposerForm({
                   <span>{t("inspireMe.buttonLabel")}</span>
                 </button>
               </div>
+              {selectedPrompt && (
+                <InspirationPromptLabel
+                  promptText={t(selectedPrompt.textKey)}
+                  onRemove={handleRemovePrompt}
+                />
+              )}
               <textarea
                 id="letter_content_area"
                 ref={contentTextareaRef}
@@ -790,7 +770,7 @@ export function LetterComposerForm({
         isOpen={isInspireOpen}
         onClose={() => setIsInspireOpen(false)}
         onSelectPrompt={handleSelectPrompt}
-        selectedPromptId={activePromptId}
+        selectedPromptId={selectedPromptId}
         onRemovePrompt={handleRemovePrompt}
         activeCategoryId={activeInspirationCategory}
         onCategoryChange={setActiveInspirationCategory}
