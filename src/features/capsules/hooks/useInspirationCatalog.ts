@@ -3,15 +3,11 @@
 import { useEffect, useCallback, useSyncExternalStore } from "react";
 import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { ICapsuleRepository } from "@/lib/repositories/ICapsuleRepository";
-import {
-  InspirationItemResponse,
-  InspirationCategoryResponse,
-} from "@/types/timeecho";
+import { InspirationItemResponse } from "@/types/timeecho";
 
 interface InspirationCatalogStore {
   locale: string;
   inspirations: InspirationItemResponse[];
-  categories: InspirationCategoryResponse[];
   isLoading: boolean;
   error: Error | null;
   fetchedAt: number;
@@ -20,7 +16,6 @@ interface InspirationCatalogStore {
 const initialStore: InspirationCatalogStore = {
   locale: "",
   inspirations: [],
-  categories: [],
   isLoading: true,
   error: null,
   fetchedAt: 0,
@@ -81,19 +76,14 @@ async function fetchCatalog(
 
   activeFetchPromise = (async () => {
     try {
-      const [fetchedCategories, fetchedInspirations] = await Promise.all([
-        repository && typeof repository.getInspirationCategories === "function"
-          ? repository.getInspirationCategories(locale)
-          : Promise.resolve([]),
+      const fetchedInspirations =
         repository && typeof repository.getInspirations === "function"
-          ? repository.getInspirations(locale, { per_page: 100 })
-          : Promise.resolve([]),
-      ]);
+          ? await repository.getInspirations(locale, { per_page: 100 })
+          : [];
 
       currentStore = {
         locale,
         inspirations: fetchedInspirations,
-        categories: fetchedCategories,
         isLoading: false,
         error: null,
         fetchedAt: Date.now(),
@@ -108,7 +98,6 @@ async function fetchCatalog(
       currentStore = {
         locale,
         inspirations: [],
-        categories: [],
         isLoading: false,
         error: errorObj,
         fetchedAt: Date.now(),
@@ -124,16 +113,12 @@ async function fetchCatalog(
 
 export interface UseInspirationCatalogResult {
   inspirations: InspirationItemResponse[];
-  categories: InspirationCategoryResponse[];
   isLoading: boolean;
   error: Error | null;
   refresh: () => Promise<void>;
   findInspiration: (
     slug: string | null | undefined,
   ) => InspirationItemResponse | undefined;
-  getInspirationsByCategory: (
-    categorySlug: string | null | undefined,
-  ) => InspirationItemResponse[];
   getRandomInspiration: (
     excludeSlug?: string | null,
   ) => InspirationItemResponse | undefined;
@@ -159,18 +144,6 @@ export function useInspirationCatalog(): UseInspirationCatalogResult {
     [store.inspirations],
   );
 
-  const getInspirationsByCategory = useCallback(
-    (categorySlug: string | null | undefined): InspirationItemResponse[] => {
-      if (!categorySlug) return [];
-      return store.inspirations.filter(
-        (item) =>
-          item.category_slug === categorySlug ||
-          item.categorySlug === categorySlug,
-      );
-    },
-    [store.inspirations],
-  );
-
   const getRandomInspiration = useCallback(
     (excludeSlug?: string | null): InspirationItemResponse | undefined => {
       if (store.inspirations.length === 0) return undefined;
@@ -186,12 +159,10 @@ export function useInspirationCatalog(): UseInspirationCatalogResult {
 
   return {
     inspirations: store.inspirations,
-    categories: store.categories,
     isLoading: store.isLoading && store.inspirations.length === 0,
     error: store.error,
     refresh,
     findInspiration,
-    getInspirationsByCategory,
     getRandomInspiration,
   };
 }

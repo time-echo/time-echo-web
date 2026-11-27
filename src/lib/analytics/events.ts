@@ -99,7 +99,6 @@ export interface PostHogInspireMeOpenedProperties {
 }
 
 export interface PostHogInspirePromptSelectedProperties {
-  category_id: string;
   prompt_id: string;
   source: "landing" | "composer";
   locale: SupportedLanguage;

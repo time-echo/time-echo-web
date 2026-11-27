@@ -12,7 +12,6 @@ import {
   StampDetailResponse,
   LetterStampInfo,
   StampFilters,
-  InspirationCategoryResponse,
   InspirationItemResponse,
   InspirationDetailResponse,
   InspirationFilters,
@@ -530,10 +529,6 @@ export class HttpApiRepository implements ICapsuleRepository {
     const loc = locale || this.resolveLocale();
     const query = new URLSearchParams();
 
-    const categoryParam =
-      filters?.category || filters?.category_slug || filters?.category_id;
-    if (categoryParam) query.set("category", String(categoryParam));
-
     if (filters?.q) {
       query.set("q", filters.q);
     } else if (filters?.text) {
@@ -571,43 +566,6 @@ export class HttpApiRepository implements ICapsuleRepository {
       if (Array.isArray(data.inspirations)) return data.inspirations;
       if (Array.isArray(data.data)) return data.data;
     }
-    return [];
-  }
-
-  async getInspirationCategories(
-    locale?: string,
-  ): Promise<InspirationCategoryResponse[]> {
-    const loc = locale || this.resolveLocale();
-    const data = await this.request<
-      | InspirationCategoryResponse[]
-      | {
-          inspiration_categories?: InspirationCategoryResponse[];
-          inspirationCategories?: InspirationCategoryResponse[];
-          data?: InspirationCategoryResponse[];
-        }
-    >("/inspiration_categories", {
-      headers: {
-        "X-Locale": loc,
-        "Accept-Language": loc,
-      },
-    });
-
-    if (Array.isArray(data)) {
-      return data;
-    }
-
-    if (data && typeof data === "object") {
-      if (Array.isArray(data.inspiration_categories)) {
-        return data.inspiration_categories;
-      }
-      if (Array.isArray(data.inspirationCategories)) {
-        return data.inspirationCategories;
-      }
-      if (Array.isArray(data.data)) {
-        return data.data;
-      }
-    }
-
     return [];
   }
 

@@ -477,10 +477,6 @@ export default function HomePage() {
                     if (!nextPrompt) return;
                     setSelectedPromptId(nextPrompt.slug);
                     track("inspire_prompt_selected", {
-                      category_id:
-                        nextPrompt.category_slug ||
-                        nextPrompt.categorySlug ||
-                        "",
                       prompt_id: nextPrompt.slug,
                       source: "landing",
                       locale,

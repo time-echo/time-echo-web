@@ -6,7 +6,6 @@ import {
   StampItemResponse,
   StampDetailResponse,
   StampFilters,
-  InspirationCategoryResponse,
   InspirationItemResponse,
   InspirationDetailResponse,
   InspirationFilters,
@@ -33,9 +32,6 @@ export interface ICapsuleRepository {
     locale?: string,
     filters?: InspirationFilters,
   ): Promise<InspirationItemResponse[]>;
-  getInspirationCategories?(
-    locale?: string,
-  ): Promise<InspirationCategoryResponse[]>;
   getInspirationBySlug?(
     slug: string,
     locale?: string,
