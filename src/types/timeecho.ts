@@ -196,3 +196,28 @@ export interface StampFilters {
   perPage?: number;
   per_page?: number;
 }
+
+export interface InspirationItemResponse {
+  slug: string;
+  text: string;
+  position: number;
+  active?: boolean;
+}
+
+export interface InspirationDetailResponse {
+  slug: string;
+  text: string;
+  position: number;
+  active: boolean;
+}
+
+export interface InspirationFilters {
+  text?: string;
+  q?: string;
+  query?: string;
+  active?: boolean | string;
+  status?: string;
+  page?: number;
+  perPage?: number;
+  per_page?: number;
+}

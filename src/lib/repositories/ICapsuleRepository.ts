@@ -6,6 +6,9 @@ import {
   StampItemResponse,
   StampDetailResponse,
   StampFilters,
+  InspirationItemResponse,
+  InspirationDetailResponse,
+  InspirationFilters,
 } from "@/types/timeecho";
 
 export interface ICapsuleRepository {
@@ -25,4 +28,12 @@ export interface ICapsuleRepository {
     slug: string,
     locale?: string,
   ): Promise<StampDetailResponse | null>;
+  getInspirations?(
+    locale?: string,
+    filters?: InspirationFilters,
+  ): Promise<InspirationItemResponse[]>;
+  getInspirationBySlug?(
+    slug: string,
+    locale?: string,
+  ): Promise<InspirationDetailResponse | null>;
 }

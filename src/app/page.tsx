@@ -12,6 +12,7 @@ import {
   Lock,
   ShieldCheck,
   Mail,
+  Sparkles,
   ChevronLeft,
   ChevronRight,
   RotateCw,
@@ -24,6 +25,10 @@ import { ArchivalDatePicker } from "@/components/ui/ArchivalDatePicker";
 import { Slider } from "@/components/ui/Slider";
 import { SocialProof } from "@/features/landing/components/SocialProof";
 import { useLetterFunnel } from "@/features/capsules/hooks/useLetterFunnel";
+import {
+  InspirationPromptLabel,
+  useInspirationCatalog,
+} from "@/features/capsules";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -87,8 +92,17 @@ export default function HomePage() {
   const [showCustomDate, setShowCustomDate] = useState<boolean>(false);
   const [selectedStampId, setSelectedStampId] = useState<string | null>(null);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState<boolean>(false);
+  const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
   const { findStamp } = useStampCatalog();
+  const {
+    inspirations,
+    isLoading: isLoadingInspirations,
+    findInspiration,
+    getRandomInspiration,
+  } = useInspirationCatalog();
   const currentStamp = selectedStampId ? findStamp(selectedStampId) : undefined;
+
+  const selectedPrompt = findInspiration(selectedPromptId);
 
   const [predictionCity, setPredictionCity] = useState("");
   const [predictionCareer, setPredictionCareer] = useState("");
@@ -124,6 +138,28 @@ export default function HomePage() {
     new Date().toISOString(),
     locale,
   );
+
+  const letterPlaceholderHorizon = (() => {
+    if (showCustomDate) {
+      if (customDate) {
+        return t("landing.letterPlaceholderHorizonCustom", {
+          date: formatLocaleDate(`${customDate}T12:00:00`, locale),
+        });
+      }
+      return t("landing.letterPlaceholderHorizonFuture");
+    }
+    switch (selectedHorizonDays) {
+      case 180:
+        return t("landing.letterPlaceholderHorizon6m");
+      case 1095:
+        return t("landing.letterPlaceholderHorizon3y");
+      case 1825:
+        return t("landing.letterPlaceholderHorizon5y");
+      case 365:
+      default:
+        return t("landing.letterPlaceholderHorizon1y");
+    }
+  })();
 
   const handlePresetDate = (
     days: number,
@@ -427,12 +463,42 @@ export default function HomePage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label
-                htmlFor="landing-content"
-                className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block"
-              >
-                {t("landing.yourLetter")}
-              </label>
+              <div className="flex items-center justify-between gap-2">
+                <label
+                  htmlFor="landing-content"
+                  className="text-xs font-letter font-semibold text-foreground uppercase tracking-wider block"
+                >
+                  {t("landing.yourLetter")}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const nextPrompt = getRandomInspiration(selectedPromptId);
+                    if (!nextPrompt) return;
+                    setSelectedPromptId(nextPrompt.slug);
+                    track("inspire_prompt_selected", {
+                      prompt_id: nextPrompt.slug,
+                      source: "landing",
+                      locale,
+                    });
+                    requestAnimationFrame(() => {
+                      contentTextareaRef.current?.focus();
+                    });
+                  }}
+                  disabled={isLoadingInspirations && inspirations.length === 0}
+                  aria-label={t("inspireMe.buttonAria")}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs border border-crease bg-manila/50 hover:border-wax hover:bg-manila text-foreground font-letter text-[11px] font-semibold tracking-wider transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Sparkles size={13} className="text-wax shrink-0" />
+                  <span>{t("inspireMe.buttonLabel")}</span>
+                </button>
+              </div>
+              {selectedPrompt && (
+                <InspirationPromptLabel
+                  promptText={selectedPrompt.text}
+                  onRemove={() => setSelectedPromptId(null)}
+                />
+              )}
               <textarea
                 id="landing-content"
                 ref={contentTextareaRef}
@@ -442,7 +508,13 @@ export default function HomePage() {
                   funnel.trackStart(e.target.value);
                   setContent(e.target.value);
                 }}
-                placeholder={t("landing.letterPlaceholderGuide")}
+                placeholder={
+                  selectedPrompt
+                    ? ""
+                    : t("landing.letterPlaceholderGuide", {
+                        horizon: letterPlaceholderHorizon,
+                      })
+                }
                 rows={7}
                 maxLength={2000}
                 required

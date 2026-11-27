@@ -10,9 +10,11 @@ import { useTimeEcho } from "@/lib/context/TimeEchoContext";
 import { useAuth } from "@/lib/context/AuthContext";
 import { track } from "@/lib/analytics";
 import { Letter, PredictionCategory } from "@/types/timeecho";
-import { Calendar, Mail, AlertCircle } from "lucide-react";
+import { Calendar, Mail, AlertCircle, Sparkles } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, StampPickerModal, useStampCatalog } from "@/components/stamps";
+import { InspirationPromptLabel } from "./InspirationPromptLabel";
+import { useInspirationCatalog } from "../hooks/useInspirationCatalog";
 
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
@@ -69,9 +71,19 @@ export function LetterComposerForm({
 
   const searchParams = useSearchParams();
   const { findStamp } = useStampCatalog();
+  const {
+    inspirations,
+    isLoading: isLoadingInspirations,
+    findInspiration,
+    getRandomInspiration,
+  } = useInspirationCatalog();
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState(false);
+  const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
+  const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
   const hasTrackedCreationStart = useRef(false);
+
+  const selectedPrompt = findInspiration(selectedPromptId);
 
   const trackStartIfNeeded = () => {
     if (hasTrackedCreationStart.current) return;
@@ -82,6 +94,25 @@ export function LetterComposerForm({
       locale,
       horizon_preset: form.horizonPreset,
     });
+  };
+
+  const handleInspireMe = () => {
+    const nextPrompt = getRandomInspiration(selectedPromptId);
+    if (!nextPrompt) return;
+
+    setSelectedPromptId(nextPrompt.slug);
+    track("inspire_prompt_selected", {
+      prompt_id: nextPrompt.slug,
+      source: "composer",
+      locale,
+    });
+    requestAnimationFrame(() => {
+      contentTextareaRef.current?.focus();
+    });
+  };
+
+  const handleRemovePrompt = () => {
+    setSelectedPromptId(null);
   };
 
   const selectedStampSlug = form.stamp_slug || form.stampId;
@@ -296,20 +327,41 @@ export function LetterComposerForm({
             </div>
 
             <div className="space-y-2 relative">
-              <label
-                htmlFor="letter_content_area"
-                className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
-              >
-                {t("letters.content_label")} *
-              </label>
+              <div className="flex items-center justify-between gap-2">
+                <label
+                  htmlFor="letter_content_area"
+                  className="text-xs font-letter uppercase tracking-wider font-semibold text-foreground-muted block"
+                >
+                  {t("letters.content_label")} *
+                </label>
+                <button
+                  type="button"
+                  onClick={handleInspireMe}
+                  disabled={isLoadingInspirations && inspirations.length === 0}
+                  aria-label={t("inspireMe.buttonAria")}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs border border-crease bg-manila/50 hover:border-wax hover:bg-manila text-foreground font-letter text-[11px] font-semibold tracking-wider transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Sparkles size={13} className="text-wax shrink-0" />
+                  <span>{t("inspireMe.buttonLabel")}</span>
+                </button>
+              </div>
+              {selectedPrompt && (
+                <InspirationPromptLabel
+                  promptText={selectedPrompt.text}
+                  onRemove={handleRemovePrompt}
+                />
+              )}
               <textarea
                 id="letter_content_area"
+                ref={contentTextareaRef}
                 value={form.content}
                 onChange={(e) => {
                   trackStartIfNeeded();
                   setField("content", e.target.value);
                 }}
-                placeholder={t("letters.content_placeholder_form")}
+                placeholder={
+                  selectedPrompt ? "" : t("letters.content_placeholder_form")
+                }
                 rows={15}
                 minLength={80}
                 maxLength={2000}

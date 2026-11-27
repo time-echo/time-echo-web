@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --no-warnings --import ./src/lib/analytics/__tests__/register-ts-paths.mjs --test src/lib/analytics/__tests__/analytics.test.ts",
+    "test": "node --no-warnings --import ./src/lib/analytics/__tests__/register-ts-paths.mjs --test src/lib/analytics/__tests__/analytics.test.ts src/features/capsules/data/__tests__/inspirationPrompts.test.ts",
     "prepare": "husky"
   },
   "dependencies": {

@@ -341,7 +341,13 @@
     "freeBadge": "Gratis",
     "freeNote": "Enviar tu carta no cuesta nada.",
     "stampHint": "Opcional: elige una estampilla decorativa para tu carta.",
-    "letterPlaceholderGuide": "¿Qué le dirías a tu yo de dentro de un año?\n¿Qué te preocupa hoy? ¿Qué esperas haber logrado? ¿Qué no quieres olvidar?",
+    "letterPlaceholderGuide": "¿Qué le dirías a tu yo {horizon}?\n¿Qué te preocupa hoy? ¿Qué esperas haber logrado? ¿Qué no quieres olvidar?",
+    "letterPlaceholderHorizon6m": "de dentro de 6 meses",
+    "letterPlaceholderHorizon1y": "de dentro de un año",
+    "letterPlaceholderHorizon3y": "de dentro de 3 años",
+    "letterPlaceholderHorizon5y": "de dentro de 5 años",
+    "letterPlaceholderHorizonCustom": "el {date}",
+    "letterPlaceholderHorizonFuture": "del futuro",
     "counterEmpty": "Unas pocas frases bastan (mínimo 80 caracteres)",
     "counterProgress": "¡Buen comienzo! Te faltan {remaining} caracteres para poder sellarla",
     "counterReady": "{count} / 2000 · lista para sellar",
@@ -1373,5 +1379,11 @@
     "categories": {
       "all": "Todos"
     }
+  },
+  "inspireMe": {
+    "buttonLabel": "Inspírame",
+    "buttonAria": "Mostrar una idea de inspiración aleatoria para escribir",
+    "activePromptLabel": "Inspiración",
+    "removePrompt": "Quitar inspiración"
   }
 }

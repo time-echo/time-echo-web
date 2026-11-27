@@ -341,7 +341,13 @@
     "freeBadge": "Free",
     "freeNote": "Sending your letter costs nothing.",
     "stampHint": "Optional: pick a decorative stamp for your letter.",
-    "letterPlaceholderGuide": "What would you tell yourself a year from now?\nWhat worries you today? What do you hope to have achieved? What don't you want to forget?",
+    "letterPlaceholderGuide": "What would you tell yourself {horizon}?\nWhat worries you today? What do you hope to have achieved? What don't you want to forget?",
+    "letterPlaceholderHorizon6m": "6 months from now",
+    "letterPlaceholderHorizon1y": "a year from now",
+    "letterPlaceholderHorizon3y": "3 years from now",
+    "letterPlaceholderHorizon5y": "5 years from now",
+    "letterPlaceholderHorizonCustom": "on {date}",
+    "letterPlaceholderHorizonFuture": "in the future",
     "counterEmpty": "A few sentences are enough (80 characters minimum)",
     "counterProgress": "Good start! {remaining} more characters and you can seal it",
     "counterReady": "{count} / 2000 · ready to seal",
@@ -1373,5 +1379,11 @@
     "categories": {
       "all": "All"
     }
+  },
+  "inspireMe": {
+    "buttonLabel": "Inspire Me",
+    "buttonAria": "Show a random writing inspiration prompt",
+    "activePromptLabel": "Inspiration",
+    "removePrompt": "Remove inspiration"
   }
 }

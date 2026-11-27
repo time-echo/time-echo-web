@@ -19,6 +19,12 @@ export type { CapsuleCardProps } from "./components/CapsuleCard";
 export { LetterComposerForm } from "./components/LetterComposerForm";
 export type { LetterComposerFormProps } from "./components/LetterComposerForm";
 
+export { InspirationPromptLabel } from "./components/InspirationPromptLabel";
+export type { InspirationPromptLabelProps } from "./components/InspirationPromptLabel";
+
+export { useInspirationCatalog } from "./hooks/useInspirationCatalog";
+export type { UseInspirationCatalogResult } from "./hooks/useInspirationCatalog";
+
 export { useCapsules } from "./hooks/useCapsules";
 export type { CapsuleFilterStatus } from "./hooks/useCapsules";
 
