@@ -26,12 +26,8 @@ import { Slider } from "@/components/ui/Slider";
 import { SocialProof } from "@/features/landing/components/SocialProof";
 import { useLetterFunnel } from "@/features/capsules/hooks/useLetterFunnel";
 import {
-  InspireMeDrawer,
   InspirationPromptLabel,
-  InspirePromptSelection,
-  DEFAULT_INSPIRATION_CATEGORY_ID,
-  InspirationCategoryId,
-  getInspirationPromptById,
+  useInspirationCatalog,
 } from "@/features/capsules";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -96,14 +92,17 @@ export default function HomePage() {
   const [showCustomDate, setShowCustomDate] = useState<boolean>(false);
   const [selectedStampId, setSelectedStampId] = useState<string | null>(null);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState<boolean>(false);
-  const [isInspireOpen, setIsInspireOpen] = useState<boolean>(false);
-  const [activeInspirationCategory, setActiveInspirationCategory] =
-    useState<InspirationCategoryId>(DEFAULT_INSPIRATION_CATEGORY_ID);
   const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
   const { findStamp } = useStampCatalog();
+  const {
+    inspirations,
+    isLoading: isLoadingInspirations,
+    findInspiration,
+    getRandomInspiration,
+  } = useInspirationCatalog();
   const currentStamp = selectedStampId ? findStamp(selectedStampId) : undefined;
 
-  const selectedPrompt = getInspirationPromptById(selectedPromptId);
+  const selectedPrompt = findInspiration(selectedPromptId);
 
   const [predictionCity, setPredictionCity] = useState("");
   const [predictionCareer, setPredictionCareer] = useState("");
@@ -139,6 +138,28 @@ export default function HomePage() {
     new Date().toISOString(),
     locale,
   );
+
+  const letterPlaceholderHorizon = (() => {
+    if (showCustomDate) {
+      if (customDate) {
+        return t("landing.letterPlaceholderHorizonCustom", {
+          date: formatLocaleDate(`${customDate}T12:00:00`, locale),
+        });
+      }
+      return t("landing.letterPlaceholderHorizonFuture");
+    }
+    switch (selectedHorizonDays) {
+      case 180:
+        return t("landing.letterPlaceholderHorizon6m");
+      case 1095:
+        return t("landing.letterPlaceholderHorizon3y");
+      case 1825:
+        return t("landing.letterPlaceholderHorizon5y");
+      case 365:
+      default:
+        return t("landing.letterPlaceholderHorizon1y");
+    }
+  })();
 
   const handlePresetDate = (
     days: number,
@@ -452,16 +473,25 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => {
-                    setIsInspireOpen(true);
-                    track("inspire_me_opened", {
+                    const nextPrompt = getRandomInspiration(selectedPromptId);
+                    if (!nextPrompt) return;
+                    setSelectedPromptId(nextPrompt.slug);
+                    track("inspire_prompt_selected", {
+                      category_id:
+                        nextPrompt.category_slug ||
+                        nextPrompt.categorySlug ||
+                        "",
+                      prompt_id: nextPrompt.slug,
                       source: "landing",
                       locale,
                     });
+                    requestAnimationFrame(() => {
+                      contentTextareaRef.current?.focus();
+                    });
                   }}
-                  aria-haspopup="dialog"
-                  aria-expanded={isInspireOpen}
+                  disabled={isLoadingInspirations && inspirations.length === 0}
                   aria-label={t("inspireMe.buttonAria")}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs border border-crease bg-manila/50 hover:border-wax hover:bg-manila text-foreground font-letter text-[11px] font-semibold tracking-wider transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs border border-crease bg-manila/50 hover:border-wax hover:bg-manila text-foreground font-letter text-[11px] font-semibold tracking-wider transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Sparkles size={13} className="text-wax shrink-0" />
                   <span>{t("inspireMe.buttonLabel")}</span>
@@ -469,7 +499,7 @@ export default function HomePage() {
               </div>
               {selectedPrompt && (
                 <InspirationPromptLabel
-                  promptText={t(selectedPrompt.textKey)}
+                  promptText={selectedPrompt.text}
                   onRemove={() => setSelectedPromptId(null)}
                 />
               )}
@@ -482,7 +512,13 @@ export default function HomePage() {
                   funnel.trackStart(e.target.value);
                   setContent(e.target.value);
                 }}
-                placeholder={t("landing.letterPlaceholderGuide")}
+                placeholder={
+                  selectedPrompt
+                    ? ""
+                    : t("landing.letterPlaceholderGuide", {
+                        horizon: letterPlaceholderHorizon,
+                      })
+                }
                 rows={7}
                 maxLength={2000}
                 required
@@ -1042,28 +1078,6 @@ export default function HomePage() {
               source: "landing",
             });
           }
-        }}
-      />
-
-      <InspireMeDrawer
-        isOpen={isInspireOpen}
-        onClose={() => setIsInspireOpen(false)}
-        selectedPromptId={selectedPromptId}
-        onRemovePrompt={() => setSelectedPromptId(null)}
-        activeCategoryId={activeInspirationCategory}
-        onCategoryChange={setActiveInspirationCategory}
-        onSelectPrompt={({ categoryId, promptId }: InspirePromptSelection) => {
-          if (selectedPromptId) return;
-          setSelectedPromptId(promptId);
-          track("inspire_prompt_selected", {
-            category_id: categoryId,
-            prompt_id: promptId,
-            source: "landing",
-            locale,
-          });
-          requestAnimationFrame(() => {
-            contentTextareaRef.current?.focus();
-          });
         }}
       />
     </div>

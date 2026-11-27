@@ -341,7 +341,13 @@
     "freeBadge": "Gratis",
     "freeNote": "Enviar tu carta no cuesta nada.",
     "stampHint": "Opcional: elige una estampilla decorativa para tu carta.",
-    "letterPlaceholderGuide": "¿Qué le dirías a tu yo de dentro de un año?\n¿Qué te preocupa hoy? ¿Qué esperas haber logrado? ¿Qué no quieres olvidar?",
+    "letterPlaceholderGuide": "¿Qué le dirías a tu yo {horizon}?\n¿Qué te preocupa hoy? ¿Qué esperas haber logrado? ¿Qué no quieres olvidar?",
+    "letterPlaceholderHorizon6m": "de dentro de 6 meses",
+    "letterPlaceholderHorizon1y": "de dentro de un año",
+    "letterPlaceholderHorizon3y": "de dentro de 3 años",
+    "letterPlaceholderHorizon5y": "de dentro de 5 años",
+    "letterPlaceholderHorizonCustom": "el {date}",
+    "letterPlaceholderHorizonFuture": "del futuro",
     "counterEmpty": "Unas pocas frases bastan (mínimo 80 caracteres)",
     "counterProgress": "¡Buen comienzo! Te faltan {remaining} caracteres para poder sellarla",
     "counterReady": "{count} / 2000 · lista para sellar",
@@ -1376,106 +1382,8 @@
   },
   "inspireMe": {
     "buttonLabel": "Inspírame",
-    "buttonAria": "Abrir ideas de inspiración para escribir",
+    "buttonAria": "Mostrar una idea de inspiración aleatoria para escribir",
     "activePromptLabel": "Inspiración",
-    "drawerTitle": "¿Necesitas una chispa?",
-    "drawerSubtitle": "Elige una pregunta para guiar tu escritura. Se mostrará como recordatorio encima de tu carta.",
-    "categoriesAria": "Categorías de inspiración",
-    "close": "Cerrar panel de inspiración",
-    "usePrompt": "Usar",
-    "selected": "Seleccionada",
-    "removePrompt": "Quitar inspiración",
-    "onePromptLimit": "Solo puedes elegir una inspiración por carta. Haz clic de nuevo o quítala para elegir otra.",
-    "emptyCategory": "Todavía no hay ideas disponibles en esta categoría.",
-    "categories": {
-      "futureReflections": {
-        "name": "Reflexiones del futuro",
-        "description": "Pensamientos sobre la persona en la que esperas convertirte.",
-        "prompts": {
-          "personToBecome": "¿Qué tipo de persona esperas llegar a ser?",
-          "adviceToFuture": "¿Qué consejo le darías a tu yo del futuro?",
-          "hopeNeverChanges": "¿Qué parte de quien eres hoy esperas que nunca cambie?",
-          "proudToHear": "¿Qué haría sonreír a tu yo del futuro al leer esta carta?",
-          "letterToRemember": "Si pudieras recordarle una sola verdad a tu yo del futuro hoy, ¿cuál sería?"
-        }
-      },
-      "dreamsGoals": {
-        "name": "Sueños y metas",
-        "description": "Ambiciones personales, planes y aspiraciones.",
-        "prompts": {
-          "threeAccomplishments": "¿Cuáles son tres cosas que quieres lograr?",
-          "dreamTooBig": "¿Qué sueño te da un poco de vértigo ahora mismo, pero te ilusiona igual?",
-          "nextChapter": "¿Cómo te gustaría que se vea el próximo capítulo de tu vida?",
-          "skillToMaster": "¿Qué habilidad, oficio o hábito quieres construir durante el próximo año?",
-          "courageousStep": "¿Cuál es ese paso valiente que has estado postergando?"
-        }
-      },
-      "relationships": {
-        "name": "Relaciones",
-        "description": "Familia, amistades, vínculos significativos y seres queridos.",
-        "prompts": {
-          "peopleWhoMatter": "¿Quiénes son las personas que marcan tu vida hoy y por qué son importantes para ti?",
-          "unsaidThankYou": "¿Quién merece un agradecimiento que todavía no le has dicho en voz alta?",
-          "hopeStillClose": "¿A quién esperas seguir teniendo cerca cuando abras esta carta?",
-          "favoriteConversation": "¿Qué conversación reciente se quedó contigo mucho después de terminar?",
-          "howYouLove": "¿Cómo te han transformado últimamente tus vínculos más cercanos?"
-        }
-      },
-      "everydayLife": {
-        "name": "Vida cotidiana",
-        "description": "Rutinas actuales, experiencias, intereses y el día a día.",
-        "prompts": {
-          "littleThingsHappy": "¿Qué pequeñas cosas te hacen feliz en este momento?",
-          "ordinaryDay": "Describe un día cualquiera de tu vida hoy, desde la mañana hasta la noche.",
-          "currentFavorites": "¿Qué canciones, libros, lugares o comidas te tienen obsesionado últimamente?",
-          "homeAndSpace": "¿Cómo se ve y se siente hoy tu casa o tu rincón favorito?",
-          "currentRoutine": "¿Qué ritual diario te da más paz en esta etapa?"
-        }
-      },
-      "personalGrowth": {
-        "name": "Crecimiento personal",
-        "description": "Lecciones, desafíos, miedos y evolución personal.",
-        "prompts": {
-          "hardestLesson": "¿Cuál es la lección más importante que has aprendido recientemente?",
-          "currentChallenge": "¿Qué desafío estás atravesando ahora mismo y qué te está enseñando?",
-          "fearToOutgrow": "¿Qué miedo o duda esperas haber superado cuando leas estas líneas?",
-          "proudOfOvercoming": "¿Qué has logrado superar últimamente que antes parecía imposible?",
-          "lettingGo": "¿Qué viejo hábito o expectativa estás finalmente listo para soltar?"
-        }
-      },
-      "gratitude": {
-        "name": "Gratitud",
-        "description": "Cosas, personas y momentos que agradeces.",
-        "prompts": {
-          "momentNeverForget": "¿Qué momento no quieres olvidar nunca?",
-          "quietBlessing": "¿Por qué parte sencilla y silenciosa de tu vida sientes más gratitud hoy?",
-          "unexpectedKindness": "¿Qué gesto inesperado de amabilidad significó mucho para ti últimamente?",
-          "pastSelfThankYou": "¿Qué le agradecerías a tu yo del pasado por haber hecho?",
-          "simpleJoy": "¿Qué pasó esta semana que te hizo detenerte y sentir agradecimiento?"
-        }
-      },
-      "predictions": {
-        "name": "Predicciones",
-        "description": "Expectativas y pronósticos sobre tu futuro.",
-        "prompts": {
-          "whereLiving": "¿Dónde te imaginas viviendo y pasando tus mañanas?",
-          "biggestSurprise": "¿Qué crees que te sorprenderá más cuando abras esta carta?",
-          "workAndPurpose": "¿En qué tipo de trabajo o proyectos crees que estarás poniendo tu energía?",
-          "worriesThatFade": "¿Cuál de tus preocupaciones actuales crees que se verá pequeña para entonces?",
-          "worldAroundYou": "¿Qué crees que habrá cambiado más en tu vida y qué seguirá igual?"
-        }
-      },
-      "justBecause": {
-        "name": "Porque sí",
-        "description": "Ideas abiertas y espontáneas para escribir sin plan.",
-        "prompts": {
-          "rightNowSnapshot": "Detente y mira a tu alrededor: ¿qué ves, escuchas y sientes en este preciso instante?",
-          "honestCheckIn": "Si no tuvieras que filtrar ni un solo pensamiento, ¿cómo estás realmente hoy?",
-          "weirdlySpecific": "¿Qué recuerdo muy específico o chiste interno quieres guardar para después?",
-          "letterWithoutPlan": "Empieza con la primera frase que se te venga a la cabeza y deja que te guíe.",
-          "questionForFuture": "¿Cuál es la pregunta que más ganas tienes de hacerle a tu yo del futuro?"
-        }
-      }
-    }
+    "removePrompt": "Quitar inspiración"
   }
 }

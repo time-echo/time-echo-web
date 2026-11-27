@@ -12,6 +12,10 @@ import {
   StampDetailResponse,
   LetterStampInfo,
   StampFilters,
+  InspirationCategoryResponse,
+  InspirationItemResponse,
+  InspirationDetailResponse,
+  InspirationFilters,
 } from "@/types/timeecho";
 
 export class ApiError extends Error {
@@ -511,6 +515,117 @@ export class HttpApiRepository implements ICapsuleRepository {
         },
       );
       return data || null;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) {
+        return null;
+      }
+      return null;
+    }
+  }
+
+  async getInspirations(
+    locale?: string,
+    filters?: InspirationFilters,
+  ): Promise<InspirationItemResponse[]> {
+    const loc = locale || this.resolveLocale();
+    const query = new URLSearchParams();
+
+    const categoryParam =
+      filters?.category || filters?.category_slug || filters?.category_id;
+    if (categoryParam) query.set("category", String(categoryParam));
+
+    if (filters?.q) {
+      query.set("q", filters.q);
+    } else if (filters?.text) {
+      query.set("text", filters.text);
+    } else if (filters?.query) {
+      query.set("q", filters.query);
+    }
+
+    if (filters?.active !== undefined) {
+      query.set("active", String(filters.active));
+    } else if (filters?.status) {
+      query.set("status", filters.status);
+    }
+
+    if (filters?.page) query.set("page", String(filters.page));
+    const perPage = filters?.perPage ?? filters?.per_page;
+    if (perPage) query.set("per_page", String(perPage));
+
+    const qs = query.toString();
+    const endpoint = `/inspirations${qs ? `?${qs}` : ""}`;
+    const data = await this.request<
+      | InspirationItemResponse[]
+      | {
+          inspirations?: InspirationItemResponse[];
+          data?: InspirationItemResponse[];
+        }
+    >(endpoint, {
+      headers: {
+        "X-Locale": loc,
+        "Accept-Language": loc,
+      },
+    });
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object") {
+      if (Array.isArray(data.inspirations)) return data.inspirations;
+      if (Array.isArray(data.data)) return data.data;
+    }
+    return [];
+  }
+
+  async getInspirationCategories(
+    locale?: string,
+  ): Promise<InspirationCategoryResponse[]> {
+    const loc = locale || this.resolveLocale();
+    const data = await this.request<
+      | InspirationCategoryResponse[]
+      | {
+          inspiration_categories?: InspirationCategoryResponse[];
+          inspirationCategories?: InspirationCategoryResponse[];
+          data?: InspirationCategoryResponse[];
+        }
+    >("/inspiration_categories", {
+      headers: {
+        "X-Locale": loc,
+        "Accept-Language": loc,
+      },
+    });
+
+    if (Array.isArray(data)) {
+      return data;
+    }
+
+    if (data && typeof data === "object") {
+      if (Array.isArray(data.inspiration_categories)) {
+        return data.inspiration_categories;
+      }
+      if (Array.isArray(data.inspirationCategories)) {
+        return data.inspirationCategories;
+      }
+      if (Array.isArray(data.data)) {
+        return data.data;
+      }
+    }
+
+    return [];
+  }
+
+  async getInspirationBySlug(
+    slug: string,
+    locale?: string,
+  ): Promise<InspirationDetailResponse | null> {
+    const loc = locale || this.resolveLocale();
+    try {
+      const data = await this.request<
+        InspirationDetailResponse | { inspiration?: InspirationDetailResponse }
+      >(`/inspirations/${encodeURIComponent(slug)}`, {
+        headers: { "X-Locale": loc },
+      });
+      if (data && typeof data === "object" && "inspiration" in data) {
+        return data.inspiration || null;
+      }
+      return (data as InspirationDetailResponse) || null;
     } catch (err) {
       if (err instanceof ApiError && err.status === 404) {
         return null;

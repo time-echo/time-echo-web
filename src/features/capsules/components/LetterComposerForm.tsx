@@ -13,16 +13,8 @@ import { Letter, PredictionCategory } from "@/types/timeecho";
 import { Calendar, Mail, AlertCircle, Sparkles } from "lucide-react";
 import { cn, formatLocaleDate } from "@/lib/utils";
 import { Stamp, StampPickerModal, useStampCatalog } from "@/components/stamps";
-import {
-  InspireMeDrawer,
-  InspirationPromptLabel,
-  InspirePromptSelection,
-} from "./InspireMeDrawer";
-import {
-  DEFAULT_INSPIRATION_CATEGORY_ID,
-  InspirationCategoryId,
-  getInspirationPromptById,
-} from "../data/inspirationPrompts";
+import { InspirationPromptLabel } from "./InspirationPromptLabel";
+import { useInspirationCatalog } from "../hooks/useInspirationCatalog";
 
 export interface LetterComposerFormProps {
   onSuccess?: (created: Letter) => void;
@@ -79,16 +71,19 @@ export function LetterComposerForm({
 
   const searchParams = useSearchParams();
   const { findStamp } = useStampCatalog();
+  const {
+    inspirations,
+    isLoading: isLoadingInspirations,
+    findInspiration,
+    getRandomInspiration,
+  } = useInspirationCatalog();
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [isStampPickerOpen, setIsStampPickerOpen] = useState(false);
-  const [isInspireOpen, setIsInspireOpen] = useState(false);
-  const [activeInspirationCategory, setActiveInspirationCategory] =
-    useState<InspirationCategoryId>(DEFAULT_INSPIRATION_CATEGORY_ID);
   const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
   const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
   const hasTrackedCreationStart = useRef(false);
 
-  const selectedPrompt = getInspirationPromptById(selectedPromptId);
+  const selectedPrompt = findInspiration(selectedPromptId);
 
   const trackStartIfNeeded = () => {
     if (hasTrackedCreationStart.current) return;
@@ -101,24 +96,14 @@ export function LetterComposerForm({
     });
   };
 
-  const handleOpenInspire = () => {
-    setIsInspireOpen(true);
-    track("inspire_me_opened", {
-      source: "composer",
-      locale,
-    });
-  };
+  const handleInspireMe = () => {
+    const nextPrompt = getRandomInspiration(selectedPromptId);
+    if (!nextPrompt) return;
 
-  const handleSelectPrompt = ({
-    categoryId,
-    promptId,
-  }: InspirePromptSelection) => {
-    if (selectedPromptId) return;
-
-    setSelectedPromptId(promptId);
+    setSelectedPromptId(nextPrompt.slug);
     track("inspire_prompt_selected", {
-      category_id: categoryId,
-      prompt_id: promptId,
+      category_id: nextPrompt.category_slug || nextPrompt.categorySlug || "",
+      prompt_id: nextPrompt.slug,
       source: "composer",
       locale,
     });
@@ -352,11 +337,10 @@ export function LetterComposerForm({
                 </label>
                 <button
                   type="button"
-                  onClick={handleOpenInspire}
-                  aria-haspopup="dialog"
-                  aria-expanded={isInspireOpen}
+                  onClick={handleInspireMe}
+                  disabled={isLoadingInspirations && inspirations.length === 0}
                   aria-label={t("inspireMe.buttonAria")}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs border border-crease bg-manila/50 hover:border-wax hover:bg-manila text-foreground font-letter text-[11px] font-semibold tracking-wider transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs border border-crease bg-manila/50 hover:border-wax hover:bg-manila text-foreground font-letter text-[11px] font-semibold tracking-wider transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Sparkles size={13} className="text-wax shrink-0" />
                   <span>{t("inspireMe.buttonLabel")}</span>
@@ -364,7 +348,7 @@ export function LetterComposerForm({
               </div>
               {selectedPrompt && (
                 <InspirationPromptLabel
-                  promptText={t(selectedPrompt.textKey)}
+                  promptText={selectedPrompt.text}
                   onRemove={handleRemovePrompt}
                 />
               )}
@@ -376,7 +360,9 @@ export function LetterComposerForm({
                   trackStartIfNeeded();
                   setField("content", e.target.value);
                 }}
-                placeholder={t("letters.content_placeholder_form")}
+                placeholder={
+                  selectedPrompt ? "" : t("letters.content_placeholder_form")
+                }
                 rows={15}
                 minLength={80}
                 maxLength={2000}
@@ -764,16 +750,6 @@ export function LetterComposerForm({
             });
           }
         }}
-      />
-
-      <InspireMeDrawer
-        isOpen={isInspireOpen}
-        onClose={() => setIsInspireOpen(false)}
-        onSelectPrompt={handleSelectPrompt}
-        selectedPromptId={selectedPromptId}
-        onRemovePrompt={handleRemovePrompt}
-        activeCategoryId={activeInspirationCategory}
-        onCategoryChange={setActiveInspirationCategory}
       />
     </div>
   );

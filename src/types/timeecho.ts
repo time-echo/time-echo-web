@@ -196,3 +196,46 @@ export interface StampFilters {
   perPage?: number;
   per_page?: number;
 }
+
+export interface InspirationCategoryResponse {
+  slug: string;
+  name: string;
+  description: string;
+  position: number;
+}
+
+export interface InspirationItemResponse {
+  slug: string;
+  text: string;
+  category_slug: string;
+  categorySlug?: string;
+  position: number;
+  active?: boolean;
+}
+
+export interface InspirationDetailResponse {
+  slug: string;
+  text: string;
+  category_slug: string;
+  categorySlug?: string;
+  category_name?: string;
+  categoryName?: string;
+  category_description?: string;
+  categoryDescription?: string;
+  position: number;
+  active: boolean;
+}
+
+export interface InspirationFilters {
+  category?: string;
+  category_id?: string | number;
+  category_slug?: string;
+  text?: string;
+  q?: string;
+  query?: string;
+  active?: boolean | string;
+  status?: string;
+  page?: number;
+  perPage?: number;
+  per_page?: number;
+}

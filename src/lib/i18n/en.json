@@ -341,7 +341,13 @@
     "freeBadge": "Free",
     "freeNote": "Sending your letter costs nothing.",
     "stampHint": "Optional: pick a decorative stamp for your letter.",
-    "letterPlaceholderGuide": "What would you tell yourself a year from now?\nWhat worries you today? What do you hope to have achieved? What don't you want to forget?",
+    "letterPlaceholderGuide": "What would you tell yourself {horizon}?\nWhat worries you today? What do you hope to have achieved? What don't you want to forget?",
+    "letterPlaceholderHorizon6m": "6 months from now",
+    "letterPlaceholderHorizon1y": "a year from now",
+    "letterPlaceholderHorizon3y": "3 years from now",
+    "letterPlaceholderHorizon5y": "5 years from now",
+    "letterPlaceholderHorizonCustom": "on {date}",
+    "letterPlaceholderHorizonFuture": "in the future",
     "counterEmpty": "A few sentences are enough (80 characters minimum)",
     "counterProgress": "Good start! {remaining} more characters and you can seal it",
     "counterReady": "{count} / 2000 · ready to seal",
@@ -1376,106 +1382,8 @@
   },
   "inspireMe": {
     "buttonLabel": "Inspire Me",
-    "buttonAria": "Open writing inspiration prompts",
+    "buttonAria": "Show a random writing inspiration prompt",
     "activePromptLabel": "Inspiration",
-    "drawerTitle": "Need a spark?",
-    "drawerSubtitle": "Pick a question to guide your writing. It stays as a gentle reminder above your letter.",
-    "categoriesAria": "Inspiration categories",
-    "close": "Close inspiration drawer",
-    "usePrompt": "Use",
-    "selected": "Selected",
-    "removePrompt": "Remove inspiration",
-    "onePromptLimit": "You can select one inspiration per letter. Click it again or remove it to choose another.",
-    "emptyCategory": "No prompts available in this category yet.",
-    "categories": {
-      "futureReflections": {
-        "name": "Future Reflections",
-        "description": "Thoughts about the person you hope to become.",
-        "prompts": {
-          "personToBecome": "What kind of person do you hope to become?",
-          "adviceToFuture": "What advice would you give your future self?",
-          "hopeNeverChanges": "What part of who you are today do you hope never changes?",
-          "proudToHear": "What would make your future self smile when reading this?",
-          "letterToRemember": "If you could remind your future self of one truth today, what would it be?"
-        }
-      },
-      "dreamsGoals": {
-        "name": "Dreams & Goals",
-        "description": "Personal ambitions, plans, and aspirations.",
-        "prompts": {
-          "threeAccomplishments": "What are three things you want to accomplish?",
-          "dreamTooBig": "What dream feels a little intimidating right now, but still excites you?",
-          "nextChapter": "What do you hope the next chapter of your life looks like?",
-          "skillToMaster": "What skill, craft, or habit do you want to build over the next year?",
-          "courageousStep": "What is one brave step you have been putting off?"
-        }
-      },
-      "relationships": {
-        "name": "Relationships",
-        "description": "Family, friends, meaningful connections, and loved ones.",
-        "prompts": {
-          "peopleWhoMatter": "Who are the people shaping your life right now, and why do they matter to you?",
-          "unsaidThankYou": "Who deserves a thank you you haven't said out loud yet?",
-          "hopeStillClose": "Who do you hope is still by your side when you open this letter?",
-          "favoriteConversation": "What recent conversation stayed with you long after it ended?",
-          "howYouLove": "How have your closest relationships changed you lately?"
-        }
-      },
-      "everydayLife": {
-        "name": "Everyday Life",
-        "description": "Current routines, experiences, interests, and daily life.",
-        "prompts": {
-          "littleThingsHappy": "What little things make you happy right now?",
-          "ordinaryDay": "Describe an ordinary day in your life right now—from morning to night.",
-          "currentFavorites": "What songs, books, places, or meals are you currently obsessed with?",
-          "homeAndSpace": "What does your home or favorite corner look and feel like today?",
-          "currentRoutine": "What daily ritual brings you the most peace right now?"
-        }
-      },
-      "personalGrowth": {
-        "name": "Personal Growth",
-        "description": "Lessons, challenges, fears, and self-improvement.",
-        "prompts": {
-          "hardestLesson": "What is the most important lesson you've learned recently?",
-          "currentChallenge": "What challenge are you working through right now, and what is it teaching you?",
-          "fearToOutgrow": "What fear or doubt do you hope you will have outgrown by the time you read this?",
-          "proudOfOvercoming": "What have you overcome lately that once felt impossible?",
-          "lettingGo": "What old habit or expectation are you finally ready to let go of?"
-        }
-      },
-      "gratitude": {
-        "name": "Gratitude",
-        "description": "Things, people, and moments you appreciate.",
-        "prompts": {
-          "momentNeverForget": "What moment do you never want to forget?",
-          "quietBlessing": "What quiet, ordinary part of your life are you deeply grateful for today?",
-          "unexpectedKindness": "What unexpected kindness has meant a lot to you recently?",
-          "pastSelfThankYou": "What would you thank your past self for doing?",
-          "simpleJoy": "What happened this week that made you pause and feel thankful?"
-        }
-      },
-      "predictions": {
-        "name": "Predictions",
-        "description": "Expectations and predictions about your future.",
-        "prompts": {
-          "whereLiving": "Where do you picture yourself living and spending your mornings?",
-          "biggestSurprise": "What do you think will surprise you most when you open this letter?",
-          "workAndPurpose": "What kind of work or projects do you think you'll be pouring your energy into?",
-          "worriesThatFade": "Which of today's worries do you predict will feel small by then?",
-          "worldAroundYou": "What do you think will have changed most in your life—and what will stay the same?"
-        }
-      },
-      "justBecause": {
-        "name": "Just Because",
-        "description": "Open-ended and spontaneous writing ideas.",
-        "prompts": {
-          "rightNowSnapshot": "Stop and look around—what do you see, hear, and feel in this exact moment?",
-          "honestCheckIn": "If you didn't have to filter a single thought, how are you really doing today?",
-          "weirdlySpecific": "What oddly specific memory or inside joke do you want to preserve for later?",
-          "letterWithoutPlan": "Start with the first sentence that comes to mind and see where it takes you.",
-          "questionForFuture": "What is one question you're dying to ask your future self?"
-        }
-      }
-    }
+    "removePrompt": "Remove inspiration"
   }
 }
